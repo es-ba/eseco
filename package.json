@@ -1,0 +1,76 @@
+{
+  "name": "eseco",
+  "description": "defunciones",
+  "version": "1.4.1",
+  "private": true,
+  "author": "Codenautas <codenautas@googlegroups.com>",
+  "license": "MIT",
+  "main": "dist/server/server-eseco.js",
+  "types": "dist/server/app-eseco.d.ts",
+  "files": [
+    "dist",
+    "install",
+    "unlogged"
+  ],
+  "dependencies": {
+    "yazl": "~2.5.1",
+    "backend-plus": "^1.4.3",
+    "operativos": "^1.1.0",
+    "rel-enc": "^1.2.3",
+    "meta-enc": "^1.2.1",
+    "procesamiento": "^1.0.0",
+    "row-validator": "^0.4.1",
+    "typed-controls": "^0.8.21"
+  },
+  "dependencias provisorias: las que se pongan en dependencias ponerlas acá y sacarlas juntas": {
+    "backend-plus": "^1.4.3",
+    "operativos": "^1.1.0",
+    "rel-enc": "^1.2.3",
+    "row-validator": "^0.4.1",
+    "typed-controls": "^0.8.21"
+  },
+  "devDependencies": {
+    "@types/mocha": "~7.0.2",
+    "@types/yazl": "~2.4.2",
+    "discrepances": "~0.2.4",
+    "pg-triggers": "~0.2.3",
+    "types.d.ts": "~0.5.0",
+    "mixin-patch": "~0.3.3",
+    "cross-var": "^1.1.0"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "(tsc -p src/client & tsc -p src/server || echo \"continue w/error\") && mixin-patch",
+    "mixin-patch": "mixin-patch",
+    "watch:buildC": "(tsc -p src/client --watch || echo \"continue w/error\")",
+    "watch:buildS": "(tsc -p src/server --watch || echo \"continue w/error\")",
+    "test": "mocha --reporter spec --bail --check-leaks test/",
+    "start": "node dist/server/server-eseco.js",
+    "dump": "npm start -- --dump-db",
+    "bdump": "npm run build && npm run dump",
+    "link-operativos": "cross-var \"cd $npm_package_config_stackFolder/operativos && npm run clink\"",
+    "link-datos-ext": "cross-var \"cd $npm_package_config_stackFolder/datos-ext && npm run clink\"",
+    "link-varcal": "cross-var \"cd $npm_package_config_stackFolder/varcal && npm run clink\"",
+    "link-consistencias": "cross-var \"cd $npm_package_config_stackFolder/consistencias && npm run clink\"",
+    "link-procesamiento": "cross-var \"cd $npm_package_config_stackFolder/procesamiento && npm run clink\"",
+    "link-stack": "npm prune && npm i && npm run link-operativos && npm run link-datos-ext && npm run link-varcal && npm run link-consistencias && npm run link-procesamiento && npm link procesamiento && npm run build",
+    "git-diff": "git log -p --branches --not --remotes",
+    "git-commit": "git add package.json && (git commit -m \"upgrading stack dependencies\" || true)",
+    "update-eseco": "npm version patch && ncu -u && npm run git-commit && git push && npm i",
+    "upgrade-stack": "npm run publish-operativos && sleep 2 && npm run publish-datos-ext && sleep 2 && npm run publish-varcal && sleep 2 && npm run publish-consistencias && sleep 2 && npm run publish-procesamiento && sleep 2 && npm run update-eseco"
+  },
+  "config": {
+    "stackFolder": "../../codenautas"
+  },
+  "qa-control": {
+    "package-version": "0.3.0",
+    "coverage": 90,
+    "run-in": "server",
+    "stability": "extending",
+    "type": "app",
+    "ecmaVersion": 6
+  }
+}

@@ -1,0 +1,17 @@
+operativo|id_casillero|padre|tipoc|tipoc__denominacion|casillero|orden|ok|nombre|tipovar|longitud|tipoe|aclaracion|salto|unidad_analisis|cantidad_resumen|irrepetible|despliegue|ver_id|optativo|orden_total|ultimo_ancestro|formulario_principal|var_name|var_name_especial|expresion_habilitar|valor_ns_nc|valor_sin_dato
+ESECO|F:F1||F|formulario|F1|10|✔|||||||vivienda||||||10|F:F1|true|||||
+ESECO|DV|F:F1|B|bloque|DV|5|✔|Datos vivienda||||||||true||||10;5|F:F1||||||
+ESECO|DV1|DV|P|pregunta|DV1||✔|¿qué días es hoy?|fecha|fecha||||||true||||10;5;0|F:F1||dv1||||
+ESECO|DV2|DV|P|pregunta|DV2||✔|¿Puede realizar la entrevista?|si_no|||||||true||||10;5;0|F:F1||dv2||||
+ESECO|DV2/1|DV2|O|opción|1||✔|Sí||||||||||||10;5;0;0|F:F1||||||
+ESECO|DV2/2|DV2|O|opción|2||✔|No||||||||||||10;5;0;0|F:F1||||||
+ESECO|D|F:F1|B|bloque|D|20|✔|Presencia de cuadro diagnóstico||||||||true||||10;20|F:F1||||||
+ESECO|D1|D|P|pregunta|D1||✔|¿Le han hecho alguna vez la prueba para ver si estaba infectado por el coronavirus con una muestra de la garganta o la nariz?|opciones|||||||true||||10;20;0|F:F1||d1||||
+ESECO|D3|D|P|pregunta|D3||✔|Fiebre||||||||true||||10;20;0|F:F1||||||
+ESECO|D1/1|D1|O|opción|1||✔|No me la han hecho|||||D3|||||||10;20;0;0|F:F1||||||
+ESECO|D1/2|D1|O|opción|2||✔|Me la han hecho y fue negativa|||||D3|||||||10;20;0;0|F:F1||||||
+ESECO|D1/3|D1|O|opción|3||✔|Sí, me la hicieron hace más de 14 días y fue positiva *||||||||||||10;20;0;0|F:F1||||||
+ESECO|F:F3||F|formulario|F3|30|✔|||||||personas||||||30|F:F3||||||
+ESECO|DP|F:F3|B|bloque|DP|5|✔|Datos persona||||||||true||||30;5|F:F3||||||
+ESECO|P1|F:F3|P|pregunta|P1|10|✔|nombre|texto|||||||true||||30;10|F:F3||p1||||
+ESECO|P2|F:F3|P|pregunta|P2|20|✔|edad|numero|||||||true||||30;20|F:F3||p2||||

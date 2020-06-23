@@ -1,0 +1,3 @@
+operativo|unidad_analisis|nombre|pk_agregada|padre|orden|principal
+ESECO|vivienda||||10|true
+ESECO|personas|||vivienda|30|
