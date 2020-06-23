@@ -13,7 +13,14 @@
     "unlogged"
   ],
   "dependencies": {
+    "@material-ui/core": "~4.10.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "redux-typed-reducer": "~0.1.1",
     "yazl": "~2.5.1",
+    "ajax-best-promise": "^0.3.7",
     "backend-plus": "^1.4.3",
     "operativos": "^1.1.0",
     "rel-enc": "^1.2.3",
@@ -30,7 +37,11 @@
     "typed-controls": "^0.8.21"
   },
   "devDependencies": {
-    "@types/mocha": "~7.0.2",
+    "@types/node": "^14.0.13",
+    "@types/mocha": "^7.0.2",
+    "@types/react": "^16.9.36",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.9",
     "@types/yazl": "~2.4.2",
     "discrepances": "~0.2.4",
     "pg-triggers": "~0.2.3",
