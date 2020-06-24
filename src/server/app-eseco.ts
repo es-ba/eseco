@@ -5,7 +5,6 @@ import {ProceduresEseco} from "./procedures-eseco";
 
 import * as pg from "pg-promise-strict";
 import * as miniTools from "mini-tools";
-import * as fs from "fs-extra";
 import {Request, Response} from "./types-eseco";
 
 import * as yazl from "yazl";
@@ -88,15 +87,35 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         super.configStaticConfig();
         this.setStaticConfig(defConfig);
     }
-    
-    clientIncludes(req:Request, hideBEPlusInclusions:boolean){
+    clientIncludes(req, opts) {
         var be = this;
-        return super.clientIncludes(req, hideBEPlusInclusions).concat([
-            {type:'js' , src:'client/client.js' },
-            {type:'css', file:'form-data-signals.css'},
-        ])
+        var menuedResources=req && opts && !opts.skipMenu ? [
+            { type:'js' , src: 'client/client.js' },
+        ]:[
+            {type:'js' , src:'unlogged.js' },
+        ];
+        if(opts && opts.extraFiles){
+            menuedResources = menuedResources.concat(opts.extraFiles);
+        }
+        return [
+            { type: 'js', module: 'react', modPath: 'umd', fileDevelopment:'react.development.js', file:'react.production.min.js' },
+            { type: 'js', module: 'react-dom', modPath: 'umd', fileDevelopment:'react-dom.development.js', file:'react-dom.production.min.js' },
+            { type: 'js', module: '@material-ui/core', modPath: 'umd', fileDevelopment:'material-ui.development.js', file:'material-ui.production.min.js' },
+            { type: 'js', module: 'clsx', file:'clsx.min.js' },
+            { type: 'js', module: 'redux', modPath:'../dist', fileDevelopment:'redux.js', file:'redux.min.js' },
+            { type: 'js', module: 'react-redux', modPath:'../dist', fileDevelopment:'react-redux.js', file:'react-redux.min.js' },
+            { type: 'js', module: 'memoize-one',  file:'memoize-one.js' },
+            ...super.clientIncludes(req, opts),
+            { type: 'js', module: 'redux-typed-reducer', modPath:'../dist', file:'redux-typed-reducer.js' },
+            { type: 'js', src: 'adapt.js' },
+            { type: 'js', src: 'tipos.js' },
+            { type: 'js', src: 'redux-formulario.js' },
+            { type: 'js', src: 'render-general.js' },
+            { type: 'js', src: 'render-formulario.js' },
+            { type: 'css', file: 'menu.css' },
+            ... menuedResources
+        ];
     }
-    
     getMenu(){
         let menu = {menu:[
             {menuType:'menu', name:'procesar', menuContent:[

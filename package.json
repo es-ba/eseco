@@ -14,6 +14,7 @@
   ],
   "dependencies": {
     "@material-ui/core": "~4.10.2",
+    "memoize-one": "^5.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
@@ -54,24 +55,15 @@
   },
   "scripts": {
     "prepublish": "npm run build",
-    "build": "(tsc -p src/client & tsc -p src/server || echo \"continue w/error\") && mixin-patch",
+    "build": "(tsc -p src/unlogged || echo \"continue w/error\") && (tsc -p src/client || echo \"continue w/error\") && (tsc -p src/server || echo \"continue w/error\") && mixin-patch",
     "mixin-patch": "mixin-patch",
     "watch:buildC": "(tsc -p src/client --watch || echo \"continue w/error\")",
     "watch:buildS": "(tsc -p src/server --watch || echo \"continue w/error\")",
+    "watch:buildU": "(tsc -p src/unlogged --watch || echo \"continue w/error\")",
     "test": "mocha --reporter spec --bail --check-leaks test/",
     "start": "node dist/server/server-eseco.js",
     "dump": "npm start -- --dump-db",
-    "bdump": "npm run build && npm run dump",
-    "link-operativos": "cross-var \"cd $npm_package_config_stackFolder/operativos && npm run clink\"",
-    "link-datos-ext": "cross-var \"cd $npm_package_config_stackFolder/datos-ext && npm run clink\"",
-    "link-varcal": "cross-var \"cd $npm_package_config_stackFolder/varcal && npm run clink\"",
-    "link-consistencias": "cross-var \"cd $npm_package_config_stackFolder/consistencias && npm run clink\"",
-    "link-procesamiento": "cross-var \"cd $npm_package_config_stackFolder/procesamiento && npm run clink\"",
-    "link-stack": "npm prune && npm i && npm run link-operativos && npm run link-datos-ext && npm run link-varcal && npm run link-consistencias && npm run link-procesamiento && npm link procesamiento && npm run build",
-    "git-diff": "git log -p --branches --not --remotes",
-    "git-commit": "git add package.json && (git commit -m \"upgrading stack dependencies\" || true)",
-    "update-eseco": "npm version patch && ncu -u && npm run git-commit && git push && npm i",
-    "upgrade-stack": "npm run publish-operativos && sleep 2 && npm run publish-datos-ext && sleep 2 && npm run publish-varcal && sleep 2 && npm run publish-consistencias && sleep 2 && npm run publish-procesamiento && sleep 2 && npm run update-eseco"
+    "bdump": "npm run build && npm run dump"
   },
   "config": {
     "stackFolder": "../../codenautas"

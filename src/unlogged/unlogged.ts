@@ -1,7 +1,8 @@
 "use strict";
-import {LOCAL_STORAGE_STATE_NAME} from "../unlogged/dm-react";
 import {html}  from 'js-to-html';
 import * as AjaxBestPromise from "ajax-best-promise";
+
+var LOCAL_STORAGE_STATE_NAME ='zx-03'
 
 window.addEventListener('load', async function(){
     var layout = document.getElementById('total-layout')!;
@@ -48,6 +49,7 @@ appCache.addEventListener('downloading', async function() {
         layout.firstChild
     );
 }, false);
+
 appCache.addEventListener('error', async function(e:Event) {
     // @ts-ignore es ErrorEvent porque el evento es 'error'
     var errorEvent:ErrorEvent = e;
@@ -72,7 +74,7 @@ async function cacheReady(){
         url:`carga-dm/${periodo?`${periodo}p${panel}t${tarea}_manifest.manifest`:'dm-manifest.manifest'}`,
         data:{}
     });
-    myOwn.setLocalVar('ipc2.0-app-cache-version',result.split('\n')[1]);
+    myOwn.setLocalVar('app-cache-version',result.split('\n')[1]);
     setTimeout(function(){
         var cacheStatusElement = document.getElementById('cache-status')!;
         if(!cacheStatusElement){
@@ -136,3 +138,4 @@ async function displayWhenReady(message:string, type:string, message2:string, _e
         texto.appendChild(texto2);
     }
 }
+
