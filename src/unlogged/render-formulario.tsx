@@ -62,6 +62,7 @@ function HijosDespliegue(props:{hijos:IContenido[]}){
         {props.hijos.map((hijo:IContenido)=>
             <Grid item>
                 <CasilleroDespliegue casillero={hijo.data}/>
+                <HijosDespliegue hijos={hijo.childs}/>
             </Grid>
         )}
     </Grid>
