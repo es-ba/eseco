@@ -17,10 +17,10 @@ import {
     DialogTitle, Divider, Fab, Grid, IconButton, InputBase, 
     List, ListItem, ListItemIcon, ListItemText, Drawer, 
     Menu, MenuItem, Paper, SvgIcon, Switch, 
-    Table, TableBody, TableCell, TableHead, TableRow, TextField, Toolbar, Typography, Zoom,
+    Table, TableBody, TableCell, TableHead, TableRow, TextField, ThemeProvider, Toolbar, Typography, Zoom,
     useScrollTrigger,
     // styles:
-    createStyles, makeStyles, Theme, fade
+    createStyles, makeStyles, Theme, fade, createMuiTheme
 } from "@material-ui/core";
 import { Store, Action } from "redux";
 
@@ -168,12 +168,28 @@ export class RenderAndCaptureError extends React.Component<
     }
 }
 
+const theme = createMuiTheme({
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        html: {
+          WebkitFontSmoothing: 'auto',
+        },
+      },
+    },
+  },
+});
+
 export function RenderPrincipal<T,T2 extends Action>(props:{store:Store<T,T2>, children:React.ReactNode}){
-    return <Provider store={props.store}>
-        <RenderAndCaptureError>
-            <CssBaseline />
-            {props.children}
-        </RenderAndCaptureError>
-    </Provider>
+    return <React.StrictMode>
+        <Provider store={props.store}>
+            <ThemeProvider theme={theme}>
+                <RenderAndCaptureError>
+                    <CssBaseline />
+                    {props.children}
+                </RenderAndCaptureError>
+            </ThemeProvider>        
+        </Provider>
+    </React.StrictMode>
 }
 

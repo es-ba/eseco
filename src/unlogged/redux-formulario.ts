@@ -1,5 +1,5 @@
 import { createStore } from "redux";
-import { Opcion, FormularioState, Pregunta } from "./tipos";
+import { CasoState, IdFormulario } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
 import * as JSON4all from "json4all";
@@ -7,11 +7,13 @@ import * as likeAr from "like-ar";
 
 var my=myOwn;
 
+const OPERATIVO='ESECO';
+const MAIN_FORM='F:F3';
 
 /* REDUCERS */
 
 var defaultActionFormulario = function defaultActionFormulario(
-    formularioState:FormularioState, 
+    formularioState:CasoState, 
 ){
     return deepFreeze({
         ...formularioState
@@ -20,7 +22,7 @@ var defaultActionFormulario = function defaultActionFormulario(
 
 var reducers={
     REGISTRAR_RESPUESTA: (payload: {forPk:{vivienda:number, persona:number}, variable:string, respuesta:any}) => 
-        function(state: FormularioState){
+        function(state: CasoState){
             return {
                 ...state,
                 datos:{
@@ -40,16 +42,16 @@ export type ActionFormularioState = ActionsFrom<typeof reducers>;
 export const dispatchers = createDispatchers(reducers);
 
 export async function dmTraerDatosFormulario(){
-    var initialState:FormularioState={
-        estructura:{
-            preguntas:[
-                {pregunta:'P1', texto:'eae asdf asdf asdfqwef asdjkfla;ewjf asef as', tipovar:'numero', salto:'P3'},
-                {pregunta:'P2', texto:'eae asdf asdf asdfqwef asdjkfla;ewjf asef as', tipovar:'numero', salto:null},
-                {pregunta:'P3', texto:'eae asdf asdf asdfqwef asdjkfla;ewjf asef as', tipovar:'numero', salto:null},
-            ]
-        },
+    var casilleros = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
+    console.log(casilleros);
+    var initialState:CasoState={
+        estructura:{formularios:casilleros},
+        mainForm:MAIN_FORM as IdFormulario,
         datos:{
             respuestas:{}
+        },
+        estado:{
+            formularioActual:MAIN_FORM as IdFormulario
         }
     };
     /* DEFINICION CONTROLADOR */

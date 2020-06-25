@@ -1,46 +1,77 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {  
-    FocusOpts, ICON, RenderPrincipal
+    FocusOpts, ICON, RenderPrincipal, 
+    clsx, memoize
 } from "./render-general";
-import {FormularioState, Pregunta, Opcion} from "./tipos";
+import {CasoState, DataCasillero, IContenido, Opcion, Pregunta} from "./tipos";
 import {dmTraerDatosFormulario } from "./redux-formulario";
-import {useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef} from "react";
 import { Provider, useSelector, useDispatch } from "react-redux"; 
 import * as memoizeBadTyped from "memoize-one";
 import * as likeAr from "like-ar";
-import * as clsxx from 'clsx';
-//@ts-ignore el módulo clsx no tiene bien puesto los tipos en su .d.ts
-var clsx: (<T>(a1:string|T, a2?:T)=> string) = clsxx;
-
-//@ts-ignore el módulo memoize-one no tiene bien puesto los tipos en su .d.ts
-var memoize:typeof memoizeBadTyped.default = memoizeBadTyped;
 
 import {
     AppBar, Badge, Button, ButtonGroup, Card, Chip, CircularProgress, CssBaseline, 
     Dialog, DialogActions, DialogContent, DialogContentText, 
     DialogTitle, Divider, Fab, Grid, IconButton, InputBase, 
-    List, ListItem, ListItemIcon, ListItemText, Drawer, 
+    Link, List, ListItem, ListItemIcon, ListItemText, Drawer, 
     Menu, MenuItem, Paper, SvgIcon, Switch, 
-    Table, TableBody, TableCell, TableHead, TableRow, TextField, Toolbar, Typography, Zoom,
-    useScrollTrigger
+    Table, TableBody, TableCell, TableHead, TableRow, TextField, Theme, Toolbar, Typography, Zoom,
+    useScrollTrigger,
+    createStyles, makeStyles
 } from "@material-ui/core";
 
-function PreguntaDespliegue(props:{pregunta:Pregunta}){
-    var {pregunta} = props;
-    return <Card>
-        <Typography>{pregunta.pregunta}</Typography>
-        <Typography>{pregunta.texto}</Typography>
-        {pregunta.salto==null?"":
-            <Typography> <ICON.ChevronRight/> {pregunta.salto} </Typography>
+var useStyles = makeStyles((_theme: Theme) =>
+    createStyles({
+        root:{},
+        F:{
+            fontSize:'2rem'
         }
-    </Card>
+    })
+);
+
+/*
+// const takeElementOrDefault<K, T extends [K in], D>()
+function isIn<V, T>(k:keyof T, object:T): object[k] is V{
+    return true
+}
+*/
+function takeElementOrDefault<V,K extends string,KO extends string>(k:K, object:{[k in KO]:V}, defaultValue:V):V{
+    return k in object ? 
+        // @ts-expect-error por alguna razón TS no quiere entender que si k está en object, object[k] existe
+        object[k] 
+    : defaultValue
+}
+
+function CasilleroDespliegue(props:{casillero:DataCasillero}){
+    const {casillero} = props;
+    var classes = useStyles();
+    return <Grid container alignItems="center">
+        <Grid item>
+            <Button variant="outlined" className={takeElementOrDefault(casillero.tipoc, classes, classes.root)}>{casillero.ver_id || casillero.casillero}</Button>
+        </Grid>
+        <Grid item>
+            <Typography className={takeElementOrDefault(casillero.tipoc, classes, classes.root)}>{casillero.nombre}</Typography>
+        </Grid>
+    </Grid>
+}
+
+function HijosDespliegue(props:{hijos:IContenido[]}){
+    return !props.hijos?.length?null:<Grid container direction="column">
+        {props.hijos.map((hijo:IContenido)=>
+            <Grid item>
+                <CasilleroDespliegue casillero={hijo.data}/>
+            </Grid>
+        )}
+    </Grid>
 }
 
 function FormularioDespliegue(){
-    var preguntas = useSelector((state:FormularioState)=>state.estructura.preguntas);
+    var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
     return <Paper>
-        {preguntas.map(pregunta=><PreguntaDespliegue key={pregunta.pregunta} pregunta={pregunta}/>)}
+        <CasilleroDespliegue casillero={formulario.data}/>
+        <HijosDespliegue hijos={formulario.childs}/>
     </Paper>
 }
 
