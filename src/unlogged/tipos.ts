@@ -9,12 +9,13 @@ export type IdVariable = 'v1'|'v2'|'etc...'
 export type IdPregunta = 'V1'|'V2'|'etc...'
 export type IdBloque = 'B1'|'B2'|'etc...'
 export type IdFormulario = 'F1'|'F2'|'etc...'
-export type IdCasillero = IdVariable | IdPregunta | IdBloque | IdFormulario
+export type IdFiltro = 'FILTRO1' | 'FILTRO2' | 'etc...'
+export type IdCasillero = IdVariable | IdPregunta | IdBloque | IdFormulario | IdFiltro
 export type IdFin = 'FIN'
-export type IdDestino = IdPregunta | IdBloque | IdFin
-
-export type DataCasillero = {
-    tipoc:'P'|'O'|'F'|'CP'|'B'|'OM', 
+export type IdDestino = IdPregunta | IdBloque | IdFin | IdFiltro
+ 
+export type CasilleroBase = {
+    tipoc:'P'|'O'|'F'|'CP'|'B'|'OM'|'FILTRO', 
     casillero:IdCasillero, 
     nombre:string, 
     salto:IdDestino|IdFin|null,
@@ -22,58 +23,70 @@ export type DataCasillero = {
     despliegue:string|null
 }
 
-export type Opcion={
-    data:DataCasillero & {tipoc:'O'}
-    childs:PreguntaSimple[]
+export type Opcion=CasilleroBase & {
+    tipoc:'O', 
+    casilleros:PreguntaSimple[] 
 }
 
-export type OpcionMultiple={
-    data:DataCasillero & {tipoc:'OM'}
-    childs:Opcion[]
+export type OpcionMultiple=CasilleroBase & {
+    tipoc:'OM',
+    casilleros:Opcion[]
 }
 
-export type DataPreguntaBase = DataCasillero & {tipoc:'P', casillero:IdCasillero}
+export type PreguntaBase = CasilleroBase & {
+    tipoc:'P', 
+    casillero:IdPregunta
+}
 
 export type TipoVariables = 'texto'|'numero'|'fecha'
 
-export type PreguntaSimple = {
-    data: DataPreguntaBase & {tipovar:TipoVariables}
-    childs: []
+export type PreguntaSimple = PreguntaBase & {
+    tipovar:TipoVariables,
+    casilleros: []
 }
 
-export type PreguntaConOpciones = {
-    data: DataPreguntaBase & {tipovar:'opcion'}
-    childs: Opcion[]
+export type PreguntaConOpciones = PreguntaBase & {
+    tipovar:'opcion',
+    casilleros: Opcion[]
 }
 
-export type PreguntaConOpcionesMultiples = {
-    data: DataPreguntaBase & {tipovar:'multiple'}
-    childs: OpcionMultiple[]
+export type PreguntaConOpcionesMultiples = PreguntaBase & {
+    tipovar:'multiple',
+    casilleros: OpcionMultiple[]
 }
 
 export type Pregunta=PreguntaSimple | PreguntaConOpciones | PreguntaConOpcionesMultiples
 
-export type ConjuntoPreguntas={
-    data:DataCasillero & {tipoc:'CP'}
-    childs:Pregunta[]
+export type ConjuntoPreguntas= CasilleroBase & {
+    tipoc:'CP',
+    casilleros:Pregunta[]
 }
 
-export interface IContenido{
-    data:DataCasillero
-    childs:IContenido[]
+export interface IContenido extends CasilleroBase {
+    casilleros:IContenido[]
 }
 
-export type ContenidoFormulario=Bloque|Pregunta|ConjuntoPreguntas
-
-export type Bloque={
-    data:DataCasillero & {tipoc:'B', casillero:IdBloque}
-    childs:ContenidoFormulario[]
+export type Filtro = CasilleroBase & {
+    tipoc:'FILTRO',
+    casillero:IdFiltro
 }
 
-export type Formulario={
-    data:DataCasillero & {tipoc:'F', casillero:IdFormulario, formulario_principal:boolean}
-    childs:ContenidoFormulario[]
+export type ContenidoFormulario=Bloque|Pregunta|ConjuntoPreguntas|Filtro
+
+export type Bloque= CasilleroBase & {
+    tipoc:'B', 
+    casillero:IdBloque,
+    casilleros:ContenidoFormulario[]
 }
+
+export type Formulario= CasilleroBase & {
+    tipoc:'F', 
+    casillero:IdFormulario, 
+    formulario_principal:boolean,
+    casilleros:ContenidoFormulario[]
+}
+
+export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion
 
 export type CasoState={
     estructura:{

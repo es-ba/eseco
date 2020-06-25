@@ -1,5 +1,5 @@
 import { createStore } from "redux";
-import { CasoState, IdFormulario } from "./tipos";
+import { CasillerosImplementados, CasoState, Formulario, IdFormulario } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
 import * as JSON4all from "json4all";
@@ -41,8 +41,28 @@ export type ActionFormularioState = ActionsFrom<typeof reducers>;
 
 export const dispatchers = createDispatchers(reducers);
 
+interface IDataSeparada<T> {
+    data:T,
+    childs:IDataSeparada<T>[]
+}
+
+type IDataConCasilleros<T> = T & {
+    casilleros:IDataConCasilleros<T>[]
+}
+
+
+function aplanarLaCurva<T>(casillerosData:IDataSeparada<T>):IDataConCasilleros<T>{
+    return {
+        ...casillerosData.data,
+        casilleros: casillerosData.childs.map(casillero=>aplanarLaCurva(casillero))
+    }
+}
+
 export async function dmTraerDatosFormulario(){
-    var casilleros = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
+    var casillerosOriginales = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
+    console.log(casillerosOriginales)
+    //@ts-ignore
+    var casilleros:{[f in IdFormulario]:Formulario} = likeAr(casillerosOriginales).map((x:any)=>aplanarLaCurva(x));
     console.log(casilleros);
     var initialState:CasoState={
         estructura:{formularios:casilleros},

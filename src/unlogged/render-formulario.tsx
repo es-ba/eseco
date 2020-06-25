@@ -4,7 +4,7 @@ import {
     FocusOpts, ICON, RenderPrincipal, 
     clsx, memoize
 } from "./render-general";
-import {CasoState, DataCasillero, IContenido, Opcion, Pregunta} from "./tipos";
+import {Bloque, CasilleroBase, CasoState, Filtro, Formulario, IContenido, Opcion, Pregunta} from "./tipos";
 import {dmTraerDatosFormulario } from "./redux-formulario";
 import { useState, useEffect, useRef} from "react";
 import { Provider, useSelector, useDispatch } from "react-redux"; 
@@ -25,6 +25,9 @@ import {
 var useStyles = makeStyles((_theme: Theme) =>
     createStyles({
         root:{},
+        errorCasillero:{
+            backgroundColor:'#FDA'
+        },
         F:{
             fontSize:'2rem'
         }
@@ -44,7 +47,7 @@ function takeElementOrDefault<V,K extends string,KO extends string>(k:K, object:
     : defaultValue
 }
 
-function CasilleroDespliegue(props:{casillero:DataCasillero}){
+function DespliegueEncabezado(props:{casillero:CasilleroBase}){
     const {casillero} = props;
     var classes = useStyles();
     return <Grid container alignItems="center">
@@ -57,22 +60,58 @@ function CasilleroDespliegue(props:{casillero:DataCasillero}){
     </Grid>
 }
 
-function HijosDespliegue(props:{hijos:IContenido[]}){
-    return !props.hijos?.length?null:<Grid container direction="column">
-        {props.hijos.map((hijo:IContenido)=>
-            <Grid item>
-                <CasilleroDespliegue casillero={hijo.data}/>
-                <HijosDespliegue hijos={hijo.childs}/>
-            </Grid>
-        )}
-    </Grid>
+function FiltroDespliegue(props:{filtro:Filtro}){
+    var {filtro} = props;
+    return <Paper>
+        <BloqueEncabezado casillero={filtro}/>
+    </Paper>
 }
+
+function CasilleroDesconocido(props:{casillero:CasilleroBase}){
+    var classes = useStyles();
+    return <Paper className={classes.errorCasillero}>
+        <Typography>Tipo de casillero no implementado:</Typography>
+        <BloqueEncabezado casillero={props.casillero}/>
+    </Paper>
+}
+
+const BloqueEncabezado = DespliegueEncabezado;
+
+function BloqueDespliegue(props:{bloque:Bloque}){
+    var {bloque} = props;
+    return <Paper>
+        <BloqueEncabezado casillero={bloque}/>
+        {!bloque.casilleros?.length?null:<Grid container direction="column">
+            {bloque.casilleros.map((casillero)=>
+                <Grid item>
+                    {
+                        casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
+                        casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
+                        <CasilleroDesconocido casillero={casillero}></CasilleroDesconocido>
+                    }
+                </Grid>
+            )}
+        </Grid>}
+    </Paper>
+}
+
+const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(){
     var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
     return <Paper>
-        <CasilleroDespliegue casillero={formulario.data}/>
-        <HijosDespliegue hijos={formulario.childs}/>
+        <FormularioEncabezado casillero={formulario}/>
+        {!formulario.casilleros?.length?null:<Grid container direction="column">
+            {formulario.casilleros.map((casillero)=>
+                <Grid item>
+                    {
+                        casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
+                        casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
+                        <CasilleroDesconocido casillero={casillero}></CasilleroDesconocido>
+                    }
+                </Grid>
+            )}
+        </Grid>}
     </Paper>
 }
 
