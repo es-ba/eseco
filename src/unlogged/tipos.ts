@@ -5,6 +5,8 @@
  * 
  */
 
+import {Structure} from "row-validator";
+
 export type IdOpcion = number
 export type IdVariable = 'v1'|'v2'|'etc...'
 export type IdPregunta = 'V1'|'V2'|'etc...'
@@ -52,7 +54,7 @@ export type OpcionMultiple=CasilleroBase & {
 
 export type PreguntaBase = CasilleroBase & {
     tipoc:'P', 
-    var_name:IdVariable // TODO, quitar esto de acá porque está especificado en las que va, ej: no en la múltiple. Pero en el map de adentro no lo detecta
+    // var_name:IdVariable // TODO, quitar esto de acá porque está especificado en las que va, ej: no en la múltiple. Pero en el map de adentro no lo detecta
     casillero:IdPregunta
 }
 
@@ -125,7 +127,8 @@ export type CasoState={
     estructura:{
         formularios:{
             [nombreFormulario in IdFormulario]:Formulario
-        }
+        },
+        estructuraRowValidator:Structure<IdVariable,IdFin>
     },
     mainForm:IdFormulario,
     datos:{

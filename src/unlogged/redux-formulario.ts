@@ -1,9 +1,10 @@
 import { createStore } from "redux";
 import { CasilleroBase, CasillerosImplementados, CasoState, 
-    Formulario, ForPk, IdFormulario, Opcion, Respuestas 
+    Formulario, ForPk, IdFormulario, Opcion, Respuestas, IdVariable 
 } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
+import { Structure } from "row-validator";
 import * as JSON4all from "json4all";
 import * as likeAr from "like-ar";
 
@@ -67,6 +68,20 @@ function aplanarLaCurva<T extends {tipoc:string}>(casillerosData:IDataSeparada<T
     }
 }
 
+function rellenarEstructura(estructura:CasoState['estructura']['estructuraRowValidator'], casillero:CasillerosImplementados){
+    if('var_name' in casillero){
+        estructura.variables[casillero.var_name]={
+            tipo:casillero.tipoc=='OM'?'opciones':casillero.tipovar,
+            // @ts-ignore TODO: acá el salto se refiere a la pregunta y hay que poner la variable
+            salto:casillero.salto,
+            //optativa:casillero.optativa,
+        }
+    }
+    casillero.casilleros.forEach((casillero)=>
+        rellenarEstructura(estructura, casillero);
+    )
+}
+
 export async function dmTraerDatosFormulario(){
     var casillerosOriginales = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
     console.log(casillerosOriginales)
@@ -74,7 +89,10 @@ export async function dmTraerDatosFormulario(){
     var casilleros:{[f in IdFormulario]:Formulario} = likeAr(casillerosOriginales).map((x:any)=>aplanarLaCurva(x));
     console.log(casilleros);
     var initialState:CasoState={
-        estructura:{formularios:casilleros},
+        estructura:{
+            formularios:casilleros,
+            estructuraRowValidator:{variables:{}, marcaFin:'NO_HAY_POR_AHORA'} as unknown as CasoState['estructura']['estructuraRowValidator']
+        },
         mainForm:MAIN_FORM as IdFormulario,
         datos:{
             respuestas:{
