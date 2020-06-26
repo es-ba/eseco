@@ -157,7 +157,7 @@ const PreguntaEncabezado = DespliegueEncabezado;
 
 function PreguntaDespliegue(props:{pregunta:Pregunta}){
     var {pregunta} = props;
-    return <Grid container>
+    return <div container>
         <Grid>
             <PreguntaEncabezado casillero={pregunta}/>
         </Grid>
@@ -177,7 +177,7 @@ function PreguntaDespliegue(props:{pregunta:Pregunta}){
             }</Grid>:
             <TextField/>
         }</Grid>
-    </Grid>
+    </div>
 }
 
 function FiltroDespliegue(props:{filtro:Filtro}){
@@ -195,7 +195,7 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
     </Paper>
 }
 
-function BloqueDespliegue(props:{id:string, bloque:Bloque}){
+function BloqueDespliegue(props:{bloque:Bloque}){
     var {bloque} = props;
     var key=bloque.ver_id!='-' && bloque.ver_id || bloque.casillero;
     var activeStep=0;
@@ -204,7 +204,10 @@ function BloqueDespliegue(props:{id:string, bloque:Bloque}){
             <div className="id">
                 {key}
             </div>
-            <div className="nombre">{bloque.nombre}</div>
+            <div className="nombre-div">
+                <div className="nombre">{bloque.nombre}</div>
+                <div className="aclaracion">{bloque.aclaracion}</div>
+            </div>
         </div>
         <div className="casilleros">{
             bloque.casilleros.map((casillero)=>
@@ -225,7 +228,7 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(){
     var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
-    return <Paper style={{maxWidth:'790px'}}>
+    return <div className="formulario">
         <FormularioEncabezado casillero={formulario}/>
         {!formulario.casilleros?.length?null:<Grid container direction="column">
             {formulario.casilleros.map((casillero)=>
@@ -239,7 +242,7 @@ function FormularioDespliegue(){
                 </Grid>
             )}
         </Grid>}
-    </Paper>
+    </div>
 }
 
 export async function desplegarFormularioActual(){

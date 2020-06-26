@@ -1,21 +1,35 @@
 colorFondoIdBloque = #888
 
+.formulario
+  max-width 768px
+
+.encabezado
+  display flex
+  .id
+    align-self flex-start
+    justify-self flex-start
+    text-align center
+  .nombre-div
+    flex-grow 2
+    align-self flex-start
+    justify-self baseline
+    .aclaracion
+      font-size 90%
+
 .bloque
   .encabezado
     background colorFondoIdBloque
     font-size 100%
-    display flex
     min-height 24px
     .id
-      border-top 2px solid colorFondoIdBloque
-      align-self flex-start
-      justify-self flex-start
       color colorFondoIdBloque
-      background-color #EEE
+      background-color #DDD
       min-width 24px
-      text-align center
-    .nombre
+      min-height 24px
+      padding-top 2px
+      vertical-align middle
+      border-bottom-right-radius 7px
+    .nombre-div
       margin 8px
-      align-self flex-start
-      justify-self baseline
-      color white
+      text-align center
+      color #DDD

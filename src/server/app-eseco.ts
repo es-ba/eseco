@@ -105,7 +105,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             { type: 'js', module: 'redux', modPath:'../dist', fileDevelopment:'redux.js', file:'redux.min.js' },
             { type: 'js', module: 'react-redux', modPath:'../dist', fileDevelopment:'react-redux.js', file:'react-redux.min.js' },
             { type: 'js', module: 'memoize-one',  file:'memoize-one.js' },
-            ...super.clientIncludes(req, opts),
+            ...super.clientIncludes(req, opts).filter(m=>m.file!='formularios.css'),
             { type: 'js', module: 'redux-typed-reducer', modPath:'../dist', file:'redux-typed-reducer.js' },
             { type: 'js', src: 'adapt.js' },
             { type: 'js', src: 'tipos.js' },
