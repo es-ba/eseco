@@ -1,5 +1,5 @@
 import { createStore } from "redux";
-import { CasillerosImplementados, CasoState, Formulario, IdFormulario } from "./tipos";
+import { CasillerosImplementados, CasoState, Formulario, IdFormulario, Opcion, CasilleroBase } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
 import * as JSON4all from "json4all";
@@ -41,7 +41,7 @@ export type ActionFormularioState = ActionsFrom<typeof reducers>;
 
 export const dispatchers = createDispatchers(reducers);
 
-interface IDataSeparada<T> {
+interface IDataSeparada<T extends {tipoc:string}> {
     data:T,
     childs:IDataSeparada<T>[]
 }
@@ -50,11 +50,18 @@ type IDataConCasilleros<T> = T & {
     casilleros:IDataConCasilleros<T>[]
 }
 
+const casilleroVacio={salto:null, despliegue:null, aclaracion:null, ver_id:null}
 
-function aplanarLaCurva<T>(casillerosData:IDataSeparada<T>):IDataConCasilleros<T>{
+const opcionesSiNo: Opcion[] = [
+    {...casilleroVacio, casillero:1, tipoc:'O', nombre:'Sí', casilleros:[]},
+    {...casilleroVacio, casillero:2, tipoc:'O', nombre:'No', casilleros:[]},
+]
+
+function aplanarLaCurva<T extends {tipoc:string}>(casillerosData:IDataSeparada<T>):IDataConCasilleros<T|CasilleroBase>{
     return {
         ...casillerosData.data,
-        casilleros: casillerosData.childs.map(casillero=>aplanarLaCurva(casillero))
+        casilleros: !casillerosData.childs.length && casillerosData.data.tipoc=='OM' ? opcionesSiNo :
+             casillerosData.childs.map(casillero=>aplanarLaCurva(casillero))
     }
 }
 

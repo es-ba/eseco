@@ -113,6 +113,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             { type: 'js', src: 'render-general.js' },
             { type: 'js', src: 'render-formulario.js' },
             { type: 'css', file: 'menu.css' },
+            { type: 'css', file: 'formulario-react.css' },
             ... menuedResources
         ];
     }

@@ -16,7 +16,9 @@ import {
     Dialog, DialogActions, DialogContent, DialogContentText, 
     DialogTitle, Divider, Fab, Grid, IconButton, InputBase, 
     Link, List, ListItem, ListItemIcon, ListItemText, Drawer, 
-    Menu, MenuItem, Paper, SvgIcon, Switch, 
+    Menu, MenuItem, Paper, 
+    Step, Stepper, StepContent, StepLabel, 
+    SvgIcon, Switch, 
     Table, TableBody, TableCell, TableHead, TableRow, TextField, Theme, Toolbar, Typography, Zoom,
     useScrollTrigger,
     createStyles, makeStyles
@@ -125,10 +127,11 @@ function OpcionDespliegue(props:{casillero:CasilleroBase}){
 }
 
 function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo]}){
-    return <Grid container>
-        <OpcionDespliegue casillero={props.casilleros[0]}/>
-        <OpcionDespliegue casillero={props.casilleros[1]}/>
-    </Grid>
+    return <Grid container>{
+        (props.casilleros as Opcion[]).map((opcion:Opcion)=>
+            <Grid key={opcion.casillero} item><OpcionDespliegue casillero={opcion}/></Grid>
+        )
+    }</Grid>
 }
 
 function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple}){
@@ -156,7 +159,7 @@ function PreguntaDespliegue(props:{pregunta:Pregunta}){
     var {pregunta} = props;
     return <Grid container>
         <Grid>
-            <BloqueEncabezado casillero={pregunta}/>
+            <PreguntaEncabezado casillero={pregunta}/>
         </Grid>
         <Grid>{
             pregunta.tipovar=="si_no"?<Grid container>
@@ -180,7 +183,7 @@ function PreguntaDespliegue(props:{pregunta:Pregunta}){
 function FiltroDespliegue(props:{filtro:Filtro}){
     var {filtro} = props;
     return <Paper>
-        <BloqueEncabezado casillero={filtro}/>
+        <DespliegueEncabezado casillero={filtro}/>
     </Paper>
 }
 
@@ -188,18 +191,23 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
     var classes = useStyles();
     return <Paper className={classes.errorCasillero}>
         <Typography>Tipo de casillero no implementado: "{props.casillero.tipoc}" para "{props.casillero.casillero}"</Typography>
-        <BloqueEncabezado casillero={props.casillero}/>
+        <DespliegueEncabezado casillero={props.casillero}/>
     </Paper>
 }
 
-const BloqueEncabezado = DespliegueEncabezado;
-
-function BloqueDespliegue(props:{bloque:Bloque}){
+function BloqueDespliegue(props:{id:string, bloque:Bloque}){
     var {bloque} = props;
-    return <Paper>
-        <BloqueEncabezado casillero={bloque}/>
-        {!bloque.casilleros?.length?null:<Grid container direction="column">
-            {bloque.casilleros.map((casillero)=>
+    var key=bloque.ver_id!='-' && bloque.ver_id || bloque.casillero;
+    var activeStep=0;
+    return <div className="bloque">
+        <div className="encabezado">
+            <div className="id">
+                {key}
+            </div>
+            <div className="nombre">{bloque.nombre}</div>
+        </div>
+        <div className="casilleros">{
+            bloque.casilleros.map((casillero)=>
                 <Grid key={casillero.casillero} item>
                     {
                         casillero.tipoc == "P"?<PreguntaDespliegue pregunta={casillero}/>:
@@ -208,9 +216,9 @@ function BloqueDespliegue(props:{bloque:Bloque}){
                         <CasilleroDesconocido casillero={casillero}/>
                     }
                 </Grid>
-            )}
-        </Grid>}
-    </Paper>
+            )
+        }</div>
+    </div>
 }
 
 const FormularioEncabezado = DespliegueEncabezado;
