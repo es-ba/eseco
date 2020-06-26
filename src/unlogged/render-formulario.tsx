@@ -53,6 +53,7 @@ var useStyles = makeStyles((_theme: Theme) =>
             padding:'0px',
             paddingLeft:'3px',
             textTransform: 'none',
+            color:'inherit'
         },
         itemOpcion:{
             padding:'6px',
@@ -126,7 +127,7 @@ function OpcionDespliegue(props:{casillero:CasilleroBase}){
 }
 
 function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo]}){
-    return <Grid container>{
+    return <Grid container wrap="nowrap">{
         (props.casilleros as Opcion[]).map((opcion:Opcion)=>
             <Grid key={opcion.casillero} item><OpcionDespliegue casillero={opcion}/></Grid>
         )
@@ -208,7 +209,7 @@ function BloqueDespliegue(props:{bloque:Bloque}){
     var {bloque} = props;
     var key=bloque.ver_id!='-' && bloque.ver_id || bloque.casillero;
     var activeStep=0;
-    return <div className="bloque">
+    return <div className="bloque" nuestro-bloque={bloque.casillero}>
         <EncabezadoDespliegue casillero={bloque}/>
         <div className="casilleros">{
             bloque.casilleros.map((casillero)=>

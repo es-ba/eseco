@@ -41,11 +41,24 @@ colorFondoIdBloque = #DDD
     vertical-align middle
     border-bottom-right-radius 7px
   .nombre-div
-    min-width 65%
+    min-width 60%
+    .nombre
+      color blue
+
+[nuestro-bloque="S"]
+  .pregunta
+    > .encabezado
+      .nombre-div
+        .nombre
+          color black
 
 .pregunta
   display flex
   border-top 1px solid colorFondoEncabezadoBloque
+  &[nuestro-tipovar="opciones"]
+    > .casilleros
+      .MuiButton-root
+        color blue
   &[nuestro-tipovar="si_no"]
     > .encabezado
       width 70%
@@ -72,6 +85,8 @@ colorFondoIdBloque = #DDD
       border-bottom-right-radius 7px
     .nombre-div
       padding margenPregunta
+      .nombre
+        color blue
   > .casilleros
     align-self flex-end
     width 50%
