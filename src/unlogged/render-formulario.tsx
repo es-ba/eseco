@@ -32,10 +32,42 @@ var useStyles = makeStyles((_theme: Theme) =>
             fontSize:'2rem'
         },
         aclaracion:{
-            fontColor:'gray'
+            color:'gray'
         },
         idOpcionM:{
-            fontWeight:'bold'
+            fontWeight:'bold',
+            margin:'4px',
+            color:'gray'
+        },
+        idOpcion:{
+            fontWeight:'bold',
+            margin:'6px',
+            color:'gray'
+        },
+        textoOpcion:{
+            margin:'6px'
+        },
+        buttonOpcion:{
+            padding:'0px',
+            paddingLeft:'3px',
+            textTransform: 'none',
+        },
+        itemOpcion:{
+            padding:'6px',
+            border:'1px dashed green'
+        },
+        itemOpciones:{
+            border:'1px dashed red'
+        },
+        salto:{
+            textAlign:'center',
+            fontSize:'80%',
+            '&::before':{
+                content:'->'
+            },
+            '::before':{
+                content:'=>'
+            },
         }
     })
 );
@@ -62,33 +94,57 @@ function DespliegueEncabezado(props:{casillero:CasilleroBase}){
         </Grid>
         <Grid item>
             <Typography className={takeElementOrDefault(casillero.tipoc, classes, classes.root)}>{casillero.nombre}</Typography>
+            {casillero.aclaracion?
+                <Typography className={classes.aclaracion}>{casillero.aclaracion}</Typography>
+            :null}
         </Grid>
     </Grid>
 }
 
-const OpcionDespliegue = DespliegueEncabezado;
+function OpcionDespliegue(props:{casillero:CasilleroBase}){
+    const {casillero} = props;
+    var classes = useStyles();
+    return <Grid className={classes.itemOpcion}> 
+        <Button variant="outlined" className={classes.buttonOpcion}>
+            <Grid container>
+                <Grid className={classes.idOpcion}>
+                    {casillero.ver_id || casillero.casillero}
+                </Grid>
+                <Grid className={classes.textoOpcion}>
+                    <Typography>{casillero.nombre}</Typography>
+                    {casillero.aclaracion?
+                        <Typography className={classes.aclaracion}>{casillero.aclaracion}</Typography>
+                    :null}
+                </Grid>
+            </Grid>
+        </Button>
+        {casillero.salto?
+            <Typography className={classes.salto}>{casillero.salto}</Typography>
+        :null}
+    </Grid>
+}
 
 function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo]}){
     return <Grid container>
-        <Grid item><OpcionDespliegue casillero={props.casilleros[0]}/></Grid>
-        <Grid item><OpcionDespliegue casillero={props.casilleros[1]}/></Grid>
+        <OpcionDespliegue casillero={props.casilleros[0]}/>
+        <OpcionDespliegue casillero={props.casilleros[1]}/>
     </Grid>
 }
 
 function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple}){
     const {opcionM} = props;
     var classes = useStyles();
-    return <Grid container alignItems="center">
-        <Grid item className={classes.idOpcionM}>
+    return <Grid container wrap="nowrap" spacing={3}>
+        <Grid sm className={classes.idOpcionM} alignContent="flex-start">
             {opcionM.ver_id || opcionM.casillero}
         </Grid>
-        <Grid item>
+        <Grid sm alignContent="space-around">
             <Typography className={takeElementOrDefault(opcionM.tipoc, classes, classes.root)}>{opcionM.nombre}</Typography>
             {opcionM.aclaracion?
                 <Typography className={classes.aclaracion}>{opcionM.aclaracion}</Typography>
             :null}
         </Grid>
-        <Grid item>
+        <Grid sm className={classes.itemOpciones} alignContent="flex-end">
             <SiNoDespliegue casilleros={opcionM.casilleros}/>
         </Grid>
 </Grid>
