@@ -4,7 +4,7 @@ import {
     FocusOpts, ICON, RenderPrincipal, 
     clsx, memoize
 } from "./render-general";
-import {Bloque, CasilleroBase, CasoState, Filtro, Formulario, IContenido, Opcion, Pregunta} from "./tipos";
+import {Bloque, CasilleroBase, CasoState, Filtro, Formulario, IContenido, Opcion, OpcionMultiple, OpcionNo, OpcionSi, Pregunta} from "./tipos";
 import {dmTraerDatosFormulario } from "./redux-formulario";
 import { useState, useEffect, useRef} from "react";
 import { Provider, useSelector, useDispatch } from "react-redux"; 
@@ -30,6 +30,12 @@ var useStyles = makeStyles((_theme: Theme) =>
         },
         F:{
             fontSize:'2rem'
+        },
+        aclaracion:{
+            fontColor:'gray'
+        },
+        idOpcionM:{
+            fontWeight:'bold'
         }
     })
 );
@@ -60,6 +66,61 @@ function DespliegueEncabezado(props:{casillero:CasilleroBase}){
     </Grid>
 }
 
+const OpcionDespliegue = DespliegueEncabezado;
+
+function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo]}){
+    return <Grid container>
+        <Grid item><OpcionDespliegue casillero={props.casilleros[0]}/></Grid>
+        <Grid item><OpcionDespliegue casillero={props.casilleros[1]}/></Grid>
+    </Grid>
+}
+
+function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple}){
+    const {opcionM} = props;
+    var classes = useStyles();
+    return <Grid container alignItems="center">
+        <Grid item className={classes.idOpcionM}>
+            {opcionM.ver_id || opcionM.casillero}
+        </Grid>
+        <Grid item>
+            <Typography className={takeElementOrDefault(opcionM.tipoc, classes, classes.root)}>{opcionM.nombre}</Typography>
+            {opcionM.aclaracion?
+                <Typography className={classes.aclaracion}>{opcionM.aclaracion}</Typography>
+            :null}
+        </Grid>
+        <Grid item>
+            <SiNoDespliegue casilleros={opcionM.casilleros}/>
+        </Grid>
+</Grid>
+}
+
+const PreguntaEncabezado = DespliegueEncabezado;
+
+function PreguntaDespliegue(props:{pregunta:Pregunta}){
+    var {pregunta} = props;
+    return <Grid container>
+        <Grid>
+            <BloqueEncabezado casillero={pregunta}/>
+        </Grid>
+        <Grid>{
+            pregunta.tipovar=="si_no"?<Grid container>
+                <SiNoDespliegue casilleros={pregunta.casilleros}/>
+            </Grid>:
+            pregunta.tipovar=="opciones" ?<Grid container direction="column">{
+                pregunta.casilleros.map((opcion:Opcion)=>
+                    <Grid key={opcion.casillero} item><OpcionDespliegue casillero={opcion}/></Grid>
+                )
+            }</Grid>:
+            pregunta.tipovar==null?<Grid container direction="column">{
+                pregunta.casilleros.map((opcionMultiple)=>
+                    <Grid key={opcionMultiple.casillero} item><OpcionMultipleDespliegue opcionM={opcionMultiple}/></Grid>
+                )
+            }</Grid>:
+            <TextField/>
+        }</Grid>
+    </Grid>
+}
+
 function FiltroDespliegue(props:{filtro:Filtro}){
     var {filtro} = props;
     return <Paper>
@@ -70,7 +131,7 @@ function FiltroDespliegue(props:{filtro:Filtro}){
 function CasilleroDesconocido(props:{casillero:CasilleroBase}){
     var classes = useStyles();
     return <Paper className={classes.errorCasillero}>
-        <Typography>Tipo de casillero no implementado:</Typography>
+        <Typography>Tipo de casillero no implementado: "{props.casillero.tipoc}" para "{props.casillero.casillero}"</Typography>
         <BloqueEncabezado casillero={props.casillero}/>
     </Paper>
 }
@@ -83,11 +144,12 @@ function BloqueDespliegue(props:{bloque:Bloque}){
         <BloqueEncabezado casillero={bloque}/>
         {!bloque.casilleros?.length?null:<Grid container direction="column">
             {bloque.casilleros.map((casillero)=>
-                <Grid item>
+                <Grid key={casillero.casillero} item>
                     {
+                        casillero.tipoc == "P"?<PreguntaDespliegue pregunta={casillero}/>:
                         casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
                         casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
-                        <CasilleroDesconocido casillero={casillero}></CasilleroDesconocido>
+                        <CasilleroDesconocido casillero={casillero}/>
                     }
                 </Grid>
             )}
@@ -99,15 +161,16 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(){
     var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
-    return <Paper>
+    return <Paper style={{maxWidth:'790px'}}>
         <FormularioEncabezado casillero={formulario}/>
         {!formulario.casilleros?.length?null:<Grid container direction="column">
             {formulario.casilleros.map((casillero)=>
-                <Grid item>
+                <Grid key={casillero.casillero} item>
                     {
+                        casillero.tipoc == "P"?<PreguntaDespliegue pregunta={casillero}/>:
                         casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
                         casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
-                        <CasilleroDesconocido casillero={casillero}></CasilleroDesconocido>
+                        <CasilleroDesconocido casillero={casillero}/>
                     }
                 </Grid>
             )}

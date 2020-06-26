@@ -10,9 +10,9 @@ export type IdPregunta = 'V1'|'V2'|'etc...'
 export type IdBloque = 'B1'|'B2'|'etc...'
 export type IdFormulario = 'F1'|'F2'|'etc...'
 export type IdFiltro = 'FILTRO1' | 'FILTRO2' | 'etc...'
-export type IdCasillero = IdVariable | IdPregunta | IdBloque | IdFormulario | IdFiltro
+export type IdCasillero = IdVariable | IdPregunta | IdBloque | IdFormulario | IdFiltro | number
 export type IdFin = 'FIN'
-export type IdDestino = IdPregunta | IdBloque | IdFin | IdFiltro
+export type IdDestino = IdPregunta | IdBloque | IdFin | IdFiltro 
  
 export type CasilleroBase = {
     tipoc:'P'|'O'|'F'|'CP'|'B'|'OM'|'FILTRO', 
@@ -20,7 +20,8 @@ export type CasilleroBase = {
     nombre:string, 
     salto:IdDestino|IdFin|null,
     ver_id:string|null,
-    despliegue:string|null
+    despliegue:string|null,
+    aclaracion:string|null
 }
 
 export type Opcion=CasilleroBase & {
@@ -28,9 +29,21 @@ export type Opcion=CasilleroBase & {
     casilleros:PreguntaSimple[] 
 }
 
+export type OpcionSi=Opcion & {
+    casillero:1,
+    nombre:'Sí'
+    casilleros:PreguntaSimple[] 
+}
+
+export type OpcionNo=Opcion & {
+    casillero:2,
+    nombre:'No'
+    casilleros:PreguntaSimple[] 
+}
+
 export type OpcionMultiple=CasilleroBase & {
     tipoc:'OM',
-    casilleros:Opcion[]
+    casilleros:[OpcionSi, OpcionNo]
 }
 
 export type PreguntaBase = CasilleroBase & {
@@ -45,17 +58,22 @@ export type PreguntaSimple = PreguntaBase & {
     casilleros: []
 }
 
+export type PreguntaConSiNo = PreguntaBase & {
+    tipovar:'si_no',
+    casilleros: [OpcionSi, OpcionNo]
+}
+
 export type PreguntaConOpciones = PreguntaBase & {
-    tipovar:'opcion',
+    tipovar:'opciones',
     casilleros: Opcion[]
 }
 
 export type PreguntaConOpcionesMultiples = PreguntaBase & {
-    tipovar:'multiple',
+    tipovar:null,
     casilleros: OpcionMultiple[]
 }
 
-export type Pregunta=PreguntaSimple | PreguntaConOpciones | PreguntaConOpcionesMultiples
+export type Pregunta=PreguntaSimple | PreguntaConSiNo | PreguntaConOpciones | PreguntaConOpcionesMultiples
 
 export type ConjuntoPreguntas= CasilleroBase & {
     tipoc:'CP',
