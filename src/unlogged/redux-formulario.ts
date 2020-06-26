@@ -1,5 +1,7 @@
 import { createStore } from "redux";
-import { CasillerosImplementados, CasoState, Formulario, IdFormulario, Opcion, CasilleroBase, ForPk } from "./tipos";
+import { CasilleroBase, CasillerosImplementados, CasoState, 
+    Formulario, ForPk, IdFormulario, Opcion, Respuestas 
+} from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
 import * as JSON4all from "json4all";
@@ -75,7 +77,10 @@ export async function dmTraerDatosFormulario(){
         estructura:{formularios:casilleros},
         mainForm:MAIN_FORM as IdFormulario,
         datos:{
-            respuestas:{}
+            respuestas:{
+                "s1": 1,
+                "a8": "hola"
+            } as unknown as Respuestas
         },
         estado:{
             formularioActual:MAIN_FORM as IdFormulario
