@@ -1,5 +1,5 @@
 import { createStore } from "redux";
-import { CasillerosImplementados, CasoState, Formulario, IdFormulario, Opcion, CasilleroBase } from "./tipos";
+import { CasillerosImplementados, CasoState, Formulario, IdFormulario, Opcion, CasilleroBase, ForPk } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
 import * as JSON4all from "json4all";
@@ -21,7 +21,7 @@ var defaultActionFormulario = function defaultActionFormulario(
 };
 
 var reducers={
-    REGISTRAR_RESPUESTA: (payload: {forPk:{vivienda:number, persona:number}, variable:string, respuesta:any}) => 
+    REGISTRAR_RESPUESTA: (payload: {forPk:ForPk, variable:string, respuesta:any}) => 
         function(state: CasoState){
             return {
                 ...state,

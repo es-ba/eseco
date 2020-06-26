@@ -4,8 +4,10 @@ import {
     FocusOpts, ICON, RenderPrincipal, 
     clsx, memoize
 } from "./render-general";
-import {Bloque, CasilleroBase, CasoState, Filtro, Formulario, IContenido, Opcion, OpcionMultiple, OpcionNo, OpcionSi, Pregunta} from "./tipos";
-import {dmTraerDatosFormulario } from "./redux-formulario";
+import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, IContenido, 
+    Opcion, OpcionMultiple, OpcionNo, OpcionSi, Pregunta, Respuestas, Valor
+} from "./tipos";
+import {dmTraerDatosFormulario, dispatchers } from "./redux-formulario";
 import { useState, useEffect, useRef} from "react";
 import { Provider, useSelector, useDispatch } from "react-redux"; 
 import * as memoizeBadTyped from "memoize-one";
@@ -103,11 +105,18 @@ function DespliegueEncabezado(props:{casillero:CasilleroBase}){
     </Grid>
 }
 
-function OpcionDespliegue(props:{casillero:CasilleroBase}){
+function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, variable:string, forPk:ForPk, elegida:boolean}){
     const {casillero} = props;
     var classes = useStyles();
+    var dispatch = useDispatch();
     return <Grid className={classes.itemOpcion}> 
-        <Button variant="outlined" className={classes.buttonOpcion}>
+        <Button 
+            variant={props.elegida?"contained":"outlined"}
+            className={classes.buttonOpcion}
+            onClick={()=>{
+                dispatch(dispatchers.REGISTRAR_RESPUESTA({respuesta:props.valorOpcion, variable:props.variable,forPk:props.forPk}))
+            }}
+        >
             <Grid container>
                 <Grid className={classes.idOpcion}>
                     {casillero.ver_id || casillero.casillero}
@@ -126,15 +135,23 @@ function OpcionDespliegue(props:{casillero:CasilleroBase}){
     </Grid>
 }
 
-function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo]}){
+function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo], variable:string, forPk:ForPk, valorActual:Valor}){
     return <Grid container wrap="nowrap">{
         (props.casilleros as Opcion[]).map((opcion:Opcion)=>
-            <Grid key={opcion.casillero} item><OpcionDespliegue casillero={opcion}/></Grid>
+            <Grid key={opcion.casillero} item>
+                <OpcionDespliegue 
+                    casillero={opcion} 
+                    variable={props.variable} 
+                    valorOpcion={opcion.casillero} 
+                    forPk={props.forPk} 
+                    elegida={opcion.casillero==props.valorActual}
+                />
+            </Grid>
         )
     }</Grid>
 }
 
-function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple}){
+function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, valorActual:Valor}){
     const {opcionM} = props;
     var classes = useStyles();
     return <div className="multiple">
@@ -148,7 +165,12 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple}){
             :null}
         </div>
         <Grid container>
-            <SiNoDespliegue casilleros={opcionM.casilleros}/>
+            <SiNoDespliegue 
+                casilleros={opcionM.casilleros} 
+                variable={opcionM.var_name} 
+                forPk={props.forPk}
+                valorActual={props.valorActual}
+            />
         </Grid>
     </div>
 }
@@ -167,22 +189,39 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase}){
     </div>
 }
 
-function PreguntaDespliegue(props:{pregunta:Pregunta}){
+function PreguntaDespliegue(props:{pregunta:Pregunta, forPk:ForPk, valorActual:Valor, respuestas:Respuestas}){
     var {pregunta} = props;
     return <div className="pregunta" nuestro-tipovar={pregunta.tipovar||"multiple"}>
         <EncabezadoDespliegue casillero={pregunta}/>
         <div className="casilleros">{
             pregunta.tipovar=="si_no"?<Grid container>
-                <SiNoDespliegue casilleros={pregunta.casilleros}/>
+                <SiNoDespliegue 
+                    casilleros={pregunta.casilleros} 
+                    variable={pregunta.var_name} 
+                    forPk={props.forPk} 
+                    valorActual={props.valorActual}
+                />
             </Grid>:
             pregunta.tipovar=="opciones" ?<Grid container direction="column">{
                 pregunta.casilleros.map((opcion:Opcion)=>
-                    <Grid key={opcion.casillero} item><OpcionDespliegue casillero={opcion}/></Grid>
+                    <Grid key={opcion.casillero} item>
+                        <OpcionDespliegue 
+                            casillero={opcion} 
+                            valorOpcion={opcion.casillero} 
+                            variable={pregunta.var_name} 
+                            forPk={props.forPk} 
+                            elegida={props.valorActual==opcion.casillero}
+                        />
+                    </Grid>
                 )
             }</Grid>:
             pregunta.tipovar==null?
                 pregunta.casilleros.map((opcionMultiple)=>
-                    <OpcionMultipleDespliegue opcionM={opcionMultiple}/>
+                    <OpcionMultipleDespliegue 
+                        opcionM={opcionMultiple} 
+                        forPk={props.forPk} 
+                        valorActual={props.respuestas[opcionMultiple.var_name]}
+                    />
                 )
             :
             <TextField className="variable" var-length={pregunta.longitud}/>
@@ -205,24 +244,29 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
     </Paper>
 }
 
+function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Bloque|Formulario}){
+    var respuestas = useSelector((state:CasoState)=>state.datos.respuestas);
+    return <div className="casilleros">{
+        props.bloqueOFormulario.casilleros.map((casillero)=>
+            <Grid key={casillero.casillero} item>
+                {
+                    casillero.tipoc == "P"?<PreguntaDespliegue pregunta={casillero} forPk={{vivienda:1, persona:1}} valorActual={casillero.var_name && respuestas[casillero.var_name]} respuestas={!casillero.var_name && respuestas || null}/>:
+                    casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
+                    casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
+                    <CasilleroDesconocido casillero={casillero}/>
+                }
+            </Grid>
+        )
+    }</div>
+}
+
 function BloqueDespliegue(props:{bloque:Bloque}){
     var {bloque} = props;
     var key=bloque.ver_id!='-' && bloque.ver_id || bloque.casillero;
     var activeStep=0;
     return <div className="bloque" nuestro-bloque={bloque.casillero}>
         <EncabezadoDespliegue casillero={bloque}/>
-        <div className="casilleros">{
-            bloque.casilleros.map((casillero)=>
-                <Grid key={casillero.casillero} item>
-                    {
-                        casillero.tipoc == "P"?<PreguntaDespliegue pregunta={casillero}/>:
-                        casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
-                        casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
-                        <CasilleroDesconocido casillero={casillero}/>
-                    }
-                </Grid>
-            )
-        }</div>
+        <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={bloque}/>
     </div>
 }
 
@@ -230,20 +274,11 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(){
     var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
+    var datos =  useSelector((state:CasoState)=>state.datos);
     return <div className="formulario">
+        <pre>{JSON.stringify(datos,null,' ')}</pre>
         <FormularioEncabezado casillero={formulario}/>
-        {!formulario.casilleros?.length?null:<Grid container direction="column">
-            {formulario.casilleros.map((casillero)=>
-                <Grid key={casillero.casillero} item>
-                    {
-                        casillero.tipoc == "P"?<PreguntaDespliegue pregunta={casillero}/>:
-                        casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
-                        casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
-                        <CasilleroDesconocido casillero={casillero}/>
-                    }
-                </Grid>
-            )}
-        </Grid>}
+        <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario}/>
     </div>
 }
 
