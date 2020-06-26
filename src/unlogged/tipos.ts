@@ -55,6 +55,7 @@ export type TipoVariables = 'texto'|'numero'|'fecha'
 
 export type PreguntaSimple = PreguntaBase & {
     tipovar:TipoVariables,
+    longitud:string,
     casilleros: []
 }
 

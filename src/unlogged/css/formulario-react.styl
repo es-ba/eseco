@@ -1,4 +1,5 @@
 colorFondoIdBloque = #888
+margenPregunta = 16px
 
 .formulario
   max-width 768px
@@ -16,8 +17,31 @@ colorFondoIdBloque = #888
     .aclaracion
       font-size 90%
 
+.pregunta
+  display flex
+  border-top 1px solid colorFondoIdBloque
+  > .encabezado
+    width 50%
+    font-size 120%
+    min-height 24px
+    .id
+      color colorFondoIdBloque
+      background-color #DDD
+      min-width 24px
+      min-height 24px
+      padding-top 2px
+      vertical-align middle
+      border-bottom-right-radius 7px
+    .nombre-div
+      padding margenPregunta
+  > .casilleros
+    align-self flex-end
+    width 50%
+    > .variable
+      margin-bottom margenPregunta
+
 .bloque
-  .encabezado
+  > .encabezado
     background colorFondoIdBloque
     font-size 100%
     min-height 24px

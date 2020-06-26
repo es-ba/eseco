@@ -56,7 +56,6 @@ var useStyles = makeStyles((_theme: Theme) =>
         },
         itemOpcion:{
             padding:'6px',
-            border:'1px dashed green'
         },
         itemOpciones:{
             border:'1px dashed red'
@@ -153,15 +152,25 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple}){
 </Grid>
 }
 
-const PreguntaEncabezado = DespliegueEncabezado;
+function EncabezadoDespliegue(props:{casillero:CasilleroBase}){
+    var {casillero} = props;
+    var key=casillero.ver_id!='-' && casillero.ver_id || casillero.casillero;
+    return <div className="encabezado">
+        <div className="id">
+            {key}
+        </div>
+        <div className="nombre-div">
+            <div className="nombre">{casillero.nombre}</div>
+            <div className="aclaracion">{casillero.aclaracion}</div>
+        </div>
+    </div>
+}
 
 function PreguntaDespliegue(props:{pregunta:Pregunta}){
     var {pregunta} = props;
-    return <div container>
-        <Grid>
-            <PreguntaEncabezado casillero={pregunta}/>
-        </Grid>
-        <Grid>{
+    return <div className="pregunta">
+        <EncabezadoDespliegue casillero={pregunta}/>
+        <div className="casilleros">{
             pregunta.tipovar=="si_no"?<Grid container>
                 <SiNoDespliegue casilleros={pregunta.casilleros}/>
             </Grid>:
@@ -175,8 +184,8 @@ function PreguntaDespliegue(props:{pregunta:Pregunta}){
                     <Grid key={opcionMultiple.casillero} item><OpcionMultipleDespliegue opcionM={opcionMultiple}/></Grid>
                 )
             }</Grid>:
-            <TextField/>
-        }</Grid>
+            <TextField className="variable" var-length={pregunta.longitud}/>
+        }</div>
     </div>
 }
 
@@ -200,15 +209,7 @@ function BloqueDespliegue(props:{bloque:Bloque}){
     var key=bloque.ver_id!='-' && bloque.ver_id || bloque.casillero;
     var activeStep=0;
     return <div className="bloque">
-        <div className="encabezado">
-            <div className="id">
-                {key}
-            </div>
-            <div className="nombre-div">
-                <div className="nombre">{bloque.nombre}</div>
-                <div className="aclaracion">{bloque.aclaracion}</div>
-            </div>
-        </div>
+        <EncabezadoDespliegue casillero={bloque}/>
         <div className="casilleros">{
             bloque.casilleros.map((casillero)=>
                 <Grid key={casillero.casillero} item>
