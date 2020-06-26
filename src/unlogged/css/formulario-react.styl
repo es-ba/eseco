@@ -1,5 +1,6 @@
-colorFondoIdBloque = #888
+colorFondoEncabezadoBloque = #888
 margenPregunta = 16px
+colorFondoIdBloque = #DDD
 
 .formulario
   max-width 768px
@@ -10,6 +11,7 @@ margenPregunta = 16px
     align-self flex-start
     justify-self flex-start
     text-align center
+    flex-shrink 0
   .nombre-div
     flex-grow 2
     align-self flex-start
@@ -17,17 +19,53 @@ margenPregunta = 16px
     .aclaracion
       font-size 90%
 
+.casilleros
+  display flex
+  flex-direction column
+
+.multiple
+  border-top 0.5px solid colorFondoIdBloque
+  margin-left 48px
+  display flex
+  .id
+    margin-right 16px
+    color colorFondoEncabezadoBloque
+    background-color colorFondoIdBloque
+    flex-shrink 0
+    flex-grow 0
+    text-align center
+    min-width 24px
+    width auto
+    height 24px
+    padding-top 2px
+    vertical-align middle
+    border-bottom-right-radius 7px
+  .nombre-div
+    min-width 65%
+
 .pregunta
   display flex
-  border-top 1px solid colorFondoIdBloque
+  border-top 1px solid colorFondoEncabezadoBloque
+  &[nuestro-tipovar="si_no"]
+    > .encabezado
+      width 70%
+    > .casilleros
+      width 30%
+  &[nuestro-tipovar="multiple"]
+    display block
+    > .encabezado
+      width 100%
+    > .casilleros
+      width 100%
   > .encabezado
     width 50%
     font-size 120%
     min-height 24px
     .id
-      color colorFondoIdBloque
-      background-color #DDD
+      color colorFondoEncabezadoBloque
+      background-color colorFondoIdBloque
       min-width 24px
+      width auto
       min-height 24px
       padding-top 2px
       vertical-align middle
@@ -42,12 +80,12 @@ margenPregunta = 16px
 
 .bloque
   > .encabezado
-    background colorFondoIdBloque
+    background colorFondoEncabezadoBloque
     font-size 100%
     min-height 24px
     .id
-      color colorFondoIdBloque
-      background-color #DDD
+      color colorFondoEncabezadoBloque
+      background-color colorFondoIdBloque
       min-width 24px
       min-height 24px
       padding-top 2px
@@ -56,4 +94,4 @@ margenPregunta = 16px
     .nombre-div
       margin 8px
       text-align center
-      color #DDD
+      color colorFondoIdBloque

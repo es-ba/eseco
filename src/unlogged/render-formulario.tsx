@@ -136,20 +136,20 @@ function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo]}){
 function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple}){
     const {opcionM} = props;
     var classes = useStyles();
-    return <Grid container wrap="nowrap" spacing={3}>
-        <Grid sm className={classes.idOpcionM} alignContent="flex-start">
+    return <div className="multiple">
+        <div className="id">
             {opcionM.ver_id || opcionM.casillero}
-        </Grid>
-        <Grid sm alignContent="space-around">
-            <Typography className={takeElementOrDefault(opcionM.tipoc, classes, classes.root)}>{opcionM.nombre}</Typography>
+        </div>
+        <div className="nombre-div">
+            <div className="nombre">{opcionM.nombre}</div>
             {opcionM.aclaracion?
-                <Typography className={classes.aclaracion}>{opcionM.aclaracion}</Typography>
+                <div className="aclaracion">{opcionM.aclaracion}</div>
             :null}
-        </Grid>
-        <Grid sm className={classes.itemOpciones} alignContent="flex-end">
+        </div>
+        <Grid container>
             <SiNoDespliegue casilleros={opcionM.casilleros}/>
         </Grid>
-</Grid>
+    </div>
 }
 
 function EncabezadoDespliegue(props:{casillero:CasilleroBase}){
@@ -168,7 +168,7 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase}){
 
 function PreguntaDespliegue(props:{pregunta:Pregunta}){
     var {pregunta} = props;
-    return <div className="pregunta">
+    return <div className="pregunta" nuestro-tipovar={pregunta.tipovar||"multiple"}>
         <EncabezadoDespliegue casillero={pregunta}/>
         <div className="casilleros">{
             pregunta.tipovar=="si_no"?<Grid container>
@@ -179,11 +179,11 @@ function PreguntaDespliegue(props:{pregunta:Pregunta}){
                     <Grid key={opcion.casillero} item><OpcionDespliegue casillero={opcion}/></Grid>
                 )
             }</Grid>:
-            pregunta.tipovar==null?<Grid container direction="column">{
+            pregunta.tipovar==null?
                 pregunta.casilleros.map((opcionMultiple)=>
-                    <Grid key={opcionMultiple.casillero} item><OpcionMultipleDespliegue opcionM={opcionMultiple}/></Grid>
+                    <OpcionMultipleDespliegue opcionM={opcionMultiple}/>
                 )
-            }</Grid>:
+            :
             <TextField className="variable" var-length={pregunta.longitud}/>
         }</div>
     </div>
