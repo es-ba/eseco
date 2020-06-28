@@ -7,7 +7,7 @@ import {
 import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, 
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor, IdVariable
+    Respuestas, Valor, IdVariable, ModoDespliegue
 } from "./tipos";
 import {dmTraerDatosFormulario, dispatchers } from "./redux-formulario";
 import { useState, useEffect, useRef} from "react";
@@ -158,17 +158,7 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, va
     const {opcionM} = props;
     var classes = useStyles();
     return <div className="multiple" nuestro-validator={props.validateState}>
-        <div className="encabezado">
-            <div className="id">
-                {opcionM.ver_id || opcionM.casillero}
-            </div>
-            <div className="nombre-div">
-                <div className="nombre">{opcionM.nombre}</div>
-                {opcionM.aclaracion?
-                    <div className="aclaracion">{opcionM.aclaracion}</div>
-                :null}
-            </div>
-        </div>
+        <EncabezadoDespliegue casillero={opcionM} verIdGuion={true} />
         <div className="casilleros">
             <Grid container>
                 <SiNoDespliegue 
@@ -182,16 +172,22 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, va
     </div>
 }
 
-function EncabezadoDespliegue(props:{casillero:CasilleroBase}){
+function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolean}){
     var {casillero} = props;
-    var key=casillero.ver_id!='-' && casillero.ver_id || casillero.casillero;
+    var key=(casillero.ver_id!='-' || props.verIdGuion) && casillero.ver_id || casillero.casillero;
     return <div className="encabezado">
         <div className="id">
             {key}
         </div>
         <div className="nombre-div">
             <div className="nombre">{casillero.nombre}</div>
-            <div className="aclaracion">{casillero.aclaracion}</div>
+            {casillero.aclaracion?
+                <div className="aclaracion">{casillero.aclaracion}</div>
+            :null}
+            <div los-metadatos="si">
+                <span el-metadato="variable">{casillero.var_name}</span>
+                <span el-metadato="expresion_habilitar">{casillero.expresion_habilitar}</span>
+            </div>
         </div>
     </div>
 }
@@ -324,8 +320,21 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(){
     var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
-    var formStructureState =  useSelector((state:CasoState)=>state.formStructureState);
-    return <div className="formulario">
+    var formStructureState = useSelector((state:CasoState)=>state.formStructureState);
+    var modoDespliegue =  useSelector((state:CasoState)=>state.estado.modoDespliegue);
+    const dispatch = useDispatch();
+    var listaModos:ModoDespliegue[]=['metadatos','relevamiento','estricto'];
+    return <div className="formulario" modo-despliegue={modoDespliegue}>
+        <div>
+            <Typography component="span">Modo de despliegue:</Typography>
+            <ButtonGroup>
+            {listaModos.map(modo=>
+                <Button variant={modo==modoDespliegue?"contained":"outlined"} onClick={
+                    ()=>dispatch(dispatchers.MODO_DESPLIEGUE({modoDespliegue:modo}))
+                }>{modo}</Button>
+            )}
+            </ButtonGroup>
+        </div>
         <FormularioEncabezado casillero={formulario}/>
         <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario}/>
     </div>

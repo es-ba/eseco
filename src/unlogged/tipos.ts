@@ -151,6 +151,8 @@ export type Respuestas={
 
 export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
 
+export type ModoDespliegue = 'metadatos'|'relevamiento'|'estricto'
+
 export type CasoState={
     estructura:{
         formularios:{
@@ -158,12 +160,13 @@ export type CasoState={
         },
         estructuraRowValidator:EstructuraRowValidator
     },
-    mainForm:IdFormulario,
+    mainForm:IdFormulario
     datos:{
         respuestas:Respuestas
     }
     estado:{
         formularioActual:IdFormulario
+        modoDespliegue:ModoDespliegue
     },
     formStructureState:FormStructureState<IdVariable,IdFin>
 }

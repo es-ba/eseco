@@ -7,10 +7,10 @@ db:
   motor: postgresql
   host: localhost
   database: eseco_db
-  schema: vitas
+  schema: encu
   user: eseco_user
   search_path: 
-  - vitas
+  - encu
   - comun
 install:
   dump:

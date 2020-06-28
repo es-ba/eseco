@@ -115,7 +115,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             { type: 'css', file: 'menu.css' },
             { type: 'css', file: 'formulario-react.css' },
             ... menuedResources
-        ];
+        ]
+        // .map(m=>({...m, file:m.fileDevelopment||m.file}));
     }
     getMenu(){
         let menu = {menu:[

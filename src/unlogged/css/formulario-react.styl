@@ -128,32 +128,54 @@ anchoNormal(ancho)
       text-align center
       color colorFondoIdBloque
 
-[nuestro-validator=optativa_sd]
-  background-color #FFe
-[nuestro-validator=valida]
-  color #050
-[nuestro-validator=actual]
-  background-color #FFF
-  &[debe-leer]
-    color blue
-  [debe-leer]
-    color blue
-[nuestro-validator=omitida]
-  background repeating-linear-gradient(45deg, #fff, #fff 10px, #ff9 10px, #ff9 12px)
-[nuestro-validator=fuera_de_flujo_por_salto]
-  background repeating-linear-gradient(45deg, #BBB, #BBB 10px, #f66 10px, #f66 12px)
-[nuestro-validator=invalida]
-  background repeating-linear-gradient(45deg, #eee, #eee 10px, #f99 10px, #f99 12px)
-[nuestro-validator=todavia_no]
-  color #888
-[nuestro-validator=calculada]
-  input
+[los-metadatos]
+  display none
+
+[modo-despliegue=estricto], [modo-despliegue=relevamiento]
+  [nuestro-validator=optativa_sd]
+    background-color #FFe
+    color #050
+  [nuestro-validator=valida]
+    color #050
+  [nuestro-validator=actual]
+    background-color #FFF
+    &[debe-leer]
+      color blue
+    [debe-leer]
+      color blue
+  [nuestro-validator=omitida]
+    background repeating-linear-gradient(45deg, #fff, #fff 10px, #ff9 10px, #ff9 12px)
+  [nuestro-validator=fuera_de_flujo_por_salto]
+    background repeating-linear-gradient(45deg, #BBB, #BBB 10px, #f66 10px, #f66 12px)
+  [nuestro-validator=invalida]
+    background repeating-linear-gradient(45deg, #eee, #eee 10px, #f99 10px, #f99 12px)
+  [nuestro-validator=todavia_no]
+    color #888
+  [nuestro-validator=calculada]
+    input
+      background-color #BBB
+  [nuestro-validator=salteada]
     background-color #BBB
-[nuestro-validator=salteada]
-  background-color #BBB
-[nuestro-validator=todavia_no]
-  color #888
-[nuestro-validator=fuera_de_flujo_por_omitida]
-  background repeating-linear-gradient(45deg, #eee, #eee 10px, #fcc 10px, #fcc 12px)
+  [nuestro-validator=fuera_de_flujo_por_omitida]
+    background repeating-linear-gradient(45deg, #eee, #eee 10px, #fcc 10px, #fcc 12px)
 
+[modo-despliegue=estricto]
+  [nuestro-validator=salteada]
+    display none
+  [nuestro-validator=todavia_no]
+    display none
 
+[modo-despliegue=metadatos]
+  background-color #f8f8f8
+  [los-metadatos]
+    display flex
+    font-size 80%
+    color #A0F
+    [el-metadato]
+      flex-shrink 1
+      margin 3px
+    [el-metadato=variable]
+      padding-left 4px
+      padding-right 4px
+      min-width 16px
+      border 1px solid gray
