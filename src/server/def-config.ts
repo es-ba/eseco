@@ -72,6 +72,7 @@ login:
     lockedFail: el usuario se encuentra bloqueado
     inactiveFail: es usuario está marcado como inactivo
 client-setup:
+  title: ESECO
   cursors: true
   lang: es
   menu: true

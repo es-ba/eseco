@@ -132,12 +132,24 @@ anchoNormal(ancho)
     color #050
   [nuestro-validator=actual]
     background-color #FFF
+    .MuiButton-outlined
+      border-color blue
+    .MuiInput-underline:after
+      border-bottom-color blue
+    .MuiInput-underline:before
+      border-bottom-color blue
     &[debe-leer=SI]
       color blue
     [debe-leer=SI]
       color blue
   [nuestro-validator=omitida]
     background repeating-linear-gradient(45deg, #fff, #fff 10px, #ff9 10px, #ff9 12px)
+    .MuiButton-outlined
+      border-color blue
+    .MuiInput-underline:after
+      border-bottom-color blue
+    .MuiInput-underline:before
+      border-bottom-color blue
     &[debe-leer=SI]
       color blue
     [debe-leer=SI]
