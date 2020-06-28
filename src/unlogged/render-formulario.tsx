@@ -158,23 +158,27 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, va
     const {opcionM} = props;
     var classes = useStyles();
     return <div className="multiple" nuestro-validator={props.validateState}>
-        <div className="id">
-            {opcionM.ver_id || opcionM.casillero}
+        <div className="encabezado">
+            <div className="id">
+                {opcionM.ver_id || opcionM.casillero}
+            </div>
+            <div className="nombre-div">
+                <div className="nombre">{opcionM.nombre}</div>
+                {opcionM.aclaracion?
+                    <div className="aclaracion">{opcionM.aclaracion}</div>
+                :null}
+            </div>
         </div>
-        <div className="nombre-div">
-            <div className="nombre">{opcionM.nombre}</div>
-            {opcionM.aclaracion?
-                <div className="aclaracion">{opcionM.aclaracion}</div>
-            :null}
+        <div className="casilleros">
+            <Grid container>
+                <SiNoDespliegue 
+                    casilleros={opcionM.casilleros} 
+                    variable={opcionM.var_name} 
+                    forPk={props.forPk}
+                    valorActual={props.valorActual}
+                />
+            </Grid>
         </div>
-        <Grid container>
-            <SiNoDespliegue 
-                casilleros={opcionM.casilleros} 
-                variable={opcionM.var_name} 
-                forPk={props.forPk}
-                valorActual={props.valorActual}
-            />
-        </Grid>
     </div>
 }
 

@@ -34,10 +34,10 @@ anchoNormal(ancho)
   margin-left 8px
   @media (min-width 600px)
     margin-left 48px
-  display flex
-  @media (max-width 599px)
-    flex-wrap wrap
     justify-content space-between
+  display flex  
+  @media (max-width 599px)
+    flex-direction column
   .id
     margin-right 16px
     color colorFondoEncabezadoBloque
@@ -51,11 +51,15 @@ anchoNormal(ancho)
     padding-top 2px
     vertical-align middle
     border-bottom-right-radius 7px
-  .nombre-div
+  > .encabezado
     min-width 50%
     flex-shrink 1
     @media (min-width 600px)
-      min-width 60%
+      min-width 55%
+  > .casilleros
+    justify-self right
+    align-self flex-end
+    min-width 33%
 
 [nuestro-bloque="S"]
   .pregunta
