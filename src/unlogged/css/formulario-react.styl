@@ -4,6 +4,7 @@ colorFondoIdBloque = #DDD
 
 .formulario
   max-width 768px
+  background-color #EEE
 
 .encabezado
   display flex
@@ -42,8 +43,6 @@ colorFondoIdBloque = #DDD
     border-bottom-right-radius 7px
   .nombre-div
     min-width 60%
-    .nombre
-      color blue
 
 [nuestro-bloque="S"]
   .pregunta
@@ -58,7 +57,7 @@ colorFondoIdBloque = #DDD
   &[nuestro-tipovar="opciones"]
     > .casilleros
       .MuiButton-root
-        color blue
+        x-color blue
   &[nuestro-tipovar="si_no"]
     > .encabezado
       width 70%
@@ -85,8 +84,6 @@ colorFondoIdBloque = #DDD
       border-bottom-right-radius 7px
     .nombre-div
       padding margenPregunta
-      .nombre
-        color blue
   > .casilleros
     align-self flex-end
     width 50%
@@ -110,3 +107,33 @@ colorFondoIdBloque = #DDD
       margin 8px
       text-align center
       color colorFondoIdBloque
+
+[nuestro-validator=optativa_sd]
+  background-color #FFe
+[nuestro-validator=valida]
+  color #050
+[nuestro-validator=actual]
+  background-color #FFF
+  &[debe-leer]
+    color blue
+  [debe-leer]
+    color blue
+[nuestro-validator=omitida]
+  background repeating-linear-gradient(45deg, #fff, #fff 10px, #ff9 10px, #ff9 12px)
+[nuestro-validator=fuera_de_flujo_por_salto]
+  background repeating-linear-gradient(45deg, #BBB, #BBB 10px, #f66 10px, #f66 12px)
+[nuestro-validator=invalida]
+  background repeating-linear-gradient(45deg, #eee, #eee 10px, #f99 10px, #f99 12px)
+[nuestro-validator=todavia_no]
+  color #888
+[nuestro-validator=calculada]
+  input
+    background-color #BBB
+[nuestro-validator=salteada]
+  background-color #BBB
+[nuestro-validator=todavia_no]
+  color #888
+[nuestro-validator=fuera_de_flujo_por_omitida]
+  background repeating-linear-gradient(45deg, #eee, #eee 10px, #fcc 10px, #fcc 12px)
+
+

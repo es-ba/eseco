@@ -193,10 +193,6 @@ export async function dmTraerDatosFormulario(){
         mainForm:MAIN_FORM,
         datos:{
             respuestas:{
-                "s1": 1,
-                "d3": 1,
-                "d4": 2,
-                "a8": "hola"
             } as unknown as Respuestas
         },
         estado:{
@@ -210,6 +206,7 @@ export async function dmTraerDatosFormulario(){
             primeraFalla:null
         }
     };
+    initialState.formStructureState=rowValidator(initialState.estructura.estructuraRowValidator, initialState.datos.respuestas)
     /* DEFINICION CONTROLADOR */
     const hdrReducer = createReducer(reducers, initialState);
     /* FIN DEFINICION CONTROLADOR */

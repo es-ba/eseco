@@ -216,10 +216,12 @@ function OpcionesDespliegue({pregunta, forPk, valorActual}:{pregunta:PreguntaCon
     }</Grid>
 }
 
-function PreguntaDespliegue(props:{pregunta:Pregunta, forPk:ForPk, valorActual:Valor, respuestas:Respuestas|null}){
+type ValidatorState = string;
+
+function PreguntaDespliegue(props:{pregunta:Pregunta, forPk:ForPk, valorActual:Valor, respuestas:Respuestas|null, validateState:ValidatorState}){
     var {pregunta} = props;
     var dispatch=useDispatch();
-    return <div className="pregunta" nuestro-tipovar={pregunta.tipovar||"multiple"}>
+    return <div className="pregunta" nuestro-tipovar={pregunta.tipovar||"multiple"} nuestro-validator={props.validateState}>
         <EncabezadoDespliegue casillero={pregunta}/>
         <div className="casilleros">{
             pregunta.tipovar=="si_no"?<Grid container>
@@ -274,7 +276,7 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
 }
 
 function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Bloque|Formulario}){
-    var respuestas = useSelector((state:CasoState)=>state.datos.respuestas);
+    var [respuestas, estadosValidator] = useSelector((state:CasoState)=>[state.datos.respuestas, state.formStructureState.estados]);
     return <div className="casilleros">{
         props.bloqueOFormulario.casilleros.map((casillero)=>
             <Grid key={casillero.casillero} item>
@@ -285,6 +287,7 @@ function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Blo
                             forPk={{vivienda:1, persona:1}} 
                             valorActual={casillero.var_name && respuestas[casillero.var_name] || null} 
                             respuestas={(!casillero.var_name || null) && respuestas}
+                            validateState={casillero.var_name && estadosValidator[casillero.var_name] || 'x'}
                         />:
                     casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
                     casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
@@ -309,10 +312,8 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(){
     var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
-    // var datos =  useSelector((state:CasoState)=>state.datos);
     var formStructureState =  useSelector((state:CasoState)=>state.formStructureState);
     return <div className="formulario">
-        <pre>{JSON.stringify(formStructureState,null,' ')}</pre>
         <FormularioEncabezado casillero={formulario}/>
         <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario}/>
     </div>
