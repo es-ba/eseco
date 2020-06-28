@@ -22,13 +22,15 @@ export type Tipoc = TipocDestinos | 'F'|'O'|'OM'
 
 export type TipoVariables = 'texto'|'numero'|'fecha'
 
+export type Despliegue = 'calculada'|'libre'|'no leer'|'leer'
+
 export type CasilleroBase = {
     tipoc:Tipoc
     casillero:IdCasillero
     nombre:string
     salto:IdDestino|IdFin|null
     ver_id:string|null
-    despliegue:string|null
+    despliegue:Despliegue|null
     aclaracion:string|null
     primera_variable?:IdVariable|null
     var_name?:IdVariable|null

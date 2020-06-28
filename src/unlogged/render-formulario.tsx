@@ -92,10 +92,10 @@ function takeElementOrDefault<V,K extends string,KO extends string>(k:K, object:
     : defaultValue
 }
 
-function DespliegueEncabezado(props:{casillero:CasilleroBase}){
+function DespliegueEncabezado(props:{casillero:CasilleroBase, leer?:boolean}){
     const {casillero} = props;
     var classes = useStyles();
-    return <Grid container alignItems="center">
+    return <Grid container alignItems="center" debe-leer={props.leer?'SI':'NO'}>
         <Grid item>
             <Button variant="outlined" className={takeElementOrDefault(casillero.tipoc, classes, classes.root)}>{casillero.ver_id || casillero.casillero}</Button>
         </Grid>
@@ -108,7 +108,7 @@ function DespliegueEncabezado(props:{casillero:CasilleroBase}){
     </Grid>
 }
 
-function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, variable:string, forPk:ForPk, elegida:boolean}){
+function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, variable:string, forPk:ForPk, elegida:boolean, leer:boolean}){
     const {casillero} = props;
     var classes = useStyles();
     var dispatch = useDispatch();
@@ -124,7 +124,7 @@ function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, va
                 <Grid className={classes.idOpcion}>
                     {casillero.ver_id || casillero.casillero}
                 </Grid>
-                <Grid className={classes.textoOpcion}>
+                <Grid className={classes.textoOpcion} debe-leer={casillero.despliegue=='leer'?'SI':casillero.despliegue=='no leer'?'NO':props.leer?'SI':'NO'}>
                     <Typography>{casillero.nombre}</Typography>
                     {casillero.aclaracion?
                         <Typography className={classes.aclaracion}>{casillero.aclaracion}</Typography>
@@ -148,6 +148,7 @@ function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo], variable:string,
                     valorOpcion={opcion.casillero} 
                     forPk={props.forPk} 
                     elegida={opcion.casillero==props.valorActual}
+                    leer={false}
                 />
             </Grid>
         )
@@ -158,7 +159,7 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, va
     const {opcionM} = props;
     var classes = useStyles();
     return <div className="multiple" nuestro-validator={props.validateState}>
-        <EncabezadoDespliegue casillero={opcionM} verIdGuion={true} />
+        <EncabezadoDespliegue casillero={opcionM} verIdGuion={true} leer={opcionM.despliegue!='no leer'} />
         <div className="casilleros">
             <Grid container>
                 <SiNoDespliegue 
@@ -172,10 +173,10 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, va
     </div>
 }
 
-function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolean}){
+function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolean, leer?:boolean}){
     var {casillero} = props;
     var key=(casillero.ver_id!='-' || props.verIdGuion) && casillero.ver_id || casillero.casillero;
-    return <div className="encabezado">
+    return <div className="encabezado" debe-leer={props.leer?'SI':'NO'}>
         <div className="id">
             {key}
         </div>
@@ -201,7 +202,7 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
     />
 }
 
-function OpcionesDespliegue({pregunta, forPk, valorActual}:{pregunta:PreguntaConOpciones, forPk:ForPk, valorActual:Valor}){
+function OpcionesDespliegue({pregunta, forPk, valorActual, leer}:{pregunta:PreguntaConOpciones, forPk:ForPk, valorActual:Valor, leer:boolean}){
     return <Grid container direction="column">{
         pregunta.casilleros.map((opcion:Opcion)=>
             <Grid key={opcion.casillero} item>
@@ -211,6 +212,7 @@ function OpcionesDespliegue({pregunta, forPk, valorActual}:{pregunta:PreguntaCon
                     variable={pregunta.var_name} 
                     forPk={forPk} 
                     elegida={valorActual==opcion.casillero}
+                    leer={leer}
                 />
             </Grid>
         )
@@ -228,7 +230,7 @@ function PreguntaDespliegue(props:{
     var {pregunta} = props;
     var dispatch=useDispatch();
     return <div className="pregunta" nuestro-tipovar={pregunta.tipovar||"multiple"} nuestro-validator={props.validateState}>
-        <EncabezadoDespliegue casillero={pregunta}/>
+        <EncabezadoDespliegue casillero={pregunta} leer={pregunta.despliegue!='no leer'}/>
         <div className="casilleros">{
             pregunta.tipovar=="si_no"?<Grid container>
                 <SiNoDespliegue 
@@ -243,10 +245,12 @@ function PreguntaDespliegue(props:{
                     pregunta={pregunta} 
                     forPk={props.forPk} 
                     valorActual={props.valorActual}
+                    leer={pregunta.despliegue=='leer'}
                 />:
             pregunta.tipovar==null?
                 (pregunta.casilleros as OpcionMultiple[]).map((opcionMultiple)=>
-                    <OpcionMultipleDespliegue 
+                    <OpcionMultipleDespliegue
+                        key={opcionMultiple.casillero} 
                         opcionM={opcionMultiple} 
                         forPk={props.forPk} 
                         valorActual={props.respuestas?.[opcionMultiple.var_name]!}
@@ -329,7 +333,7 @@ function FormularioDespliegue(){
             <Typography component="span">Modo de despliegue:</Typography>
             <ButtonGroup>
             {listaModos.map(modo=>
-                <Button variant={modo==modoDespliegue?"contained":"outlined"} onClick={
+                <Button key={modo} variant={modo==modoDespliegue?"contained":"outlined"} onClick={
                     ()=>dispatch(dispatchers.MODO_DESPLIEGUE({modoDespliegue:modo}))
                 }>{modo}</Button>
             )}

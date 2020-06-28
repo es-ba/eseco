@@ -61,13 +61,6 @@ anchoNormal(ancho)
     align-self flex-end
     min-width 33%
 
-[nuestro-bloque="S"]
-  .pregunta
-    > .encabezado
-      .nombre-div
-        .nombre
-          color black
-
 .pregunta
   @media (max-width 559px)
     flex-direction column
@@ -139,12 +132,16 @@ anchoNormal(ancho)
     color #050
   [nuestro-validator=actual]
     background-color #FFF
-    &[debe-leer]
+    &[debe-leer=SI]
       color blue
-    [debe-leer]
+    [debe-leer=SI]
       color blue
   [nuestro-validator=omitida]
     background repeating-linear-gradient(45deg, #fff, #fff 10px, #ff9 10px, #ff9 12px)
+    &[debe-leer=SI]
+      color blue
+    [debe-leer=SI]
+      color blue
   [nuestro-validator=fuera_de_flujo_por_salto]
     background repeating-linear-gradient(45deg, #BBB, #BBB 10px, #f66 10px, #f66 12px)
   [nuestro-validator=invalida]
@@ -167,6 +164,8 @@ anchoNormal(ancho)
 
 [modo-despliegue=metadatos]
   background-color #f8f8f8
+  [debe-leer=SI]
+    color blue
   [los-metadatos]
     display flex
     font-size 80%
