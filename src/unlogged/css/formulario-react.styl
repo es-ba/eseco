@@ -2,6 +2,10 @@ colorFondoEncabezadoBloque = #888
 margenPregunta = 16px
 colorFondoIdBloque = #DDD
 
+anchoNormal(ancho)
+  @media (min-width 600px)
+    width ancho
+
 .formulario
   max-width 768px
   background-color #EEE
@@ -26,8 +30,14 @@ colorFondoIdBloque = #DDD
 
 .multiple
   border-top 0.5px solid colorFondoIdBloque
-  margin-left 48px
+  font-size 120%
+  margin-left 8px
+  @media (min-width 600px)
+    margin-left 48px
   display flex
+  @media (max-width 599px)
+    flex-wrap wrap
+    justify-content space-between
   .id
     margin-right 16px
     color colorFondoEncabezadoBloque
@@ -42,7 +52,10 @@ colorFondoIdBloque = #DDD
     vertical-align middle
     border-bottom-right-radius 7px
   .nombre-div
-    min-width 60%
+    min-width 50%
+    flex-shrink 1
+    @media (min-width 600px)
+      min-width 60%
 
 [nuestro-bloque="S"]
   .pregunta
@@ -52,7 +65,10 @@ colorFondoIdBloque = #DDD
           color black
 
 .pregunta
+  @media (max-width 559px)
+    flex-direction column
   display flex
+  justify-content space-between
   border-top 1px solid colorFondoEncabezadoBloque
   &[nuestro-tipovar="opciones"]
     > .casilleros
@@ -60,9 +76,9 @@ colorFondoIdBloque = #DDD
         x-color blue
   &[nuestro-tipovar="si_no"]
     > .encabezado
-      width 70%
+      anchoNormal 70%
     > .casilleros
-      width 30%
+      anchoNormal 30%
   &[nuestro-tipovar="multiple"]
     display block
     > .encabezado
@@ -70,7 +86,7 @@ colorFondoIdBloque = #DDD
     > .casilleros
       width 100%
   > .encabezado
-    width 50%
+    anchoNormal 50%
     font-size 120%
     min-height 24px
     .id
@@ -86,7 +102,7 @@ colorFondoIdBloque = #DDD
       padding margenPregunta
   > .casilleros
     align-self flex-end
-    width 50%
+    anchoNormal 50%
     > .variable
       margin-bottom margenPregunta
 
