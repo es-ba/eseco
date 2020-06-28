@@ -34,6 +34,7 @@ export type CasilleroBase = {
     var_name?:IdVariable|null
     tipovar?:TipoVariables|'opciones'|'si_no'|null
     casilleros?:CasillerosImplementados[]|null
+    expresion_habilitar?:string
 }
 
 export type Opcion=CasilleroBase & {

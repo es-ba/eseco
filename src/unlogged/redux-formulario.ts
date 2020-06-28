@@ -30,6 +30,8 @@ var reemplazosHabilitar:{[key:string]:string}={
     true: 'true',
     "=": '==',
     "<>": '!=',
+    "&": '&&',
+    "|": '||',
 };
 
 const helpersHabilitar={
@@ -89,6 +91,8 @@ var reducers={
                     }
                 }
             }
+            console.log('xxxxxxxxxxxxxxxxx datos.respuestas')
+            console.log(JSON.stringify(nuevoEstado.datos.respuestas))
             return {
                 ...nuevoEstado,
                 formStructureState:rowValidator(nuevoEstado.estructura.estructuraRowValidator, nuevoEstado.datos.respuestas)
@@ -136,7 +140,8 @@ function rellenarVariablesYOpciones(estructura:EstructuraRowValidator, casillero
             opciones:(casillero.tipoc=='OM' || casillero.tipovar=='opciones'?
                 likeAr.createIndex(casillero.casilleros, 'casillero'):{}) as unknown as { [key: string]: RowValidatorOpcion<IdVariable> },
             salto:casillero.salto as IdVariable,
-            saltoNsNr:'salto_ns_nc' in casillero && casillero.salto_ns_nc || null
+            saltoNsNr:'salto_ns_nc' in casillero && casillero.salto_ns_nc || null,
+            funcionHabilitar:casillero.expresion_habilitar
         }
         estructura.variables[casillero.var_name]=variableDef;
     }
@@ -198,6 +203,11 @@ export async function dmTraerDatosFormulario(){
         mainForm:MAIN_FORM,
         datos:{
             respuestas:{
+                // hasta la D11
+                // "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"1","d11":"1"
+                // hasta la t9
+                "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"2","d11":"2","a_1":"1","a_2":"1","a_3":"1","a_4":"2","a_5":"2","a6":"2","a7":"2","a8":"156","a9":"89","cv1":"2","cv3":"2","t1":"2","t2":"2","t3":"1","t4":"2","t5":"2","t6":"2","t7":"2","t8":"2"
+                // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
             } as unknown as Respuestas
         },
         estado:{
