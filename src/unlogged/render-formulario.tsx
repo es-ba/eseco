@@ -4,8 +4,10 @@ import {
     FocusOpts, ICON, RenderPrincipal, 
     clsx, memoize
 } from "./render-general";
-import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, IContenido, 
-    Opcion, OpcionMultiple, OpcionNo, OpcionSi, Pregunta, PreguntaSimple, Respuestas, Valor, PreguntaConOpcionesMultiples
+import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, 
+    Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
+    Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
+    Respuestas, Valor
 } from "./tipos";
 import {dmTraerDatosFormulario, dispatchers } from "./redux-formulario";
 import { useState, useEffect, useRef} from "react";
@@ -198,6 +200,22 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
     />
 }
 
+function OpcionesDespliegue({pregunta, forPk, valorActual}:{pregunta:PreguntaConOpciones, forPk:ForPk, valorActual:Valor}){
+    return <Grid container direction="column">{
+        pregunta.casilleros.map((opcion:Opcion)=>
+            <Grid key={opcion.casillero} item>
+                <OpcionDespliegue 
+                    casillero={opcion} 
+                    valorOpcion={opcion.casillero} 
+                    variable={pregunta.var_name} 
+                    forPk={forPk} 
+                    elegida={valorActual==opcion.casillero}
+                />
+            </Grid>
+        )
+    }</Grid>
+}
+
 function PreguntaDespliegue(props:{pregunta:Pregunta, forPk:ForPk, valorActual:Valor, respuestas:Respuestas|null}){
     var {pregunta} = props;
     var dispatch=useDispatch();
@@ -212,21 +230,14 @@ function PreguntaDespliegue(props:{pregunta:Pregunta, forPk:ForPk, valorActual:V
                     valorActual={props.valorActual}
                 />
             </Grid>:
-            pregunta.tipovar=="opciones" ?<Grid container direction="column">{
-                pregunta.casilleros.map((opcion:Opcion)=>
-                    <Grid key={opcion.casillero} item>
-                        <OpcionDespliegue 
-                            casillero={opcion} 
-                            valorOpcion={opcion.casillero} 
-                            variable={pregunta.var_name} 
-                            forPk={props.forPk} 
-                            elegida={props.valorActual==opcion.casillero}
-                        />
-                    </Grid>
-                )
-            }</Grid>:
+            pregunta.tipovar=="opciones" ?
+                <OpcionesDespliegue 
+                    pregunta={pregunta} 
+                    forPk={props.forPk} 
+                    valorActual={props.valorActual}
+                />:
             pregunta.tipovar==null?
-                pregunta.casilleros.map((opcionMultiple)=>
+                (pregunta.casilleros as OpcionMultiple[]).map((opcionMultiple)=>
                     <OpcionMultipleDespliegue 
                         opcionM={opcionMultiple} 
                         forPk={props.forPk} 
@@ -234,13 +245,15 @@ function PreguntaDespliegue(props:{pregunta:Pregunta, forPk:ForPk, valorActual:V
                     />
                 )
             :
-            <Campo 
-                pregunta={pregunta}
-                valor={props.valorActual}
-                onChange={(nuevoValor)=>
-                    dispatch(dispatchers.REGISTRAR_RESPUESTA({forPk:props.forPk, variable:pregunta.var_name, respuesta:nuevoValor}))
-                }
-            />
+            ((preguntaSimple:PreguntaSimple)=>
+                <Campo 
+                    pregunta={preguntaSimple}
+                    valor={props.valorActual}
+                    onChange={(nuevoValor)=>
+                        dispatch(dispatchers.REGISTRAR_RESPUESTA({forPk:props.forPk, variable:preguntaSimple.var_name, respuesta:nuevoValor}))
+                    }
+                />
+            )(pregunta)
         }</div>
     </div>
 }
@@ -270,8 +283,8 @@ function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Blo
                         <PreguntaDespliegue 
                             pregunta={casillero} 
                             forPk={{vivienda:1, persona:1}} 
-                            valorActual={casillero.var_name && respuestas[casillero.var_name]} 
-                            respuestas={!casillero.var_name && respuestas || null}
+                            valorActual={casillero.var_name && respuestas[casillero.var_name] || null} 
+                            respuestas={(!casillero.var_name || null) && respuestas}
                         />:
                     casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
                     casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:
@@ -296,9 +309,10 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(){
     var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
-    var datos =  useSelector((state:CasoState)=>state.datos);
+    // var datos =  useSelector((state:CasoState)=>state.datos);
+    var formStructureState =  useSelector((state:CasoState)=>state.formStructureState);
     return <div className="formulario">
-        <pre>{JSON.stringify(datos,null,' ')}</pre>
+        <pre>{JSON.stringify(formStructureState,null,' ')}</pre>
         <FormularioEncabezado casillero={formulario}/>
         <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario}/>
     </div>

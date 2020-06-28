@@ -5,114 +5,139 @@
  * 
  */
 
-import {Structure} from "row-validator";
+import {FormStructureState, Structure} from "row-validator";
 
 export type IdOpcion = number
 export type IdVariable = 'v1'|'v2'|'etc...'
-export type IdPregunta = 'V1'|'V2'|'etc...'
+export type IdPregunta = 'P1'|'P2'|'etc...'
 export type IdBloque = 'B1'|'B2'|'etc...'
 export type IdFormulario = 'F1'|'F2'|'etc...'
 export type IdFiltro = 'FILTRO1' | 'FILTRO2' | 'etc...'
 export type IdCasillero = IdVariable | IdPregunta | IdBloque | IdFormulario | IdFiltro | IdOpcion
-export type IdFin = 'FIN'
+export type IdFin = never // TODO: poder poner 'FIN'
 export type IdDestino = IdPregunta | IdBloque | IdFin | IdFiltro 
 export type Valor = string|number|Date|null;
+export type TipocDestinos = 'P'|'CP'|'B'|'FILTRO'
+export type Tipoc = TipocDestinos | 'F'|'O'|'OM'
+
+export type TipoVariables = 'texto'|'numero'|'fecha'
 
 export type CasilleroBase = {
-    tipoc:'P'|'O'|'F'|'CP'|'B'|'OM'|'FILTRO', 
-    casillero:IdCasillero, 
-    nombre:string, 
-    salto:IdDestino|IdFin|null,
-    ver_id:string|null,
-    despliegue:string|null,
+    tipoc:Tipoc
+    casillero:IdCasillero
+    nombre:string
+    salto:IdDestino|IdFin|null
+    ver_id:string|null
+    despliegue:string|null
     aclaracion:string|null
+    primera_variable?:IdVariable|null
+    var_name?:IdVariable|null
+    tipovar?:TipoVariables|'opciones'|'si_no'|null
+    casilleros?:CasillerosImplementados[]|null
 }
 
 export type Opcion=CasilleroBase & {
-    tipoc:'O', 
+    tipoc:'O'
     casillero:IdOpcion
-    casilleros:PreguntaSimple[] 
+    casilleros:PreguntaSimple[]
+    var_name?:null
+    tipovar?:null
+    primera_variable?:null
 }
 
 export type OpcionSi=Opcion & {
-    casillero:1,
+    casillero:1
     nombre:'Sí'
     casilleros:PreguntaSimple[] 
 }
 
 export type OpcionNo=Opcion & {
-    casillero:2,
+    casillero:2
     nombre:'No'
     casilleros:PreguntaSimple[] 
 }
 
 export type OpcionMultiple=CasilleroBase & {
-    tipoc:'OM',
-    var_name:IdVariable,
+    tipoc:'OM'
+    var_name:IdVariable
     casilleros:[OpcionSi, OpcionNo]
 }
 
 export type PreguntaBase = CasilleroBase & {
-    tipoc:'P', 
-    // var_name:IdVariable // TODO, quitar esto de acá porque está especificado en las que va, ej: no en la múltiple. Pero en el map de adentro no lo detecta
+    tipoc:'P'
+    optativa:boolean|null
     casillero:IdPregunta
 }
 
-export type TipoVariables = 'texto'|'numero'|'fecha'
-
 export type PreguntaSimple = PreguntaBase & {
-    tipovar:TipoVariables,
-    var_name:IdVariable,
-    longitud:string,
-    casilleros: []
+    tipovar:TipoVariables
+    var_name:IdVariable
+    longitud:string
+    salto_ns_nc:IdVariable|null
+    casilleros: PreguntaSimple[]
 }
 
 export type PreguntaConSiNo = PreguntaBase & {
-    tipovar:'si_no',
-    var_name:IdVariable,
+    tipovar:'si_no'
+    var_name:IdVariable
+    salto_ns_nc:IdVariable|null
     casilleros: [OpcionSi, OpcionNo]
 }
 
 export type PreguntaConOpciones = PreguntaBase & {
-    tipovar:'opciones',
-    var_name:IdVariable,
+    tipovar:'opciones'
+    var_name:IdVariable
+    salto_ns_nc:IdVariable|null
     casilleros: Opcion[]
 }
 
 export type PreguntaConOpcionesMultiples = PreguntaBase & {
-    tipovar:null,
+    var_name?:null
+    tipovar?:null
     casilleros: OpcionMultiple[]
 }
 
 export type Pregunta=PreguntaSimple | PreguntaConSiNo | PreguntaConOpciones | PreguntaConOpcionesMultiples
 
 export type ConjuntoPreguntas= CasilleroBase & {
-    tipoc:'CP',
+    tipoc:'CP'
+    casillero:IdPregunta
+    var_name?:null
+    tipovar?:null
     casilleros:Pregunta[]
 }
 
+/*
 export interface IContenido extends CasilleroBase {
     casilleros:IContenido[]
 }
+*/
 
 export type Filtro = CasilleroBase & {
-    tipoc:'FILTRO',
+    tipoc:'FILTRO'
     casillero:IdFiltro
+    var_name?:null
+    tipovar?:null
+    primera_variable?:null
 }
 
 export type ContenidoFormulario=Bloque|Pregunta|ConjuntoPreguntas|Filtro
 
 export type Bloque= CasilleroBase & {
-    tipoc:'B', 
-    casillero:IdBloque,
+    tipoc:'B'
+    casillero:IdBloque
     casilleros:ContenidoFormulario[]
+    var_name?:null
+    tipovar?:null
 }
 
 export type Formulario= CasilleroBase & {
-    tipoc:'F', 
-    casillero:IdFormulario, 
-    formulario_principal:boolean,
+    tipoc:'F'
+    casillero:IdFormulario
+    formulario_principal:boolean
     casilleros:ContenidoFormulario[]
+    var_name?:null
+    tipovar?:null
 }
 
 export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion
@@ -123,12 +148,14 @@ export type Respuestas={
         [pregunta in IdVariable]:Valor
     }
 
+export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
+
 export type CasoState={
     estructura:{
         formularios:{
             [nombreFormulario in IdFormulario]:Formulario
         },
-        estructuraRowValidator:Structure<IdVariable,IdFin>
+        estructuraRowValidator:EstructuraRowValidator
     },
     mainForm:IdFormulario,
     datos:{
@@ -136,6 +163,7 @@ export type CasoState={
     }
     estado:{
         formularioActual:IdFormulario
-    }
+    },
+    formStructureState:FormStructureState
 }
 
