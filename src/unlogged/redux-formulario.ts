@@ -160,21 +160,26 @@ function obtenerDestinosCasilleros(casillero:CasillerosImplementados, destinos?:
     return destinos;
 }
 
-function rellenarDestinos(estructura:EstructuraRowValidator, destinos:RegistroDestinos){
+function rellenarDestinos(estructura:EstructuraRowValidator, destinos:RegistroDestinos):EstructuraRowValidator{
     function obtenerDestino(idVariableQueTieneUnDestino:IdVariable|null|undefined):IdVariable|null{
         return idVariableQueTieneUnDestino!=null && destinos[idVariableQueTieneUnDestino as IdDestino] || null
     }
-    likeAr(estructura.variables).forEach(variableDef=>({
-        salto:obtenerDestino(variableDef.salto),
-        saltoNsNr:obtenerDestino(variableDef.saltoNsNr),
-        opciones:variableDef.opciones!=null ? likeAr(variableDef.opciones).map(opcionDef=>({salto:obtenerDestino(opcionDef.salto)})).plain():null
-    }))
+    return {
+        ...estructura,
+        variables:likeAr(estructura.variables).map(variableDef=>({
+            ...variableDef,
+            salto:obtenerDestino(variableDef.salto),
+            saltoNsNr:obtenerDestino(variableDef.saltoNsNr),
+            opciones:variableDef.opciones!=null ? likeAr(variableDef.opciones).map(opcionDef=>({salto:obtenerDestino(opcionDef.salto)})).plain():undefined
+        })).plain()
+    }
 }
 
-function rellenarEstructuraRowValidator(estructura:EstructuraRowValidator, casillero:CasillerosImplementados){
-    rellenarVariablesYOpciones(estructura, casillero);
+function generarEstructuraRowValidator(casillero:CasillerosImplementados):EstructuraRowValidator{
+    var estructuraIncompleta:EstructuraRowValidator={variables:{}} as unknown as EstructuraRowValidator;
+    rellenarVariablesYOpciones(estructuraIncompleta, casillero);
     var destinos=obtenerDestinosCasilleros(casillero);
-    rellenarDestinos(estructura, destinos);
+    return rellenarDestinos(estructuraIncompleta, destinos);
 }
 
 export async function dmTraerDatosFormulario(){
@@ -182,9 +187,9 @@ export async function dmTraerDatosFormulario(){
     console.log(casillerosOriginales)
     //@ts-ignore
     var casilleros:{[f in IdFormulario]:Formulario} = likeAr(casillerosOriginales).map((x:any)=>aplanarLaCurva(x));
-    var estructuraRowValidator:EstructuraRowValidator={variables:{}} as unknown as EstructuraRowValidator;
-    rellenarEstructuraRowValidator(estructuraRowValidator, casilleros[MAIN_FORM]);
-    console.log(casilleros);
+    var estructuraRowValidator:EstructuraRowValidator = generarEstructuraRowValidator(casilleros[MAIN_FORM]);
+    console.log('casilleros',casilleros);
+    console.log('estructuraRowValidator',estructuraRowValidator);
     var initialState:CasoState={
         estructura:{
             formularios:casilleros,
