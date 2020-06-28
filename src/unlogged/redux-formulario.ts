@@ -153,10 +153,10 @@ function aplanarLaCurva<T extends {tipoc:string}>(casillerosData:IDataSeparada<T
 function rellenarVariablesYOpciones(estructura:EstructuraRowValidator, casillero:CasillerosImplementados){
     if(casillero.var_name != null){
         var variableDef={
-            tipo:casillero.tipoc=='OM'?'opciones':casillero.tipovar,
+            tipo:casillero.tipoc=='OM' || casillero.tipovar=='si_no'?'opciones':casillero.tipovar,
             // @ts-ignore optativa podría no existir, quedará null.
             optativa:casillero.optativa!,
-            opciones:(casillero.tipoc=='OM' || casillero.tipovar=='opciones'?
+            opciones:(casillero.tipoc=='OM' || casillero.tipovar=='opciones' || casillero.tipovar=='si_no'?
                 likeAr.createIndex(casillero.casilleros, 'casillero'):{}) as unknown as { [key: string]: RowValidatorOpcion<IdVariable> },
             salto:casillero.salto as IdVariable,
             saltoNsNr:'salto_ns_nc' in casillero && casillero.salto_ns_nc || null,
