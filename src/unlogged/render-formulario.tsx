@@ -7,11 +7,12 @@ import {
 import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, 
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor
+    Respuestas, Valor, IdVariable
 } from "./tipos";
 import {dmTraerDatosFormulario, dispatchers } from "./redux-formulario";
 import { useState, useEffect, useRef} from "react";
 import { Provider, useSelector, useDispatch } from "react-redux"; 
+import { EstadoVariable } from "row-validator";
 import * as memoizeBadTyped from "memoize-one";
 import * as likeAr from "like-ar";
 
@@ -153,10 +154,10 @@ function SiNoDespliegue(props:{casilleros:[OpcionSi, OpcionNo], variable:string,
     }</Grid>
 }
 
-function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, valorActual:Valor}){
+function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, valorActual:Valor, validateState:EstadoVariable|null}){
     const {opcionM} = props;
     var classes = useStyles();
-    return <div className="multiple">
+    return <div className="multiple" nuestro-validator={props.validateState}>
         <div className="id">
             {opcionM.ver_id || opcionM.casillero}
         </div>
@@ -216,9 +217,14 @@ function OpcionesDespliegue({pregunta, forPk, valorActual}:{pregunta:PreguntaCon
     }</Grid>
 }
 
-type ValidatorState = string;
-
-function PreguntaDespliegue(props:{pregunta:Pregunta, forPk:ForPk, valorActual:Valor, respuestas:Respuestas|null, validateState:ValidatorState}){
+function PreguntaDespliegue(props:{
+    pregunta:Pregunta, 
+    forPk:ForPk, 
+    valorActual:Valor, 
+    respuestas:Respuestas|null, 
+    validateState:EstadoVariable|null,
+    validateRow:{[v in IdVariable]?:EstadoVariable}|null
+}){
     var {pregunta} = props;
     var dispatch=useDispatch();
     return <div className="pregunta" nuestro-tipovar={pregunta.tipovar||"multiple"} nuestro-validator={props.validateState}>
@@ -244,6 +250,7 @@ function PreguntaDespliegue(props:{pregunta:Pregunta, forPk:ForPk, valorActual:V
                         opcionM={opcionMultiple} 
                         forPk={props.forPk} 
                         valorActual={props.respuestas?.[opcionMultiple.var_name]!}
+                        validateState={props.validateRow?.[opcionMultiple.var_name] || null}
                     />
                 )
             :
@@ -287,7 +294,8 @@ function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Blo
                             forPk={{vivienda:1, persona:1}} 
                             valorActual={casillero.var_name && respuestas[casillero.var_name] || null} 
                             respuestas={(!casillero.var_name || null) && respuestas}
-                            validateState={casillero.var_name && estadosValidator[casillero.var_name] || 'x'}
+                            validateState={casillero.var_name && estadosValidator[casillero.var_name] || null}
+                            validateRow={!casillero.var_name && estadosValidator || null}
                         />:
                     casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero}/>:
                     casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero}/>:

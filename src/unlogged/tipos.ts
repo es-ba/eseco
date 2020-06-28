@@ -164,6 +164,6 @@ export type CasoState={
     estado:{
         formularioActual:IdFormulario
     },
-    formStructureState:FormStructureState
+    formStructureState:FormStructureState<IdVariable,IdFin>
 }
 
