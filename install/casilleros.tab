@@ -47,7 +47,7 @@ ESECO|D/10/2|D/10|O|opción|2|590|✔|No||||||||||||1;147;156;178;590|F:F3||||||
 ESECO|D/11|D|OM|opción múltiple|11|600|✔|Pérdida súbita de sentido del olfato o gusto|si_no|||||||||||1;147;156;600|F:F3||d11|d11|||
 ESECO|D/11/1|D/11|O|opción|1|610|✔|Sí||||||||||||1;147;156;600;610|F:F3||||||
 ESECO|D/11/2|D/11|O|opción|2|620|✔|No||||||||||||1;147;156;600;620|F:F3||||||
-ESECO|D/12|D|OM|opción múltiple|12|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||||||1;147;156;640|F:F3||d12|d12|d3=1 || d4=1 || d5=1 || d6=1 || d7=1 || d8=1 || d9=1 || d10=1 || d11=1||
+ESECO|D/12|D|OM|opción múltiple|12|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||||||1;147;156;640|F:F3||d12|d12|d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1||
 ESECO|D/12/1|D/12|O|opción|1|650|✔|Sí||||||||||||1;147;156;640;650|F:F3||||||
 ESECO|D/12/2|D/12|O|opción|2|660|✔|No||||||||||||1;147;156;640;660|F:F3||||||
 ESECO|AE|F:F3|B|bloque|AE|670|✔|Antecedentes de otras enfermedades de riesgo||||||||true||A||1;670|F:F3||||||

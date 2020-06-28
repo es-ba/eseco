@@ -32,6 +32,10 @@ var reemplazosHabilitar:{[key:string]:string}={
     "<>": '!=',
     "&": '&&',
     "|": '||',
+    "OR": '||',
+    "AND": '&&',
+    "or": '||',
+    "and": '&&'
 };
 
 const helpersHabilitar={
@@ -57,7 +61,8 @@ var funcionesHabilitar:{[key:string]:FuncionHabilitar}={
 
 function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHabilitar{
     if(!funcionesHabilitar[nombreFuncionComoExpresion]){
-        var cuerpo = nombreFuncionComoExpresion.replace(/\b.+?\b/g, function(elToken){
+        var expresion = nombreFuncionComoExpresion.replace(/\u00A0/g,' ');
+        var cuerpo = expresion.replace(/\b.+?\b/g, function(elToken){
             var elTokenTrimeado=elToken.trim();
             if(elTokenTrimeado in reemplazosHabilitar){
                 return reemplazosHabilitar[elTokenTrimeado];
@@ -65,7 +70,10 @@ function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHabilitar
                 return elToken
             }else if(/^\W+$/.test(elTokenTrimeado)){
                 return elToken
+            }else if(/^\s+$/.test(elToken)){
+                return elToken
             }
+            console.log('elToken',elToken,elToken.codePointAt(0))
             return 'helpers.null2zero(valores.'+elToken+')';
         });
         var internalFun =  new Function('valores', 'helpers', 'return '+cuerpo);
@@ -207,6 +215,8 @@ export async function dmTraerDatosFormulario(){
                 // "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"1","d11":"1"
                 // hasta la t9
                 "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"2","d11":"2","a_1":"1","a_2":"1","a_3":"1","a_4":"2","a_5":"2","a6":"2","a7":"2","a8":"156","a9":"89","cv1":"2","cv3":"2","t1":"2","t2":"2","t3":"1","t4":"2","t5":"2","t6":"2","t7":"2","t8":"2"
+                // d3=1 || d4=1 || d5=1 || d6=1 || d7=1 || d8=1 || d9=1 || d10=1 || d11=1
+                // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
                 // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
             } as unknown as Respuestas
         },
