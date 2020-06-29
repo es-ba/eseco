@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {  
     FocusOpts, ICON, RenderPrincipal, 
-    clsx, memoize
+    clsx, memoize, adaptarTipoVarCasillero
 } from "./render-general";
 import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, 
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
@@ -281,7 +281,7 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
     useEffect(() => {
         setValor(props.valor)
     }, [props.valor]);
-    return <TextField className="variable" var-length={pregunta.longitud} value={valor?valor:''}
+    return <TextField className="variable" var-length={pregunta.longitud} value={valor?valor:''} type={adaptarTipoVarCasillero(pregunta.tipovar)}
         onChange={(event)=>setValor(event.target.value || null)}
         onBlur={(_event)=>props.onChange(valor)}
     />

@@ -23,6 +23,7 @@ import {
     createStyles, makeStyles, Theme, fade, createMuiTheme
 } from "@material-ui/core";
 import { Store, Action } from "redux";
+import { TipoVariables } from "./tipos";
 
 // https://material-ui.com/components/material-icons/
 export const materialIoIconsSvgPath={
@@ -66,15 +67,15 @@ export type OnUpdate<T> = (data:T)=>void
 
 export type InputTypes = 'date'|'number'|'tel'|'text';
 
-/*
-function adaptAtributoDataTypes(attrDataType:AtributoDataTypes):InputTypes{
-    const adapter:{[key in AtributoDataTypes]:InputTypes} = {
-        'N': 'number',
-        'C': 'text'
+export function adaptarTipoVarCasillero(casilleroDataType:TipoVariables):InputTypes{
+    const adapter:{[key in TipoVariables]:InputTypes} = {
+        'numero': 'number',
+        'texto': 'text',
+        'fecha': 'text'
     }
-    return adapter[attrDataType]
+    return adapter[casilleroDataType]
 }
-*/
+
 
 const useStylesScrollTop = makeStyles((theme: Theme) =>
     createStyles({
