@@ -279,8 +279,8 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
     var {pregunta} = props;
     var [valor, setValor] = useState(props.valor);
     return <TextField className="variable" var-length={pregunta.longitud} value={valor}
-        onChange={(event)=>setValor(event.target.value)}
-        onBlur={(event)=>props.onChange(event.target.value)}
+        onChange={(event)=>setValor(event.target.value || null)}
+        onBlur={(_event)=>props.onChange(valor)}
     />
 }
 
