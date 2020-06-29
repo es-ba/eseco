@@ -39,7 +39,7 @@ anchoNormal(ancho)
   @media (max-width 599px)
     flex-direction column
   .id
-    margin-right 16px
+    margin-right 8px
     color colorFondoEncabezadoBloque
     background-color colorFondoIdBloque
     flex-shrink 0
@@ -124,6 +124,31 @@ anchoNormal(ancho)
 [los-metadatos]
   display none
 
+.id-div
+  height 36px
+  min-width 36px
+  margin-right 8px
+
+boton-id-div()
+  x-nada 1
+
+boton-id-div-invalido()
+  .id-div
+    .id
+      opacity 70%
+    height 36px
+    min-width 36px
+    outline  1px solid blue
+    background-image url("../img/borrar-valor.png")
+    background-position bottom
+    background-size 36px
+    border-radius 4px
+    flex-shrink 0
+    flex-grow 0
+
+[tiene-valor=invalido]
+  boton-id-div-invalido()
+
 [modo-despliegue=estricto], [modo-despliegue=relevamiento]
   [nuestro-validator=optativa_sd]
     background-color #FFe
@@ -155,8 +180,10 @@ anchoNormal(ancho)
     [debe-leer=SI]
       color blue
   [nuestro-validator=fuera_de_flujo_por_salto]
+    boton-id-div()
     background repeating-linear-gradient(45deg, #BBB, #BBB 10px, #f66 10px, #f66 12px)
   [nuestro-validator=invalida]
+    boton-id-div()
     background repeating-linear-gradient(45deg, #eee, #eee 10px, #f99 10px, #f99 12px)
   [nuestro-validator=todavia_no]
     color #888
@@ -167,6 +194,8 @@ anchoNormal(ancho)
     background-color #BBB
   [nuestro-validator=fuera_de_flujo_por_omitida]
     background repeating-linear-gradient(45deg, #eee, #eee 10px, #fcc 10px, #fcc 12px)
+    &[tiene-valor=SI]
+      boton-id-div()
 
 [modo-despliegue=estricto]
   [nuestro-validator=salteada]
@@ -190,3 +219,10 @@ anchoNormal(ancho)
       padding-right 4px
       min-width 16px
       border 1px solid gray
+
+.confirma-borrado
+  padding 8px
+  .confirma-botones
+    display flex
+    > *
+      margin 8px

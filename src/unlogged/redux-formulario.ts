@@ -8,7 +8,7 @@ import { CasilleroBase, CasillerosImplementados, CasoState,
 } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
-import { getRowValidator, Structure, Opcion as RowValidatorOpcion } from "row-validator";
+import { getRowValidator, Structure, Opcion as RowValidatorOpcion, EstadoVariable } from "row-validator";
 import * as JSON4all from "json4all";
 import * as likeAr from "like-ar";
 
@@ -140,6 +140,25 @@ const opcionesSiNo: Opcion[] = [
     {...casilleroVacio, casillero:2, tipoc:'O', nombre:'No', casilleros:[]},
 ]
 
+type CaracerizacionEstadoRowValidator={
+    correcto:boolean,
+    conValor:boolean|null, // null = unknown
+}
+export const estadoRowValidator:{[estado in EstadoVariable]:CaracerizacionEstadoRowValidator}={
+    actual                    :{correcto:true , conValor:false},
+    valida                    :{correcto:true , conValor:true },
+    todavia_no                :{correcto:true , conValor:false},
+    calculada                 :{correcto:true , conValor:null }, 
+    salteada                  :{correcto:true , conValor:false},
+    optativa_sd               :{correcto:true , conValor:false},
+    invalida                  :{correcto:false, conValor:true },
+    omitida                   :{correcto:false, conValor:false},
+    fuera_de_rango            :{correcto:false, conValor:true },
+    fuera_de_flujo_por_omitida:{correcto:false, conValor:null },
+    fuera_de_flujo_por_salto  :{correcto:false, conValor:true },
+}
+
+
 function aplanarLaCurva<T extends {tipoc:string}>(casillerosData:IDataSeparada<T>):IDataConCasilleros<T|Opcion>{
     return {
         ...casillerosData.data,
@@ -235,7 +254,8 @@ export async function dmTraerDatosFormulario(){
         },
         estado:{
             formularioActual:MAIN_FORM,
-            modoDespliegue:'relevamiento'
+            modoDespliegue:'relevamiento',
+            forPk:{vivienda:1, persona:1}
             // modoDespliegue:'metadatos'
         },
         formStructureState:{

@@ -168,6 +168,7 @@ export type CasoState={
     }
     estado:{
         formularioActual:IdFormulario
+        forPk:ForPk
         modoDespliegue:ModoDespliegue
     },
     formStructureState:FormStructureState<IdVariable,IdFin>
