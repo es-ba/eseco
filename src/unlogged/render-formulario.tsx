@@ -278,7 +278,10 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolea
 function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valor)=>void}){
     var {pregunta} = props;
     var [valor, setValor] = useState(props.valor);
-    return <TextField className="variable" var-length={pregunta.longitud} value={valor}
+    useEffect(() => {
+        setValor(props.valor)
+    }, [props.valor]);
+    return <TextField className="variable" var-length={pregunta.longitud} value={valor?valor:''}
         onChange={(event)=>setValor(event.target.value || null)}
         onBlur={(_event)=>props.onChange(valor)}
     />
