@@ -180,7 +180,9 @@ boton-id-div-invalido()
       color blue
   [nuestro-validator=fuera_de_flujo_por_salto]
     boton-id-div()
-    background repeating-linear-gradient(45deg, #BBB, #BBB 10px, #f66 10px, #f66 12px)
+    background-image url("../img/fondo-salteado-error.png")
+    background-size 32px
+    background-repeat repeat
   [nuestro-validator=invalida]
     boton-id-div()
     background repeating-linear-gradient(45deg, #eee, #eee 10px, #f99 10px, #f99 12px)
@@ -192,7 +194,9 @@ boton-id-div-invalido()
     input
       background-color #BBB
   [nuestro-validator=salteada]
-    background-color #BBB
+    background-image url("../img/fondo-salteado.png")
+    background-size 32px
+    background-repeat repeat
   [nuestro-validator=fuera_de_flujo_por_omitida]
     background repeating-linear-gradient(45deg, #eee, #eee 10px, #fcc 10px, #fcc 12px)
     &[tiene-valor=SI]
