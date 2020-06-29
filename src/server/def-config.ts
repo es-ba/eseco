@@ -76,5 +76,6 @@ client-setup:
   cursors: true
   lang: es
   menu: true
-  operativo: eseco2019
+  operativo: ESECO
+  background-img: ../img/background-test.png
 `
