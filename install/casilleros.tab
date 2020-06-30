@@ -10,46 +10,46 @@ ESECO|S2/2|S2|O|opción|2|143|✔|No|||||FIN|||||||1;137;141;143|F:F3||||||
 ESECO|S3|S|P|pregunta|S3|144|✔|La persona seleccionada aceptó realizarse el test?|si_no|||||||true|no leer|||1;137;144|F:F3||s3||||
 ESECO|S3/1|S3|O|opción|1|145|✔|Sí||||||||||||1;137;144;145|F:F3||||||
 ESECO|S3/2|S3|O|opción|2|146|✔|No|||||FIN|||||||1;137;144;146|F:F3||||||
-ESECO|DC|F:F3|B|bloque|DC|147|✔|Presencia de cuadro diagnóstico compatible con COVID-19||||||||true||D||1;147|F:F3||||||
-ESECO|D1|DC|P|pregunta|D1|148|✔|¿Le han hecho alguna vez la prueba para ver si estaba infectado por el coronavirus con una muestra de la garganta o la nariz?|opciones|||||||true||||1;147;148|F:F3||d1||||
-ESECO|D1/1|D1|O|opción|1|149|✔|No me la han hecho|||||D|||||||1;147;148;149|F:F3||||||
-ESECO|D1/2|D1|O|opción|2|150|✔|Me la han hecho y fue negativa|||||D|||||||1;147;148;150|F:F3||||||
+ESECO|D|F:F3|B|bloque|D|147|✔|Presencia de cuadro diagnóstico compatible con COVID-19||||||||true||||1;147|F:F3||||||
+ESECO|D1|D|P|pregunta|D1|148|✔|¿Le han hecho alguna vez la prueba para ver si estaba infectado por el coronavirus con una muestra de la garganta o la nariz?|opciones|||||||true||||1;147;148|F:F3||d1||||
+ESECO|D1/1|D1|O|opción|1|149|✔|No me la han hecho|||||D3|||||||1;147;148;149|F:F3||||||
+ESECO|D1/2|D1|O|opción|2|150|✔|Me la han hecho y fue negativa|||||D3|||||||1;147;148;150|F:F3||||||
 ESECO|D1/3|D1|O|opción|3|151|✔|Sí, me la hicieron hace más de 14 días y fue positiva *||||||||||||1;147;148;151|F:F3||||||
-ESECO|D2|DC|P|pregunta|D2|152|✔|¿Tiene PCR (falta la aclaración) posterior?|opciones|||||||true||||1;147;152|F:F3||d2||||
+ESECO|D2|D|P|pregunta|D2|152|✔|¿Tiene PCR (falta la aclaración) posterior?|opciones|||||||true||||1;147;152|F:F3||d2||||
 ESECO|D2/1|D2|O|opción|1|153|✔|No||||||||||||1;147;152;153|F:F3||||||
 ESECO|D2/2|D2|O|opción|2|154|✔|Sí y salió negativa||||||||||||1;147;152;154|F:F3||||||
 ESECO|D2/3|D2|O|opción|3|155|✔|Sí y ha vuelto a salir positiva||||||||||||1;147;152;155|F:F3||||||
-ESECO|D|DC|P|pregunta|D|156|✔|En los últimos dos meses , ¿tuvo alguno de los siguientes síntomas?||||||||true||||1;147;156|F:F3||||||
-ESECO|D/3|D|OM|opción múltiple|3|157|✔|Fiebre|si_no|||||||||||1;147;156;157|F:F3||d3|d3|||
-ESECO|D/3/1|D/3|O|opción|1|158|✔|Sí||||||||||||1;147;156;157;158|F:F3||||||
-ESECO|D/3/2|D/3|O|opción|2|159|✔|No||||||||||||1;147;156;157;159|F:F3||||||
-ESECO|D/4|D|OM|opción múltiple|4|160|✔|Escalofríos|si_no|||||||||||1;147;156;160|F:F3||d4|d4|||
-ESECO|D/4/1|D/4|O|opción|1|161|✔|Sí||||||||||||1;147;156;160;161|F:F3||||||
-ESECO|D/4/2|D/4|O|opción|2|162|✔|No||||||||||||1;147;156;160;162|F:F3||||||
-ESECO|D/5|D|OM|opción múltiple|5|163|✔|Cansancio intenso|si_no|||||||||||1;147;156;163|F:F3||d5|d5|||
-ESECO|D/5/1|D/5|O|opción|1|164|✔|Sí||||||||||||1;147;156;163;164|F:F3||||||
-ESECO|D/5/2|D/5|O|opción|2|165|✔|No||||||||||||1;147;156;163;165|F:F3||||||
-ESECO|D/6|D|OM|opción múltiple|6|166|✔|Dolor garganta|si_no|||||||||||1;147;156;166|F:F3||d6|d6|||
-ESECO|D/6/1|D/6|O|opción|1|167|✔|Sí||||||||||||1;147;156;166;167|F:F3||||||
-ESECO|D/6/2|D/6|O|opción|2|168|✔|No||||||||||||1;147;156;166;168|F:F3||||||
-ESECO|D/7|D|OM|opción múltiple|7|169|✔|Tos|si_no|||||||||||1;147;156;169|F:F3||d7|d7|||
-ESECO|D/7/1|D/7|O|opción|1|170|✔|Sí||||||||||||1;147;156;169;170|F:F3||||||
-ESECO|D/7/2|D/7|O|opción|2|171|✔|No||||||||||||1;147;156;169;171|F:F3||||||
-ESECO|D/8|D|OM|opción múltiple|8|172|✔|Sensación de falta de aire al respirar|si_no|||||||||||1;147;156;172|F:F3||d8|d8|||
-ESECO|D/8/1|D/8|O|opción|1|173|✔|Sí||||||||||||1;147;156;172;173|F:F3||||||
-ESECO|D/8/2|D/8|O|opción|2|174|✔|No||||||||||||1;147;156;172;174|F:F3||||||
-ESECO|D/9|D|OM|opción múltiple|9|175|✔|Dolor de cabeza|si_no|||||||||||1;147;156;175|F:F3||d9|d9|||
-ESECO|D/9/1|D/9|O|opción|1|176|✔|Sí||||||||||||1;147;156;175;176|F:F3||||||
-ESECO|D/9/2|D/9|O|opción|2|177|✔|No||||||||||||1;147;156;175;177|F:F3||||||
-ESECO|D/10|D|OM|opción múltiple|10|178|✔|Náuseas y/o vómitos y/o diarrea|si_no|||||||||||1;147;156;178|F:F3||d10|d10|||
-ESECO|D/10/1|D/10|O|opción|1|179|✔|Sí||||||||||||1;147;156;178;179|F:F3||||||
-ESECO|D/10/2|D/10|O|opción|2|590|✔|No||||||||||||1;147;156;178;590|F:F3||||||
-ESECO|D/11|D|OM|opción múltiple|11|600|✔|Pérdida súbita de sentido del olfato o gusto|si_no|||||||||||1;147;156;600|F:F3||d11|d11|||
-ESECO|D/11/1|D/11|O|opción|1|610|✔|Sí||||||||||||1;147;156;600;610|F:F3||||||
-ESECO|D/11/2|D/11|O|opción|2|620|✔|No||||||||||||1;147;156;600;620|F:F3||||||
-ESECO|D/12|D|OM|opción múltiple|12|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||||||1;147;156;640|F:F3||d12|d12|d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1||
-ESECO|D/12/1|D/12|O|opción|1|650|✔|Sí||||||||||||1;147;156;640;650|F:F3||||||
-ESECO|D/12/2|D/12|O|opción|2|660|✔|No||||||||||||1;147;156;640;660|F:F3||||||
+ESECO|D3|D|P|pregunta|D3|156|✔|En los últimos dos meses , ¿tuvo alguno de los siguientes síntomas?||||||||true||||1;147;156|F:F3||||||
+ESECO|D3/3|D3|OM|opción múltiple|3|157|✔|Fiebre?|si_no|||||||||||1;147;156;157|F:F3||d3|d3|||
+ESECO|D3/3/1|D3/3|O|opción|1|158|✔|Sí||||||||||||1;147;156;157;158|F:F3||||||
+ESECO|D3/3/2|D3/3|O|opción|2|159|✔|No||||||||||||1;147;156;157;159|F:F3||||||
+ESECO|D3/4|D3|OM|opción múltiple|4|160|✔|Escalofríos?|si_no|||||||||||1;147;156;160|F:F3||d4|d4|||
+ESECO|D3/4/1|D3/4|O|opción|1|161|✔|Sí||||||||||||1;147;156;160;161|F:F3||||||
+ESECO|D3/4/2|D3/4|O|opción|2|162|✔|No||||||||||||1;147;156;160;162|F:F3||||||
+ESECO|D3/5|D3|OM|opción múltiple|5|163|✔|Cansancio intenso?|si_no|||||||||||1;147;156;163|F:F3||d5|d5|||
+ESECO|D3/5/1|D3/5|O|opción|1|164|✔|Sí||||||||||||1;147;156;163;164|F:F3||||||
+ESECO|D3/5/2|D3/5|O|opción|2|165|✔|No||||||||||||1;147;156;163;165|F:F3||||||
+ESECO|D3/6|D3|OM|opción múltiple|6|166|✔|Dolor garganta?|si_no|||||||||||1;147;156;166|F:F3||d6|d6|||
+ESECO|D3/6/1|D3/6|O|opción|1|167|✔|Sí||||||||||||1;147;156;166;167|F:F3||||||
+ESECO|D3/6/2|D3/6|O|opción|2|168|✔|No||||||||||||1;147;156;166;168|F:F3||||||
+ESECO|D3/7|D3|OM|opción múltiple|7|169|✔|Tos?|si_no|||||||||||1;147;156;169|F:F3||d7|d7|||
+ESECO|D3/7/1|D3/7|O|opción|1|170|✔|Sí||||||||||||1;147;156;169;170|F:F3||||||
+ESECO|D3/7/2|D3/7|O|opción|2|171|✔|No||||||||||||1;147;156;169;171|F:F3||||||
+ESECO|D3/8|D3|OM|opción múltiple|8|172|✔|Sensación de falta de aire al respirar?|si_no|||||||||||1;147;156;172|F:F3||d8|d8|||
+ESECO|D3/8/1|D3/8|O|opción|1|173|✔|Sí||||||||||||1;147;156;172;173|F:F3||||||
+ESECO|D3/8/2|D3/8|O|opción|2|174|✔|No||||||||||||1;147;156;172;174|F:F3||||||
+ESECO|D3/9|D3|OM|opción múltiple|9|175|✔|Dolor de cabeza?|si_no|||||||||||1;147;156;175|F:F3||d9|d9|||
+ESECO|D3/9/1|D3/9|O|opción|1|176|✔|Sí||||||||||||1;147;156;175;176|F:F3||||||
+ESECO|D3/9/2|D3/9|O|opción|2|177|✔|No||||||||||||1;147;156;175;177|F:F3||||||
+ESECO|D3/10|D3|OM|opción múltiple|10|178|✔|Náuseas y/o vómitos y/o diarrea?|si_no|||||||||||1;147;156;178|F:F3||d10|d10|||
+ESECO|D3/10/1|D3/10|O|opción|1|179|✔|Sí||||||||||||1;147;156;178;179|F:F3||||||
+ESECO|D3/10/2|D3/10|O|opción|2|590|✔|No||||||||||||1;147;156;178;590|F:F3||||||
+ESECO|D3/11|D3|OM|opción múltiple|11|600|✔|Pérdida súbita de sentido del olfato o gusto?|si_no|||||||||||1;147;156;600|F:F3||d11|d11|||
+ESECO|D3/11/1|D3/11|O|opción|1|610|✔|Sí||||||||||||1;147;156;600;610|F:F3||||||
+ESECO|D3/11/2|D3/11|O|opción|2|620|✔|No||||||||||||1;147;156;600;620|F:F3||||||
+ESECO|12|D|P|pregunta|12|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||true||||1;147;640|F:F3||d12|d12|d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1||
+ESECO|12/1|12|O|opción|1|650|✔|Sí||||||||||||1;147;640;650|F:F3||||||
+ESECO|12/2|12|O|opción|2|660|✔|No||||||||||||1;147;640;660|F:F3||||||
 ESECO|AE|F:F3|B|bloque|AE|670|✔|Antecedentes de otras enfermedades de riesgo||||||||true||A||1;670|F:F3||||||
 ESECO|A|AE|P|pregunta|A|680|✔|¿Alguna vez un médico o personal de salud le dijo que tenía ...||||||||true||||1;670;680|F:F3||||||
 ESECO|A/1|A|OM|opción múltiple|1|720|✔|diabetes?|si_no|||||||||||1;670;680;720|F:F3||a1|a1|||
@@ -97,35 +97,35 @@ ESECO|CV4/4|CV4|OM|opción múltiple|4|1180|!O|Personal de limpieza, cuidadora, 
 ESECO|CV4/5|CV4|OM|opción múltiple|5|1190|!O|Cliente profesional (o paciente en caso de personal sanitario)|si_no|||||||||||1;970;1140;1190|F:F3||cv4_5||||
 ESECO|T|F:F3|B|bloque|T|1200|✔|Trabajo||||||||true||||1;1200|F:F3||||||
 ESECO|T1|T|P|pregunta|T1|1210|✔|En los últimos dos meses, ¿trabajó en alguno de estos sectores?||||||||true||||1;1200;1210|F:F3||||||
-ESECO|T1/1|T1|OM|opción múltiple|1|1220|✔|En comercio|si_no|||||||||||1;1200;1210;1220|F:F3||t1|t1|||
+ESECO|T1/1|T1|OM|opción múltiple|1|1220|✔|En comercio|si_no|||||||||||1;1200;1210;1220|F:F3||t1|t1|t1>0 OR t10<>2||
 ESECO|T1/1/1|T1/1|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1220;1|F:F3||||||
 ESECO|T1/1/2|T1/1|O|opción|2|2|✔|No||||||||||||1;1200;1210;1220;2|F:F3||||||
-ESECO|T1/2|T1|OM|opción múltiple|2|1230|✔|En transporte|si_no|||||||||||1;1200;1210;1230|F:F3||t2|t2|||
+ESECO|T1/2|T1|OM|opción múltiple|2|1230|✔|En transporte|si_no|||||||||||1;1200;1210;1230|F:F3||t2|t2|t2>0 OR t10<>2||
 ESECO|T1/2/1|T1/2|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1230;1|F:F3||||||
 ESECO|T1/2/2|T1/2|O|opción|2|2|✔|No||||||||||||1;1200;1210;1230;2|F:F3||||||
-ESECO|T1/3|T1|OM|opción múltiple|3|1250|✔|En cuerpos y fuerzas de seguridad, bombero, protección civil|si_no|||||||||||1;1200;1210;1250|F:F3||t3|t3|||
+ESECO|T1/3|T1|OM|opción múltiple|3|1250|✔|En cuerpos y fuerzas de seguridad, bombero, protección civil|si_no|||||||||||1;1200;1210;1250|F:F3||t3|t3|t3>0 OR t10<>2||
 ESECO|T1/3/1|T1/3|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1250;1|F:F3||||||
 ESECO|T1/3/2|T1/3|O|opción|2|2|✔|No||||||||||||1;1200;1210;1250;2|F:F3||||||
-ESECO|T1/4|T1|OM|opción múltiple|4|1260|✔|En limpieza|si_no|||||||||||1;1200;1210;1260|F:F3||t4|t4|||
+ESECO|T1/4|T1|OM|opción múltiple|4|1260|✔|En limpieza|si_no|||||||||||1;1200;1210;1260|F:F3||t4|t4|t4>0 OR t10<>2||
 ESECO|T1/4/1|T1/4|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1260;1|F:F3||||||
 ESECO|T1/4/2|T1/4|O|opción|2|2|✔|No||||||||||||1;1200;1210;1260;2|F:F3||||||
-ESECO|T1/5|T1|OM|opción múltiple|5|1298|✔|En un centro sanitario con atención clínica a pacientes|si_no|||||||||||1;1200;1210;1298|F:F3||t5|t5|||
+ESECO|T1/5|T1|OM|opción múltiple|5|1298|✔|En un centro sanitario con atención clínica a pacientes|si_no|||||||||||1;1200;1210;1298|F:F3||t5|t5|t5>0 OR t10<>2||
 ESECO|T1/5/1|T1/5|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1298;1|F:F3||||||
 ESECO|T1/5/2|T1/5|O|opción|2|2|✔|No||||||||||||1;1200;1210;1298;2|F:F3||||||
-ESECO|T1/6|T1|OM|opción múltiple|6|1300|✔|En otro personal de centros sanitarios o sociosanitarios|si_no|||||||||||1;1200;1210;1300|F:F3||t6|t6|||
+ESECO|T1/6|T1|OM|opción múltiple|6|1300|✔|En otro personal de centros sanitarios o sociosanitarios|si_no|||||||||||1;1200;1210;1300|F:F3||t6|t6|t6>0 OR t10<>2||
 ESECO|T1/6/1|T1/6|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1300;1|F:F3||||||
 ESECO|T1/6/2|T1/6|O|opción|2|2|✔|No||||||||||||1;1200;1210;1300;2|F:F3||||||
-ESECO|T1/7|T1|OM|opción múltiple|7|1310|✔|Como cuidador de persona a domicilio|si_no|||||||||||1;1200;1210;1310|F:F3||t7|t7|||
+ESECO|T1/7|T1|OM|opción múltiple|7|1310|✔|Como cuidador de persona a domicilio|si_no|||||||||||1;1200;1210;1310|F:F3||t7|t7|t7>0 OR t10<>2||
 ESECO|T1/7/1|T1/7|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1310;1|F:F3||||||
 ESECO|T1/7/2|T1/7|O|opción|2|2|✔|No||||||||||||1;1200;1210;1310;2|F:F3||||||
-ESECO|T1/8|T1|OM|opción múltiple|8|1320|✔|En otros sectores presenciales de manera presencial|si_no|||||||||||1;1200;1210;1320|F:F3||t8|t8|||
+ESECO|T1/8|T1|OM|opción múltiple|8|1320|✔|En otros sectores presenciales de manera presencial|si_no|||||||||||1;1200;1210;1320|F:F3||t8|t8|t8>0 OR t10<>2||
 ESECO|T1/8/1|T1/8|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1320;1|F:F3||||||
 ESECO|T1/8/2|T1/8|O|opción|2|2|✔|No||||||||||||1;1200;1210;1320;2|F:F3||||||
-ESECO|T1/9|T1|OM|opción múltiple|9|1330|✔|Trabajó, pero no lo hizo en los sectores mencionados anteriormente|si_no|||||||||||1;1200;1210;1330|F:F3||t9|t9|t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2||
+ESECO|T1/9|T1|OM|opción múltiple|9|1330|✔|Trabajó, pero no lo hizo en los sectores mencionados anteriormente|si_no|||||||||||1;1200;1210;1330|F:F3||t9|t9|(t9>0 OR t10<>2) & t1<>1 & t2<>1 & t3<>1 & t4<>1 & t5<>1 & t6<>1 & t7<>1 & t8<>1||
 ESECO|T1/9/1|T1/9|O|opción|1|1|✔|Sí||||||||||||1;1200;1210;1330;1|F:F3||||||
 ESECO|T1/9/2|T1/9|O|opción|2|2|✔|No||||||||||||1;1200;1210;1330;2|F:F3||||||
-ESECO|T1/10|T1|OM|opción múltiple|10|1340|✔|No trabajó en los últimos dos meses|opciones|||||||||||1;1200;1210;1340|F:F3||t10|t10|t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2||
-ESECO|T1/10/2|T1/10|O|opción|2|2|✔|No, no trabajó|||||R1|||||||1;1200;1210;1340;2|F:F3||||||
+ESECO|T1/10|T1|OM|opción múltiple|10|1340|✔|No trabajó en los últimos dos meses|opciones|||||||||||1;1200;1210;1340|F:F3||t10|t10|t1<>1 & t2<>1 & t3<>1 & t4<>1 & t5<>1 & t6<>1 & t7<>1 & t8<>1 & t9<>1||
+ESECO|T1/10/2|T1/10|O|opción|2|2|✔|No, no trabajó|||||E|||||||1;1200;1210;1340;2|F:F3||||||
 ESECO|T11|T|P|pregunta|T11|1350|✔|¿Continúa trabajando ?|si_no|||||||true||||1;1200;1350|F:F3||t11||||
 ESECO|T11/1|T11|O|opción|1|1360|✔|Sí||||||||||||1;1200;1350;1360|F:F3||||||
 ESECO|T11/2|T11|O|opción|2|1370|✔|No||||||||||||1;1200;1350;1370|F:F3||||||
@@ -136,13 +136,6 @@ ESECO|T13|T|P|pregunta|T13|1410|✔|¿Cuántas horas semanales trabaja?|opciones
 ESECO|T13/1|T13|O|opción|1|1420|✔|Hasta 34 horas|||||||||no leer|||1;1200;1410;1420|F:F3||||||
 ESECO|T13/2|T13|O|opción|2|1430|✔|Entre 35 y 45 horas|||||||||no leer|||1;1200;1410;1430|F:F3||||||
 ESECO|T13/3|T13|O|opción|3|1440|✔|Más de 45 horas|||||||||no leer|||1;1200;1410;1440|F:F3||||||
-ESECO|R|F:F3|B|bloque|R|1450|✔|Hoja de control- Resultados del laboratorio||||Uso interno - ingresa dato el laboratorio ||||true||||1;1450|F:F3||||||
-ESECO|R1|R|P|pregunta|R1|1460|✔|Participante Test rápido válido|si_no|||||||true|no leer|||1;1450;1460|F:F3||r1||||
-ESECO|R1/1|R1|O|opción|1|1470|✔|Sí||||||||||||1;1450;1460;1470|F:F3||||||
-ESECO|R1/2|R1|O|opción|2|1480|✔|No||||||||||||1;1450;1460;1480|F:F3||||||
-ESECO|R2|R|P|pregunta|R2|1490|✔|Resultado Ig G|opciones|||||||true|no leer|||1;1450;1490|F:F3||r2||||
-ESECO|R2/1|R2|O|opción|1|1500|✔|Positivo||||||||||||1;1450;1490;1500|F:F3||||||
-ESECO|R2/2|R2|O|opción|2|1510|✔|Negativo||||||||||||1;1450;1490;1510|F:F3||||||
 ESECO|E|F:F3|B|bloque|E|1520|✔|Datos del entrevistado para devolución de resultados y supervisión||||Los datos del entrevistado/a se deben copiar de un original, fotocopia o App||||true||||1;1520|F:F3||||||
 ESECO|E1|E|P|pregunta|E1|1530|✔|Apellido y nombre|texto|||||||true|no leer|||1;1520;1530|F:F3||e1||||
 ESECO|E2|E|P|pregunta|E2|1540|✔|Tipo de documentación identificatoria|opciones|||||||true|no leer|||1;1520;1540|F:F3||e2||||
