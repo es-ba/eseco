@@ -4,7 +4,8 @@ import { CasilleroBase, CasillerosImplementados, CasoState,
     Formulario, ForPk, 
     IdCasillero, IdDestino, IdFormulario, IdVariable, 
     ModoDespliegue, 
-    Opcion, Respuestas
+    Opcion, Respuestas,
+    TEM
 } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
@@ -87,6 +88,20 @@ function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHabilitar
 
 var rowValidator = getRowValidator({getFuncionHabilitar})
 
+function calcularFeedback(state: CasoState){
+    var forPk=state.opciones.forPk;
+    if(forPk==null){
+        return state;
+    }
+    return {
+        ...state,
+        feedbackRowValidator:rowValidator(
+            state.estructura.formularios[forPk.formulario].estructuraRowValidator, 
+            state.datos.hdr[forPk.vivienda]!.respuestas
+        )
+    }
+}
+
 var reducers={
     REGISTRAR_RESPUESTA: (payload: {forPk:ForPk, variable:string, respuesta:any}) => 
         function(state: CasoState){
@@ -101,7 +116,7 @@ var reducers={
                     [payload.variable]: payload.respuesta
                 }
             }
-            var nuevoEstado = {
+            return {
                 ...state,
                 datos:{
                     ...state.datos,
@@ -112,18 +127,34 @@ var reducers={
                 }
             }
             console.log(JSON.stringify(nuevosDatosVivienda.respuestas))
-            return {
-                ...nuevoEstado,
-                feedbackRowValidator:rowValidator(nuevoEstado.estructura.formularios[payload.forPk.formulario].estructuraRowValidator, nuevosDatosVivienda.respuestas)
-            }
         },
     MODO_DESPLIEGUE: (payload: {modoDespliegue:ModoDespliegue}) => 
         function(state: CasoState){
             return {
                 ...state,
-                estado:{
+                opciones:{
                     ...state.opciones,
                     modoDespliegue:payload.modoDespliegue
+                }
+            }
+        },
+    CAMBIAR_FORMULARIO: (payload: {forPk:ForPk}) => 
+        function(state: CasoState){
+            return {
+                ...state,
+                opciones:{
+                    ...state.opciones,
+                    forPk: payload.forPk
+                }
+            }
+        },
+    VOLVER_HDR: (_payload: {}) => 
+        function(state: CasoState){
+            return {
+                ...state,
+                opciones:{
+                    ...state.opciones,
+                    forPk: null
                 }
             }
         }
@@ -267,13 +298,14 @@ export async function dmTraerDatosFormulario(){
                         // d3=1 || d4=1 || d5=1 || d6=1 || d7=1 || d8=1 || d9=1 || d10=1 || d11=1
                         // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
                         // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
-                    } as unknown as Respuestas
-                }
+                    } as unknown as Respuestas,
+                    tem:{nomcalle:'Bolivar', nrocatastral:'555'} as TEM
+                },
             }
         },
         opciones:{
             modoDespliegue:'relevamiento',
-            forPk:{vivienda:'capacitacion', formulario:MAIN_FORM}
+            forPk:{vivienda:'capacitacion', formulario:'F:F3' as IdFormulario} // null
             // modoDespliegue:'metadatos'
         },
         feedbackRowValidator:{
@@ -285,6 +317,21 @@ export async function dmTraerDatosFormulario(){
         }
     };
     initialState.feedbackRowValidator=rowValidator(initialState.estructura.formularios[MAIN_FORM].estructuraRowValidator, initialState.datos.hdr.capacitacion!.respuestas)
+
+    initialState.datos.hdr['10902']={
+        tem:{
+            nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
+        } as TEM,
+        // @ts-ignore
+        respuestas:{}
+    };
+    initialState.datos.hdr['10909']={
+        tem:{
+            nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
+        } as TEM,
+        // @ts-ignore
+        respuestas:{}
+    }
     /* DEFINICION CONTROLADOR */
     const hdrReducer = createReducer(reducers, initialState);
     /* FIN DEFINICION CONTROLADOR */

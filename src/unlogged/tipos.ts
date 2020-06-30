@@ -151,10 +151,26 @@ export type Respuestas={
         [pregunta in IdVariable]:Valor
     }
 
-export type IdCaso='capacitacion'|'viv101'|'viv102'|'etc...' // el caso es una vivienda
+export type IdCaso='capacitacion'|'10902'|'10909'|'etc...' // el caso es una vivienda
+
+export type TEM = {
+    nomcalle:string
+    sector:string
+    edificio:string
+    entrada:string
+    nrocatastral:string
+    piso:string	
+    departamento:string
+    habitacion:string
+    casa:string
+    prioridad:1|2|3
+}
 
 export type HojaDeRuta={
-    [idCaso in IdCaso]?: {respuestas: Respuestas}
+    [idCaso in IdCaso]?: {
+        respuestas: Respuestas
+        tem: TEM
+    }
 }
 
 export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
@@ -175,7 +191,7 @@ export type CasoState={
         hdr:HojaDeRuta
     }
     opciones:{ // datos de navegación que elije el usuario
-        forPk:ForPk // índice dentro de las unidades de análisis
+        forPk:ForPk|null // índice dentro de las unidades de análisis. Null = en hoja de ruta
         modoDespliegue:ModoDespliegue
     },
     feedbackRowValidator:FormStructureState<IdVariable,IdFin>|null // resultado del rowValidator para estado.forPk

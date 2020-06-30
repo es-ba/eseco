@@ -429,11 +429,11 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
 
 const FormularioEncabezado = DespliegueEncabezado;
 
-function FormularioDespliegue(){
-    var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.opciones.forPk.formulario]!.casilleros);
+function FormularioDespliegue(props:{forPk:ForPk}){
+    var forPk = props.forPk;
+    var formulario = useSelector((state:CasoState)=>state.estructura.formularios[forPk.formulario]!.casilleros);
     var formStructureState = useSelector((state:CasoState)=>state.feedbackRowValidator);
     var modoDespliegue =  useSelector((state:CasoState)=>state.opciones.modoDespliegue);
-    var forPk =  useSelector((state:CasoState)=>state.opciones.forPk);
     const dispatch = useDispatch();
     var listaModos:ModoDespliegue[]=['metadatos','relevamiento','estricto'];
     return <div className="formulario" modo-despliegue={modoDespliegue}>
@@ -452,6 +452,19 @@ function FormularioDespliegue(){
     </div>
 }
 
+export function HojaDeRutaDespliegue(){
+    return <div>Hoja de ruta</div>
+}
+
+export function AppEseco(){
+    var forPk = useSelector((state:CasoState)=>state.opciones.forPk);
+    if(forPk==null){
+        return <HojaDeRutaDespliegue /> 
+    }else{
+        return <FormularioDespliegue forPk={forPk}/>
+    }
+}
+
 export async function desplegarFormularioActual(){
     // traer los metadatos en una "estructura"
     // traer los datos de localStorage
@@ -459,7 +472,7 @@ export async function desplegarFormularioActual(){
     const store = await dmTraerDatosFormulario()
     ReactDOM.render(
         <RenderPrincipal store={store}>
-            <FormularioDespliegue />
+            <AppEseco/>
         </RenderPrincipal>,
         document.getElementById('main_layout')
     )
