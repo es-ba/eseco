@@ -50,31 +50,31 @@ ESECO|D3/11/2|D3/11|O|opción|2|620|✔|No||||||||||||1;147;156;600;620|F:F3||||
 ESECO|12|D|P|pregunta|12|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||true||||1;147;640|F:F3||d12|d12|d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1||
 ESECO|12/1|12|O|opción|1|650|✔|Sí||||||||||||1;147;640;650|F:F3||||||
 ESECO|12/2|12|O|opción|2|660|✔|No||||||||||||1;147;640;660|F:F3||||||
-ESECO|AE|F:F3|B|bloque|AE|670|✔|Antecedentes de otras enfermedades de riesgo||||||||true||A||1;670|F:F3||||||
-ESECO|A|AE|P|pregunta|A|680|✔|¿Alguna vez un médico o personal de salud le dijo que tenía ...||||||||true||||1;670;680|F:F3||||||
-ESECO|A/1|A|OM|opción múltiple|1|720|✔|diabetes?|si_no|||||||||||1;670;680;720|F:F3||a1|a1|||
-ESECO|A/1/1|A/1|O|opción|1|750|✔|Sí||||||||||||1;670;680;720;750|F:F3||||||
-ESECO|A/1/2|A/1|O|opción|2|760|✔|No||||||||||||1;670;680;720;760|F:F3||||||
-ESECO|A/2|A|OM|opción múltiple|2|770|✔|hipertensión arterial?|si_no|||||||||||1;670;680;770|F:F3||a2|a2|||
-ESECO|A/2/1|A/2|O|opción|1|780|✔|Sí||||||||||||1;670;680;770;780|F:F3||||||
-ESECO|A/2/2|A/2|O|opción|2|790|✔|No||||||||||||1;670;680;770;790|F:F3||||||
-ESECO|A/3|A|OM|opción múltiple|3|800|✔|alguna enfermedad cardiovascular?|si_no|||||||||||1;670;680;800|F:F3||a3|a3|||
-ESECO|A/3/1|A/3|O|opción|1|810|✔|Sí||||||||||||1;670;680;800;810|F:F3||||||
-ESECO|A/3/2|A/3|O|opción|2|820|✔|No||||||||||||1;670;680;800;820|F:F3||||||
-ESECO|A/4|A|OM|opción múltiple|4|830|✔|alguna enfermedad pulmonar crónica (asma, EPOC, bronquitis crónica)?|si_no|||||||||||1;670;680;830|F:F3||a4|a4|||
-ESECO|A/4/1|A/4|O|opción|1|840|✔|Sí||||||||||||1;670;680;830;840|F:F3||||||
-ESECO|A/4/2|A/4|O|opción|2|850|✔|No||||||||||||1;670;680;830;850|F:F3||||||
-ESECO|A/5|A|OM|opción múltiple|5|860|✔|otra enfermedad crónica o grave?|si_no|||||||||||1;670;680;860|F:F3||a5|a5|||
-ESECO|A/5/1|A/5|O|opción|1|870|✔|Sí||||||||||||1;670;680;860;870|F:F3||||||
-ESECO|A/5/2|A/5|O|opción|2|880|✔|No||||||||||||1;670;680;860;880|F:F3||||||
-ESECO|A6|AE|P|pregunta|A6|890|✔|¿Le diagnosticaron algún cáncer en los últimos 5 años?|si_no|||||||true||||1;670;890|F:F3||a6||||
+ESECO|A|F:F3|B|bloque|A|670|✔|Antecedentes de otras enfermedades de riesgo||||||||true||||1;670|F:F3||||||
+ESECO|A1|A|P|pregunta|A1|680|✔|¿Alguna vez un médico o personal de salud le dijo que tenía ...||||||||true||||1;670;680|F:F3||||||
+ESECO|A1/1|A1|OM|opción múltiple|1|720|✔|diabetes?|si_no|||||||||||1;670;680;720|F:F3||a1|a1|||
+ESECO|A1/1/1|A1/1|O|opción|1|750|✔|Sí||||||||||||1;670;680;720;750|F:F3||||||
+ESECO|A1/1/2|A1/1|O|opción|2|760|✔|No||||||||||||1;670;680;720;760|F:F3||||||
+ESECO|A1/2|A1|OM|opción múltiple|2|770|✔|hipertensión arterial?|si_no|||||||||||1;670;680;770|F:F3||a2|a2|||
+ESECO|A1/2/1|A1/2|O|opción|1|780|✔|Sí||||||||||||1;670;680;770;780|F:F3||||||
+ESECO|A1/2/2|A1/2|O|opción|2|790|✔|No||||||||||||1;670;680;770;790|F:F3||||||
+ESECO|A1/3|A1|OM|opción múltiple|3|800|✔|alguna enfermedad cardiovascular?|si_no|||||||||||1;670;680;800|F:F3||a3|a3|||
+ESECO|A1/3/1|A1/3|O|opción|1|810|✔|Sí||||||||||||1;670;680;800;810|F:F3||||||
+ESECO|A1/3/2|A1/3|O|opción|2|820|✔|No||||||||||||1;670;680;800;820|F:F3||||||
+ESECO|A1/4|A1|OM|opción múltiple|4|830|✔|alguna enfermedad pulmonar crónica (asma, EPOC, bronquitis crónica)?|si_no|||||||||||1;670;680;830|F:F3||a4|a4|||
+ESECO|A1/4/1|A1/4|O|opción|1|840|✔|Sí||||||||||||1;670;680;830;840|F:F3||||||
+ESECO|A1/4/2|A1/4|O|opción|2|850|✔|No||||||||||||1;670;680;830;850|F:F3||||||
+ESECO|A1/5|A1|OM|opción múltiple|5|860|✔|otra enfermedad crónica o grave?|si_no|||||||||||1;670;680;860|F:F3||a5|a5|||
+ESECO|A1/5/1|A1/5|O|opción|1|870|✔|Sí||||||||||||1;670;680;860;870|F:F3||||||
+ESECO|A1/5/2|A1/5|O|opción|2|880|✔|No||||||||||||1;670;680;860;880|F:F3||||||
+ESECO|A6|A|P|pregunta|A6|890|✔|¿Le diagnosticaron algún cáncer en los últimos 5 años?|si_no|||||||true||||1;670;890|F:F3||a6||||
 ESECO|A6/1|A6|O|opción|1|900|✔|Sí||||||||||||1;670;890;900|F:F3||||||
 ESECO|A6/2|A6|O|opción|2|910|✔|No||||||||||||1;670;890;910|F:F3||||||
-ESECO|A7|AE|P|pregunta|A7|920|✔|¿Es fumador/a o fue fumador/a (más de 1 cigarrillo/día) en los últimos 5 años?|si_no|||||||true||||1;670;920|F:F3||a7||||
+ESECO|A7|A|P|pregunta|A7|920|✔|¿Es fumador/a o fue fumador/a (más de 1 cigarrillo/día) en los últimos 5 años?|si_no|||||||true||||1;670;920|F:F3||a7||||
 ESECO|A7/1|A7|O|opción|1|930|✔|Sí||||||||||||1;670;920;930|F:F3||||||
 ESECO|A7/2|A7|O|opción|2|940|✔|No||||||||||||1;670;920;940|F:F3||||||
-ESECO|A8|AE|P|pregunta|A8|950|✔|¿Podría decirme cuánto mide, aproximadamente, sin zapatos?|numero|||cm||||true||||1;670;950|F:F3||a8||||
-ESECO|A9|AE|P|pregunta|A9|960|✔|¿Podría decirme cuánto pesa, aproximadamente, sin zapatos ni ropa?|numero|||Kg||||true||||1;670;960|F:F3||a9||||
+ESECO|A8|A|P|pregunta|A8|950|✔|¿Podría decirme cuánto mide, aproximadamente, sin zapatos?|numero|||cm||||true||||1;670;950|F:F3||a8||||
+ESECO|A9|A|P|pregunta|A9|960|✔|¿Podría decirme cuánto pesa, aproximadamente, sin zapatos ni ropa?|numero|||Kg||||true||||1;670;960|F:F3||a9||||
 ESECO|CV|F:F3|B|bloque|CV|970|✔|Contacto con casos y viajes||||||||true||||1;970|F:F3||||||
 ESECO|CV1|CV|P|pregunta|CV1|980|✔|En los últimos dos meses, ¿estuvo en contacto con alguna persona diagnosticada de COVID-19?|opciones|||||||true||||1;970;980|F:F3||cv1||||
 ESECO|CV1/1|CV1|O|opción|1|990|✔|Sí||||||||||||1;970;980;990|F:F3||||||
@@ -145,15 +145,15 @@ ESECO|E2/3|E2|O|opción|3|1570|✔|No tiene documento|||||C1|||||||1;1520;1540;1
 ESECO|E2/4|E2|O|opción|4|1580|✔|Otro||||||||||||1;1520;1540;1580|F:F3||||||
 ESECO|E3|E|P|pregunta|E3|1590|✔|¿Cuál?|texto|||||||true|no leer|||1;1520;1590|F:F3||e3||||
 ESECO|E4|E|P|pregunta|E4|1600|✔|País emisor del documento|opciones|||||||true|no leer|||1;1520;1600|F:F3||e4||||
-ESECO|E4/1|E4|O|opción|1|1610|✔|Uruguay|||||E6|||||||1;1520;1600;1610|F:F3||||||
-ESECO|E4/2|E4|O|opción|2|1620|✔|Paraguay|||||E6|||||||1;1520;1600;1620|F:F3||||||
-ESECO|E4/3|E4|O|opción|3|1630|✔|Brasil|||||E6|||||||1;1520;1600;1630|F:F3||||||
-ESECO|E4/4|E4|O|opción|4|1640|✔|Bolivia|||||E6|||||||1;1520;1600;1640|F:F3||||||
-ESECO|E4/5|E4|O|opción|5|1650|✔|Chile|||||E6|||||||1;1520;1600;1650|F:F3||||||
-ESECO|E4/6|E4|O|opción|6|1660|✔|Perú|||||E6|||||||1;1520;1600;1660|F:F3||||||
-ESECO|E4/7|E4|O|opción|7|1670|✔|Venezuela|||||E6|||||||1;1520;1600;1670|F:F3||||||
+ESECO|E4/1|E4|O|opción|1|1610|✔|Uruguay||||||||||||1;1520;1600;1610|F:F3||||||
+ESECO|E4/2|E4|O|opción|2|1620|✔|Paraguay||||||||||||1;1520;1600;1620|F:F3||||||
+ESECO|E4/3|E4|O|opción|3|1630|✔|Brasil||||||||||||1;1520;1600;1630|F:F3||||||
+ESECO|E4/4|E4|O|opción|4|1640|✔|Bolivia||||||||||||1;1520;1600;1640|F:F3||||||
+ESECO|E4/5|E4|O|opción|5|1650|✔|Chile||||||||||||1;1520;1600;1650|F:F3||||||
+ESECO|E4/6|E4|O|opción|6|1660|✔|Perú||||||||||||1;1520;1600;1660|F:F3||||||
+ESECO|E4/7|E4|O|opción|7|1670|✔|Venezuela||||||||||||1;1520;1600;1670|F:F3||||||
 ESECO|E4/8|E4|O|opción|8|1680|✔|Otro (especificar)||||||||||||1;1520;1600;1680|F:F3||||||
-ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no leer|||1;1520;1690|F:F3||e5||||
+ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no leer|||1;1520;1690|F:F3||e5||e4=8||
 ESECO|E6|E|P|pregunta|E6|1700|✔|Número|texto|||||||true|no leer|||1;1520;1700|F:F3||e6||||
 ESECO|C|F:F3|B|bloque|C|1710|✔|Contacto||||||||true||||1;1710|F:F3||||||
 ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|||||||true|no leer|||1;1710;1720|F:F3||c1||||
