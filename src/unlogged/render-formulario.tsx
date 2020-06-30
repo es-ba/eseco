@@ -5,6 +5,7 @@ import {
     clsx, memoize, adaptarTipoVarCasillero
 } from "./render-general";
 import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, 
+    IdCaso, 
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
     Respuestas, Valor, IdVariable, ModoDespliegue
@@ -385,8 +386,15 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
     </Paper>
 }
 
+function useSelectorVivienda(vivienda:IdCaso){
+    return useSelector((state:CasoState)=>({
+        respuestas: state.datos.hdr[vivienda]!.respuestas || null, 
+        feedback: state.feedbackRowValidator!.estados || null
+    }))
+}
+
 function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Bloque|Formulario, forPk:ForPk}){
-    var [respuestas, estadosValidator] = useSelector((state:CasoState)=>[state.datos.respuestas, state.formStructureState.estados]);
+    var {respuestas, feedback} = useSelectorVivienda(props.forPk.vivienda);
     return <div className="casilleros">{
         props.bloqueOFormulario.casilleros.map((casillero)=>
             <Grid key={casillero.casillero} item>
@@ -394,11 +402,11 @@ function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Blo
                     casillero.tipoc == "P"?
                         <PreguntaDespliegue 
                             pregunta={casillero} 
-                            forPk={{vivienda:1, persona:1}} 
+                            forPk={props.forPk} 
                             valorActual={casillero.var_name && respuestas[casillero.var_name] || null} 
                             respuestas={(!casillero.var_name || null) && respuestas}
-                            validateState={casillero.var_name && estadosValidator[casillero.var_name] || null}
-                            validateRow={!casillero.var_name && estadosValidator || null}
+                            validateState={casillero.var_name && feedback[casillero.var_name] || null}
+                            validateRow={!casillero.var_name && feedback || null}
                         />:
                     casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero} forPk={props.forPk}/>:
                     casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero} forPk={props.forPk}/>:
@@ -422,10 +430,10 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
 const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(){
-    var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.estado.formularioActual]);
-    var formStructureState = useSelector((state:CasoState)=>state.formStructureState);
-    var modoDespliegue =  useSelector((state:CasoState)=>state.estado.modoDespliegue);
-    var forPk =  useSelector((state:CasoState)=>state.estado.forPk);
+    var formulario = useSelector((state:CasoState)=>state.estructura.formularios[state.opciones.forPk.formulario]!.casilleros);
+    var formStructureState = useSelector((state:CasoState)=>state.feedbackRowValidator);
+    var modoDespliegue =  useSelector((state:CasoState)=>state.opciones.modoDespliegue);
+    var forPk =  useSelector((state:CasoState)=>state.opciones.forPk);
     const dispatch = useDispatch();
     var listaModos:ModoDespliegue[]=['metadatos','relevamiento','estricto'];
     return <div className="formulario" modo-despliegue={modoDespliegue}>

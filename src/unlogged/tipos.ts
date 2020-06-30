@@ -145,11 +145,17 @@ export type Formulario= CasilleroBase & {
 
 export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion
 
-export type ForPk={vivienda:number, persona:number}
+export type ForPk={vivienda:IdCaso, formulario:IdFormulario}
 
 export type Respuestas={
         [pregunta in IdVariable]:Valor
     }
+
+export type IdCaso='capacitacion'|'viv101'|'viv102'|'etc...' // el caso es una vivienda
+
+export type HojaDeRuta={
+    [idCaso in IdCaso]?: {respuestas: Respuestas}
+}
 
 export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
 
@@ -157,20 +163,21 @@ export type ModoDespliegue = 'metadatos'|'relevamiento'|'estricto'
 
 export type CasoState={
     estructura:{
-        formularios:{
-            [nombreFormulario in IdFormulario]:Formulario
+        formularios:{ 
+            [nombreFormulario in IdFormulario]:{
+                casilleros:Formulario, // casilleros aplanados
+                estructuraRowValidator:EstructuraRowValidator // estructura de variables para el RowValidator
+            }
         },
-        estructuraRowValidator:EstructuraRowValidator
     },
     mainForm:IdFormulario
     datos:{
-        respuestas:Respuestas
+        hdr:HojaDeRuta
     }
-    estado:{
-        formularioActual:IdFormulario
-        forPk:ForPk
+    opciones:{ // datos de navegación que elije el usuario
+        forPk:ForPk // índice dentro de las unidades de análisis
         modoDespliegue:ModoDespliegue
     },
-    formStructureState:FormStructureState<IdVariable,IdFin>
+    feedbackRowValidator:FormStructureState<IdVariable,IdFin>|null // resultado del rowValidator para estado.forPk
 }
 

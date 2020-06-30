@@ -90,21 +90,31 @@ var rowValidator = getRowValidator({getFuncionHabilitar})
 var reducers={
     REGISTRAR_RESPUESTA: (payload: {forPk:ForPk, variable:string, respuesta:any}) => 
         function(state: CasoState){
+            var datosVivienda=state.datos.hdr[payload.forPk.vivienda];
+            if(datosVivienda==null){
+                return state;
+            }
+            var nuevosDatosVivienda={
+                ...datosVivienda,
+                respuestas:{
+                    ...datosVivienda.respuestas,
+                    [payload.variable]: payload.respuesta
+                }
+            }
             var nuevoEstado = {
                 ...state,
                 datos:{
                     ...state.datos,
-                    respuestas: {
-                        ...state.datos.respuestas,
-                        [payload.variable]: payload.respuesta
+                    hdr:{
+                        ...state.datos.hdr,
+                        [payload.forPk.vivienda]:nuevosDatosVivienda
                     }
                 }
             }
-            console.log('xxxxxxxxxxxxxxxxx datos.respuestas')
-            console.log(JSON.stringify(nuevoEstado.datos.respuestas))
+            console.log(JSON.stringify(nuevosDatosVivienda.respuestas))
             return {
                 ...nuevoEstado,
-                formStructureState:rowValidator(nuevoEstado.estructura.estructuraRowValidator, nuevoEstado.datos.respuestas)
+                feedbackRowValidator:rowValidator(nuevoEstado.estructura.formularios[payload.forPk.formulario].estructuraRowValidator, nuevosDatosVivienda.respuestas)
             }
         },
     MODO_DESPLIEGUE: (payload: {modoDespliegue:ModoDespliegue}) => 
@@ -112,7 +122,7 @@ var reducers={
             return {
                 ...state,
                 estado:{
-                    ...state.estado,
+                    ...state.opciones,
                     modoDespliegue:payload.modoDespliegue
                 }
             }
@@ -226,39 +236,47 @@ function generarEstructuraRowValidator(casillero:CasillerosImplementados):Estruc
 }
 
 export async function dmTraerDatosFormulario(){
-    var casillerosOriginales = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
+    var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
     console.log(casillerosOriginales)
     //@ts-ignore
-    var casilleros:{[f in IdFormulario]:Formulario} = likeAr(casillerosOriginales).map((x:any)=>aplanarLaCurva(x));
-    var estructuraRowValidator:EstructuraRowValidator = generarEstructuraRowValidator(casilleros[MAIN_FORM]);
-    console.log('casilleros',casilleros);
-    console.log('estructuraRowValidator',estructuraRowValidator);
+    var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
+        likeAr(casillerosOriginales).map(
+            (casillerosJerarquizados:any)=>{
+                var casillerosAplanados:CasillerosImplementados = aplanarLaCurva(casillerosJerarquizados);
+                return {
+                    casilleros: casillerosAplanados,
+                    estructuraRowValidator: generarEstructuraRowValidator(casillerosAplanados)
+                }
+            }
+        ).plain();
     var initialState:CasoState={
         estructura:{
-            formularios:casilleros,
-            estructuraRowValidator
+            formularios:casillerosTodosFormularios
         },
         mainForm:MAIN_FORM,
         datos:{
-            respuestas:{
-                // hasta la D11
-                // "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"1","d11":"1"
-                // hasta la t9
-                // "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"2","d11":"2","a_1":"1","a_2":"1","a_3":"1","a_4":"2","a_5":"2","a6":"2","a7":"2","a8":"156","a9":"89","cv1":"2","cv3":"2","t1":"2","t2":"2","t3":"1","t4":"2","t5":"2","t6":"2","t7":"2","t8":"2"
-                // hasta la pregunta de texto:
-                //"s2":"2","s1":"2","s3":"1","d1":"1","d3":"1","d4":"1","d5":"1","d7":"2","d6":"2","d8":"1","d9":"1","d10":"1","d11":"1","d12":"1","a1":"1","a2":"1","a3":"1","a4":"1","a5":"1","a6":"1","a7":"1"
-                // d3=1 || d4=1 || d5=1 || d6=1 || d7=1 || d8=1 || d9=1 || d10=1 || d11=1
-                // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
-                // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
-            } as unknown as Respuestas
+            hdr:{
+                capacitacion:{
+                    respuestas:{
+                        // hasta la D11
+                        "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"1","d11":"1"
+                        // hasta la t9
+                        // "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"2","d11":"2","a_1":"1","a_2":"1","a_3":"1","a_4":"2","a_5":"2","a6":"2","a7":"2","a8":"156","a9":"89","cv1":"2","cv3":"2","t1":"2","t2":"2","t3":"1","t4":"2","t5":"2","t6":"2","t7":"2","t8":"2"
+                        // hasta la pregunta de texto:
+                        //"s2":"2","s1":"2","s3":"1","d1":"1","d3":"1","d4":"1","d5":"1","d7":"2","d6":"2","d8":"1","d9":"1","d10":"1","d11":"1","d12":"1","a1":"1","a2":"1","a3":"1","a4":"1","a5":"1","a6":"1","a7":"1"
+                        // d3=1 || d4=1 || d5=1 || d6=1 || d7=1 || d8=1 || d9=1 || d10=1 || d11=1
+                        // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
+                        // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
+                    } as unknown as Respuestas
+                }
+            }
         },
-        estado:{
-            formularioActual:MAIN_FORM,
+        opciones:{
             modoDespliegue:'relevamiento',
-            forPk:{vivienda:1, persona:1}
+            forPk:{vivienda:'capacitacion', formulario:MAIN_FORM}
             // modoDespliegue:'metadatos'
         },
-        formStructureState:{
+        feedbackRowValidator:{
             resumen:'vacio',
             estados:{},
             siguientes:{},
@@ -266,7 +284,7 @@ export async function dmTraerDatosFormulario(){
             primeraFalla:null
         }
     };
-    initialState.formStructureState=rowValidator(initialState.estructura.estructuraRowValidator, initialState.datos.respuestas)
+    initialState.feedbackRowValidator=rowValidator(initialState.estructura.formularios[MAIN_FORM].estructuraRowValidator, initialState.datos.hdr.capacitacion!.respuestas)
     /* DEFINICION CONTROLADOR */
     const hdrReducer = createReducer(reducers, initialState);
     /* FIN DEFINICION CONTROLADOR */
