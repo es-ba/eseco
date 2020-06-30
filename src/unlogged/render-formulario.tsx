@@ -281,7 +281,15 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
     useEffect(() => {
         setValor(props.valor)
     }, [props.valor]);
-    return <TextField className="variable" var-length={pregunta.longitud} value={valor?valor:''} type={adaptarTipoVarCasillero(pregunta.tipovar)}
+    const inputProps = {
+        maxLength: pregunta.longitud,
+    };
+    return <TextField 
+        className="variable" 
+        //var-length={pregunta.longitud} 
+        inputProps={inputProps}
+        value={valor?valor:''} 
+        type={adaptarTipoVarCasillero(pregunta.tipovar)}
         onChange={(event)=>setValor(event.target.value || null)}
         onBlur={(_event)=>props.onChange(valor)}
     />
