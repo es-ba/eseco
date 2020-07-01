@@ -5,7 +5,7 @@ ESECO|DV1|DV|P|pregunta|DV1|110|✔|¿Puede realizar la entrevista?|si_no|||||||
 ESECO|DV1/1|DV1|O|opción|1|1|✔|Sí||||||||||||1;100;110;1|F:F1||||||
 ESECO|DV1/2|DV1|O|opción|2|2|✔|No||||||||||||1;100;110;2|F:F1||||||
 ESECO|DV2|DV|P|pregunta|DV2|120|✔|Fecha de la visita|fecha|||||||true|calculada|||1;100;120|F:F1||dv2||||
-ESECO|DV3|DV|P|pregunta|DV3|130|✔|¿Por qué motivo no pudo realizar la entrevista?|opciones|||||||true|oculta|||1;100;130|F:F1||dv3||||
+ESECO|DV3|DV|P|pregunta|DV3|130|✔|¿Por qué motivo no pudo realizar la entrevista?|opciones|||||||true|oculta|||1;100;130|F:F1||dv3||dv1=2||
 ESECO|DV3/1|DV3|O|opción|1|1|✔|La vivienda está deshabitada||||||||||||1;100;130;1|F:F1||||||
 ESECO|DV3/2|DV3|O|opción|2|2|✔|La vivienda está demolida||||||||||||1;100;130;2|F:F1||||||
 ESECO|DV3/3|DV3|O|opción|3|3|✔|La vivinda se usa solo los fines de semana o muy esporádicamente||||||||||||1;100;130;3|F:F1||||||
@@ -15,7 +15,7 @@ ESECO|DV3/6|DV3|O|opción|6|6|✔|En la dirección de referencia no se encuetra 
 ESECO|DV3/7|DV3|O|opción|7|7|✔|Los habitantes de la vivienda están ausentes||||||||||||1;100;130;7|F:F1||||||
 ESECO|DV3/8|DV3|O|opción|8|8|✔|Los habitantes de la vivienda rechazan ser entrevistados||||||||||||1;100;130;8|F:F1||||||
 ESECO|DV3/9|DV3|O|opción|9|9|✔|Otras causas||||||||||||1;100;130;9|F:F1||||||
-ESECO|DV3otros|DV|P|pregunta|DV3otros|140|✔|Especifique la causa|texto|||||||true|oculta|-||1;100;140|F:F1||dv3otros||||
+ESECO|DV3otros|DV|P|pregunta|DV3otros|140|✔|Especifique la causa|texto|||||||true|oculta|-||1;100;140|F:F1||dv3otros||dv3=9||
 ESECO|DV4|DV|P|pregunta|DV4|160|✔|¿Alguna persona de esta vivienda fue diagnosticada con COVID-19 positivo hace menos de 14 días?|si_no|||||||true||||1;100;160|F:F1||dv4||||
 ESECO|DV4/1|DV4|O|opción|1|1|✔|Sí||||||||||||1;100;160;1|F:F1||||||
 ESECO|DV4/2|DV4|O|opción|2|2|✔|No||||||||||||1;100;160;2|F:F1||||||
@@ -89,7 +89,7 @@ ESECO|D7|D|P|pregunta|D7|640|✔|¿Seguía sintiendo alguno de esos síntomas en
 ESECO|D7/1|D7|O|opción|1|650|✔|Sí||||||||||||3;147;640;650|F:F3||||||
 ESECO|D7/2|D7|O|opción|2|660|✔|No||||||||||||3;147;640;660|F:F3||||||
 ESECO|A|F:F3|B|bloque|A|670|✔|Antecedentes de otras enfermedades de riesgo||||||||true||||3;670|F:F3||||||
-ESECO|A1|A|P|pregunta|A1|680|✔|¿Alguna vez un médico o personal de salud le dijo que tenía ...||||||||true||||3;670;680|F:F3||||||
+ESECO|A1|A|P|pregunta|A1|680|✔|¿Alguna vez un médico o personal de salud le dijo que tenía...||||||||true||||3;670;680|F:F3||||||
 ESECO|A1/1|A1|OM|opción múltiple|1|720|✔|diabetes?|si_no|||||||||||3;670;680;720|F:F3||a1_1||||
 ESECO|A1/1/1|A1/1|O|opción|1|750|✔|Sí||||||||||||3;670;680;720;750|F:F3||||||
 ESECO|A1/1/2|A1/1|O|opción|2|760|✔|No||||||||||||3;670;680;720;760|F:F3||||||
@@ -186,9 +186,9 @@ ESECO|E4/7|E4|O|opción|7|1670|✔|Venezuela||||||||||||3;1520;1600;1670|F:F3|||
 ESECO|E4/8|E4|O|opción|8|1680|✔|Otro (especificar)||||||||||||3;1520;1600;1680|F:F3||||||
 ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no leer|||3;1520;1690|F:F3||e5||e4=8||
 ESECO|E6|E|P|pregunta|E6|1700|✔|Número|texto|||||||true|no leer|||3;1520;1700|F:F3||e6||||
-ESECO|C|F:F3|B|bloque|C|1710|✔|Contacto||||||||true||||3;1710|F:F3||||||
-ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|||||||true|no leer|||3;1710;1720|F:F3||c1||||
-ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true|no leer|||3;1710;1730|F:F3||c2||||
-ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|||||||true|no leer|||3;1710;1740|F:F3||c3||||
-ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|||||||true|no leer|||3;1710;1750|F:F3||c4||||
+ESECO|C|F:F3|B|bloque|C|1710|✔|Datos de contacto del entrevistado||||||||true||||3;1710|F:F3||||||
+ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|||||||true||||3;1710;1720|F:F3||c1||||
+ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true||||3;1710;1730|F:F3||c2||||
+ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|||||||true||||3;1710;1740|F:F3||c3||||
+ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|||||||true||||3;1710;1750|F:F3||c4||||
 ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no leer|||3;2000|F:F3||fin||||
