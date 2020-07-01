@@ -158,7 +158,17 @@ var reducers={
                     forPk: null
                 }
             })
-        }
+        },
+    RESET_OPCIONES: (_payload: {}) => 
+        function(state: CasoState){
+            return calcularFeedback({
+                ...state,
+                opciones:{
+                    ...state.opciones,
+                    forPk: null
+                }
+            })
+        },
 }
 
 export type ActionFormularioState = ActionsFrom<typeof reducers>;

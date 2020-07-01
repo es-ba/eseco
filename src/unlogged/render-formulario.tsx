@@ -592,7 +592,7 @@ export async function desplegarFormularioActual(){
     // verificar el main Layout
     const store = await dmTraerDatosFormulario()
     ReactDOM.render(
-        <RenderPrincipal store={store}>
+        <RenderPrincipal store={store} dispatchers={dispatchers} mensajeRetorno="Volver a la hoja de ruta">
             <AppEseco/>
         </RenderPrincipal>,
         document.getElementById('main_layout')

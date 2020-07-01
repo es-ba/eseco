@@ -130,25 +130,27 @@ export function focusToId(id:string, opts:FocusOpts, cb?:(e:HTMLElement)=>void){
     }
 }
 
-export function ReseterForm(props:{onTryAgain:()=>void}){
+export type IDispatchers = {RESET_OPCIONES:Function};
+
+export function ReseterForm(props:{onTryAgain:()=>void, dispatchers:IDispatchers, mensaje:string}){
     const dispatch = useDispatch();
     return <>
         <Button variant="outlined"
             onClick={()=>{
-                // dispatch(dispatchers.RESET_OPCIONES({}));
+                dispatch(props.dispatchers.RESET_OPCIONES({}));
                 props.onTryAgain();
             }}
-        >Volver a la hoja de ruta</Button>
+        >{props.mensaje}</Button>
     </>;
 }
 
 export class RenderAndCaptureError extends React.Component<
-    {},
+    {dispatchers:IDispatchers, mensajeRetorno:string},
     {hasError:boolean, error:Error|{}, info?:any}
 >{
     constructor(props:any) {
         super(props);
-        this.state = { hasError: false, error:{} };
+        this.state = { hasError: false, error:{}};
     }
     componentDidCatch(error:Error, info:any){
         this.setState({ hasError: true , error, info });
@@ -157,8 +159,8 @@ export class RenderAndCaptureError extends React.Component<
         if(this.state.hasError){
             return <>
                 <Typography>Hubo un problema en la programación de la pantalla.</Typography>
-                <ReseterForm onTryAgain={()=>
-                    this.setState({ hasError: false, error:{} })
+                <ReseterForm dispatchers={this.props.dispatchers} mensaje={this.props.mensajeRetorno} onTryAgain={()=>
+                    this.setState({ hasError: false, error:{}})
                 }/>
                 <Typography>Error detectado:</Typography>
                 <Typography>{this.state.error instanceof Error ? this.state.error.message : 'unknown error'}</Typography>
@@ -181,11 +183,11 @@ const theme = createMuiTheme({
   },
 });
 
-export function RenderPrincipal<T,T2 extends Action>(props:{store:Store<T,T2>, children:React.ReactNode}){
+export function RenderPrincipal<T,T2 extends Action>(props:{store:Store<T,T2>, dispatchers:IDispatchers, mensajeRetorno:string, children:React.ReactNode}){
     return <React.StrictMode>
         <Provider store={props.store}>
             <ThemeProvider theme={theme}>
-                <RenderAndCaptureError>
+                <RenderAndCaptureError dispatchers={props.dispatchers} mensajeRetorno={props.mensajeRetorno}>
                     <CssBaseline />
                     {props.children}
                 </RenderAndCaptureError>
