@@ -3,6 +3,8 @@ margenPregunta = 16px
 colorFondoIdBloque = #DDD
 
 anchoNormal(ancho)
+  @media print
+    width ancho
   @media (min-width 600px)
     width ancho
 
@@ -31,11 +33,14 @@ anchoNormal(ancho)
   border-top 0.5px solid colorFondoIdBloque
   font-size 120%
   margin-left 8px
+  @media print
+    margin-left 48px
+    justify-content space-between
   @media (min-width 600px)
     margin-left 48px
     justify-content space-between
   display flex  
-  @media (max-width 599px)
+  @media screen and (max-width 599px)
     flex-direction column
   .id
     margin-right 8px
@@ -53,6 +58,8 @@ anchoNormal(ancho)
   > .encabezado
     min-width 50%
     flex-shrink 1
+    @media print
+      min-width 55%
     @media (min-width 600px)
       min-width 55%
   > .casilleros
@@ -61,7 +68,7 @@ anchoNormal(ancho)
     min-width 33%
 
 .pregunta
-  @media (max-width 559px)
+  @media screen and (max-width 559px)
     flex-direction column
   display flex
   justify-content space-between
@@ -187,6 +194,8 @@ boton-id-div-invalido()
     boton-id-div()
     background repeating-linear-gradient(45deg, #eee, #eee 10px, #f99 10px, #f99 12px)
   [nuestro-validator=todavia_no]
+    &[ocultar-salteada=SI]
+      display none
     background-color #EEE
     color #888
   [nuestro-validator=calculada]
@@ -194,6 +203,8 @@ boton-id-div-invalido()
     input
       background-color #BBB
   [nuestro-validator=salteada]
+    &[ocultar-salteada=SI]
+      display none
     background-image url("../img/fondo-salteado.png")
     background-size 32px
     background-repeat repeat
@@ -207,6 +218,11 @@ boton-id-div-invalido()
     display none
   [nuestro-validator=todavia_no]
     display none
+
+[modo-despliegue=PDF]
+  background-color #fffff
+  [debe-leer=SI]
+    color blue
 
 [modo-despliegue=metadatos]
   background-color #f8f8f8

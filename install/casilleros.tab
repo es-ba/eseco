@@ -4,8 +4,8 @@ ESECO|DV|F:F1|B|bloque|DV|100|✔|Datos de la Visita||||||||true||||1;100|F:F1||
 ESECO|DV1|DV|P|pregunta|DV1|110|✔|¿Puede realizar la entrevista?|si_no|||||||true||||1;100;110|F:F1||dv1||||
 ESECO|DV1/1|DV1|O|opción|1|1|✔|Sí||||||||||||1;100;110;1|F:F1||||||
 ESECO|DV1/2|DV1|O|opción|2|2|✔|No||||||||||||1;100;110;2|F:F1||||||
-ESECO|DV2|DV|P|pregunta|DV2|120|✔|Fecha de la visita|fecha|||||||true|calculada|||1;100;120|F:F1||dv2||||
-ESECO|DV3|DV|P|pregunta|DV3|130|✔|¿Por qué motivo no pudo realizar la entrevista?|opciones|||||||true|oculta|||1;100;130|F:F1||dv3||dv1=2||
+ESECO|DV2|DV|P|pregunta|DV2|120|✔|Fecha de la visita|fecha|||||||true|calculada no_leer|||1;100;120|F:F1||dv2||||
+ESECO|DV3|DV|P|pregunta|DV3|130|✔|¿Por qué motivo no pudo realizar la entrevista?|opciones|||||||true|ocultar no_leer|||1;100;130|F:F1||dv3||dv1=2||
 ESECO|DV3/1|DV3|O|opción|1|1|✔|La vivienda está deshabitada||||||||||||1;100;130;1|F:F1||||||
 ESECO|DV3/2|DV3|O|opción|2|2|✔|La vivienda está demolida||||||||||||1;100;130;2|F:F1||||||
 ESECO|DV3/3|DV3|O|opción|3|3|✔|La vivinda se usa solo los fines de semana o muy esporádicamente||||||||||||1;100;130;3|F:F1||||||
@@ -15,14 +15,14 @@ ESECO|DV3/6|DV3|O|opción|6|6|✔|En la dirección de referencia no se encuetra 
 ESECO|DV3/7|DV3|O|opción|7|7|✔|Los habitantes de la vivienda están ausentes||||||||||||1;100;130;7|F:F1||||||
 ESECO|DV3/8|DV3|O|opción|8|8|✔|Los habitantes de la vivienda rechazan ser entrevistados||||||||||||1;100;130;8|F:F1||||||
 ESECO|DV3/9|DV3|O|opción|9|9|✔|Otras causas||||||||||||1;100;130;9|F:F1||||||
-ESECO|DV3otros|DV|P|pregunta|DV3otros|140|✔|Especifique la causa|texto|||||||true|oculta|-||1;100;140|F:F1||dv3otros||dv3=9||
+ESECO|DV3otros|DV|P|pregunta|DV3otros|140|✔|Especifique la causa|texto|||||||true|ocultar no_leer|-||1;100;140|F:F1||dv3otros||dv3=9||
 ESECO|DV4|DV|P|pregunta|DV4|160|✔|¿Alguna persona de esta vivienda fue diagnosticada con COVID-19 positivo hace menos de 14 días?|si_no|||||||true||||1;100;160|F:F1||dv4||||
 ESECO|DV4/1|DV4|O|opción|1|1|✔|Sí||||||||||||1;100;160;1|F:F1||||||
 ESECO|DV4/2|DV4|O|opción|2|2|✔|No||||||||||||1;100;160;2|F:F1||||||
 ESECO|DV5|DV|P|pregunta|DV5|170|✔|¿Cuántas personas viven en esta vivienda?|numero|||||||true||||1;100;170|F:F1||dv5||||
 ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Habitantes del hogar|||||F2|||true||||1;180|F:F1||||||
 ESECO|F:F2||F|formulario|F2|2|✔|Formulario de habitantes de la vivienda||||||personas||||||2|F:F2||||||
-ESECO|P1|F:F2|P|pregunta|P1|110|✔|Nombre|texto|||||||true|no leer|||2;110|F:F2||p1||||
+ESECO|P1|F:F2|P|pregunta|P1|110|✔|Nombre|texto|||||||true|no_leer|||2;110|F:F2||p1||||
 ESECO|P2|F:F2|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||||true||||2;120|F:F2||p2||||
 ESECO|P2/1|P2|O|opción|1|1|✔|Varón||||||||||||2;120;1|F:F2||||||
 ESECO|P2/2|P2|O|opción|2|2|✔|Mujer||||||||||||2;120;2|F:F2||||||
@@ -32,13 +32,13 @@ ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;140;1|F:F2||||||
 ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;140;2|F:F2||||||
 ESECO|F:F3||F|formulario|F3|3|✔|Formulario individual||||||viviendas||||||3|F:F3||||||
 ESECO|S|F:F3|B|bloque|S|137|✔|Realización de test, cuestionario y firma de consentimiento||||||||true||||3;137|F:F3||||||
-ESECO|S1|S|P|pregunta|S1|138|✔|¿La persona seleccionada aceptó firmar el consentimiento?|si_no|||||||true|no leer|||3;137;138|F:F3||s1||||
+ESECO|S1|S|P|pregunta|S1|138|✔|¿La persona seleccionada aceptó firmar el consentimiento?|si_no|||||||true|no_leer|||3;137;138|F:F3||s1||||
 ESECO|S1/1|S1|O|opción|1|139|✔|Sí||||||||||||3;137;138;139|F:F3||||||
 ESECO|S1/2|S1|O|opción|2|140|✔|No|||||FIN|||||||3;137;138;140|F:F3||||||
-ESECO|S2|S|P|pregunta|S2|141|✔|¿La persona seleccionada aceptó contestar el cuestionario?|si_no|||||||true|no leer|||3;137;141|F:F3||s2||||
+ESECO|S2|S|P|pregunta|S2|141|✔|¿La persona seleccionada aceptó contestar el cuestionario?|si_no|||||||true|no_leer|||3;137;141|F:F3||s2||||
 ESECO|S2/1|S2|O|opción|1|142|✔|Sí||||||||||||3;137;141;142|F:F3||||||
 ESECO|S2/2|S2|O|opción|2|143|✔|No|||||FIN|||||||3;137;141;143|F:F3||||||
-ESECO|S3|S|P|pregunta|S3|144|✔|¿La persona seleccionada aceptó realizarse el test?|si_no|||||||true|no leer|||3;137;144|F:F3||s3||||
+ESECO|S3|S|P|pregunta|S3|144|✔|¿La persona seleccionada aceptó realizarse el test?|si_no|||||||true|no_leer|||3;137;144|F:F3||s3||||
 ESECO|S3/1|S3|O|opción|1|145|✔|Sí||||||||||||3;137;144;145|F:F3||||||
 ESECO|S3/2|S3|O|opción|2|146|✔|No|||||FIN|||||||3;137;144;146|F:F3||||||
 ESECO|D|F:F3|B|bloque|D|147|✔|Presencia de cuadro diagnóstico compatible con COVID-19||||||||true||||3;147|F:F3||||||
@@ -48,7 +48,7 @@ ESECO|D1/2|D1|O|opción|2|150|✔|No|||||D6|||||||3;147;148;150|F:F3||||||
 ESECO|D2|D|P|pregunta|D2|152|✔|¿Cuántas pruebas le hicieron?|opciones|||||||true||||3;147;152|F:F3||d2||||
 ESECO|D2/1|D2|O|opción|1|153|✔|Una||||||||||||3;147;152;153|F:F3||||||
 ESECO|D2/2|D2|O|opción|2|154|✔|Más de una||||||||||||3;147;152;154|F:F3||||||
-ESECO|D3|D|P|pregunta|D3|153|✔|¿Cuántas?|numero|||||||true|no leer|||3;147;153|F:F3||d3||d2=2||
+ESECO|D3|D|P|pregunta|D3|153|✔|¿Cuántas?|numero|||||||true|no_leer|||3;147;153|F:F3||d3||d2=2||
 ESECO|D4|D|P|pregunta|D4|154|✔|¿Hace cuánto le hicieron la última prueba?|opciones|||||||true||||3;147;154|F:F3||d4||||
 ESECO|D4/1|D4|O|opción|1|1|✔|Menos de 14 días||||||||||||3;147;154;1|F:F3||||||
 ESECO|D4/2|D4|O|opción|2|2|✔|Más de 14 días||||||||||||3;147;154;2|F:F3||||||
@@ -164,18 +164,18 @@ ESECO|T2/8|T2|OM|opción múltiple|8|1320|✔|En otros sectores|si_no|||||||||||
 ESECO|T2/8/1|T2/8|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1320;1|F:F3||||||
 ESECO|T2/8/2|T2/8|O|opción|2|2|✔|No||||||||||||3;1200;1210;1320;2|F:F3||||||
 ESECO|T3|T|P|pregunta|T3|1410|✔|¿Cuántas horas semanales trabaja?|opciones|||||||true||||3;1200;1410|F:F3||t3||||
-ESECO|T3/1|T3|O|opción|1|1420|✔|Hasta 34 horas|||||||||no leer|||3;1200;1410;1420|F:F3||||||
-ESECO|T3/2|T3|O|opción|2|1430|✔|Entre 35 y 45 horas|||||||||no leer|||3;1200;1410;1430|F:F3||||||
-ESECO|T3/3|T3|O|opción|3|1440|✔|Más de 45 horas|||||||||no leer|||3;1200;1410;1440|F:F3||||||
+ESECO|T3/1|T3|O|opción|1|1420|✔|Hasta 34 horas|||||||||no_leer|||3;1200;1410;1420|F:F3||||||
+ESECO|T3/2|T3|O|opción|2|1430|✔|Entre 35 y 45 horas|||||||||no_leer|||3;1200;1410;1430|F:F3||||||
+ESECO|T3/3|T3|O|opción|3|1440|✔|Más de 45 horas|||||||||no_leer|||3;1200;1410;1440|F:F3||||||
 ESECO|E|F:F3|B|bloque|E|1520|✔|Datos del entrevistado para devolución de resultados y supervisión||||Los datos del entrevistado/a se deben copiar de un original, fotocopia o App||||true||||3;1520|F:F3||||||
-ESECO|E1|E|P|pregunta|E1|1530|✔|Apellido y nombre|texto|||||||true|no leer|||3;1520;1530|F:F3||e1||||
-ESECO|E2|E|P|pregunta|E2|1540|✔|Tipo de documentación identificatoria|opciones|||||||true|no leer|||3;1520;1540|F:F3||e2||||
+ESECO|E1|E|P|pregunta|E1|1530|✔|Apellido y nombre|texto|||||||true|no_leer|||3;1520;1530|F:F3||e1||||
+ESECO|E2|E|P|pregunta|E2|1540|✔|Tipo de documentación identificatoria|opciones|||||||true|no_leer|||3;1520;1540|F:F3||e2||||
 ESECO|E2/1|E2|O|opción|1|1550|✔|DNI argentino|||||E6|||||||3;1520;1540;1550|F:F3||||||
 ESECO|E2/2|E2|O|opción|2|1560|✔|Documento extranjero|||||E4|||||||3;1520;1540;1560|F:F3||||||
 ESECO|E2/3|E2|O|opción|3|1570|✔|No tiene documento|||||C1|||||||3;1520;1540;1570|F:F3||||||
 ESECO|E2/4|E2|O|opción|4|1580|✔|Otro||||||||||||3;1520;1540;1580|F:F3||||||
-ESECO|E3|E|P|pregunta|E3|1590|✔|¿Cuál?|texto|||||||true|no leer|||3;1520;1590|F:F3||e3||||
-ESECO|E4|E|P|pregunta|E4|1600|✔|País emisor del documento|opciones|||||||true|no leer|||3;1520;1600|F:F3||e4||||
+ESECO|E3|E|P|pregunta|E3|1590|✔|¿Cuál?|texto|||||||true|no_leer|||3;1520;1590|F:F3||e3||||
+ESECO|E4|E|P|pregunta|E4|1600|✔|País emisor del documento|opciones|||||||true|no_leer|||3;1520;1600|F:F3||e4||||
 ESECO|E4/1|E4|O|opción|1|1610|✔|Uruguay||||||||||||3;1520;1600;1610|F:F3||||||
 ESECO|E4/2|E4|O|opción|2|1620|✔|Paraguay||||||||||||3;1520;1600;1620|F:F3||||||
 ESECO|E4/3|E4|O|opción|3|1630|✔|Brasil||||||||||||3;1520;1600;1630|F:F3||||||
@@ -184,11 +184,11 @@ ESECO|E4/5|E4|O|opción|5|1650|✔|Chile||||||||||||3;1520;1600;1650|F:F3||||||
 ESECO|E4/6|E4|O|opción|6|1660|✔|Perú||||||||||||3;1520;1600;1660|F:F3||||||
 ESECO|E4/7|E4|O|opción|7|1670|✔|Venezuela||||||||||||3;1520;1600;1670|F:F3||||||
 ESECO|E4/8|E4|O|opción|8|1680|✔|Otro (especificar)||||||||||||3;1520;1600;1680|F:F3||||||
-ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no leer|||3;1520;1690|F:F3||e5||e4=8||
-ESECO|E6|E|P|pregunta|E6|1700|✔|Número|texto|||||||true|no leer|||3;1520;1700|F:F3||e6||||
+ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no_leer|||3;1520;1690|F:F3||e5||e4=8||
+ESECO|E6|E|P|pregunta|E6|1700|✔|Número|texto|||||||true|no_leer|||3;1520;1700|F:F3||e6||||
 ESECO|C|F:F3|B|bloque|C|1710|✔|Datos de contacto del entrevistado||||||||true||||3;1710|F:F3||||||
 ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|||||||true||||3;1710;1720|F:F3||c1||||
 ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true||||3;1710;1730|F:F3||c2||||
 ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|||||||true||||3;1710;1740|F:F3||c3||||
 ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|||||||true||||3;1710;1750|F:F3||c4||||
-ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no leer|||3;2000|F:F3||fin||||
+ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no_leer|||3;2000|F:F3||fin||||
