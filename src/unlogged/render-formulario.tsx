@@ -5,12 +5,12 @@ import {
     clsx, memoize, adaptarTipoVarCasillero
 } from "./render-general";
 import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, 
-    IdCaso, 
+    IdCaso, DatosVivienda, 
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
     Respuestas, Valor, IdVariable, ModoDespliegue
 } from "./tipos";
-import {dmTraerDatosFormulario, dispatchers, estadoRowValidator } from "./redux-formulario";
+import {dmTraerDatosFormulario, dispatchers, estadoRowValidator, MAIN_FORM } from "./redux-formulario";
 import { useState, useEffect, useRef} from "react";
 import { Provider, useSelector, useDispatch } from "react-redux"; 
 import { EstadoVariable } from "row-validator";
@@ -447,13 +447,37 @@ function FormularioDespliegue(props:{forPk:ForPk}){
             )}
             </ButtonGroup>
         </div>
+        <Button 
+            variant="outlined"
+            onClick={()=>
+                dispatch(dispatchers.VOLVER_HDR({}))
+            }
+        >
+            Volver a HDR            
+        </Button>
         <FormularioEncabezado casillero={formulario}/>
         <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario} forPk={forPk}/>
     </div>
 }
 
 export function HojaDeRutaDespliegue(){
-    return <div>Hoja de ruta</div>
+    var hdr = useSelector((state:CasoState)=>state.datos.hdr);
+    var dispatch = useDispatch();
+    return <div className="hoja-de-ruta">
+        {likeAr(hdr).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
+            <div className="vivienda">
+                <Button 
+                    variant="outlined"
+                    onClick={()=>{
+                        dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:MAIN_FORM}}))
+                    }}
+                >
+                    {idCaso}
+                </Button>
+                <pre>{JSON.stringify(datosVivienda.tem)}</pre>
+            </div>
+        ).array()}
+    </div>
 }
 
 export function AppEseco(){

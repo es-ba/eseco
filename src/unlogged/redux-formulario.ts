@@ -16,7 +16,7 @@ import * as likeAr from "like-ar";
 var my=myOwn;
 
 const OPERATIVO='ESECO';
-const MAIN_FORM:IdFormulario='F:F3' as IdFormulario;
+export const MAIN_FORM:IdFormulario='F:F3' as IdFormulario;
 
 /* REDUCERS */
 
@@ -306,7 +306,7 @@ export async function dmTraerDatosFormulario(){
         },
         opciones:{
             modoDespliegue:'relevamiento',
-            forPk:{vivienda:'capacitacion', formulario:'F:F3' as IdFormulario} // null
+            forPk:null//{vivienda:'capacitacion', formulario:'F:F3' as IdFormulario} // null
             // modoDespliegue:'metadatos'
         },
         feedbackRowValidator:{

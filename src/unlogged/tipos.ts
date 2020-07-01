@@ -166,11 +166,13 @@ export type TEM = {
     prioridad:1|2|3
 }
 
+export type DatosVivienda= {
+    respuestas: Respuestas
+    tem: TEM
+}
+
 export type HojaDeRuta={
-    [idCaso in IdCaso]?: {
-        respuestas: Respuestas
-        tem: TEM
-    }
+    [idCaso in IdCaso]?: DatosVivienda
 }
 
 export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
