@@ -12,6 +12,7 @@ import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reduc
 import { getRowValidator, Structure, Opcion as RowValidatorOpcion, EstadoVariable, FormStructureState } from "row-validator";
 import * as JSON4all from "json4all";
 import * as likeAr from "like-ar";
+import * as bestGlobals from "best-globals";
 
 var my=myOwn;
 
@@ -114,10 +115,20 @@ var reducers={
             if(datosVivienda==null){
                 return state;
             }
+            /////////// ESPECIALES
+            var otrasRespuestasCalculadas={};
+            if(payload.variable=='dv1' && payload.respuesta != null 
+                // @ts-ignore en esta encuesta existe
+                && datosVivienda.respuestas.dv2 == null
+            ){
+                otrasRespuestasCalculadas={dv2: bestGlobals.date.today()}
+            }
+            ////////// FIN ESPECIALES
             var nuevosDatosVivienda={
                 ...datosVivienda,
                 respuestas:{
                     ...datosVivienda.respuestas,
+                    ...otrasRespuestasCalculadas,
                     [payload.variable]: payload.respuesta
                 }
             }
