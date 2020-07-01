@@ -88,7 +88,7 @@ function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHabilitar
 
 var rowValidator = getRowValidator({getFuncionHabilitar})
 
-function calcularFeedback(state: CasoState){
+function calcularFeedback(state: CasoState):CasoState{
     var forPk=state.opciones.forPk;
     if(forPk==null){
         return state;
@@ -97,10 +97,13 @@ function calcularFeedback(state: CasoState){
     console.log(JSON.stringify(state.datos.hdr[forPk.vivienda].respuestas))
     return {
         ...state,
-        feedbackRowValidator:rowValidator(
-            state.estructura.formularios[forPk.formulario].estructuraRowValidator, 
-            state.datos.hdr[forPk.vivienda].respuestas
-        )
+        feedbackRowValidator:{
+            ...state.feedbackRowValidator,
+            [toPlainForPk(forPk)]:rowValidator(
+                state.estructura.formularios[forPk.formulario].estructuraRowValidator, 
+                state.datos.hdr[forPk.vivienda].respuestas
+            )
+        }
     }
 }
 
@@ -131,13 +134,13 @@ var reducers={
         },
     MODO_DESPLIEGUE: (payload: {modoDespliegue:ModoDespliegue}) => 
         function(state: CasoState){
-            return {
+            return calcularFeedback({
                 ...state,
                 opciones:{
                     ...state.opciones,
                     modoDespliegue:payload.modoDespliegue
                 }
-            }
+            })
         },
     CAMBIAR_FORMULARIO: (payload: {forPk:ForPk}) => 
         function(state: CasoState){

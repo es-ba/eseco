@@ -12,10 +12,9 @@ import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario,
     Respuestas, Valor, IdVariable, ModoDespliegue
 } from "./tipos";
 import {dmTraerDatosFormulario, dispatchers, estadoRowValidator, toPlainForPk } from "./redux-formulario";
-import { useState, useEffect, useRef} from "react";
-import { Provider, useSelector, useDispatch } from "react-redux"; 
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux"; 
 import { EstadoVariable } from "row-validator";
-import * as memoizeBadTyped from "memoize-one";
 import * as likeAr from "like-ar";
 
 import {
