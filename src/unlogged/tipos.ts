@@ -145,7 +145,8 @@ export type Formulario= CasilleroBase & {
 
 export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion
 
-export type ForPk={vivienda:IdCaso, formulario:IdFormulario}
+export type ForPk={vivienda:IdCaso, formulario:IdFormulario, persona?:number}
+export type PlainForPk='{"vivienda":"capacitacion","formulario":"F:F1","persona":null}'|'etc...';
 
 export type Respuestas={
         [pregunta in IdVariable]:Valor
@@ -172,7 +173,7 @@ export type DatosVivienda= {
 }
 
 export type HojaDeRuta={
-    [idCaso in IdCaso]?: DatosVivienda
+    [idCaso in IdCaso]: DatosVivienda
 }
 
 export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
@@ -186,9 +187,9 @@ export type CasoState={
                 casilleros:Formulario, // casilleros aplanados
                 estructuraRowValidator:EstructuraRowValidator // estructura de variables para el RowValidator
             }
-        },
-    },
-    mainForm:IdFormulario
+        }
+        mainForm:IdFormulario
+    }
     datos:{
         hdr:HojaDeRuta
     }
@@ -196,6 +197,8 @@ export type CasoState={
         forPk:ForPk|null // índice dentro de las unidades de análisis. Null = en hoja de ruta
         modoDespliegue:ModoDespliegue
     },
-    feedbackRowValidator:FormStructureState<IdVariable,IdFin>|null // resultado del rowValidator para estado.forPk
+    feedbackRowValidator:{
+        [formulario in PlainForPk]:FormStructureState<IdVariable,IdFin> // resultado del rowValidator para estado.forPk
+    }
 }
 

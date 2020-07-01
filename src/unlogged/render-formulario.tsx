@@ -10,7 +10,7 @@ import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario,
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
     Respuestas, Valor, IdVariable, ModoDespliegue
 } from "./tipos";
-import {dmTraerDatosFormulario, dispatchers, estadoRowValidator, MAIN_FORM } from "./redux-formulario";
+import {dmTraerDatosFormulario, dispatchers, estadoRowValidator, toPlainForPk } from "./redux-formulario";
 import { useState, useEffect, useRef} from "react";
 import { Provider, useSelector, useDispatch } from "react-redux"; 
 import { EstadoVariable } from "row-validator";
@@ -386,15 +386,17 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
     </Paper>
 }
 
-function useSelectorVivienda(vivienda:IdCaso){
+function useSelectorVivienda(forPk:ForPk){
     return useSelector((state:CasoState)=>({
-        respuestas: state.datos.hdr[vivienda]!.respuestas || null, 
-        feedback: state.feedbackRowValidator!.estados || null
+        respuestas: state.datos.hdr[forPk.vivienda].respuestas, 
+        feedback: state.feedbackRowValidator[toPlainForPk(forPk)].estados,
+        formulario: state.estructura.formularios[forPk.formulario].casilleros,
+        modoDespliegue: state.opciones.modoDespliegue
     }))
 }
 
 function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Bloque|Formulario, forPk:ForPk}){
-    var {respuestas, feedback} = useSelectorVivienda(props.forPk.vivienda);
+    var {respuestas, feedback} = useSelectorVivienda(props.forPk);
     return <div className="casilleros">{
         props.bloqueOFormulario.casilleros.map((casillero)=>
             <Grid key={casillero.casillero} item>
@@ -431,9 +433,7 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var formulario = useSelector((state:CasoState)=>state.estructura.formularios[forPk.formulario]!.casilleros);
-    var formStructureState = useSelector((state:CasoState)=>state.feedbackRowValidator);
-    var modoDespliegue =  useSelector((state:CasoState)=>state.opciones.modoDespliegue);
+    var {formulario, modoDespliegue} = useSelectorVivienda(props.forPk);
     const dispatch = useDispatch();
     var listaModos:ModoDespliegue[]=['metadatos','relevamiento','estricto'];
     return <div className="formulario" modo-despliegue={modoDespliegue}>
@@ -461,7 +461,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
 }
 
 export function HojaDeRutaDespliegue(){
-    var hdr = useSelector((state:CasoState)=>state.datos.hdr);
+    var {hdr, mainForm} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, mainForm:state.estructura.mainForm}));
     var dispatch = useDispatch();
     return <div className="hoja-de-ruta">
         {likeAr(hdr).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
@@ -469,7 +469,7 @@ export function HojaDeRutaDespliegue(){
                 <Button 
                     variant="outlined"
                     onClick={()=>{
-                        dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:MAIN_FORM}}))
+                        dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
                     }}
                 >
                     {idCaso}

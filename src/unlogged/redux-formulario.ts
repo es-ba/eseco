@@ -2,21 +2,21 @@ import { createStore } from "redux";
 import { CasilleroBase, CasillerosImplementados, CasoState, 
     EstructuraRowValidator, 
     Formulario, ForPk, 
-    IdCasillero, IdDestino, IdFormulario, IdVariable, 
+    IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdVariable, 
     ModoDespliegue, 
-    Opcion, Respuestas,
+    Opcion, PlainForPk, Respuestas,
     TEM
 } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
-import { getRowValidator, Structure, Opcion as RowValidatorOpcion, EstadoVariable } from "row-validator";
+import { getRowValidator, Structure, Opcion as RowValidatorOpcion, EstadoVariable, FormStructureState } from "row-validator";
 import * as JSON4all from "json4all";
 import * as likeAr from "like-ar";
 
 var my=myOwn;
 
 const OPERATIVO='ESECO';
-export const MAIN_FORM:IdFormulario='F:F3' as IdFormulario;
+const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
 
 /* REDUCERS */
 
@@ -94,12 +94,12 @@ function calcularFeedback(state: CasoState){
         return state;
     }
     console.log('vivenda',forPk.vivienda);
-    console.log(JSON.stringify(state.datos.hdr[forPk.vivienda]!.respuestas))
+    console.log(JSON.stringify(state.datos.hdr[forPk.vivienda].respuestas))
     return {
         ...state,
         feedbackRowValidator:rowValidator(
             state.estructura.formularios[forPk.formulario].estructuraRowValidator, 
-            state.datos.hdr[forPk.vivienda]!.respuestas
+            state.datos.hdr[forPk.vivienda].respuestas
         )
     }
 }
@@ -267,6 +267,11 @@ function generarEstructuraRowValidator(casillero:CasillerosImplementados):Estruc
     return rellenarDestinos(estructuraIncompleta, destinos);
 }
 
+export function toPlainForPk(forPk:ForPk):PlainForPk{
+    // @ts-ignore sabemos que hay que hacer un JSON
+    return JSON.stringify(forPk);
+}
+
 export async function dmTraerDatosFormulario(){
     var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
     console.log(casillerosOriginales)
@@ -281,11 +286,18 @@ export async function dmTraerDatosFormulario(){
                 }
             }
         ).plain();
+    var getFeedbackInicial:()=>FormStructureState<IdVariable,IdFin> = ()=>({
+        resumen:'vacio',
+        estados:{},
+        siguientes:{},
+        actual:null,
+        primeraFalla:null
+    });
     var initialState:CasoState={
         estructura:{
-            formularios:casillerosTodosFormularios
+            formularios:casillerosTodosFormularios,
+            mainForm:MAIN_FORM
         },
-        mainForm:MAIN_FORM,
         datos:{
             hdr:{
                 capacitacion:{
@@ -302,6 +314,20 @@ export async function dmTraerDatosFormulario(){
                     } as unknown as Respuestas,
                     tem:{nomcalle:'Bolivar', nrocatastral:'555'} as TEM
                 },
+                '10902':{
+                    tem:{
+                        nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
+                    } as TEM,
+                    // @ts-ignore
+                    respuestas:{}
+                },
+                '10909':{
+                    tem:{
+                        nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
+                    } as TEM,
+                    // @ts-ignore
+                    respuestas:{}
+                }
             }
         },
         opciones:{
@@ -309,30 +335,23 @@ export async function dmTraerDatosFormulario(){
             forPk:null//{vivienda:'capacitacion', formulario:'F:F3' as IdFormulario} // null
             // modoDespliegue:'metadatos'
         },
-        feedbackRowValidator:{
-            resumen:'vacio',
-            estados:{},
-            siguientes:{},
-            actual:null,
-            primeraFalla:null
+        // @ts-ignore lo lleno después
+        feedbackRowValidator:null
+    };
+    var vivienda:IdCaso;
+    var formulario:IdFormulario;
+    // @ts-ignore esto se va
+    for(var vivienda in initialState.datos.hdr){
+        // @ts-ignore esto se va
+        for(var formulario in initialState.estructura.formularios){
+            initialState.feedbackRowValidator[toPlainForPk({vivienda,formulario})]=
+                rowValidator(
+                    initialState.estructura.formularios[formulario].estructuraRowValidator, 
+                    initialState.datos.hdr[vivienda].respuestas
+                )
         }
-    };
-    initialState.feedbackRowValidator=rowValidator(initialState.estructura.formularios[MAIN_FORM].estructuraRowValidator, initialState.datos.hdr.capacitacion!.respuestas)
-
-    initialState.datos.hdr['10902']={
-        tem:{
-            nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
-        } as TEM,
-        // @ts-ignore
-        respuestas:{}
-    };
-    initialState.datos.hdr['10909']={
-        tem:{
-            nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
-        } as TEM,
-        // @ts-ignore
-        respuestas:{}
     }
+
     /* DEFINICION CONTROLADOR */
     const hdrReducer = createReducer(reducers, initialState);
     /* FIN DEFINICION CONTROLADOR */
