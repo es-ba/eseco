@@ -9,7 +9,7 @@ import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario,
     IdCaso, DatosVivienda, 
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor, IdVariable, ModoDespliegue
+    Respuestas, Valor, IdVariable, ModoDespliegue, IdFormulario, InfoFormulario
 } from "./tipos";
 import {dmTraerDatosFormulario, dispatchers, estadoRowValidator, toPlainForPk } from "./redux-formulario";
 import { useState, useEffect } from "react";
@@ -390,6 +390,7 @@ function useSelectorVivienda(forPk:ForPk){
     return useSelector((state:CasoState)=>({
         respuestas: state.datos.hdr[forPk.vivienda].respuestas, 
         feedback: state.feedbackRowValidator[toPlainForPk(forPk)].estados,
+        resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
         formulario: state.estructura.formularios[forPk.formulario].casilleros,
         modoDespliegue: state.opciones.modoDespliegue
     }))
@@ -460,6 +461,29 @@ function FormularioDespliegue(props:{forPk:ForPk}){
     </div>
 }
 
+function calcularResumenVivienda(idCaso:IdCaso){
+    var prioridades = {
+        'con problemas':1,
+        'incompleto':2,
+        'vacio':3,
+        'ok':4
+    }
+    var {formularios} = useSelector((state:CasoState)=>({formularios: state.estructura.formularios}));
+    var forms = likeAr(formularios).map((_infoFormulario:InfoFormulario, idFormulario: IdFormulario)=>
+        idFormulario
+    ).array();
+    var min = 4
+    var minResumen: 'vacio' | 'con problemas' | 'incompleto' | 'ok' = 'ok';
+    forms.forEach((formulario:IdFormulario)=>{
+        var {resumen} = useSelectorVivienda({vivienda:idCaso, formulario});    
+        if(prioridades[resumen]<min){
+            min=prioridades[resumen];
+            minResumen=resumen;
+        }
+    })
+    return minResumen
+}
+
 export function HojaDeRutaDespliegue(){
     var {hdr, mainForm} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, mainForm:state.estructura.mainForm}));
     var dispatch = useDispatch();
@@ -507,7 +531,8 @@ export function HojaDeRutaDespliegue(){
                             {likeAr(hdr).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
                                 <TableRow>
                                     <TableCell>
-                                        <Button 
+                                        <Button
+                                            resumen-vivienda={calcularResumenVivienda(idCaso)}
                                             variant="outlined"
                                             onClick={()=>{
                                                 dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))

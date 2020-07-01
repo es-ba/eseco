@@ -180,13 +180,15 @@ export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
 
 export type ModoDespliegue = 'metadatos'|'relevamiento'|'estricto'
 
+export type InfoFormulario={
+    casilleros:Formulario, // casilleros aplanados
+    estructuraRowValidator:EstructuraRowValidator // estructura de variables para el RowValidator
+}
+
 export type CasoState={
     estructura:{
         formularios:{ 
-            [nombreFormulario in IdFormulario]:{
-                casilleros:Formulario, // casilleros aplanados
-                estructuraRowValidator:EstructuraRowValidator // estructura de variables para el RowValidator
-            }
+            [nombreFormulario in IdFormulario]:InfoFormulario
         }
         mainForm:IdFormulario
     }
