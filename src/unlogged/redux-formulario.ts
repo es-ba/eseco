@@ -336,7 +336,7 @@ export async function dmTraerDatosFormulario(){
             // modoDespliegue:'metadatos'
         },
         // @ts-ignore lo lleno después
-        feedbackRowValidator:null
+        feedbackRowValidator:{}
     };
     var vivienda:IdCaso;
     var formulario:IdFormulario;
