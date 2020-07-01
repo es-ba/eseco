@@ -42,45 +42,52 @@ ESECO|S3|S|P|pregunta|S3|144|✔|¿La persona seleccionada aceptó realizarse el
 ESECO|S3/1|S3|O|opción|1|145|✔|Sí||||||||||||3;137;144;145|F:F3||||||
 ESECO|S3/2|S3|O|opción|2|146|✔|No|||||FIN|||||||3;137;144;146|F:F3||||||
 ESECO|D|F:F3|B|bloque|D|147|✔|Presencia de cuadro diagnóstico compatible con COVID-19||||||||true||||3;147|F:F3||||||
-ESECO|D1|D|P|pregunta|D1|148|✔|¿Le han hecho alguna vez la prueba para ver si estaba infectado por el coronavirus con una muestra de la garganta o la nariz?|opciones|||||||true||||3;147;148|F:F3||d1||||
-ESECO|D1/1|D1|O|opción|1|149|✔|No me la han hecho|||||D3|||||||3;147;148;149|F:F3||||||
-ESECO|D1/2|D1|O|opción|2|150|✔|Me la han hecho y fue negativa|||||D3|||||||3;147;148;150|F:F3||||||
-ESECO|D1/3|D1|O|opción|3|151|✔|Sí, me la hicieron hace más de 14 días y fue positiva *||||||||||||3;147;148;151|F:F3||||||
-ESECO|D2|D|P|pregunta|D2|152|✔|¿Tiene PCR (falta la aclaración) posterior?|opciones|||||||true||||3;147;152|F:F3||d2||||
-ESECO|D2/1|D2|O|opción|1|153|✔|No||||||||||||3;147;152;153|F:F3||||||
-ESECO|D2/2|D2|O|opción|2|154|✔|Sí y salió negativa||||||||||||3;147;152;154|F:F3||||||
-ESECO|D2/3|D2|O|opción|3|155|✔|Sí y ha vuelto a salir positiva||||||||||||3;147;152;155|F:F3||||||
-ESECO|D3|D|P|pregunta|D3|156|✔|En los últimos dos meses, ¿tuvo alguno de los siguientes síntomas...||||||||true||||3;147;156|F:F3||||||
-ESECO|D3/1|D3|OM|opción múltiple|1|157|✔|fiebre?|si_no|||||||||||3;147;156;157|F:F3||d3_1||||
-ESECO|D3/1/1|D3/1|O|opción|1|158|✔|Sí||||||||||||3;147;156;157;158|F:F3||||||
-ESECO|D3/1/2|D3/1|O|opción|2|159|✔|No||||||||||||3;147;156;157;159|F:F3||||||
-ESECO|D3/2|D3|OM|opción múltiple|2|160|✔|escalofríos?|si_no|||||||||||3;147;156;160|F:F3||d3_2||||
-ESECO|D3/2/1|D3/2|O|opción|1|161|✔|Sí||||||||||||3;147;156;160;161|F:F3||||||
-ESECO|D3/2/2|D3/2|O|opción|2|162|✔|No||||||||||||3;147;156;160;162|F:F3||||||
-ESECO|D3/3|D3|OM|opción múltiple|3|163|✔|cansancio intenso?|si_no|||||||||||3;147;156;163|F:F3||d3_3||||
-ESECO|D3/3/1|D3/3|O|opción|1|164|✔|Sí||||||||||||3;147;156;163;164|F:F3||||||
-ESECO|D3/3/2|D3/3|O|opción|2|165|✔|No||||||||||||3;147;156;163;165|F:F3||||||
-ESECO|D3/4|D3|OM|opción múltiple|4|166|✔|dolor garganta?|si_no|||||||||||3;147;156;166|F:F3||d3_4||||
-ESECO|D3/4/1|D3/4|O|opción|1|167|✔|Sí||||||||||||3;147;156;166;167|F:F3||||||
-ESECO|D3/4/2|D3/4|O|opción|2|168|✔|No||||||||||||3;147;156;166;168|F:F3||||||
-ESECO|D3/5|D3|OM|opción múltiple|5|169|✔|tos?|si_no|||||||||||3;147;156;169|F:F3||d3_5||||
-ESECO|D3/5/1|D3/5|O|opción|1|170|✔|Sí||||||||||||3;147;156;169;170|F:F3||||||
-ESECO|D3/5/2|D3/5|O|opción|2|171|✔|No||||||||||||3;147;156;169;171|F:F3||||||
-ESECO|D3/6|D3|OM|opción múltiple|6|172|✔|sensación de falta de aire al respirar?|si_no|||||||||||3;147;156;172|F:F3||d3_6||||
-ESECO|D3/6/1|D3/6|O|opción|1|173|✔|Sí||||||||||||3;147;156;172;173|F:F3||||||
-ESECO|D3/6/2|D3/6|O|opción|2|174|✔|No||||||||||||3;147;156;172;174|F:F3||||||
-ESECO|D3/7|D3|OM|opción múltiple|7|175|✔|dolor de cabeza?|si_no|||||||||||3;147;156;175|F:F3||d3_7||||
-ESECO|D3/7/1|D3/7|O|opción|1|176|✔|Sí||||||||||||3;147;156;175;176|F:F3||||||
-ESECO|D3/7/2|D3/7|O|opción|2|177|✔|No||||||||||||3;147;156;175;177|F:F3||||||
-ESECO|D3/8|D3|OM|opción múltiple|8|178|✔|náuseas o vómitos o diarrea?|si_no|||||||||||3;147;156;178|F:F3||d3_8||||
-ESECO|D3/8/1|D3/8|O|opción|1|179|✔|Sí||||||||||||3;147;156;178;179|F:F3||||||
-ESECO|D3/8/2|D3/8|O|opción|2|590|✔|No||||||||||||3;147;156;178;590|F:F3||||||
-ESECO|D3/9|D3|OM|opción múltiple|9|600|✔|pérdida súbita de sentido del olfato o gusto?|si_no|||||||||||3;147;156;600|F:F3||d3_9||||
-ESECO|D3/9/1|D3/9|O|opción|1|610|✔|Sí||||||||||||3;147;156;600;610|F:F3||||||
-ESECO|D3/9/2|D3/9|O|opción|2|620|✔|No||||||||||||3;147;156;600;620|F:F3||||||
-ESECO|D4|D|P|pregunta|D4|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||true||||3;147;640|F:F3||d12|d12|d3_1=1 or d3_2=1 or d3_3=1 or d3_4=1 or d3_5=1 or d3_6=1 or d3_7=1 or d3_8=1 or d3_9=1||
-ESECO|D4/1|D4|O|opción|1|650|✔|Sí||||||||||||3;147;640;650|F:F3||||||
-ESECO|D4/2|D4|O|opción|2|660|✔|No||||||||||||3;147;640;660|F:F3||||||
+ESECO|D1|D|P|pregunta|D1|148|✔|¿Alguna vez le hicieron la prueba para ver si estaba infectado/a con COVID-19 con una muestra de la garganta o la nariz?|si_no|||||||true||||3;147;148|F:F3||d1||||
+ESECO|D1/1|D1|O|opción|1|149|✔|Sí||||||||||||3;147;148;149|F:F3||||||
+ESECO|D1/2|D1|O|opción|2|150|✔|No|||||D6|||||||3;147;148;150|F:F3||||||
+ESECO|D2|D|P|pregunta|D2|152|✔|¿Cuántas pruebas le hicieron?|opciones|||||||true||||3;147;152|F:F3||d2||||
+ESECO|D2/1|D2|O|opción|1|153|✔|Una||||||||||||3;147;152;153|F:F3||||||
+ESECO|D2/2|D2|O|opción|2|154|✔|Más de una||||||||||||3;147;152;154|F:F3||||||
+ESECO|D3|D|P|pregunta|D3|153|✔|¿Cuántas?|numero|||||||true|no leer|||3;147;153|F:F3||d3||d2=2||
+ESECO|D4|D|P|pregunta|D4|154|✔|¿Hace cuánto le hicieron la última prueba?|opciones|||||||true||||3;147;154|F:F3||d4||||
+ESECO|D4/1|D4|O|opción|1|1|✔|Menos de 14 días||||||||||||3;147;154;1|F:F3||||||
+ESECO|D4/2|D4|O|opción|2|2|✔|Más de 14 días||||||||||||3;147;154;2|F:F3||||||
+ESECO|D5|D|P|pregunta|D5|155|✔|¿Cuál fue el resultado de la última prueba?|opciones|||||||true||||3;147;155|F:F3||d5||||
+ESECO|D5/1|D5|O|opción|1|1|✔|Positivo|||||||||ocultar|||3;147;155;1|F:F3||||d4 != 1||
+ESECO|D5/2|D5|O|opción|2|2|✔|Positivo||||para menos de 14 días|FIN||||ocultar|||3;147;155;2|F:F3||||d4=1||
+ESECO|D5/3|D5|O|opción|3|3|✔|Negativo||||||||||||3;147;155;3|F:F3||||||
+ESECO|D5/9|D5|O|opción|9|9|✔|No sabe||||||||||||3;147;155;9|F:F3||||||
+ESECO|D6|D|P|pregunta|D6|156|✔|En los últimos dos meses, ¿tuvo alguno de los siguientes síntomas...||||||||true||||3;147;156|F:F3||||||
+ESECO|D6/1|D6|OM|opción múltiple|1|157|✔|fiebre?|si_no|||||||||||3;147;156;157|F:F3||d6_1||||
+ESECO|D6/1/1|D6/1|O|opción|1|158|✔|Sí||||||||||||3;147;156;157;158|F:F3||||||
+ESECO|D6/1/2|D6/1|O|opción|2|159|✔|No||||||||||||3;147;156;157;159|F:F3||||||
+ESECO|D6/2|D6|OM|opción múltiple|2|160|✔|escalofríos?|si_no|||||||||||3;147;156;160|F:F3||d6_2||||
+ESECO|D6/2/1|D6/2|O|opción|1|161|✔|Sí||||||||||||3;147;156;160;161|F:F3||||||
+ESECO|D6/2/2|D6/2|O|opción|2|162|✔|No||||||||||||3;147;156;160;162|F:F3||||||
+ESECO|D6/3|D6|OM|opción múltiple|3|163|✔|cansancio intenso?|si_no|||||||||||3;147;156;163|F:F3||d6_3||||
+ESECO|D6/3/1|D6/3|O|opción|1|164|✔|Sí||||||||||||3;147;156;163;164|F:F3||||||
+ESECO|D6/3/2|D6/3|O|opción|2|165|✔|No||||||||||||3;147;156;163;165|F:F3||||||
+ESECO|D6/4|D6|OM|opción múltiple|4|166|✔|dolor garganta?|si_no|||||||||||3;147;156;166|F:F3||d6_4||||
+ESECO|D6/4/1|D6/4|O|opción|1|167|✔|Sí||||||||||||3;147;156;166;167|F:F3||||||
+ESECO|D6/4/2|D6/4|O|opción|2|168|✔|No||||||||||||3;147;156;166;168|F:F3||||||
+ESECO|D6/5|D6|OM|opción múltiple|5|169|✔|tos?|si_no|||||||||||3;147;156;169|F:F3||d6_5||||
+ESECO|D6/5/1|D6/5|O|opción|1|170|✔|Sí||||||||||||3;147;156;169;170|F:F3||||||
+ESECO|D6/5/2|D6/5|O|opción|2|171|✔|No||||||||||||3;147;156;169;171|F:F3||||||
+ESECO|D6/6|D6|OM|opción múltiple|6|172|✔|sensación de falta de aire al respirar?|si_no|||||||||||3;147;156;172|F:F3||d6_6||||
+ESECO|D6/6/1|D6/6|O|opción|1|173|✔|Sí||||||||||||3;147;156;172;173|F:F3||||||
+ESECO|D6/6/2|D6/6|O|opción|2|174|✔|No||||||||||||3;147;156;172;174|F:F3||||||
+ESECO|D6/7|D6|OM|opción múltiple|7|175|✔|dolor de cabeza?|si_no|||||||||||3;147;156;175|F:F3||d6_7||||
+ESECO|D6/7/1|D6/7|O|opción|1|176|✔|Sí||||||||||||3;147;156;175;176|F:F3||||||
+ESECO|D6/7/2|D6/7|O|opción|2|177|✔|No||||||||||||3;147;156;175;177|F:F3||||||
+ESECO|D6/8|D6|OM|opción múltiple|8|178|✔|náuseas o vómitos o diarrea?|si_no|||||||||||3;147;156;178|F:F3||d6_8||||
+ESECO|D6/8/1|D6/8|O|opción|1|179|✔|Sí||||||||||||3;147;156;178;179|F:F3||||||
+ESECO|D6/8/2|D6/8|O|opción|2|590|✔|No||||||||||||3;147;156;178;590|F:F3||||||
+ESECO|D6/9|D6|OM|opción múltiple|9|600|✔|pérdida súbita de sentido del olfato o gusto?|si_no|||||||||||3;147;156;600|F:F3||d6_9||||
+ESECO|D6/9/1|D6/9|O|opción|1|610|✔|Sí||||||||||||3;147;156;600;610|F:F3||||||
+ESECO|D6/9/2|D6/9|O|opción|2|620|✔|No||||||||||||3;147;156;600;620|F:F3||||||
+ESECO|D7|D|P|pregunta|D7|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||true||||3;147;640|F:F3||d12|d12|d3_1=1 or d3_2=1 or d3_3=1 or d3_4=1 or d3_5=1 or d3_6=1 or d3_7=1 or d3_8=1 or d3_9=1||
+ESECO|D7/1|D7|O|opción|1|650|✔|Sí||||||||||||3;147;640;650|F:F3||||||
+ESECO|D7/2|D7|O|opción|2|660|✔|No||||||||||||3;147;640;660|F:F3||||||
 ESECO|A|F:F3|B|bloque|A|670|✔|Antecedentes de otras enfermedades de riesgo||||||||true||||3;670|F:F3||||||
 ESECO|A1|A|P|pregunta|A1|680|✔|¿Alguna vez un médico o personal de salud le dijo que tenía ...||||||||true||||3;670;680|F:F3||||||
 ESECO|A1/1|A1|OM|opción múltiple|1|720|✔|diabetes?|si_no|||||||||||3;670;680;720|F:F3||a1_1||||
