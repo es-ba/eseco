@@ -93,6 +93,8 @@ function calcularFeedback(state: CasoState){
     if(forPk==null){
         return state;
     }
+    console.log('vivenda',forPk.vivienda);
+    console.log(JSON.stringify(state.datos.hdr[forPk.vivienda]!.respuestas))
     return {
         ...state,
         feedbackRowValidator:rowValidator(
@@ -116,7 +118,7 @@ var reducers={
                     [payload.variable]: payload.respuesta
                 }
             }
-            return {
+            return calcularFeedback({
                 ...state,
                 datos:{
                     ...state.datos,
@@ -125,8 +127,7 @@ var reducers={
                         [payload.forPk.vivienda]:nuevosDatosVivienda
                     }
                 }
-            }
-            console.log(JSON.stringify(nuevosDatosVivienda.respuestas))
+            })
         },
     MODO_DESPLIEGUE: (payload: {modoDespliegue:ModoDespliegue}) => 
         function(state: CasoState){
@@ -140,23 +141,23 @@ var reducers={
         },
     CAMBIAR_FORMULARIO: (payload: {forPk:ForPk}) => 
         function(state: CasoState){
-            return {
+            return calcularFeedback({
                 ...state,
                 opciones:{
                     ...state.opciones,
                     forPk: payload.forPk
                 }
-            }
+            })
         },
     VOLVER_HDR: (_payload: {}) => 
         function(state: CasoState){
-            return {
+            return calcularFeedback({
                 ...state,
                 opciones:{
                     ...state.opciones,
                     forPk: null
                 }
-            }
+            })
         }
 }
 
