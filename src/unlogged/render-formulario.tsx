@@ -463,10 +463,10 @@ function FormularioDespliegue(props:{forPk:ForPk}){
 
 function calcularResumenVivienda(idCaso:IdCaso){
     var prioridades = {
-        'con problemas':1,
-        'incompleto':2,
-        'vacio':3,
-        'ok':4
+        'con problemas':{prioridad: 1, cantidad:0},
+        'incompleto':{prioridad: 2, cantidad:0},
+        'vacio':{prioridad: 3, cantidad:0},
+        'ok':{prioridad: 4, cantidad:0}
     }
     var {formularios} = useSelector((state:CasoState)=>({formularios: state.estructura.formularios}));
     var forms = likeAr(formularios).map((_infoFormulario:InfoFormulario, idFormulario: IdFormulario)=>
@@ -476,10 +476,12 @@ function calcularResumenVivienda(idCaso:IdCaso){
     var minResumen: 'vacio' | 'con problemas' | 'incompleto' | 'ok' = 'ok';
     forms.forEach((formulario:IdFormulario)=>{
         var {resumen} = useSelectorVivienda({vivienda:idCaso, formulario});    
-        if(prioridades[resumen]<min){
-            min=prioridades[resumen];
+        if(prioridades[resumen].prioridad<min){
+            min=prioridades[resumen].prioridad;
+            min=prioridades[resumen].cantidad++;
             minResumen=resumen;
         }
+        minResumen = minResumen=='vacio'&& prioridades['ok'].cantidad?'incompleto':minResumen;
     })
     return minResumen
 }

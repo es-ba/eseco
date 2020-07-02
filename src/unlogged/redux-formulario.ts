@@ -326,6 +326,7 @@ export async function dmTraerDatosFormulario(){
             hdr:{
                 capacitacion:{
                     respuestas:{
+                        "dv1":"1", "dv5":"4",
                         // hasta la D11
                         "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"1","d11":"1"
                         // hasta la t9

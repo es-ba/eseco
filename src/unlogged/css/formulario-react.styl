@@ -9,6 +9,21 @@ anchoNormal(ancho)
 .formulario, .hoja-de-ruta
   max-width 768px
 
+.hoja-de-ruta
+  .MuiButton-root
+    &[resumen-vivienda="ok"]
+      background-color  #5CB85C
+      color  #FFFFFF
+    &[resumen-vivienda="vacio"]
+      background-color  FFFFFF
+      color  #000000
+    &[resumen-vivienda="con problemas"]
+      background-color  red
+      color  #FFFFFF
+    &[resumen-vivienda="incompleto"]
+      background-color  yellow
+      color  #000000
+
 .encabezado
   display flex
   .id
