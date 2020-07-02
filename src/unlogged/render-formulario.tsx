@@ -161,7 +161,8 @@ function SiNoDespliegue(props:{casilleroConOpciones:IcasilleroConOpciones, forPk
 function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, valorActual:Valor, feedback:FeedbackVariable}){
     const {opcionM} = props;
     var classes = useStyles();
-    return <div className="multiple" nuestro-validator={props.feedback.estado}>
+    return <div className="multiple" nuestro-validator={props.feedback.estado} esta-inhabilitada={props.feedback?.inhabilitada?'SI':'NO'}
+>
         <EncabezadoDespliegue 
             casillero={opcionM} 
             verIdGuion={true} 
@@ -364,6 +365,7 @@ function PreguntaDespliegue(props:{
         nuestro-tipovar={pregunta.tipovar||"multiple"} 
         nuestro-validator={props.feedback?.estado}
         ocultar-salteada={pregunta.despliegue?.includes('ocultar')?(pregunta.expresion_habilitar?'INHABILITAR':'SI'):'NO'}
+        esta-inhabilitada={props.feedback?.inhabilitada?'SI':'NO'}
     >
         <EncabezadoDespliegue 
             casillero={pregunta} 
