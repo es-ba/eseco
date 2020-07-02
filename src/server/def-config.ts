@@ -78,6 +78,6 @@ client-setup:
   menu: true
   operativo: ESECO
   background-img: ../img/background-test.png
-  deviceWidthForMobile: 768px
+  deviceWidthForMobile: device-width
   user-scalable: no
 `
