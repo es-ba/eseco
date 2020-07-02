@@ -273,6 +273,16 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolea
     </div>
 }
 
+function calcularNuestraLongitud(longitud:string |null){
+    var value = parseInt(longitud||'9999');
+    if(isNaN(value)){
+        return 'full';
+    }else{
+        return value<=10?'small'
+            :value<=20?'medium':'full'
+    }
+}
+
 function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valor)=>void}){
     var {pregunta} = props;
     var [valor, setValor] = useState(props.valor);
@@ -283,8 +293,9 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
     const inputProps = {
         maxLength: pregunta.longitud,
     };
-    return <div className="campo">
-        <div style={{width:"80%"}}>
+    var nuestraLongitud = calcularNuestraLongitud(pregunta.longitud)
+    return <div className="campo" nuestra-longitud={nuestraLongitud}>
+        <div className="input-campo">
             <TextField 
                 className="variable" 
                 //var-length={pregunta.longitud} 
@@ -300,7 +311,7 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
                 }}
             />
         </div>
-        <div style={{width:"20%"}}>
+        <div className="boton-confirmar-campo">
             <Button variant={editando?"contained":'outlined'} size="small" color={editando?'primary':'default'}><ICON.Check/></Button>
         </div>
     </div>

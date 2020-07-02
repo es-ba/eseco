@@ -125,6 +125,21 @@ anchoNormal(ancho)
       margin-bottom margenPregunta
       .MuiButton-root
         margin-left 5px
+      &[nuestra-longitud=full]
+        .input-campo
+          width 80%
+        .boton-confirmar-campo
+          width 20%
+      &[nuestra-longitud=medium]
+        .input-campo
+          width 60%
+        .boton-confirmar-campo
+          width 40%
+      &[nuestra-longitud=small]
+        .input-campo
+          width 30%
+        .boton-confirmar-campo
+          width 70%
   > .casilleros, > div .casilleros
     align-self flex-end
     anchoNormal 50%
