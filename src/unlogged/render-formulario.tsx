@@ -472,28 +472,41 @@ function FormularioDespliegue(props:{forPk:ForPk}){
     var {formulario, modoDespliegue} = useSelectorVivienda(props.forPk);
     const dispatch = useDispatch();
     var listaModos:ModoDespliegue[]=['metadatos','relevamiento','PDF'];
-    return <div className="formulario" modo-despliegue={modoDespliegue}>
-        <div>
-            <Typography component="span">Modo de despliegue:</Typography>
-            <ButtonGroup>
-            {listaModos.map(modo=>
-                <Button key={modo} variant={modo==modoDespliegue?"contained":"outlined"} onClick={
-                    ()=>dispatch(dispatchers.MODO_DESPLIEGUE({modoDespliegue:modo}))
-                }>{modo}</Button>
-            )}
-            </ButtonGroup>
-        </div>
-        <Button 
-            variant="outlined"
-            onClick={()=>
-                dispatch(dispatchers.VOLVER_HDR({}))
-            }
-        >
-            Volver a HDR            
-        </Button>
-        <FormularioEncabezado casillero={formulario}/>
-        <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario} forPk={forPk}/>
-    </div>
+    return (
+        <>
+            <AppBar position="fixed">
+                <Toolbar>
+                    <IconButton
+                        color="inherit"
+                        onClick={()=>
+                            dispatch(dispatchers.VOLVER_HDR({}))
+                        }
+                    >
+                        <ICON.ChevronLeft/>
+                    </IconButton>
+                    <Typography variant="h6">
+                        Vivienda
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <main>
+                <Paper className="formulario" modo-despliegue={modoDespliegue}>
+                    <div>
+                        <Typography component="span">Modo de despliegue:</Typography>
+                        <ButtonGroup>
+                        {listaModos.map(modo=>
+                            <Button key={modo} variant={modo==modoDespliegue?"contained":"outlined"} onClick={
+                                ()=>dispatch(dispatchers.MODO_DESPLIEGUE({modoDespliegue:modo}))
+                            }>{modo}</Button>
+                        )}
+                        </ButtonGroup>
+                    </div>
+                    <FormularioEncabezado casillero={formulario}/>
+                    <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario} forPk={forPk}/>
+                </Paper>
+            </main>
+        </>
+    );
 }
 
 function calcularResumenVivienda(idCaso:IdCaso){
@@ -531,29 +544,27 @@ export function HojaDeRutaDespliegue(){
                     <Typography variant="h6">
                         Hoja de ruta
                     </Typography>
-                    <div>
-                        <Button style={{marginTop:'3px'}}
-                            color="inherit"
-                            //onClick={/*dispatch que lleva a pantalla opciones*/}
-                        >
-                            <ICON.Settings/>
-                        </Button>
-                        <Button
-                            color="inherit"
-                            onClick={()=>{
-                                //PROVISORIO
-                                history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=configurar`);
-                                location.reload();   
-                            }}
-                        >
-                            <ICON.ExitToApp/>
-                        </Button>
-                    </div>
+                    <IconButton style={{marginTop:'3px'}}
+                        color="inherit"
+                        //onClick={/*dispatch que lleva a pantalla opciones*/}
+                    >
+                        <ICON.Settings/>
+                    </IconButton>
+                    <IconButton
+                        color="inherit"
+                        onClick={()=>{
+                            //PROVISORIO
+                            history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=configurar`);
+                            location.reload();   
+                        }}
+                    >
+                        <ICON.ExitToApp/>
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <main>
                 <Paper className="hoja-de-ruta">
-                    <Table className="tabla-hoja-de-ruta" style={{borderTopStyle: "groove", marginTop:'40px'}}>
+                    <Table className="tabla-hoja-de-ruta" style={{borderTopStyle: "groove"}}>
                         <colgroup>
                             <col style={{width:"15%"}}/>
                             <col style={{width:"80%"}}/>
