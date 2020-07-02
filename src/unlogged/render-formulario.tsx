@@ -276,21 +276,34 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolea
 function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valor)=>void}){
     var {pregunta} = props;
     var [valor, setValor] = useState(props.valor);
+    var [editando, setEditando] = useState(false);
     useEffect(() => {
         setValor(props.valor)
     }, [props.valor]);
     const inputProps = {
         maxLength: pregunta.longitud,
     };
-    return <TextField 
-        className="variable" 
-        //var-length={pregunta.longitud} 
-        inputProps={inputProps}
-        value={valor?valor:''} 
-        type={adaptarTipoVarCasillero(pregunta.tipovar)}
-        onChange={(event)=>setValor(event.target.value || null)}
-        onBlur={(_event)=>props.onChange(valor)}
-    />
+    return <div className="campo">
+        <div style={{width:"80%"}}>
+            <TextField 
+                className="variable" 
+                //var-length={pregunta.longitud} 
+                fullWidth={true}
+                inputProps={inputProps}
+                value={valor?valor:''} 
+                type={adaptarTipoVarCasillero(pregunta.tipovar)}
+                onChange={(event)=>setValor(event.target.value || null)}
+                onFocus={(_event)=>setEditando(true)}
+                onBlur={(_event)=>{
+                    props.onChange(valor)
+                    setEditando(false)
+                }}
+            />
+        </div>
+        <div style={{width:"20%"}}>
+            <Button variant={editando?"contained":'outlined'} size="small" color={editando?'primary':'default'}><ICON.Check/></Button>
+        </div>
+    </div>
 }
 
 interface IcasilleroConOpciones{
