@@ -19,8 +19,9 @@ ESECO|DV3otros|DV|P|pregunta|DV3otros|140|✔|Especifique la causa|texto|||||||t
 ESECO|DV4|DV|P|pregunta|DV4|160|✔|¿Alguna persona de esta vivienda fue diagnosticada con COVID-19 positivo hace menos de 14 días?|si_no|||||||true|ocultar|||1;100;160|F:F1||dv4||dv1=1||
 ESECO|DV4/1|DV4|O|opción|1|1|✔|Sí||||||||||||1;100;160;1|F:F1||||||
 ESECO|DV4/2|DV4|O|opción|2|2|✔|No||||||||||||1;100;160;2|F:F1||||||
-ESECO|DV5|DV|P|pregunta|DV5|170|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true|ocultar|||1;100;170|F:F1||dv5||dv1=1||
-ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv5>1||
+ESECO|CC1|DV|CONS|consistencia|CC1|165|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||1;100;165|F:F1||||dv4=1||
+ESECO|DV5|DV|P|pregunta|DV5|170|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true|ocultar|||1;100;170|F:F1||dv5||dv4=2||
+ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv5>0 & dv4=2||
 ESECO|F:F2||F|formulario|F2|2|✔|Formulario de habitantes de la vivienda||||||personas||||||2|F:F2||||||
 ESECO|P1|F:F2|P|pregunta|P1|110|✔|Nombre|texto|||||||true|no_leer|||2;110|F:F2||p1||||
 ESECO|P2|F:F2|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||||true||||2;120|F:F2||p2||||
@@ -53,14 +54,15 @@ ESECO|D3|D|P|pregunta|D3|153|✔|¿Cuántas?|numero|2||||||true|no_leer|||3;147;
 ESECO|D4|D|P|pregunta|D4|154|✔|¿Hace cuánto le hicieron la última prueba?|opciones|||||||true||||3;147;154|F:F3||d4||||
 ESECO|D4/1|D4|O|opción|1|1|✔|Menos de 14 días||||||||||||3;147;154;1|F:F3||||||
 ESECO|D4/2|D4|O|opción|2|2|✔|Más de 14 días||||||||||||3;147;154;2|F:F3||||||
-ESECO|D5|D|P|pregunta|D5|155|✔|¿Cuál fue el resultado de la última prueba?|opciones|||||||true|ocultar|||3;147;155|F:F3||d5||d4!=2||
+ESECO|D5|D|P|pregunta|D5|155|✔|¿Cuál fue el resultado de la última prueba?|opciones|||||||true|ocultar|||3;147;155|F:F3||d5||d4!=1||
 ESECO|D5/1|D5|O|opción|1|1|✔|Positivo||||||||||||3;147;155;1|F:F3||||d4 != 1||
 ESECO|D5/2|D5|O|opción|2|2|✔|Negativo||||||||||||3;147;155;2|F:F3||||||
 ESECO|D5/9|D5|O|opción|9|9|✔|No sabe||||||||||||3;147;155;9|F:F3||||||
-ESECO|D5C|D|P|pregunta|D5C|156|✔|¿Cuál fue el resultado de la última prueba?|opciones|||||||true|ocultar|D5||3;147;156|F:F3||d5c|d5c|d4=2||
+ESECO|D5C|D|P|pregunta|D5C|156|✔|¿Cuál fue el resultado de la última prueba?|opciones|||||||true|ocultar|D5||3;147;156|F:F3||d5c|d5c|d4=1||
 ESECO|D5C/1|D5C|O|opción|1|1|✔|Positivo|||||FIN|||||||3;147;156;1|F:F3||||||
 ESECO|D5C/2|D5C|O|opción|2|2|✔|Negativo||||||||||||3;147;156;2|F:F3||||||
 ESECO|D5C/9|D5C|O|opción|9|9|✔|No sabe||||||||||||3;147;156;9|F:F3||||||
+ESECO|CC2|D|CONS|consistencia|CC2|161|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||3;147;161|F:F3||||d5c=1 & d4=1||
 ESECO|D6|D|P|pregunta|D6|166|✔|En los últimos dos meses, ¿tuvo alguno de los siguientes síntomas...||||||||true||||3;147;166|F:F3||||||
 ESECO|D6/1|D6|OM|opción múltiple|1|157|✔|fiebre?|si_no|||||||||||3;147;166;157|F:F3||d6_1||||
 ESECO|D6/1/1|D6/1|O|opción|1|158|✔|Sí||||||||||||3;147;166;157;158|F:F3||||||

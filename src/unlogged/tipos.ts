@@ -13,13 +13,14 @@ export type IdPregunta = 'P1'|'P2'|'etc...'
 export type IdBloque = 'B1'|'B2'|'etc...'
 export type IdFormulario = 'F1'|'F2'|'etc...'
 export type IdBotonFormulario = 'BF:F1'|'BF:F2'|'etc...'
+export type IdConsistencia = 'CONS1'|'CONS2'|'etc...'
 export type IdFiltro = 'FILTRO1' | 'FILTRO2' | 'etc...'
 export type IdCasillero = IdVariable | IdPregunta | IdBloque | IdFormulario | IdFiltro | IdOpcion
 export type IdFin = never // TODO: poder poner 'FIN'
 export type IdDestino = IdPregunta | IdBloque | IdFin | IdFiltro 
 export type Valor = string|number|Date|null;
 export type TipocDestinos = 'P'|'CP'|'B'|'FILTRO'|'BF'
-export type Tipoc = TipocDestinos | 'F'|'O'|'OM'
+export type Tipoc = TipocDestinos | 'F'|'O'|'OM'|'CONS'
 
 export type FeedbackVariable = Feedback<IdVariable, IdFin>
 
@@ -127,7 +128,7 @@ export type Filtro = CasilleroBase & {
     primera_variable?:null
 }
 
-export type ContenidoFormulario=Bloque|Pregunta|ConjuntoPreguntas|Filtro|BotonFormulario
+export type ContenidoFormulario=Bloque|Pregunta|ConjuntoPreguntas|Filtro|BotonFormulario|Consistencia
 
 export type Bloque = CasilleroBase & {
     tipoc:'B'
@@ -135,6 +136,14 @@ export type Bloque = CasilleroBase & {
     casilleros:ContenidoFormulario[]
     var_name?:null
     tipovar?:null
+}
+
+export type Consistencia = CasilleroBase & {
+    tipoc:'CONS'
+    casillero:IdConsistencia
+    var_name?:null
+    tipovar?:null
+    primera_variable?:null
 }
 
 export type BotonFormulario = CasilleroBase & {
@@ -154,7 +163,7 @@ export type Formulario = CasilleroBase & {
     tipovar?:null
 }
 
-export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion|BotonFormulario
+export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion|BotonFormulario|Consistencia
 
 export type ForPk={vivienda:IdCaso, formulario:IdFormulario, persona?:number}
 export type PlainForPk='{"vivienda":"capacitacion","formulario":"F:F1","persona":null}'|'etc...';
