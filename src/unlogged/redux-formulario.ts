@@ -1,7 +1,7 @@
 import { createStore } from "redux";
 import { CasilleroBase, CasillerosImplementados, CasoState, 
     EstructuraRowValidator, 
-    Formulario, ForPk, 
+    FeedbackVariable, Formulario, ForPk, 
     IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdVariable, 
     ModoDespliegue, 
     Opcion, PlainForPk, Respuestas,
@@ -9,7 +9,7 @@ import { CasilleroBase, CasillerosImplementados, CasoState,
 } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
-import { getRowValidator, Structure, Opcion as RowValidatorOpcion, EstadoVariable, FormStructureState } from "row-validator";
+import { getRowValidator, Structure, Opcion as RowValidatorOpcion, FormStructureState } from "row-validator";
 import * as JSON4all from "json4all";
 import * as likeAr from "like-ar";
 import * as bestGlobals from "best-globals";
@@ -62,7 +62,7 @@ var funcionesHabilitar:{[key:string]:FuncionHabilitar}={
     'v1 < v2': function(valores){ return valores.v1 < valores.v2 },
 }
 
-function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHabilitar{
+export function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHabilitar{
     if(!funcionesHabilitar[nombreFuncionComoExpresion]){
         var expresion = nombreFuncionComoExpresion.replace(/\u00A0/g,' ');
         var cuerpo = expresion.replace(/\b.+?\b/g, function(elToken){
@@ -210,20 +210,6 @@ type CaracerizacionEstadoRowValidator={
     correcto:boolean,
     conValor:boolean|null, // null = unknown
 }
-export const estadoRowValidator:{[estado in EstadoVariable]:CaracerizacionEstadoRowValidator}={
-    actual                    :{correcto:true , conValor:false},
-    valida                    :{correcto:true , conValor:true },
-    todavia_no                :{correcto:true , conValor:false},
-    calculada                 :{correcto:true , conValor:null }, 
-    salteada                  :{correcto:true , conValor:false},
-    optativa_sd               :{correcto:true , conValor:false},
-    invalida                  :{correcto:false, conValor:true },
-    omitida                   :{correcto:false, conValor:false},
-    fuera_de_rango            :{correcto:false, conValor:true },
-    fuera_de_flujo_por_omitida:{correcto:false, conValor:null },
-    fuera_de_flujo_por_salto  :{correcto:false, conValor:true },
-}
-
 
 function aplanarLaCurva<T extends {tipoc:string}>(casillerosData:IDataSeparada<T>):IDataConCasilleros<T|Opcion>{
     return {
@@ -310,13 +296,6 @@ export async function dmTraerDatosFormulario(){
                 }
             }
         ).plain();
-    var getFeedbackInicial:()=>FormStructureState<IdVariable,IdFin> = ()=>({
-        resumen:'vacio',
-        estados:{},
-        siguientes:{},
-        actual:null,
-        primeraFalla:null
-    });
     var initialState:CasoState={
         estructura:{
             formularios:casillerosTodosFormularios,
@@ -337,10 +316,11 @@ export async function dmTraerDatosFormulario(){
                         // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
                         // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
                     } as unknown as Respuestas,
-                    tem:{nomcalle:'Bolivar', nrocatastral:'555'} as TEM
+                    tem:{observaciones:'Encuesta vacía', nomcalle:'Bolivar', nrocatastral:'541' } as TEM
                 },
                 '10902':{
                     tem:{
+                        observaciones:'Lista par el individual',
                         nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
                     } as TEM,
                     // @ts-ignore
@@ -348,10 +328,14 @@ export async function dmTraerDatosFormulario(){
                 },
                 '10909':{
                     tem:{
+                        observaciones:'Encuesta empezada',
                         nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
                     } as TEM,
-                    // @ts-ignore
-                    respuestas:{}
+                    respuestas:{
+                        // para ver cómo las opciones con ocultar se ocultan
+                        // @ts-ignore
+                        "dv2":"2020-07-01","dv1":"1","dv4":"1","dv5":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
+                    }
                 }
             }
         },

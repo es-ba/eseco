@@ -5,20 +5,23 @@
  * 
  */
 
-import {FormStructureState, Structure} from "row-validator";
+import {FormStructureState, Structure, Feedback} from "row-validator";
 
 export type IdOpcion = number
 export type IdVariable = 'v1'|'v2'|'etc...'
 export type IdPregunta = 'P1'|'P2'|'etc...'
 export type IdBloque = 'B1'|'B2'|'etc...'
 export type IdFormulario = 'F1'|'F2'|'etc...'
+export type IdBotonFormulario = 'BF:F1'|'BF:F2'|'etc...'
 export type IdFiltro = 'FILTRO1' | 'FILTRO2' | 'etc...'
 export type IdCasillero = IdVariable | IdPregunta | IdBloque | IdFormulario | IdFiltro | IdOpcion
 export type IdFin = never // TODO: poder poner 'FIN'
 export type IdDestino = IdPregunta | IdBloque | IdFin | IdFiltro 
 export type Valor = string|number|Date|null;
-export type TipocDestinos = 'P'|'CP'|'B'|'FILTRO'
+export type TipocDestinos = 'P'|'CP'|'B'|'FILTRO'|'BF'
 export type Tipoc = TipocDestinos | 'F'|'O'|'OM'
+
+export type FeedbackVariable = Feedback<IdVariable, IdFin>
 
 export type TipoVariables = 'texto'|'numero'|'fecha'
 
@@ -124,9 +127,9 @@ export type Filtro = CasilleroBase & {
     primera_variable?:null
 }
 
-export type ContenidoFormulario=Bloque|Pregunta|ConjuntoPreguntas|Filtro
+export type ContenidoFormulario=Bloque|Pregunta|ConjuntoPreguntas|Filtro|BotonFormulario
 
-export type Bloque= CasilleroBase & {
+export type Bloque = CasilleroBase & {
     tipoc:'B'
     casillero:IdBloque
     casilleros:ContenidoFormulario[]
@@ -134,7 +137,15 @@ export type Bloque= CasilleroBase & {
     tipovar?:null
 }
 
-export type Formulario= CasilleroBase & {
+export type BotonFormulario = CasilleroBase & {
+    tipoc:'BF'
+    casillero:IdBotonFormulario
+    var_name?:null
+    tipovar?:null
+    primera_variable?:null
+}
+
+export type Formulario = CasilleroBase & {
     tipoc:'F'
     casillero:IdFormulario
     formulario_principal:boolean
@@ -143,7 +154,7 @@ export type Formulario= CasilleroBase & {
     tipovar?:null
 }
 
-export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion
+export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion|BotonFormulario
 
 export type ForPk={vivienda:IdCaso, formulario:IdFormulario, persona?:number}
 export type PlainForPk='{"vivienda":"capacitacion","formulario":"F:F1","persona":null}'|'etc...';
@@ -165,6 +176,7 @@ export type TEM = {
     habitacion:string
     casa:string
     prioridad:1|2|3
+    observaciones:string
 }
 
 export type DatosVivienda= {

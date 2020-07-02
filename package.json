@@ -27,7 +27,7 @@
     "rel-enc": "^1.2.3",
     "meta-enc": "^1.2.1",
     "procesamiento": "^1.0.0",
-    "row-validator": "^0.5.1",
+    "row-validator": "^0.6.0",
     "typed-controls": "^0.8.21"
   },
   "dependencias provisorias: las que se pongan en dependencias ponerlas acá y sacarlas juntas": {

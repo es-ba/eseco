@@ -40,6 +40,7 @@ anchoNormal(ancho)
     justify-self baseline
     .aclaracion
       font-size 90%
+      color #666 !important
 
 .casilleros
   display flex
@@ -165,6 +166,10 @@ anchoNormal(ancho)
       text-align center
       color colorFondoIdBloque
 
+.seccion-boton-formulario
+  display flex
+  justify-content space-between
+
 [los-metadatos]
   display none
 
@@ -231,6 +236,9 @@ boton-id-div-invalido()
   [nuestro-validator=invalida]
     boton-id-div()
     background repeating-linear-gradient(45deg, #eee, #eee 10px, #f99 10px, #f99 12px)
+  [esta-inhabilitada=SI]
+    [ocultar-salteada=INHABILITADA]
+      display none
   [nuestro-validator=todavia_no]
     &[ocultar-salteada=SI]
       display none

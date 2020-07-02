@@ -5,16 +5,20 @@ import {
     clsx, memoize, adaptarTipoVarCasillero,
     ICON
 } from "./render-general";
-import {Bloque, CasilleroBase, CasoState, Filtro, ForPk, Formulario, 
-    IdCaso, DatosVivienda, 
+import {Bloque, BotonFormulario, 
+    CasilleroBase, CasoState, DatosVivienda, FeedbackVariable, Filtro, ForPk, Formulario, 
+    IdCaso, IdFormulario, IdVariable, InfoFormulario,
+    ModoDespliegue,
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor, IdVariable, ModoDespliegue, IdFormulario, InfoFormulario
+    Respuestas, Valor,
 } from "./tipos";
-import {dmTraerDatosFormulario, dispatchers, estadoRowValidator, toPlainForPk } from "./redux-formulario";
+import { dmTraerDatosFormulario, dispatchers, 
+    getFuncionHabilitar, 
+    toPlainForPk 
+} from "./redux-formulario";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"; 
-import { EstadoVariable } from "row-validator";
 import * as likeAr from "like-ar";
 
 import {
@@ -154,16 +158,16 @@ function SiNoDespliegue(props:{casilleroConOpciones:IcasilleroConOpciones, forPk
     />
 }
 
-function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, valorActual:Valor, validateState:EstadoVariable}){
+function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, valorActual:Valor, feedback:FeedbackVariable}){
     const {opcionM} = props;
     var classes = useStyles();
-    return <div className="multiple" nuestro-validator={props.validateState}>
+    return <div className="multiple" nuestro-validator={props.feedback.estado}>
         <EncabezadoDespliegue 
             casillero={opcionM} 
             verIdGuion={true} 
             leer={!opcionM.despliegue?.includes('no_leer')} 
-            tieneValor={props.valorActual!=null?(estadoRowValidator[props.validateState].correcto?'valido':'invalido'):'NO'}
-            validateState={props.validateState}
+            tieneValor={props.valorActual!=null?(props.feedback.conProblema?'invalido':'valido'):'NO'}
+            feedback={props.feedback}
             forPk={props.forPk}
         />
         <div className="casilleros">
@@ -178,7 +182,7 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, va
     </div>
 }
 
-function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolean, leer?:boolean, tieneValor?:string, validateState?:EstadoVariable|null, forPk:ForPk}){
+function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolean, leer?:boolean, tieneValor?:string, feedback?:FeedbackVariable|null, forPk:ForPk}){
     var {casillero} = props;
     var dispatch = useDispatch()
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -241,26 +245,26 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolea
                     }}>Borrar respuesta</Button>
                 </div>
             </div>:<div className="confirma-borrado">
-                {props.validateState=="actual"?<>
+                {props.feedback?.estado=="actual"?<>
                     <Typography>Esta es la pregunta actual {props.leer?"lea la respuesta y ":""} registre la respuesta </Typography>
                     <Typography>
                         {casillero.tipovar=="opciones"||casillero.tipovar=="si_no"?
                             "en el botón azul de la respuesta correspondiente "
                         :   "sobre la raya azul (pulse sobre ella para que aparezca el teclado)"}
                     </Typography>
-                </>:props.validateState=="omitida"?<>
+                </>:props.feedback?.estado=="omitida"?<>
                     <Typography>Esta es la pregunta parece omitida.</Typography>
                     <Typography>Quizás falte ingresar la respuesta.</Typography>
                     <Typography>Quizás haya un error en una pregunta anterior.</Typography>
-                </>:props.validateState=="fuera_de_rango"?<>
+                </>:props.feedback?.estado=="fuera_de_rango"?<>
                     <Typography>La respuesta está fuera de rango</Typography>
-                </>:props.validateState=="fuera_de_flujo_por_omitida"?<>
+                </>:props.feedback?.estado=="fuera_de_flujo_por_omitida"?<>
                     <Typography>Hay una respuesta omitida o un error más arriba.</Typography>
                     <Typography>Revise la pregunta marcada en amarillo.</Typography>
-                </>:props.validateState=="todavia_no"?<>
+                </>:props.feedback?.estado=="todavia_no"?<>
                     <Typography>Todavía no hay que contestar esta pregunta.</Typography>
                     <Typography>Ingresar la respuesta a la pregunta de fondo blanco.</Typography>
-                </>:props.validateState=="salteada"?<>
+                </>:props.feedback?.estado=="salteada"?<>
                     <Typography>Esta pregunta está salteada debido a una respuesta marcada más arriba.</Typography>
                     <Typography>Buscar la siguiente pregunta de fondo blanco.</Typography>
                 </>:
@@ -329,7 +333,9 @@ function OpcionesDespliegue(
 ){
     return <Grid container direction={horizontal?"row":"column"} wrap={horizontal?"nowrap":"wrap"}>{
         casilleroConOpciones.casilleros.map((opcion:Opcion)=>
-            <Grid key={opcion.casillero} item>
+            <Grid key={opcion.casillero} item
+                ocultar-salteada={opcion.despliegue?.includes('ocultar')?(opcion.expresion_habilitar?'INHABILITAR':'SI'):'NO'}
+            >
                 <OpcionDespliegue 
                     casillero={opcion} 
                     valorOpcion={opcion.casillero} 
@@ -348,22 +354,22 @@ function PreguntaDespliegue(props:{
     forPk:ForPk, 
     valorActual:Valor, 
     respuestas:Respuestas|null, 
-    validateState:EstadoVariable|null,
-    validateRow:{[v in IdVariable]?:EstadoVariable}|null
+    feedback:FeedbackVariable|null,
+    feedbackRow:{[v in IdVariable]:FeedbackVariable}|null
 }){
     var {pregunta} = props;
     var dispatch=useDispatch();
     return <div 
         className="pregunta" 
         nuestro-tipovar={pregunta.tipovar||"multiple"} 
-        nuestro-validator={props.validateState}
-        ocultar-salteada={pregunta.despliegue?.includes('ocultar')?'SI':'NO'}
+        nuestro-validator={props.feedback?.estado}
+        ocultar-salteada={pregunta.despliegue?.includes('ocultar')?(pregunta.expresion_habilitar?'INHABILITAR':'SI'):'NO'}
     >
         <EncabezadoDespliegue 
             casillero={pregunta} 
             leer={!pregunta.despliegue?.includes('no_leer')}  
-            tieneValor={props.valorActual!=null && props.validateState!=null?(estadoRowValidator[props.validateState].correcto?'valido':'invalido'):'NO'}
-            validateState={props.validateState}
+            tieneValor={props.valorActual!=null && props.feedback!=null?(props.feedback.conProblema?'invalido':'valido'):'NO'}
+            feedback={props.feedback}
             forPk={props.forPk}
         />
         <div className="casilleros">{
@@ -389,7 +395,7 @@ function PreguntaDespliegue(props:{
                         opcionM={opcionMultiple} 
                         forPk={props.forPk} 
                         valorActual={props.respuestas?.[opcionMultiple.var_name]!}
-                        validateState={props.validateRow?.[opcionMultiple.var_name]!}
+                        feedback={props.feedbackRow?.[opcionMultiple.var_name]!}
                     />
                 )
             :
@@ -413,6 +419,45 @@ function FiltroDespliegue(props:{filtro:Filtro, forPk:ForPk}){
     </Paper>
 }
 
+function BotonFomulario(props:{casillero:BotonFormulario, forPk:ForPk}){
+    var {casillero, forPk} = props;
+    var habilitador = casillero.expresion_habilitar?getFuncionHabilitar(casillero.expresion_habilitar):()=>true;
+    var {respuestas} = useSelectorVivienda(forPk);
+    var dispatch = useDispatch();
+    var habilitado = habilitador(respuestas);
+    var [confirmarForzarIr, setConfirmarForzarIr] = useState(false);
+    const ir = ()=>{
+        dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{...forPk, formulario:'F:'+casillero.salto! as IdFormulario}}));
+        if(confirmarForzarIr){setConfirmarForzarIr(false)}
+    };
+    return <div 
+        className="seccion-boton-formulario" 
+        nuestro-validator={habilitado?'actual':'todavia_no'}
+        ocultar-salteada={casillero.despliegue?.includes('ocultar')?(casillero.expresion_habilitar?'INHABILITAR':'SI'):'NO'}
+    >
+        <div className="aclaracion">{casillero.aclaracion}</div>
+        <Button
+            variant="contained"
+            color={habilitado?"primary":"default"}
+            disabled={!casillero.salto}
+            onClick={()=>{
+                if(habilitado) ir(); 
+                else setConfirmarForzarIr(true);
+            }}
+        >{casillero.nombre}<ICON.Send/></Button>
+        <Dialog 
+            open={confirmarForzarIr}
+            onClose={()=>setConfirmarForzarIr(false)}
+        >
+            <Typography>No se puede avanzar al siguiente formulario.</Typography>
+            <Typography>Quizás no terminó de contestar las preguntas correspondientes</Typography>
+            <Typography>Quizás no corresponde en base a las respuestas obtenidas</Typography>
+            <Button color="secondary" onClick={()=>setConfirmarForzarIr(false)}>forzar</Button>
+            <Button color="primary" variant="contained" onClick={ir}>Entendido</Button>
+        </Dialog>
+    </div>
+}
+
 function CasilleroDesconocido(props:{casillero:CasilleroBase}){
     var classes = useStyles();
     return <Paper className={classes.errorCasillero}>
@@ -424,7 +469,7 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
 function useSelectorVivienda(forPk:ForPk){
     return useSelector((state:CasoState)=>({
         respuestas: state.datos.hdr[forPk.vivienda].respuestas, 
-        feedback: state.feedbackRowValidator[toPlainForPk(forPk)].estados,
+        feedbackRow: state.feedbackRowValidator[toPlainForPk(forPk)].feedback,
         resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
         formulario: state.estructura.formularios[forPk.formulario].casilleros,
         modoDespliegue: state.opciones.modoDespliegue
@@ -432,7 +477,7 @@ function useSelectorVivienda(forPk:ForPk){
 }
 
 function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Bloque|Formulario, forPk:ForPk}){
-    var {respuestas, feedback} = useSelectorVivienda(props.forPk);
+    var {respuestas, feedbackRow} = useSelectorVivienda(props.forPk);
     return <div className="casilleros">{
         props.bloqueOFormulario.casilleros.map((casillero)=>
             <Grid key={casillero.casillero} item>
@@ -443,11 +488,12 @@ function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Blo
                             forPk={props.forPk} 
                             valorActual={casillero.var_name && respuestas[casillero.var_name] || null} 
                             respuestas={(!casillero.var_name || null) && respuestas}
-                            validateState={casillero.var_name && feedback[casillero.var_name] || null}
-                            validateRow={!casillero.var_name && feedback || null}
+                            feedback={casillero.var_name && feedbackRow[casillero.var_name] || null}
+                            feedbackRow={!casillero.var_name && feedbackRow || null}
                         />:
                     casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero} forPk={props.forPk}/>:
                     casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero} forPk={props.forPk}/>:
+                    casillero.tipoc == "BF"?<BotonFomulario casillero={casillero} forPk={props.forPk}/>:
                     <CasilleroDesconocido casillero={casillero}/>
                 }
             </Grid>
