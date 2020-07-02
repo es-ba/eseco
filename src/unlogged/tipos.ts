@@ -22,7 +22,7 @@ export type Tipoc = TipocDestinos | 'F'|'O'|'OM'
 
 export type TipoVariables = 'texto'|'numero'|'fecha'
 
-export type Despliegue = 'calculada'|'libre'|'no leer'|'leer'
+export type Despliegue = 'calculada'|'libre'|'no_leer'|'leer'
 
 export type CasilleroBase = {
     tipoc:Tipoc
@@ -178,7 +178,7 @@ export type HojaDeRuta={
 
 export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
 
-export type ModoDespliegue = 'metadatos'|'relevamiento'|'estricto'
+export type ModoDespliegue = 'metadatos'|'relevamiento'|'PDF'
 
 export type InfoFormulario={
     casilleros:Formulario, // casilleros aplanados
