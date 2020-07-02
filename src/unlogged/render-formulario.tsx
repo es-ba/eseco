@@ -11,7 +11,7 @@ import {Bloque, BotonFormulario,
     ModoDespliegue,
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor,
+    Respuestas, Valor, TEM,
 } from "./tipos";
 import { dmTraerDatosFormulario, dispatchers, 
     getFuncionHabilitar, 
@@ -582,6 +582,21 @@ function calcularResumenVivienda(idCaso:IdCaso){
     return minResumen
 }
 
+export function DesplegarTem(props:{tem:TEM}){
+    const {tem} = props;
+    return <div>
+        <div>{tem.nomcalle} {tem.nrocatastral}</div>
+        <div>sector:{tem.sector}</div>
+        <div>edificio:{tem.edificio}</div>
+        <div>entrada:{tem.entrada}</div>
+        <div>piso {tem.piso} dpto {tem.departamento}</div>
+        <div>habitacion:{tem.habitacion}</div>
+        <div>casa:{tem.casa}</div>
+        <div>prioridad:{tem.prioridad}</div>
+        <div>observaciones:{tem.observaciones}</div>
+    </div>
+}
+
 export function HojaDeRutaDespliegue(){
     var {hdr, mainForm} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, mainForm:state.estructura.mainForm}));
     var dispatch = useDispatch();
@@ -638,7 +653,7 @@ export function HojaDeRutaDespliegue(){
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <pre>{JSON.stringify(datosVivienda.tem)}</pre>
+                                        <DesplegarTem tem={datosVivienda.tem}/>
                                     </TableCell>
                                 </TableRow>
                             ).array()}
