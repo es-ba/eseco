@@ -42,6 +42,15 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             }
             next();
         })
+        mainApp.get(baseUrl+'/campo',async function(req,res,_next){
+            // @ts-ignore sé que voy a recibir useragent por los middlewares de Backend-plus
+            var {useragent, user} = req;
+            var parameters = req.query;
+            var manifestPath = 'carga-dm/dm-manifest.manifest';
+            /** @type {{type:'js', src:string}[]} */
+            var htmlMain=be.mainPage({useragent, user}, !be.config.devel["no-offline"], {skipMenu:true, manifestPath}).toHtmlDoc();
+            miniTools.serveText(htmlMain,'html')(req,res);
+        });
     }
     addLoggedServices(){
         var be = this;
@@ -130,6 +139,9 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {menuType:'table', name:'diccionario'  , label:'diccionarios' },
             ]},
             */
+            {menuType:'menu', name:'encuestadores', menuContent:[
+                {menuType:'sincronizar_dm', name:'sincronizar_dm', label:'sincronizar'},
+            ]},
             {menuType:'menu', name:'configurar', menuContent:[
                 {menuType:'menu', name:'metadatos', menuContent:[
                     {menuType:'table', name:'operativos'},
