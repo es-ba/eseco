@@ -1,5 +1,5 @@
 operativo|id_casillero|padre|tipoc|tipoc__denominacion|casillero|orden|ok|nombre|tipovar|longitud|tipoe|aclaracion|salto|unidad_analisis|cantidad_resumen|irrepetible|despliegue|ver_id|optativo|orden_total|ultimo_ancestro|formulario_principal|var_name|var_name_especial|expresion_habilitar|valor_ns_nc|valor_sin_dato
-ESECO|F:F1||F|formulario|F1|1|✔|ESTUDIO DE SEROPREVALENCIA COVID-19 (ESECO-2020)||||||viviendas||||||1|F:F1||||||
+ESECO|F:F1||F|formulario|F1|1|✔|Estudio de seroprevalencia COVID-19||||||viviendas||||||1|F:F1||||||
 ESECO|DV|F:F1|B|bloque|DV|100|✔|Datos de la Visita||||||||true||||1;100|F:F1||||||
 ESECO|DV1|DV|P|pregunta|DV1|110|✔|¿Puede realizar la entrevista?|si_no|||||||true||||1;100;110|F:F1||dv1||||
 ESECO|DV1/1|DV1|O|opción|1|1|✔|Sí||||||||||||1;100;110;1|F:F1||||||
@@ -20,18 +20,22 @@ ESECO|DV4|DV|P|pregunta|DV4|160|✔|¿Alguna persona de esta vivienda fue diagno
 ESECO|DV4/1|DV4|O|opción|1|1|✔|Sí||||||||||||1;100;160;1|F:F1||||||
 ESECO|DV4/2|DV4|O|opción|2|2|✔|No||||||||||||1;100;160;2|F:F1||||||
 ESECO|CC1|DV|CONS|consistencia|CC1|165|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||1;100;165|F:F1||||dv4=1||
-ESECO|DV5|DV|P|pregunta|DV5|170|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true|ocultar|||1;100;170|F:F1||dv5||dv4=2||
-ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv5>0 & dv4=2||
-ESECO|F:F2||F|formulario|F2|2|✔|Formulario de habitantes de la vivienda||||||personas||||||2|F:F2||||||
-ESECO|P1|F:F2|P|pregunta|P1|110|✔|Nombre|texto|||||||true|no_leer|||2;110|F:F2||p1||||
-ESECO|P2|F:F2|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||||true||||2;120|F:F2||p2||||
-ESECO|P2/1|P2|O|opción|1|1|✔|Varón||||||||||||2;120;1|F:F2||||||
-ESECO|P2/2|P2|O|opción|2|2|✔|Mujer||||||||||||2;120;2|F:F2||||||
-ESECO|P3|F:F2|P|pregunta|P3|130|✔|¿Cuántos años cumplidos tiene en este momento?|numero|2||Si tiene menos de un año anote 0||||true||||2;130|F:F2||p3||||
-ESECO|P4|F:F2|P|pregunta|P4|140|✔|¿Está la persona en este momento presente?|si_no|||||||true||||2;140|F:F2||p4||||
-ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;140;1|F:F2||||||
-ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;140;2|F:F2||||||
-ESECO|F3|F:F2|BF|Botón para formulario|F3|999|✔|Continuar|||||F3|||true||||2;999|F:F2||||p4=1||
+ESECO|CP|DV|P|pregunta|CP|170|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true|ocultar|||1;100;170|F:F1||cp||dv4=2||
+ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||cp>0 & dv4=2||
+ESECO|F:F2||F|formulario|F2|2|✔|Habitantes de la vivienda||||||viviendas||||||2|F:F2||||||
+ESECO|LP|F:F2|B|bloque|LP|1|✔|Lista de personas||||||personas||true||||2;1|F:F2||||||
+ESECO|P1|LP|P|pregunta|P1|110|✔|Nombre|texto|||||||true|no_leer|||2;1;110|F:F2||p1||||
+ESECO|P2|LP|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||||true||||2;1;120|F:F2||p2||||
+ESECO|P2/1|P2|O|opción|1|1|✔|Varón||||||||||||2;1;120;1|F:F2||||||
+ESECO|P2/2|P2|O|opción|2|2|✔|Mujer||||||||||||2;1;120;2|F:F2||||||
+ESECO|P3|LP|P|pregunta|P3|130|✔|¿Cuántos años cumplidos tiene en este momento?|numero|2||Si tiene menos de un año anote 0||||true||||2;1;130|F:F2||p3||||
+ESECO|P4|LP|P|pregunta|P4|140|✔|¿Está la persona en este momento presente?|si_no|||||||true||||2;1;140|F:F2||p4||p3>=18 or p3<0||
+ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;1;140;1|F:F2||||||
+ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;1;140;2|F:F2||||||
+ESECO|P9|F:F2|P|pregunta|P9|333|✔|¿Esos son todos los habitantes de la vivienda? (incluidos los ausentes)|opciones|||||||true||||2;333|F:F2||p9||||
+ESECO|P9/1|P9|O|opción|1||✔|Sí, son todos||||||||||||2;333;0|F:F2||||||
+ESECO|P9/2|P9|O|opción|2||✔|No, faltó anotar a alguien||||||||||||2;333;0|F:F2||||||
+ESECO|F3|F:F2|BF|Botón para formulario|F3|999|✔|Continuar|||||F3|||true||||2;999|F:F2||||||
 ESECO|F:F3||F|formulario|F3|3|✔|Formulario individual||||||viviendas||||||3|F:F3||||||
 ESECO|S|F:F3|B|bloque|S|137|✔|Realización de test, cuestionario y firma de consentimiento||||||||true||||3;137|F:F3||||||
 ESECO|S1|S|P|pregunta|S1|138|✔|¿La persona seleccionada aceptó firmar el consentimiento?|si_no|||||||true|no_leer|||3;137;138|F:F3||s1||||
@@ -91,7 +95,7 @@ ESECO|D6/8/2|D6/8|O|opción|2|590|✔|No||||||||||||3;147;166;178;590|F:F3||||||
 ESECO|D6/9|D6|OM|opción múltiple|9|600|✔|pérdida súbita de sentido del olfato o gusto?|si_no|||||||||||3;147;166;600|F:F3||d6_9||||
 ESECO|D6/9/1|D6/9|O|opción|1|610|✔|Sí||||||||||||3;147;166;600;610|F:F3||||||
 ESECO|D6/9/2|D6/9|O|opción|2|620|✔|No||||||||||||3;147;166;600;620|F:F3||||||
-ESECO|D7|D|P|pregunta|D7|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||true||||3;147;640|F:F3||d12|d12|d3_1=1 or d3_2=1 or d3_3=1 or d3_4=1 or d3_5=1 or d3_6=1 or d3_7=1 or d3_8=1 or d3_9=1||
+ESECO|D7|D|P|pregunta|D7|640|✔|¿Seguía sintiendo alguno de esos síntomas en las últimas 2 semanas?|si_no|||||||true||||3;147;640|F:F3||d12|d12|d6_1=1 or d6_2=1 or d6_3=1 or d6_4=1 or d6_5=1 or d6_6=1 or d6_7=1 or d6_8=1 or d6_9=1||
 ESECO|D7/1|D7|O|opción|1|650|✔|Sí||||||||||||3;147;640;650|F:F3||||||
 ESECO|D7/2|D7|O|opción|2|660|✔|No||||||||||||3;147;640;660|F:F3||||||
 ESECO|A|F:F3|B|bloque|A|670|✔|Antecedentes de otras enfermedades de riesgo||||||||true||||3;670|F:F3||||||

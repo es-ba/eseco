@@ -1,6 +1,6 @@
 import { createStore } from "redux";
 import { CasilleroBase, CasillerosImplementados, CasoState, 
-    EstructuraRowValidator, 
+    DatosVivienda, EstructuraRowValidator, 
     FeedbackVariable, Formulario, ForPk, 
     IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdVariable, 
     ModoDespliegue, 
@@ -16,6 +16,7 @@ import * as bestGlobals from "best-globals";
 
 var my=myOwn;
 
+export const MAXCP=20;
 const OPERATIVO='ESECO';
 const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
 
@@ -89,59 +90,119 @@ export function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHa
 
 var rowValidator = getRowValidator({getFuncionHabilitar})
 
-function calcularFeedback(state: CasoState):CasoState{
-    var forPk=state.opciones.forPk;
-    if(forPk==null){
+// TODO: GENERALIZAR
+type Persona={p1:string, p2:number, p3:number, p4:number}
+
+function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
+    // TODO: GENERALIZAR
+    var respuestas = {personas:[], ...datosVivienda.respuestas} as unknown as {cp:number, personas:Persona[]};
+    if((respuestas.cp||1)==respuestas.personas.length) return datosVivienda;
+    if(respuestas.cp>MAXCP)respuestas.cp=MAXCP;
+    if(respuestas.cp<respuestas.personas.length){
+        respuestas.personas=respuestas.personas.filter(p=>p.p1||p.p2||p.p3||p.p4);
+    }
+    if(respuestas.cp>respuestas.personas.length){
+        respuestas.personas=[...respuestas.personas];
+        while(respuestas.cp>respuestas.personas.length){
+            respuestas.personas.push({} as Persona)
+        }
+    }
+    return {
+        ...datosVivienda,
+        respuestas:respuestas as unknown as DatosVivienda['respuestas']
+    };
+}
+
+function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
+    forPk = forPk || state.opciones.forPk;
+    if(forPk == null){
         return state;
     }
-    console.log('vivenda',forPk.vivienda);
-    console.log(JSON.stringify(state.datos.hdr[forPk.vivienda].respuestas))
+    console.log('forPk',forPk);
+    var vivienda = forPk.vivienda;
+    var respuestas = state.datos.hdr[vivienda].respuestas;
+    console.log(JSON.stringify(respuestas));
+    var nuevosRows = likeAr([
+        {forPk:{vivienda, formulario:'F:F1' as IdFormulario}, formulario:'F:F1' as IdFormulario},
+        {forPk:{vivienda, formulario:'F:F2' as IdFormulario}, formulario:'F:F2' as IdFormulario},
+        {forPk:{vivienda, formulario:'F:F3' as IdFormulario}, formulario:'F:F3' as IdFormulario},
+        ...bestGlobals.serie({
+            from:1, 
+            //@ts-ignore existen las personas y es un array
+            to:respuestas.personas.length
+        }).map(persona=>({forPk:{vivienda, formulario:'F:F2' as IdFormulario, persona}, formulario:'F:F2_personas' as IdFormulario}))
+    ]).build(({forPk, formulario})=>{
+        var respuestasUnidadAnalisis=state.datos.hdr[forPk.vivienda].respuestas;
+        // TODO: GENERALIZAR:
+        if('persona' in forPk && forPk.persona!=null){
+            // @ts-ignore exite
+            respuestasUnidadAnalisis=respuestasUnidadAnalisis.personas[forPk.persona-1];
+        }
+        return {
+            [toPlainForPk(forPk)]: rowValidator(
+                state.estructura.formularios[formulario].estructuraRowValidator, 
+                respuestasUnidadAnalisis
+            )
+        }
+    })
     return {
         ...state,
         feedbackRowValidator:{
             ...state.feedbackRowValidator,
-            [toPlainForPk(forPk)]:rowValidator(
-                state.estructura.formularios[forPk.formulario].estructuraRowValidator, 
-                state.datos.hdr[forPk.vivienda].respuestas
-            )
+            ...nuevosRows
         }
     }
 }
 
 var reducers={
-    REGISTRAR_RESPUESTA: (payload: {forPk:ForPk, variable:string, respuesta:any}) => 
+    REGISTRAR_RESPUESTA: (payload: {forPk:ForPk, variable:IdVariable, respuesta:any}) => 
         function(state: CasoState){
-            var datosVivienda=state.datos.hdr[payload.forPk.vivienda];
-            if(datosVivienda==null){
+            var datosViviendaRecibidos=state.datos.hdr[payload.forPk.vivienda];
+            if(datosViviendaRecibidos==null){
                 return state;
             }
             /////////// ESPECIALES
             var otrasRespuestasCalculadas={};
-            if(payload.variable=='dv1' && payload.respuesta != null 
+            if(payload.variable==('dv1' as IdVariable) && payload.respuesta != null 
                 // @ts-ignore en esta encuesta existe
-                && datosVivienda.respuestas.dv2 == null
+                && datosViviendaRecibidos.respuestas.dv2 == null
             ){
                 otrasRespuestasCalculadas={dv2: bestGlobals.date.today()}
             }
-            ////////// FIN ESPECIALES
-            var nuevosDatosVivienda={
-                ...datosVivienda,
-                respuestas:{
-                    ...datosVivienda.respuestas,
-                    ...otrasRespuestasCalculadas,
-                    [payload.variable]: payload.respuesta
-                }
+            var respuestas = {
+                ...datosViviendaRecibidos.respuestas,
+                ...otrasRespuestasCalculadas,
+            };
+            var respuestasAModificar = respuestas;
+            /// GENERALIZAR:
+            if(payload.forPk.persona!=null){
+                var iPersona = payload.forPk.persona-1;
+                //@ts-ignore personas existe
+                respuestas.personas = [
+                    //@ts-ignore personas existe
+                    ...respuestas.personas
+                ];
+                //@ts-ignore personas existe
+                respuestas.personas[iPersona] = {...respuestas.personas[iPersona]}
+                //@ts-ignore personas existe
+                respuestasAModificar = respuestas.personas[iPersona];
             }
+            respuestasAModificar[payload.variable] = payload.respuesta;
+            ////////// FIN ESPECIALES
+            var datosVivienda=variablesCalculadas({
+                ...datosViviendaRecibidos,
+                respuestas
+            })
             return calcularFeedback({
                 ...state,
                 datos:{
                     ...state.datos,
                     hdr:{
                         ...state.datos.hdr,
-                        [payload.forPk.vivienda]:nuevosDatosVivienda
+                        [payload.forPk.vivienda]:datosVivienda
                     }
                 }
-            })
+            }, payload.forPk)
         },
     MODO_DESPLIEGUE: (payload: {modoDespliegue:ModoDespliegue}) => 
         function(state: CasoState){
@@ -285,6 +346,9 @@ export function toPlainForPk(forPk:ForPk):PlainForPk{
 export async function dmTraerDatosFormulario(){
     var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
     console.log(casillerosOriginales)
+    //TODO: GENERALIZAR
+    //@ts-ignore
+    casillerosOriginales['F:F2_personas']=casillerosOriginales['F:F2'].childs.find(casillero=>casillero.casillero='LP');
     //@ts-ignore
     var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
         likeAr(casillerosOriginales).map(
@@ -303,30 +367,22 @@ export async function dmTraerDatosFormulario(){
         },
         datos:{
             hdr:{
-                10202:{
-                    respuestas:{
-                        "dv1":"1", "dv5":"4",
-                        // hasta la D11
-                        "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"1","d11":"1"
-                        // hasta la t9
-                        // "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"2","d11":"2","a_1":"1","a_2":"1","a_3":"1","a_4":"2","a_5":"2","a6":"2","a7":"2","a8":"156","a9":"89","cv1":"2","cv3":"2","t1":"2","t2":"2","t3":"1","t4":"2","t5":"2","t6":"2","t7":"2","t8":"2"
-                        // hasta la pregunta de texto:
-                        //"s2":"2","s1":"2","s3":"1","d1":"1","d3":"1","d4":"1","d5":"1","d7":"2","d6":"2","d8":"1","d9":"1","d10":"1","d11":"1","d12":"1","a1":"1","a2":"1","a3":"1","a4":"1","a5":"1","a6":"1","a7":"1"
-                        // d3=1 || d4=1 || d5=1 || d6=1 || d7=1 || d8=1 || d9=1 || d10=1 || d11=1
-                        // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
-                        // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
-                    } as unknown as Respuestas,
-                    tem:{observaciones:'Encuesta vacía', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
-                },
                 '10902':{
                     tem:{
-                        observaciones:'Lista par el individual',
+                        observaciones:'Encuesta vacía',
                         nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
                     } as TEM,
                     // @ts-ignore
-                    respuestas:{}
+                    respuestas:{personas:[]}
                 },
-                '10909':{
+                '10904':{
+                    respuestas:{
+                        "dv1":"1","dv2":new Date(),"dv4":"2","cp":"3"
+                        ,personas:[{},{},{}],
+                    } as unknown as Respuestas,
+                    tem:{observaciones:'Lista par el individual', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
+                },
+                '13303':{
                     tem:{
                         observaciones:'Encuesta empezada',
                         nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
@@ -335,7 +391,21 @@ export async function dmTraerDatosFormulario(){
                     respuestas:{
                         // para ver cómo las opciones con ocultar se ocultan
                         // @ts-ignore
-                        "dv2":"2020-07-01","dv1":"1","dv4":"1","dv5":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
+                        "dv1":"1","dv2":new Date(),"dv4":"2","cp":"3"
+                        // @ts-ignore
+                        ,personas:[{"p1":"asdfa","p2":"1","p3":"33","p4":"1"},{"p1":"asdf","p2":"1"},{}]
+                    }
+                },
+                '13308':{
+                    tem:{
+                        observaciones:'Encuesta terminada',
+                        nomcalle:'Bolivar', nrocatastral:'541', piso:'PB', departamento:'A',
+                    } as TEM,
+                    respuestas:{
+                        // para ver cómo las opciones con ocultar se ocultan
+                        // @ts-ignore
+                        "dv2":"2020-07-01","dv1":"1","dv4":"1","cp":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
+                        ,personas:[]
                     }
                 }
             }

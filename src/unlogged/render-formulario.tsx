@@ -113,7 +113,7 @@ function DespliegueEncabezado(props:{casillero:CasilleroBase, leer?:boolean}){
     </Grid>
 }
 
-function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, variable:string, forPk:ForPk, elegida:boolean, leer:boolean}){
+function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, variable:IdVariable, forPk:ForPk, elegida:boolean, leer:boolean}){
     const {casillero} = props;
     var classes = useStyles();
     var dispatch = useDispatch();
@@ -122,7 +122,7 @@ function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, va
             variant={props.elegida?"contained":"outlined"}
             className={classes.buttonOpcion}
             onClick={()=>{
-                dispatch(dispatchers.REGISTRAR_RESPUESTA({respuesta:props.valorOpcion, variable:props.variable,forPk:props.forPk}))
+                dispatch(dispatchers.REGISTRAR_RESPUESTA({respuesta:props.valorOpcion, variable:props.variable, forPk:props.forPk}))
             }}
         >
             <Grid container>
@@ -481,18 +481,26 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
 }
 
 function useSelectorVivienda(forPk:ForPk){
-    return useSelector((state:CasoState)=>({
-        respuestas: state.datos.hdr[forPk.vivienda].respuestas, 
-        feedbackRow: state.feedbackRowValidator[toPlainForPk(forPk)].feedback,
-        resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
-        formulario: state.estructura.formularios[forPk.formulario].casilleros,
-        modoDespliegue: state.opciones.modoDespliegue
-    }))
+    return useSelector((state:CasoState)=>{
+        var respuestas=state.datos.hdr[forPk.vivienda].respuestas;
+        //TODO: generalizar
+        if(forPk.persona){
+            // @ts-ignore
+            respuestas = respuestas.personas[forPk.persona-1]
+        }
+        return {
+            respuestas,
+            feedbackRow: state.feedbackRowValidator[toPlainForPk(forPk)].feedback,
+            resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
+            formulario: state.estructura.formularios[forPk.formulario].casilleros,
+            modoDespliegue: state.opciones.modoDespliegue
+        }
+    })
 }
 
-function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Bloque|Formulario, forPk:ForPk}){
+function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Bloque|Formulario, forPk:ForPk, multiple:boolean}){
     var {respuestas, feedbackRow} = useSelectorVivienda(props.forPk);
-    return <div className="casilleros">{
+    return <div className="casilleros" es-multiple={props.multiple?'SI':'NO'}>{
         props.bloqueOFormulario.casilleros.map((casillero)=>
             <Grid key={casillero.casillero} item>
                 {
@@ -517,12 +525,24 @@ function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Blo
 }
 
 function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
-    var {bloque} = props;
+    var {bloque, forPk} = props;
     var key=bloque.ver_id!='-' && bloque.ver_id || bloque.casillero;
     var activeStep=0;
+    var multiple = !!bloque.unidad_analisis;
+    var lista = [{forPk, key:0, multiple:false}];
+    if(multiple){
+        var {respuestas} = useSelectorVivienda(forPk);
+        // TODO: GENERALIZAR
+        // @ts-ignore 
+        lista=respuestas.personas.map((_persona, i)=>(
+            {forPk:{...forPk, persona:i+1}, key:i+1, multiple:true}
+        ))
+    }
     return <div className="bloque" nuestro-bloque={bloque.casillero}>
-        <EncabezadoDespliegue casillero={bloque} forPk={props.forPk}/>
-        <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={bloque} forPk={props.forPk}/>
+        <EncabezadoDespliegue casillero={bloque} forPk={forPk}/>
+        {lista.map(({key, forPk, multiple})=>
+            <DesplegarContenidoInternoBloqueOFormulario key={key} bloqueOFormulario={bloque} forPk={forPk} multiple={multiple}/>
+        )}
     </div>
 }
 
@@ -563,7 +583,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
                         </ButtonGroup>
                     </div>
                     <FormularioEncabezado casillero={formulario}/>
-                    <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario} forPk={forPk}/>
+                    <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario} forPk={forPk} multiple={false}/>
                 </Paper>
             </main>
         </>

@@ -8,7 +8,7 @@
 import {FormStructureState, Structure, Feedback} from "row-validator";
 
 export type IdOpcion = number
-export type IdVariable = 'v1'|'v2'|'etc...'
+export type IdVariable = 'v1'|'v2'|'personas'|'etc...'
 export type IdPregunta = 'P1'|'P2'|'etc...'
 export type IdBloque = 'B1'|'B2'|'etc...'
 export type IdFormulario = 'F1'|'F2'|'etc...'
@@ -136,6 +136,7 @@ export type Bloque = CasilleroBase & {
     casilleros:ContenidoFormulario[]
     var_name?:null
     tipovar?:null
+    unidad_analisis?:string
 }
 
 export type Consistencia = CasilleroBase & {
