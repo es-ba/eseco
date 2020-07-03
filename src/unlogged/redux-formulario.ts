@@ -18,6 +18,7 @@ var my=myOwn;
 
 const OPERATIVO='ESECO';
 const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
+export const LOCAL_STORAGE_STATE_NAME ='hdr-campo';
 
 /* REDUCERS */
 
@@ -283,94 +284,111 @@ export function toPlainForPk(forPk:ForPk):PlainForPk{
 }
 
 export async function dmTraerDatosFormulario(){
-    var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
-    console.log(casillerosOriginales)
-    //@ts-ignore
-    var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
-        likeAr(casillerosOriginales).map(
-            (casillerosJerarquizados:any)=>{
-                var casillerosAplanados:CasillerosImplementados = aplanarLaCurva(casillerosJerarquizados);
-                return {
-                    casilleros: casillerosAplanados,
-                    estructuraRowValidator: generarEstructuraRowValidator(casillerosAplanados)
-                }
-            }
-        ).plain();
-    var initialState:CasoState={
-        estructura:{
-            formularios:casillerosTodosFormularios,
-            mainForm:MAIN_FORM
-        },
-        datos:{
-            hdr:{
-                10202:{
-                    respuestas:{
-                        "dv1":"1", "dv5":"4",
-                        // hasta la D11
-                        "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"1","d11":"1"
-                        // hasta la t9
-                        // "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"2","d11":"2","a_1":"1","a_2":"1","a_3":"1","a_4":"2","a_5":"2","a6":"2","a7":"2","a8":"156","a9":"89","cv1":"2","cv3":"2","t1":"2","t2":"2","t3":"1","t4":"2","t5":"2","t6":"2","t7":"2","t8":"2"
-                        // hasta la pregunta de texto:
-                        //"s2":"2","s1":"2","s3":"1","d1":"1","d3":"1","d4":"1","d5":"1","d7":"2","d6":"2","d8":"1","d9":"1","d10":"1","d11":"1","d12":"1","a1":"1","a2":"1","a3":"1","a4":"1","a5":"1","a6":"1","a7":"1"
-                        // d3=1 || d4=1 || d5=1 || d6=1 || d7=1 || d8=1 || d9=1 || d10=1 || d11=1
-                        // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
-                        // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
-                    } as unknown as Respuestas,
-                    tem:{observaciones:'Encuesta vacía', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
-                },
-                '10902':{
-                    tem:{
-                        observaciones:'Lista par el individual',
-                        nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
-                    } as TEM,
-                    // @ts-ignore
-                    respuestas:{}
-                },
-                '10909':{
-                    tem:{
-                        observaciones:'Encuesta empezada',
-                        nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
-                        edificio:'SUR', sector:'2'
-                    } as TEM,
-                    respuestas:{
-                        // para ver cómo las opciones con ocultar se ocultan
-                        // @ts-ignore
-                        "dv2":"2020-07-01","dv1":"1","dv4":"1","dv5":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
+    var createInitialState = async function createInitialState(){
+        var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
+        console.log(casillerosOriginales)
+        //@ts-ignore
+        var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
+            likeAr(casillerosOriginales).map(
+                (casillerosJerarquizados:any)=>{
+                    var casillerosAplanados:CasillerosImplementados = aplanarLaCurva(casillerosJerarquizados);
+                    return {
+                        casilleros: casillerosAplanados,
+                        estructuraRowValidator: generarEstructuraRowValidator(casillerosAplanados)
                     }
                 }
-            }
-        },
-        opciones:{
-            modoDespliegue:'relevamiento',
-            forPk:null//{vivienda:'10202', formulario:'F:F3' as IdFormulario} // null
-            // modoDespliegue:'metadatos'
-        },
-        // @ts-ignore lo lleno después
-        feedbackRowValidator:{}
-    };
-    var vivienda:IdCaso;
-    var formulario:IdFormulario;
-    // @ts-ignore esto se va
-    for(var vivienda in initialState.datos.hdr){
+            ).plain();
+        var initialState:CasoState={
+            estructura:{
+                formularios:casillerosTodosFormularios,
+                mainForm:MAIN_FORM
+            },
+            datos:{
+                hdr:{
+                    10202:{
+                        respuestas:{
+                            "dv1":"1", "dv5":"4",
+                            // hasta la D11
+                            "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"1","d11":"1"
+                            // hasta la t9
+                            // "s1":"1","s2":"2","s3":"1","d1":"2","d3":"2","d4":"2","d5":"2","d6":"2","d7":"2","d8":"2","d9":"2","d10":"2","d11":"2","a_1":"1","a_2":"1","a_3":"1","a_4":"2","a_5":"2","a6":"2","a7":"2","a8":"156","a9":"89","cv1":"2","cv3":"2","t1":"2","t2":"2","t3":"1","t4":"2","t5":"2","t6":"2","t7":"2","t8":"2"
+                            // hasta la pregunta de texto:
+                            //"s2":"2","s1":"2","s3":"1","d1":"1","d3":"1","d4":"1","d5":"1","d7":"2","d6":"2","d8":"1","d9":"1","d10":"1","d11":"1","d12":"1","a1":"1","a2":"1","a3":"1","a4":"1","a5":"1","a6":"1","a7":"1"
+                            // d3=1 || d4=1 || d5=1 || d6=1 || d7=1 || d8=1 || d9=1 || d10=1 || d11=1
+                            // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
+                            // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
+                        } as unknown as Respuestas,
+                        tem:{observaciones:'Encuesta vacía', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
+                    },
+                    '10902':{
+                        tem:{
+                            observaciones:'Lista par el individual',
+                            nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
+                        } as TEM,
+                        // @ts-ignore
+                        respuestas:{}
+                    },
+                    '10909':{
+                        tem:{
+                            observaciones:'Encuesta empezada',
+                            nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
+                            edificio:'SUR', sector:'2'
+                        } as TEM,
+                        respuestas:{
+                            // para ver cómo las opciones con ocultar se ocultan
+                            // @ts-ignore
+                            "dv2":"2020-07-01","dv1":"1","dv4":"1","dv5":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
+                        }
+                    }
+                }
+            },
+            opciones:{
+                modoDespliegue:'relevamiento',
+                forPk:null//{vivienda:'10202', formulario:'F:F3' as IdFormulario} // null
+                // modoDespliegue:'metadatos'
+            },
+            // @ts-ignore lo lleno después
+            feedbackRowValidator:{}
+        };
+        var vivienda:IdCaso;
+        var formulario:IdFormulario;
         // @ts-ignore esto se va
-        for(var formulario in initialState.estructura.formularios){
-            initialState.feedbackRowValidator[toPlainForPk({vivienda,formulario})]=
-                rowValidator(
-                    initialState.estructura.formularios[formulario].estructuraRowValidator, 
-                    initialState.datos.hdr[vivienda].respuestas
-                )
+        for(var vivienda in initialState.datos.hdr){
+            // @ts-ignore esto se va
+            for(var formulario in initialState.estructura.formularios){
+                initialState.feedbackRowValidator[toPlainForPk({vivienda,formulario})]=
+                    rowValidator(
+                        initialState.estructura.formularios[formulario].estructuraRowValidator, 
+                        initialState.datos.hdr[vivienda].respuestas
+                    )
+            }
+        }
+        return initialState;
+    }
+    var loadState = async function loadState():Promise<CasoState>{
+        var casoState:CasoState|null = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
+        if(casoState){
+            return casoState;
+        }else{
+            var initialState = await createInitialState();
+            return initialState;
         }
     }
-
+    var saveState = function saveState(state:CasoState){
+        my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+    }
     /* DEFINICION CONTROLADOR */
+    var initialState:CasoState = await loadState();
     const hdrReducer = createReducer(reducers, initialState);
     /* FIN DEFINICION CONTROLADOR */
     /* CARGA Y GUARDADO DE STATE */
 
+    
     /* CREACION STORE */
     const store = createStore(hdrReducer, initialState); 
+    saveState(store.getState());
     store.subscribe(function(){
-        // saveState(store.getState());
+         saveState(store.getState());
     });
     /* FIN CREACION STORE */
 
