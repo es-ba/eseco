@@ -595,18 +595,24 @@ function calcularResumenVivienda(idCaso:IdCaso){
     return minResumen
 }
 
+export function Atributo(props:{nombre:string, valor:string}){
+    return props.valor!=null && props.valor!=''?<span className="atributo-par">
+        <span className="atributo-nombre">{props.nombre}</span> <span className="atributo-valor">{props.valor}</span>
+    </span>:null
+}
+
 export function DesplegarTem(props:{tem:TEM}){
     const {tem} = props;
     return <div>
-        <div>{tem.nomcalle} {tem.nrocatastral}</div>
-        <div>sector:{tem.sector}</div>
-        <div>edificio:{tem.edificio}</div>
-        <div>entrada:{tem.entrada}</div>
-        <div>piso {tem.piso} dpto {tem.departamento}</div>
-        <div>habitacion:{tem.habitacion}</div>
-        <div>casa:{tem.casa}</div>
-        <div>prioridad:{tem.prioridad}</div>
-        <div>observaciones:{tem.observaciones}</div>
+        <div className="tem-domicilio">{tem.nomcalle} {tem.nrocatastral} <Atributo nombre="piso" valor={tem.piso}/> <Atributo nombre="dpto" valor={tem.departamento}/> </div>
+        <div>
+            <Atributo nombre="sector" valor={tem.sector}/>
+            <Atributo nombre="edificio" valor={tem.edificio}/>
+            <Atributo nombre="casa" valor={tem.casa}/>
+            <Atributo nombre="entrada" valor={tem.entrada}/>
+            <Atributo nombre="habitacion" valor={tem.habitacion}/>
+        </div>
+        <div className="tem-observaciones">{tem.observaciones}</div>
     </div>
 }
 

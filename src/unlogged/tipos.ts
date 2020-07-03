@@ -166,13 +166,13 @@ export type Formulario = CasilleroBase & {
 export type CasillerosImplementados=Formulario|Bloque|Filtro|ConjuntoPreguntas|Pregunta|OpcionMultiple|Opcion|BotonFormulario|Consistencia
 
 export type ForPk={vivienda:IdCaso, formulario:IdFormulario, persona?:number}
-export type PlainForPk='{"vivienda":"capacitacion","formulario":"F:F1","persona":null}'|'etc...';
+export type PlainForPk='{"vivienda":"10202","formulario":"F:F1","persona":null}'|'etc...';
 
 export type Respuestas={
         [pregunta in IdVariable]:Valor
     }
 
-export type IdCaso='capacitacion'|'10902'|'10909'|'etc...' // el caso es una vivienda
+export type IdCaso='10202'|'10902'|'10909'|'etc...' // el caso es una vivienda
 
 export type TEM = {
     nomcalle:string

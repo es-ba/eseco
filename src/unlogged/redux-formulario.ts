@@ -303,7 +303,7 @@ export async function dmTraerDatosFormulario(){
         },
         datos:{
             hdr:{
-                capacitacion:{
+                10202:{
                     respuestas:{
                         "dv1":"1", "dv5":"4",
                         // hasta la D11
@@ -316,7 +316,7 @@ export async function dmTraerDatosFormulario(){
                         // d3=1 or d4=1 or d5=1 or d6=1 or d7=1 or d8=1 or d9=1 or d10=1 or d11=1
                         // t1=2 & t2=2 & t3=2 & t4=2 & t5=2 & t6=2 & t7=2 & t8=2 & t9=2
                     } as unknown as Respuestas,
-                    tem:{observaciones:'Encuesta vacía', nomcalle:'Bolivar', nrocatastral:'541' } as TEM
+                    tem:{observaciones:'Encuesta vacía', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
                 },
                 '10902':{
                     tem:{
@@ -329,7 +329,8 @@ export async function dmTraerDatosFormulario(){
                 '10909':{
                     tem:{
                         observaciones:'Encuesta empezada',
-                        nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
+                        nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
+                        edificio:'SUR', sector:'2'
                     } as TEM,
                     respuestas:{
                         // para ver cómo las opciones con ocultar se ocultan
@@ -341,7 +342,7 @@ export async function dmTraerDatosFormulario(){
         },
         opciones:{
             modoDespliegue:'relevamiento',
-            forPk:null//{vivienda:'capacitacion', formulario:'F:F3' as IdFormulario} // null
+            forPk:null//{vivienda:'10202', formulario:'F:F3' as IdFormulario} // null
             // modoDespliegue:'metadatos'
         },
         // @ts-ignore lo lleno después
