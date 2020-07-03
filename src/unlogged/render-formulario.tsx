@@ -639,6 +639,12 @@ export function DesplegarTem(props:{tem:TEM}){
 export function HojaDeRutaDespliegue(){
     var {hdr, mainForm} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, mainForm:state.estructura.mainForm}));
     var dispatch = useDispatch();
+    const updateOnlineStatus = function(){
+        setOnline(window.navigator.onLine);
+    }
+    const [online, setOnline] = useState(window.navigator.onLine);
+    window.addEventListener('online',  updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
     return (
         <>
             <AppBar position="fixed">
@@ -652,16 +658,18 @@ export function HojaDeRutaDespliegue(){
                     >
                         <ICON.Settings/>
                     </IconButton>
-                    <IconButton
-                        color="inherit"
-                        onClick={()=>{
-                            //PROVISORIO
-                            history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=configurar`);
-                            location.reload();   
-                        }}
-                    >
-                        <ICON.ExitToApp/>
-                    </IconButton>
+                    {online?
+                        <IconButton
+                            color="inherit"
+                            onClick={()=>{
+                                //PROVISORIO
+                                history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=encuestadores,sincronizar_dm`);
+                                location.reload();   
+                            }}
+                        >
+                            <ICON.SyncAlt/>
+                        </IconButton>
+                    :null}
                 </Toolbar>
             </AppBar>
             <main>

@@ -19,6 +19,7 @@ var my=myOwn;
 export const MAXCP=20;
 const OPERATIVO='ESECO';
 const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
+export const LOCAL_STORAGE_STATE_NAME ='hdr-campo';
 
 /* REDUCERS */
 
@@ -344,103 +345,121 @@ export function toPlainForPk(forPk:ForPk):PlainForPk{
 }
 
 export async function dmTraerDatosFormulario(){
-    var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
-    console.log(casillerosOriginales)
-    //TODO: GENERALIZAR
-    //@ts-ignore
-    casillerosOriginales['F:F2_personas']=casillerosOriginales['F:F2'].childs.find(casillero=>casillero.casillero='LP');
-    //@ts-ignore
-    var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
-        likeAr(casillerosOriginales).map(
-            (casillerosJerarquizados:any)=>{
-                var casillerosAplanados:CasillerosImplementados = aplanarLaCurva(casillerosJerarquizados);
-                return {
-                    casilleros: casillerosAplanados,
-                    estructuraRowValidator: generarEstructuraRowValidator(casillerosAplanados)
-                }
-            }
-        ).plain();
-    var initialState:CasoState={
-        estructura:{
-            formularios:casillerosTodosFormularios,
-            mainForm:MAIN_FORM
-        },
-        datos:{
-            hdr:{
-                '10902':{
-                    tem:{
-                        observaciones:'Encuesta vacía',
-                        nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
-                    } as TEM,
-                    // @ts-ignore
-                    respuestas:{personas:[]}
-                },
-                '10904':{
-                    respuestas:{
-                        "dv1":"1","dv2":new Date(),"dv4":"2","cp":"3"
-                        ,personas:[{},{},{}],
-                    } as unknown as Respuestas,
-                    tem:{observaciones:'Lista par el individual', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
-                },
-                '13303':{
-                    tem:{
-                        observaciones:'Encuesta empezada',
-                        nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
-                        edificio:'SUR', sector:'2'
-                    } as TEM,
-                    respuestas:{
-                        // para ver cómo las opciones con ocultar se ocultan
-                        // @ts-ignore
-                        "dv1":"1","dv2":new Date(),"dv4":"2","cp":"3"
-                        // @ts-ignore
-                        ,personas:[{"p1":"asdfa","p2":"1","p3":"33","p4":"1"},{"p1":"asdf","p2":"1"},{}]
-                    }
-                },
-                '13308':{
-                    tem:{
-                        observaciones:'Encuesta terminada',
-                        nomcalle:'Bolivar', nrocatastral:'541', piso:'PB', departamento:'A',
-                    } as TEM,
-                    respuestas:{
-                        // para ver cómo las opciones con ocultar se ocultan
-                        // @ts-ignore
-                        "dv2":"2020-07-01","dv1":"1","dv4":"1","cp":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
-                        ,personas:[]
+    var createInitialState = async function createInitialState(){
+        var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
+        console.log(casillerosOriginales)
+        //TODO: GENERALIZAR
+        //@ts-ignore
+        casillerosOriginales['F:F2_personas']=casillerosOriginales['F:F2'].childs.find(casillero=>casillero.casillero='LP');
+        //@ts-ignore
+        var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
+            likeAr(casillerosOriginales).map(
+                (casillerosJerarquizados:any)=>{
+                    var casillerosAplanados:CasillerosImplementados = aplanarLaCurva(casillerosJerarquizados);
+                    return {
+                        casilleros: casillerosAplanados,
+                        estructuraRowValidator: generarEstructuraRowValidator(casillerosAplanados)
                     }
                 }
-            }
-        },
-        opciones:{
-            modoDespliegue:'relevamiento',
-            forPk:null//{vivienda:'10202', formulario:'F:F3' as IdFormulario} // null
-            // modoDespliegue:'metadatos'
-        },
-        // @ts-ignore lo lleno después
-        feedbackRowValidator:{}
-    };
-    var vivienda:IdCaso;
-    var formulario:IdFormulario;
-    // @ts-ignore esto se va
-    for(var vivienda in initialState.datos.hdr){
+            ).plain();
+        var initialState:CasoState={
+            estructura:{
+                formularios:casillerosTodosFormularios,
+                mainForm:MAIN_FORM
+            },
+            datos:{
+                hdr:{
+                    '10902':{
+                        tem:{
+                            observaciones:'Encuesta vacía',
+                            nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
+                        } as TEM,
+                        // @ts-ignore
+                        respuestas:{personas:[]}
+                    },
+                    '10904':{
+                        respuestas:{
+                            "dv1":"1","dv2":new Date(),"dv4":"2","cp":"3"
+                            ,personas:[{},{},{}],
+                        } as unknown as Respuestas,
+                        tem:{observaciones:'Lista par el individual', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
+                    },
+                    '13303':{
+                        tem:{
+                            observaciones:'Encuesta empezada',
+                            nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
+                            edificio:'SUR', sector:'2'
+                        } as TEM,
+                        respuestas:{
+                            // para ver cómo las opciones con ocultar se ocultan
+                            // @ts-ignore
+                            "dv1":"1","dv2":new Date(),"dv4":"2","cp":"3"
+                            // @ts-ignore
+                            ,personas:[{"p1":"asdfa","p2":"1","p3":"33","p4":"1"},{"p1":"asdf","p2":"1"},{}]
+                        }
+                    },
+                    '13308':{
+                        tem:{
+                            observaciones:'Encuesta terminada',
+                            nomcalle:'Bolivar', nrocatastral:'541', piso:'PB', departamento:'A',
+                        } as TEM,
+                        respuestas:{
+                            // para ver cómo las opciones con ocultar se ocultan
+                            // @ts-ignore
+                            "dv2":"2020-07-01","dv1":"1","dv4":"1","cp":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
+                            ,personas:[]
+                        }
+                    }
+                }
+            
+            },
+            opciones:{
+                modoDespliegue:'relevamiento',
+                forPk:null//{vivienda:'10202', formulario:'F:F3' as IdFormulario} // null
+                // modoDespliegue:'metadatos'
+            },
+            // @ts-ignore lo lleno después
+            feedbackRowValidator:{}
+        };
+        var vivienda:IdCaso;
+        var formulario:IdFormulario;
         // @ts-ignore esto se va
-        for(var formulario in initialState.estructura.formularios){
-            initialState.feedbackRowValidator[toPlainForPk({vivienda,formulario})]=
-                rowValidator(
-                    initialState.estructura.formularios[formulario].estructuraRowValidator, 
-                    initialState.datos.hdr[vivienda].respuestas
-                )
+        for(var vivienda in initialState.datos.hdr){
+            // @ts-ignore esto se va
+            for(var formulario in initialState.estructura.formularios){
+                initialState.feedbackRowValidator[toPlainForPk({vivienda,formulario})]=
+                    rowValidator(
+                        initialState.estructura.formularios[formulario].estructuraRowValidator, 
+                        initialState.datos.hdr[vivienda].respuestas
+                    )
+            }
+        }
+        return initialState;
+    }
+    var loadState = async function loadState():Promise<CasoState>{
+        var casoState:CasoState|null = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
+        if(casoState){
+            return casoState;
+        }else{
+            var initialState = await createInitialState();
+            return initialState;
         }
     }
-
+    var saveState = function saveState(state:CasoState){
+        my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+    }
     /* DEFINICION CONTROLADOR */
+    var initialState:CasoState = await loadState();
     const hdrReducer = createReducer(reducers, initialState);
     /* FIN DEFINICION CONTROLADOR */
     /* CARGA Y GUARDADO DE STATE */
 
+    
     /* CREACION STORE */
     const store = createStore(hdrReducer, initialState); 
+    saveState(store.getState());
     store.subscribe(function(){
-        // saveState(store.getState());
+         saveState(store.getState());
     });
     /* FIN CREACION STORE */
 

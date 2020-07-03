@@ -1,8 +1,8 @@
 "use strict";
 import {html}  from 'js-to-html';
 import * as AjaxBestPromise from "ajax-best-promise";
-
-var LOCAL_STORAGE_STATE_NAME ='zx-03'
+import {LOCAL_STORAGE_STATE_NAME} from "../unlogged/redux-formulario";
+import { desplegarFormularioActual } from './render-formulario';
 
 window.addEventListener('load', async function(){
     var layout = document.getElementById('total-layout')!;
@@ -14,26 +14,17 @@ window.addEventListener('load', async function(){
     await myOwn.ready;
     layout.innerHTML='<div id=main_layout></div><span id="mini-console"></span>';
     var url = new URL(window.location.href);
-    if(location.pathname.endsWith('/dm')){
-        if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
-            const {periodo, panel, tarea} = myOwn.getLocalVar(LOCAL_STORAGE_STATE_NAME)!;
-            history.replaceState(null, '', `${location.origin+location.pathname}/../hdr?periodo=${periodo}&panel=${panel}&tarea=${tarea}`);
-            location.reload();
-        }else{
-            layout.appendChild(html.div([
-                html.p('Dispositivo sin carga'), 
-                html.p('Sitio seguro para sacar el ícono'), 
-                html.img({src:'img/logo-dm.png'}),
-                html.p([html.a({href:'./menu#i=dm2,sincronizar_dm2'},'ir a sincronizar')])
-            ]).create());        
-        }
+    //if(location.pathname.endsWith('/campo')){
+    if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
+        desplegarFormularioActual();
     }else{
-        const periodo = url.searchParams.get("periodo");
-        const panel = url.searchParams.get("panel");
-        const tarea = url.searchParams.get("tarea");
-        //@ts-ignore existe 
-        dmHojaDeRuta({addrParamsHdr:{periodo, panel, tarea}});
+        layout.appendChild(html.div([
+            html.p('Dispositivo sin carga'), 
+            //html.img({src:'img/logo-dm.png'}),
+            html.p([html.a({href:'./menu#w=sincronizar'},'Sincronizar')])
+        ]).create());        
     }
+    //}
 })
 
 var wasDownloading=false;
@@ -69,9 +60,8 @@ appCache.addEventListener('error', async function(e:Event) {
 
 async function cacheReady(){
     wasDownloading=false;
-    var {periodo, panel, tarea} = myOwn.getLocalVar(LOCAL_STORAGE_STATE_NAME)||{};
     var result:string = await AjaxBestPromise.get({
-        url:`carga-dm/${periodo?`${periodo}p${panel}t${tarea}_manifest.manifest`:'dm-manifest.manifest'}`,
+        url:'carga-dm/dm-manifest.manifest',
         data:{}
     });
     myOwn.setLocalVar('app-cache-version',result.split('\n')[1]);

@@ -11,6 +11,11 @@ import * as yazl from "yazl";
 import { NextFunction } from "express-serve-static-core";
 
 //import { casos               } from "./table-casos";
+import { roles               } from "./table-roles";
+import { personal            } from "./table-personal";
+import { personal_rol        } from "./table-personal_rol";
+import { permisos            } from "./table-permisos";
+import { roles_permisos      } from "./table-roles_permisos";
 
 import {defConfig} from "./def-config"
 import { FieldDefinition } from "procesamiento";
@@ -42,6 +47,15 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             }
             next();
         })
+        mainApp.get(baseUrl+'/campo',async function(req,res,_next){
+            // @ts-ignore sé que voy a recibir useragent por los middlewares de Backend-plus
+            var {useragent, user} = req;
+            var parameters = req.query;
+            var manifestPath = 'carga-dm/dm-manifest.manifest';
+            /** @type {{type:'js', src:string}[]} */
+            var htmlMain=be.mainPage({useragent, user}, !be.config.devel["no-offline"], {skipMenu:true, manifestPath}).toHtmlDoc();
+            miniTools.serveText(htmlMain,'html')(req,res);
+        });
     }
     addLoggedServices(){
         var be = this;
@@ -82,6 +96,38 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
     }
     async postConfig(){
         await super.postConfig();
+        var be=this;
+        await be.inTransaction(null, async function(client:pg.Client){
+            var qPermisos=`
+            SELECT jsonb_object_agg(r.rol,jsonb_build_object('superuser',r.superuser,'puede',(
+                  SELECT jsonb_object_agg(rp.permiso,(
+                        SELECT jsonb_object_agg(rpa.accion,rpa.habilitado)
+                          FROM roles_permisos rpa
+                          WHERE rpa.rol=rp.rol AND rpa.permiso=rp.permiso
+                    ))
+                    FROM roles_permisos rp
+                    WHERE rp.rol=r.rol #condHabilitado#
+              )))
+              FROM roles r
+            `;
+            var results = [
+                await client.query(qPermisos.replace('#condHabilitado#','')).fetchUniqueValue(),
+                await client.query(qPermisos.replace('#condHabilitado#',` and rp.${pg.quoteIdent('habilitado')}`)).fetchUniqueValue(),
+                await client.query(`
+                    SELECT jsonb_object_agg(permiso,(
+                        SELECT jsonb_object_agg(accion,true)
+                          FROM permisos pa
+                          WHERE pa.permiso=p.permiso
+                      ))
+                      FROM permisos p
+                `).fetchUniqueValue()
+            ];
+            be.permisosRol=results[0].value;
+            be.permisosRolSoloTrue=results[1].value;
+            be.permisosSuperuser=results[2].value;
+            console.dir(be.permisosRolSoloTrue,{depth:9});
+            console.dir(be.permisosSuperuser,{depth:9});
+        });
     }
     configStaticConfig(){
         super.configStaticConfig();
@@ -118,6 +164,18 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         ]
         // .map(m=>({...m, file:m.fileDevelopment||m.file}));
     }
+    getContext(req:Request):Context{
+        var be = this;
+        var fatherContext = super.getContext(req);
+        if(fatherContext.user){
+            if(be.permisosRol[req.user.rol].superuser){
+                return {superuser:true, puede: be.permisosSuperuser, ...fatherContext}
+            }else{
+                return {puede: be.permisosRol[req.user.rol].puede, ...fatherContext}
+            }
+        }
+        return {puede:{}, ...fatherContext};
+    }
     getMenu(){
         let menu = {menu:[
             {menuType:'mostrarFormulario', name:'fi', label:'formulario individual', selectedByDefault:true},
@@ -130,6 +188,9 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {menuType:'table', name:'diccionario'  , label:'diccionarios' },
             ]},
             */
+            {menuType:'menu', name:'encuestadores', menuContent:[
+                {menuType:'sincronizar_dm', name:'sincronizar_dm', label:'sincronizar'},
+            ]},
             {menuType:'menu', name:'configurar', menuContent:[
                 {menuType:'menu', name:'metadatos', menuContent:[
                     {menuType:'table', name:'operativos'},
@@ -141,6 +202,11 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             ]},
             {menuType:'menu', name:'usuarios', menuContent:[
                 {menuType:'table', name:'usuarios'},
+                {menuType:'table', name:'roles'},
+                {menuType:'table', name:'permisos'},
+                {menuType:'table', name:'roles_permisos'},
+                {menuType:'table', name:'personal'},
+                {menuType:'table', name:'personal_rol'},
             ]},
             {menuType:'proc', name:'generate_tabledef', proc:'tabledef_generate', label:'generar tablas'  },
         ]}
@@ -151,6 +217,11 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         super.prepareGetTables();
         this.getTableDefinition={
             ...this.getTableDefinition
+            , roles
+            , personal
+            , personal_rol
+            , permisos
+            , roles_permisos
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
@@ -179,6 +250,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         })
         be.appendToTableDefinition('usuarios', function (tableDef) {
             tableDef.foreignKeys = tableDef.foreignKeys||[];
+            tableDef.foreignKeys.push({references:'roles'  , fields:['rol'] , onDelete: 'cascade'});
         });
     }
   }
