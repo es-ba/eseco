@@ -42,6 +42,29 @@ anchoNormal(ancho)
       font-size 90%
       color #666 !important
 
+.bloque[es-multiple=SI]
+  > .casilleros
+    flex-direction row
+    > *
+      width 24%
+    .pregunta
+      flex-direction column
+      > .encabezado
+        display none
+        width 100%
+        > .id-div
+          width 24px
+        > *
+          display inline
+          margin 2px
+          padding 0px
+      > .casilleros
+        width 100%
+  > .casilleros:nth-child(2)
+    .pregunta
+      > .encabezado
+        display block
+
 .casilleros
   display flex
   flex-direction column
@@ -324,6 +347,14 @@ boton-id-div-invalido()
 .observaciones
   font-size 95%
 
+.boton-confirmar-campo
+  .MuiButton-root
+    min-width 28px
+  .MuiButton-label
+    width 26px
+  button.MuiButton-outlinedSizeSmall
+    padding 3px
+
 /*ESTILOS CACHE*/
 #cache-layout, #cache-log
   clear both
@@ -360,3 +391,4 @@ app-cache-version, #app-dm-version
   background-color #00AA15
   color #ffffff
 /* FIN ESTILOS CACHE*/
+

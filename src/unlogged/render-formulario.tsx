@@ -500,7 +500,7 @@ function useSelectorVivienda(forPk:ForPk){
 
 function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Bloque|Formulario, forPk:ForPk, multiple:boolean}){
     var {respuestas, feedbackRow} = useSelectorVivienda(props.forPk);
-    return <div className="casilleros" es-multiple={props.multiple?'SI':'NO'}>{
+    return <div className="casilleros">{
         props.bloqueOFormulario.casilleros.map((casillero)=>
             <Grid key={casillero.casillero} item>
                 {
@@ -538,7 +538,7 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
             {forPk:{...forPk, persona:i+1}, key:i+1, multiple:true}
         ))
     }
-    return <div className="bloque" nuestro-bloque={bloque.casillero}>
+    return <div className="bloque" nuestro-bloque={bloque.casillero} es-multiple={multiple?'SI':'NO'}>
         <EncabezadoDespliegue casillero={bloque} forPk={forPk}/>
         {lista.map(({key, forPk, multiple})=>
             <DesplegarContenidoInternoBloqueOFormulario key={key} bloqueOFormulario={bloque} forPk={forPk} multiple={multiple}/>
