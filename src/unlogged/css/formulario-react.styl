@@ -42,28 +42,29 @@ anchoNormal(ancho)
       font-size 90%
       color #666 !important
 
-.bloque[es-multiple=SI]
-  > .casilleros
-    flex-direction row
-    > *
-      width 24%
-    .pregunta
-      flex-direction column
-      > .encabezado
-        display none
-        width 100%
-        > .id-div
-          width 24px
-        > *
-          display inline
-          margin 2px
-          padding 0px
-      > .casilleros
-        width 100%
-  > .casilleros:nth-child(2)
-    .pregunta
-      > .encabezado
-        display block
+@media screen and (min-width 600px)
+  .bloque[es-multiple=SI]
+    > .casilleros
+      flex-direction row
+      > *
+        width 24%
+      .pregunta
+        flex-direction column
+        > .encabezado
+          display none
+          width 100%
+          > .id-div
+            width 24px
+          > *
+            display inline
+            margin 2px
+            padding 0px
+        > .casilleros
+          width 100%
+    > .casilleros:nth-child(2)
+      .pregunta
+        > .encabezado
+          display block
 
 .casilleros
   display flex
@@ -79,7 +80,7 @@ anchoNormal(ancho)
   @media (min-width 600px)
     margin-left 48px
     justify-content space-between
-  display flex  
+  display flex
   @media screen and (max-width 599px)
     flex-direction column
   .id
@@ -108,7 +109,7 @@ anchoNormal(ancho)
     min-width 33%
 
 .pregunta
-  @media screen and (max-width 559px)
+  @media screen and (max-width 599px)
     flex-direction column
   display flex
   justify-content space-between
@@ -150,9 +151,11 @@ anchoNormal(ancho)
       margin-bottom margenPregunta
       .MuiButton-root
         margin-left 5px
+      .input-campo
+        max-width calc(100% - 40px)
       &[nuestra-longitud=full]
         .input-campo
-          width 80%
+          width 88%
         .boton-confirmar-campo
           width 20%
       &[nuestra-longitud=medium]
