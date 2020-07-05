@@ -23,18 +23,22 @@ ESECO|CC1|DV|CONS|consistencia|CC1|165|⛔|Cuando en la vivienda hay al menos un
 ESECO|CP|DV|P|pregunta|CP|170|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true|ocultar|||1;100;170|F:F1||cp||dv4=2||
 ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||cp>0 & dv4=2||
 ESECO|F:F2||F|formulario|F2|2|✔|Habitantes de la vivienda||||||viviendas||||||2|F:F2||||||
-ESECO|LP|F:F2|B|bloque|LP|1|✔|Lista de personas||||||personas||true||||2;1|F:F2||||||
-ESECO|P1|LP|P|pregunta|P1|110|✔|Nombre|texto|||||||true|no_leer|||2;1;110|F:F2||p1||||
-ESECO|P2|LP|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||||true||||2;1;120|F:F2||p2||||
-ESECO|P2/1|P2|O|opción|1|1|✔|Varón||||||||||||2;1;120;1|F:F2||||||
-ESECO|P2/2|P2|O|opción|2|2|✔|Mujer||||||||||||2;1;120;2|F:F2||||||
-ESECO|P3|LP|P|pregunta|P3|130|✔|¿Cuántos años cumplidos tiene en este momento?|numero|2||Si tiene menos de un año anote 0||||true||||2;1;130|F:F2||p3||||
-ESECO|P4|LP|P|pregunta|P4|140|✔|¿Está la persona en este momento presente?|si_no|||||||true||||2;1;140|F:F2||p4||p3>=18 or p3<0||
-ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;1;140;1|F:F2||||||
-ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;1;140;2|F:F2||||||
-ESECO|P9|F:F2|P|pregunta|P9|333|✔|¿Esos son todos los habitantes de la vivienda? (incluidos los ausentes)|opciones|||||||true||||2;333|F:F2||p9||||
-ESECO|P9/1|P9|O|opción|1||✔|Sí, son todos||||||||||||2;333;0|F:F2||||||
-ESECO|P9/2|P9|O|opción|2||✔|No, faltó anotar a alguien||||||||||||2;333;0|F:F2||||||
+ESECO|CP!|F:F2|P|pregunta|CP!|1|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;1|F:F2||cp!|cp!|||
+ESECO|LN|F:F2|B|bloque|LN|10|✔|Lista de nombres||||||personas||true||||2;10|F:F2||||||
+ESECO|P1!|LN|P|pregunta|P1!||✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||||true||||2;10;0|F:F2||p1!|p1!|||
+ESECO|LP|F:F2|B|bloque|LP|100|✔|Lista de personas||||||personas||true||||2;100|F:F2||||||
+ESECO|P1|LP|P|pregunta|P1|110|✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||personas||true||||2;100;110|F:F2||p1||||
+ESECO|P2|LP|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||personas||true||||2;100;120|F:F2||p2||||
+ESECO|P2/1|P2|O|opción|1|1|✔|Varón||||||||||||2;100;120;1|F:F2||||||
+ESECO|P2/2|P2|O|opción|2|2|✔|Mujer||||||||||||2;100;120;2|F:F2||||||
+ESECO|P3|LP|P|pregunta|P3|130|✔|¿Cuántos años cumplidos tiene en este momento?|numero|2||Si tiene menos de un año anote 0||personas||true||||2;100;130|F:F2||p3||||
+ESECO|P4|LP|P|pregunta|P4|140|✔|¿Está la persona en este momento presente?|si_no|||||personas||true||||2;100;140|F:F2||p4||p3>=18 or p3<0||
+ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;100;140;1|F:F2||||||
+ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;100;140;2|F:F2||||||
+ESECO|B9|F:F2|B|bloque|B9|330|✔|confirmación de la lista de personas||||||||true||||2;330|F:F2||||||
+ESECO|P9|B9|P|pregunta|P9|333|✔|¿Esos son todos los habitantes de la vivienda? (incluidos los ausentes)|opciones|||||||true||||2;330;333|F:F2||p9||_personas_incompletas=0||
+ESECO|P9/2|P9|O|opción|2||✔|No, faltó anotar a alguien||||||||||||2;330;333;0|F:F2||||||
+ESECO|P9/1|P9|O|opción|1||✔|Sí, son todos||||||||||||2;330;333;0|F:F2||||||
 ESECO|F3|F:F2|BF|Botón para formulario|F3|999|✔|Continuar|||||F3|||true||||2;999|F:F2||||||
 ESECO|F:F3||F|formulario|F3|3|✔|Formulario individual||||||viviendas||||||3|F:F3||||||
 ESECO|S|F:F3|B|bloque|S|137|✔|Realización de test, cuestionario y firma de consentimiento||||||||true||||3;137|F:F3||||||
