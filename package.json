@@ -1,7 +1,7 @@
 {
   "name": "eseco",
-  "description": "defunciones",
-  "version": "1.4.1",
+  "description": "Encuesta Seropositiva de Covid19",
+  "version": "0.3.0",
   "private": true,
   "author": "Codenautas <codenautas@googlegroups.com>",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "yazl": "~2.5.1",
     "ajax-best-promise": "^0.3.7",
     "backend-plus": "^1.4.3",
+    "best-globals": "^0.10.25",
     "operativos": "^1.1.0",
     "rel-enc": "^1.2.3",
     "meta-enc": "^1.2.1",

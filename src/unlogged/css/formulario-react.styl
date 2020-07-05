@@ -42,6 +42,16 @@ anchoNormal(ancho)
       font-size 90%
       color #666 !important
 
+[nuestro-bloque="LN"]
+  > .casilleros
+    .pregunta
+      > .encabezado
+        display none
+  > .casilleros:nth-child(2)
+    .pregunta
+      > .encabezado
+        display block
+
 @media screen and (min-width 600px)
   .bloque[es-multiple=SI]
     > .casilleros
@@ -357,6 +367,18 @@ boton-id-div-invalido()
     width 26px
   button.MuiButton-outlinedSizeSmall
     padding 3px
+  button.MuiButton-containedSizeSmall
+    padding 3px
+
+.bienvenida
+  padding 12px
+  max-width 760px
+
+[nuestro-bloque="LN"]
+  @media print
+    display none
+  @media (min-width 600px)
+    display none
 
 /*ESTILOS CACHE*/
 #cache-layout, #cache-log

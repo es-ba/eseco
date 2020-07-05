@@ -493,7 +493,8 @@ function useSelectorVivienda(forPk:ForPk){
             feedbackRow: state.feedbackRowValidator[toPlainForPk(forPk)].feedback,
             resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
             formulario: state.estructura.formularios[forPk.formulario].casilleros,
-            modoDespliegue: state.opciones.modoDespliegue
+            modoDespliegue: state.modo.demo?state.opciones.modoDespliegue:'relevamiento',
+            modo: state.modo
         }
     })
 }
@@ -550,7 +551,7 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var {formulario, modoDespliegue} = useSelectorVivienda(props.forPk);
+    var {formulario, modoDespliegue, modo} = useSelectorVivienda(props.forPk);
     const dispatch = useDispatch();
     var listaModos:ModoDespliegue[]=['metadatos','relevamiento','PDF'];
     return (
@@ -572,7 +573,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
             </AppBar>
             <main>
                 <Paper className="formulario" modo-despliegue={modoDespliegue}>
-                    <div>
+                    {modo.demo?<div>
                         <Typography component="span">Modo de despliegue:</Typography>
                         <ButtonGroup>
                         {listaModos.map(modo=>
@@ -581,7 +582,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
                             }>{modo}</Button>
                         )}
                         </ButtonGroup>
-                    </div>
+                    </div>:null}
                     <FormularioEncabezado casillero={formulario}/>
                     <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario} forPk={forPk} multiple={false}/>
                 </Paper>
@@ -712,20 +713,49 @@ export function HojaDeRutaDespliegue(){
     );
 }
 
+export function ListaTextos(props:{textos:string[]}){
+    return <ul>
+        {props.textos.map(t=><li><Typography>{t}</Typography></li>)}
+    </ul>;
+}
+
+export function BienvenidaDespliegue(){
+    var dispatch=useDispatch();
+    return <Paper className="bienvenida">
+        <Typography>DEMO del sistema de relevamiento de ESECO</Typography>
+        <Typography>En esta demo:</Typography>
+        <ListaTextos textos={[
+            "Algunas viviendas aparecen relevadas (el botón está de color) sirven para ver cómo se ve",
+            "Lo que se carguen se guardan localmente pero no se trasmiten a la base de datos",
+            "Se puede volver a la versión inicial (o sea borrar lo que se guardó localmente) desde la opción sincronizar [⇄]",
+            "Todavía hay cosas que faltan o pueden cambiar",
+        ]} />
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={()=>dispatch(dispatchers.SET_OPCION({opcion:'bienvenido', valor:true}))}
+        >
+            Continuar <ICON.Send/>
+        </Button>
+    </Paper>
+}
+
 export function AppEseco(){
-    var forPk = useSelector((state:CasoState)=>state.opciones.forPk);
-    if(forPk==null){
+    var {forPk, bienvenido} = useSelector((state:CasoState)=>({...state.opciones, ...state.modo}));
+    if(!bienvenido){
+        return <BienvenidaDespliegue /> 
+    }else if(forPk==null){
         return <HojaDeRutaDespliegue /> 
     }else{
         return <FormularioDespliegue forPk={forPk}/>
     }
 }
 
-export async function desplegarFormularioActual(){
+export async function desplegarFormularioActual(opts:{modoDemo:boolean}){
     // traer los metadatos en una "estructura"
     // traer los datos de localStorage
     // verificar el main Layout
-    const store = await dmTraerDatosFormulario()
+    const store = await dmTraerDatosFormulario(opts)
     ReactDOM.render(
         <RenderPrincipal store={store} dispatchers={dispatchers} mensajeRetorno="Volver a la hoja de ruta">
             <AppEseco/>

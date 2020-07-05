@@ -16,7 +16,7 @@ window.addEventListener('load', async function(){
     var url = new URL(window.location.href);
     //if(location.pathname.endsWith('/campo')){
     if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
-        desplegarFormularioActual();
+        desplegarFormularioActual({modoDemo:false});
     }else{
         layout.appendChild(html.div([
             html.p('Dispositivo sin carga'), 

@@ -4,8 +4,8 @@ import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario} from "../unlogged/redu
 import { CasoState } from "../unlogged/tipos";
 
 
-async function traerHdr(){
-    await dmTraerDatosFormulario();
+async function traerHdr(opts:{modoDemo:boolean}){
+    await dmTraerDatosFormulario(opts);
     history.replaceState(null, '', `${location.origin+location.pathname}/../campo`);
     location.reload();   
 }
@@ -20,7 +20,7 @@ myOwn.wScreens.sincronizar_dm=function(){
             //TODO descargar hdr
             
             //traer nueva
-            await traerHdr();
+            await traerHdr({modoDemo:false});
         }
     }else{
         mainLayout.appendChild(html.p('Sincronizar dispositivo').create());
@@ -28,11 +28,11 @@ myOwn.wScreens.sincronizar_dm=function(){
         mainLayout.appendChild(loadButton);
         loadButton.onclick = async function(){
             //traer nueva
-            await traerHdr();
+            await traerHdr({modoDemo:false});
         }
     }
 };
 
-myOwn.wScreens.mostrarFormulario=function(){
-    window.desplegarFormularioActual();
+myOwn.wScreens.demo=function(){
+    window.desplegarFormularioActual({modoDemo:true});
 }

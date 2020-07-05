@@ -38,9 +38,11 @@ export type CasilleroBase = {
     aclaracion:string|null
     primera_variable?:IdVariable|null
     var_name?:IdVariable|null
+    var_name_especial?:string|null
     tipovar?:TipoVariables|'opciones'|'si_no'|null
     casilleros?:CasillerosImplementados[]|null
     expresion_habilitar?:string
+    unidad_analisis?:string|null
 }
 
 export type Opcion=CasilleroBase & {
@@ -136,7 +138,6 @@ export type Bloque = CasilleroBase & {
     casilleros:ContenidoFormulario[]
     var_name?:null
     tipovar?:null
-    unidad_analisis?:string
 }
 
 export type Consistencia = CasilleroBase & {
@@ -220,8 +221,12 @@ export type CasoState={
     opciones:{ // datos de navegación que elije el usuario
         forPk:ForPk|null // índice dentro de las unidades de análisis. Null = en hoja de ruta
         modoDespliegue:ModoDespliegue
+        bienvenido:boolean
     },
-    feedbackRowValidator:{
+    modo:{ // no se persiste
+        demo:boolean
+    }
+    feedbackRowValidator:{  // no se persiste
         [formulario in PlainForPk]:FormStructureState<IdVariable,IdFin> // resultado del rowValidator para estado.forPk
     }
 }

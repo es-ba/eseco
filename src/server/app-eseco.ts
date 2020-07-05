@@ -178,7 +178,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
     }
     getMenu(){
         let menu = {menu:[
-            {menuType:'mostrarFormulario', name:'fi', label:'formulario individual', selectedByDefault:true},
+            {menuType:'demo', name:'demo', selectedByDefault:true},
             /*
             {menuType:'menu', name:'procesar', menuContent:[
                 {menuType:'table', name:'variables'    },

@@ -96,22 +96,38 @@ type Persona={p1:string, p2:number, p3:number, p4:number}
 
 function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
     // TODO: GENERALIZAR
-    var respuestas = {personas:[], ...datosVivienda.respuestas} as unknown as {cp:number, personas:Persona[]};
-    if((respuestas.cp||1)==respuestas.personas.length) return datosVivienda;
-    if(respuestas.cp>MAXCP)respuestas.cp=MAXCP;
+    var cp='cp' as IdVariable;
+    var _personas_incompletas = '_personas_incompletas' as IdVariable
+    var p9='p9' as IdVariable;
+    //@ts-ignore
+    var cantidadPersonasActual:number = datosVivienda.respuestas.personas?.length||0;
+    //@ts-ignore
+    var personasIncompletas=datosVivienda.respuestas.personas.filter(p=>!p.p1 || !p.p2 || !p.p3 || p.p3>=18 && !p.p4).length;
+    if(
+        (datosVivienda.respuestas[cp]||1)==cantidadPersonasActual
+        && datosVivienda.respuestas[_personas_incompletas]==personasIncompletas
+        && datosVivienda.respuestas[p9]!=2
+    ) return datosVivienda;
+    datosVivienda=bestGlobals.changing({respuestas:{personas:[{}]}},datosVivienda) // deepCopy
+    var respuestas = datosVivienda.respuestas as unknown as {cp:number, personas:Persona[], _personas_incompletas:number, p9:number|null};
+    if(respuestas.p9==2){
+        respuestas.cp=Math.max(respuestas.personas.length,respuestas.cp)+1
+        respuestas.p9=null;
+    }
+    if(respuestas.cp>MAXCP) respuestas.cp=MAXCP;
     if(respuestas.cp<respuestas.personas.length){
         respuestas.personas=respuestas.personas.filter(p=>p.p1||p.p2||p.p3||p.p4);
     }
     if(respuestas.cp>respuestas.personas.length){
-        respuestas.personas=[...respuestas.personas];
         while(respuestas.cp>respuestas.personas.length){
             respuestas.personas.push({} as Persona)
         }
     }
-    return {
-        ...datosVivienda,
-        respuestas:respuestas as unknown as DatosVivienda['respuestas']
-    };
+    if(respuestas.personas.length==0){
+        respuestas.personas.push({} as Persona)
+    }
+    respuestas._personas_incompletas=respuestas.personas.filter(p=>!p.p1 || !p.p2 || !p.p3 || p.p3>=18 && !p.p4).length;
+    return datosVivienda;
 }
 
 function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
@@ -168,7 +184,8 @@ var reducers={
                 // @ts-ignore en esta encuesta existe
                 && datosViviendaRecibidos.respuestas.dv2 == null
             ){
-                otrasRespuestasCalculadas={dv2: bestGlobals.date.today()}
+                // @ts-expect-error tengo que agregar toDmy en los tipos
+                otrasRespuestasCalculadas={dv2: bestGlobals.date.today().toDmy()}
             }
             var respuestas = {
                 ...datosViviendaRecibidos.respuestas,
@@ -235,6 +252,16 @@ var reducers={
                 }
             })
         },
+    SET_OPCION: (payload: {opcion:keyof CasoState['opciones'], valor:any}) => 
+        function(state: CasoState){
+            return calcularFeedback({
+                ...state,
+                opciones:{
+                    ...state.opciones,
+                    [payload.opcion]: payload.valor
+                }
+            })
+        },
     RESET_OPCIONES: (_payload: {}) => 
         function(state: CasoState){
             return calcularFeedback({
@@ -283,8 +310,12 @@ function aplanarLaCurva<T extends {tipoc:string}>(casillerosData:IDataSeparada<T
 
 // type AnyRef<T extends {}>=[T, keyof T];
 
-function rellenarVariablesYOpciones(estructura:EstructuraRowValidator, casillero:CasillerosImplementados){
+function rellenarVariablesYOpciones(estructura:EstructuraRowValidator, casillero:CasillerosImplementados, unidadAnalisis?:string|null){
     if(casillero.var_name != null){
+        if(casillero.var_name.endsWith('!')){
+            // @ts-ignore las variables espejo son las que terminan en !
+            casillero.var_name=casillero.var_name_especial.replace(/!+$/,'');
+        }
         var variableDef={
             tipo:casillero.tipoc=='OM' || casillero.tipovar=='si_no'?'opciones':casillero.tipovar,
             // @ts-ignore optativa podría no existir, quedará null.
@@ -293,13 +324,14 @@ function rellenarVariablesYOpciones(estructura:EstructuraRowValidator, casillero
                 likeAr.createIndex(casillero.casilleros, 'casillero'):{}) as unknown as { [key: string]: RowValidatorOpcion<IdVariable> },
             salto:casillero.salto as IdVariable,
             saltoNsNr:'salto_ns_nc' in casillero && casillero.salto_ns_nc || null,
-            funcionHabilitar:casillero.expresion_habilitar
+            funcionHabilitar:casillero.expresion_habilitar,
+            calculada:casillero.unidad_analisis && casillero.unidad_analisis!=unidadAnalisis || casillero.despliegue?.includes('calculada')
         }
         estructura.variables[casillero.var_name]=variableDef;
     }
     if(casillero.casilleros){
         casillero.casilleros.forEach((casillero:CasillerosImplementados)=>
-            rellenarVariablesYOpciones(estructura, casillero)
+            rellenarVariablesYOpciones(estructura, casillero, unidadAnalisis)
         )
     }
 }
@@ -334,7 +366,7 @@ function rellenarDestinos(estructura:EstructuraRowValidator, destinos:RegistroDe
 
 function generarEstructuraRowValidator(casillero:CasillerosImplementados):EstructuraRowValidator{
     var estructuraIncompleta:EstructuraRowValidator={variables:{}} as unknown as EstructuraRowValidator;
-    rellenarVariablesYOpciones(estructuraIncompleta, casillero);
+    rellenarVariablesYOpciones(estructuraIncompleta, casillero, casillero.unidad_analisis);
     var destinos=obtenerDestinosCasilleros(casillero);
     return rellenarDestinos(estructuraIncompleta, destinos);
 }
@@ -344,13 +376,13 @@ export function toPlainForPk(forPk:ForPk):PlainForPk{
     return JSON.stringify(forPk);
 }
 
-export async function dmTraerDatosFormulario(){
+export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
     var createInitialState = async function createInitialState(){
         var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
         console.log(casillerosOriginales)
         //TODO: GENERALIZAR
         //@ts-ignore
-        casillerosOriginales['F:F2_personas']=casillerosOriginales['F:F2'].childs.find(casillero=>casillero.casillero='LP');
+        casillerosOriginales['F:F2_personas']=casillerosOriginales['F:F2'].childs.find(casillero=>casillero.data.casillero=='LP');
         //@ts-ignore
         var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
             likeAr(casillerosOriginales).map(
@@ -379,7 +411,7 @@ export async function dmTraerDatosFormulario(){
                     },
                     '10904':{
                         respuestas:{
-                            "dv1":"1","dv2":new Date(),"dv4":"2","cp":"3"
+                            "dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3"
                             ,personas:[{},{},{}],
                         } as unknown as Respuestas,
                         tem:{observaciones:'Lista par el individual', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
@@ -393,7 +425,7 @@ export async function dmTraerDatosFormulario(){
                         respuestas:{
                             // para ver cómo las opciones con ocultar se ocultan
                             // @ts-ignore
-                            "dv1":"1","dv2":new Date(),"dv4":"2","cp":"3"
+                            "dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3"
                             // @ts-ignore
                             ,personas:[{"p1":"asdfa","p2":"1","p3":"33","p4":"1"},{"p1":"asdf","p2":"1"},{}]
                         }
@@ -406,17 +438,19 @@ export async function dmTraerDatosFormulario(){
                         respuestas:{
                             // para ver cómo las opciones con ocultar se ocultan
                             // @ts-ignore
-                            "dv2":"2020-07-01","dv1":"1","dv4":"1","cp":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
+                            "dv2":"1/7/2020","dv1":"1","dv4":"1","cp":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
                             ,personas:[]
                         }
                     }
                 }
-            
             },
             opciones:{
                 modoDespliegue:'relevamiento',
-                forPk:null//{vivienda:'10202', formulario:'F:F3' as IdFormulario} // null
-                // modoDespliegue:'metadatos'
+                bienvenido:false,
+                forPk:null,
+            },
+            modo:{
+                demo:false
             },
             // @ts-ignore lo lleno después
             feedbackRowValidator:{}
@@ -438,10 +472,16 @@ export async function dmTraerDatosFormulario(){
     }
     var loadState = async function loadState():Promise<CasoState>{
         var casoState:CasoState|null = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
-        if(casoState){
+        if(casoState && !opts.modoDemo){
             return casoState;
         }else{
             var initialState = await createInitialState();
+            if(opts.modoDemo){
+                initialState = {...initialState, modo:{...initialState.modo, demo:opts.modoDemo}};
+                if(casoState){
+                    initialState = {...initialState, datos:casoState.datos}
+                }
+            }
             return initialState;
         }
     }
