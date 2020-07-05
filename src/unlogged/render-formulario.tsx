@@ -638,7 +638,7 @@ export function DesplegarTem(props:{tem:TEM}){
 }
 
 export function HojaDeRutaDespliegue(){
-    var {hdr, mainForm} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, mainForm:state.estructura.mainForm}));
+    var {hdr, mainForm, modo} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, mainForm:state.estructura.mainForm, modo:state.modo}));
     var dispatch = useDispatch();
     const updateOnlineStatus = function(){
         setOnline(window.navigator.onLine);
@@ -675,6 +675,14 @@ export function HojaDeRutaDespliegue(){
             </AppBar>
             <main>
                 <Paper className="hoja-de-ruta">
+                    {modo.demo?<div>
+                        <Typography>Modo demo </Typography>
+                        <Button variant="outlined" color="secondary"
+                            onClick={()=>dispatch(dispatchers.REINICIAR_DEMO())}
+                        >
+                            reiniciar
+                        </Button>
+                    </div>:null}
                     <Table className="tabla-hoja-de-ruta" style={{borderTopStyle: "groove"}}>
                         <colgroup>
                             <col style={{width:"15%"}}/>
@@ -727,7 +735,7 @@ export function BienvenidaDespliegue(){
         <ListaTextos textos={[
             "Algunas viviendas aparecen relevadas (el botón está de color) sirven para ver cómo se ve",
             "Lo que se carguen se guardan localmente pero no se trasmiten a la base de datos",
-            "Se puede volver a la versión inicial (o sea borrar lo que se guardó localmente) desde la opción sincronizar [⇄]",
+            "Se puede volver a la versión inicial (o sea borrar lo que se guardó localmente) desde la hoja de ruta boton [reiniciar demo]",
             "Todavía hay cosas que faltan o pueden cambiar",
         ]} />
         <Button

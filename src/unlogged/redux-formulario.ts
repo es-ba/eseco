@@ -272,6 +272,15 @@ var reducers={
                 }
             })
         },
+    REINICIAR_DEMO: (_payload: {}) =>
+        function(state: CasoState){
+            if(!state.modo.demo) return state;
+            return calcularFeedback({
+                ...state,
+                // @ts-ignore copio los datos iniciales
+                datos:bestGlobals.deepCopy(state.modo.demo)
+            })
+        },
 }
 
 export type ActionFormularioState = ActionsFrom<typeof reducers>;
@@ -477,7 +486,10 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
         }else{
             var initialState = await createInitialState();
             if(opts.modoDemo){
-                initialState = {...initialState, modo:{...initialState.modo, demo:opts.modoDemo}};
+                initialState = {...initialState, modo:{...initialState.modo, 
+                    //@ts-ignore es un booleano pero pongo ahí los datos de demo!
+                    demo: initialState.datos
+                }};
                 if(casoState){
                     initialState = {...initialState, datos:casoState.datos}
                 }
