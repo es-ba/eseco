@@ -327,7 +327,7 @@ function rellenarVariablesYOpciones(estructura:EstructuraRowValidator, casillero
         }
         var variableDef={
             tipo:casillero.tipoc=='OM' || casillero.tipovar=='si_no'?'opciones':casillero.tipovar,
-            // @ts-ignore optativa podría no existir, quedará null.
+            // @ts-ignore optativo podría no existir, quedará null.
             optativa:casillero.optativo!,
             opciones:(casillero.tipoc=='OM' || casillero.tipovar=='opciones' || casillero.tipovar=='si_no'?
                 likeAr.createIndex(casillero.casilleros, 'casillero'):{}) as unknown as { [key: string]: RowValidatorOpcion<IdVariable> },
@@ -420,23 +420,20 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                     },
                     '10904':{
                         respuestas:{
-                            "dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3"
+                            "dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"1"
                             ,personas:[{},{},{}],
                         } as unknown as Respuestas,
-                        tem:{observaciones:'Lista par el individual', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
+                        tem:{observaciones:'Lista para cargar la lista de personas', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
                     },
                     '13303':{
                         tem:{
-                            observaciones:'Encuesta empezada',
+                            observaciones:'Con 3 miembros cargados',
                             nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
                             edificio:'SUR', sector:'2'
                         } as TEM,
                         respuestas:{
-                            // para ver cómo las opciones con ocultar se ocultan
                             // @ts-ignore
-                            "dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3"
-                            // @ts-ignore
-                            ,personas:[{"p1":"asdfa","p2":"1","p3":"33","p4":"1"},{"p1":"asdf","p2":"1"},{}]
+                            "personas":[{"p1":"Carolina","p2":"2","p3":"33","p4":"1"},{"p1":"Alfonso","p2":"1","p3":"72","p4":"1"},{"p1":"Berta","p3":"68","p2":"2","p4":"1"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3","_personas_incompletas":0,"p9":"1"
                         }
                     },
                     '13308':{
@@ -447,8 +444,18 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                         respuestas:{
                             // para ver cómo las opciones con ocultar se ocultan
                             // @ts-ignore
-                            "dv2":"1/7/2020","dv1":"1","dv4":"1","cp":"33","p1":"Esteban","p2":"2","p3":"33","p4":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"2","d3":"23","d4":"1","d6_1":null
-                            ,personas:[]
+                            "personas":[{"p1":"Carolina","p2":"2","p3":"33","p4":"1"},{"p1":"Alfonso","p2":"1","p3":"72","p4":"1"},{"p1":"Berta","p3":"68","p2":"2","p4":"1"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3","_personas_incompletas":0,"p9":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"1","d4":"1","d5c":"2","d6_1":"2","d6_2":"2","d6_3":"2","d6_4":"2","d6_5":"2","d6_6":"2","d6_7":"2","d6_8":"2","d6_9":"2","a1_1":"2","a1_2":"2","a1_3":"2","a1_4":"2","a1_5":"2","a2":"2","a3":"2","a4":"159","a5":"59","cv1":"2","cv3":"1","cv4_1":2,"cv4_2":2,"cv4_3":2,"cv4_4":2,"cv4_5":2,"cv4_6":1,"t1":"1","t2_1":"2","t2_2":"2","t2_3":"2","t2_4":"2","t2_5":"2","t2_6":"1","t2_7":"2","t2_8":"2","t3":"2","e1":"Carolina Martinez","e2":"1","e6":"34567890","c1":"15-16171819","c2":"preuba@prueba.com","fin":"dudó mucho en contestar"
+                        }
+                    },
+                    '13309':{
+                        tem:{
+                            observaciones:'Encuesta avanzada',
+                            nomcalle:'Bolivar', nrocatastral:'609',
+                        } as TEM,
+                        respuestas:{
+                            // para ver cómo las opciones con ocultar se ocultan
+                            // @ts-ignore
+                            "personas":[{"p1":"sadfasdf"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"1","s1":"1","_personas_incompletas":1,"s2":"1","s3":"1","d1":"1","d2":"1","d3":null,"d4":"2","d5":"2","d6_1":"2","d6_2":"2","d6_3":"2","d6_4":"2","d6_6":"2","d6_7":"2","d6_5":"2","d6_8":"2","d6_9":"2","a1_1":"2","a1_2":"2","a1_3":"2","a1_4":"2","a1_5":"2","a2":"2","a3":"2","a4":"161","a5":"59","cv1":"2","cv3":"1","t1":null,"e1":null,"e2":null,"e6":null,"c3":null,"e4":null,"cv2_1":null
                         }
                     }
                 }
