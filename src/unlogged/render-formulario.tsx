@@ -288,8 +288,8 @@ function calcularNuestraLongitud(longitud:string |null){
     }
 }
 
-function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valor)=>void}){
-    var {pregunta} = props;
+function Campo(props:{disabled:boolean, pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valor)=>void}){
+    var {pregunta, disabled } = props;
     var [valor, setValor] = useState(props.valor);
     var [editando, setEditando] = useState(false);
     useEffect(() => {
@@ -302,6 +302,7 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
     return <div className="campo" nuestra-longitud={nuestraLongitud}>
         <div className="input-campo">
             <TextField 
+                disabled={disabled}
                 className="variable" 
                 //var-length={pregunta.longitud} 
                 fullWidth={true}
@@ -316,9 +317,11 @@ function Campo(props:{pregunta:PreguntaSimple, valor:Valor, onChange:(valor:Valo
                 }}
             />
         </div>
-        <div className="boton-confirmar-campo">
-            <Button variant={editando?"contained":'outlined'} size="small" color={editando?'primary':'default'}><ICON.Check/></Button>
-        </div>
+        {disabled?null:
+            <div className="boton-confirmar-campo">
+                <Button variant={editando?"contained":'outlined'} size="small" color={editando?'primary':'default'}><ICON.Check/></Button>
+            </div>
+        }
     </div>
 }
 
@@ -402,7 +405,8 @@ function PreguntaDespliegue(props:{
                 )
             :
             ((preguntaSimple:PreguntaSimple)=>
-                <Campo 
+                <Campo
+                    disabled={preguntaSimple.despliegue?.includes('calculada')?true:false}
                     pregunta={preguntaSimple}
                     valor={props.valorActual}
                     onChange={(nuevoValor)=>
