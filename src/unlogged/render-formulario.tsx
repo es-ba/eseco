@@ -505,6 +505,7 @@ function useSelectorVivienda(forPk:ForPk){
         return {
             respuestas,
             feedbackRow: state.feedbackRowValidator[toPlainForPk(forPk)].feedback,
+            actual: state.feedbackRowValidator[toPlainForPk(forPk)].actual,
             resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
             formulario: state.estructura.formularios[forPk.formulario].casilleros,
             modoDespliegue: state.modo.demo?state.opciones.modoDespliegue:'relevamiento',
@@ -563,18 +564,11 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
 
 const FormularioEncabezado = DespliegueEncabezado;
 
-function calcularActual(feedbackRow:any):IdVariable|null{
-    var filtroActual = (likeAr(feedbackRow).filter((feedback: FeedbackVariable)=>feedback.estado == 'actual').plain()) || {};
-    var actual = likeAr(filtroActual).map((_feedback:FeedbackVariable, variable)=>variable).array();
-    return actual.length?actual[0]:null
-}
-
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var {formulario, modoDespliegue, modo, feedbackRow} = useSelectorVivienda(props.forPk);
+    var {formulario, modoDespliegue, modo, feedbackRow, actual} = useSelectorVivienda(props.forPk);
     const dispatch = useDispatch();
     useEffect(() => {
-        var actual = calcularActual(feedbackRow);
         if(actual){
             focusToId(actual, {moveToElement:true, moveBehavior:'smooth'});
         }else{
