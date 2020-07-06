@@ -87,8 +87,12 @@ const useStylesScrollTop = makeStyles((theme: Theme) =>
     }),
 );
 
-export const scrollToTop = () => () => {
+export const scrollToTop = () => {
     window.scroll({behavior:'smooth', top:0, left:0})
+};
+
+export const scrollToBottom = () => {
+    window.scroll({behavior:'smooth', top:document.body.clientHeight-window.innerHeight, left:0})
 };
 
 
@@ -104,7 +108,7 @@ export function ScrollTop(props: any) {
     });
     return (
         <Zoom in={trigger}>
-            <div onClick={scrollToTop()} role="presentation" className={classes.root}>
+            <div onClick={scrollToTop} role="presentation" className={classes.root}>
                 {children}
             </div>
         </Zoom>

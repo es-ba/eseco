@@ -5,7 +5,8 @@ import {
     clsx, memoize, adaptarTipoVarCasillero,
     ICON,
     focusToId,
-    scrollToTop
+    scrollToTop,
+    scrollToBottom
 } from "./render-general";
 import {Bloque, BotonFormulario, 
     CasilleroBase, CasoState, Consistencia, DatosVivienda, FeedbackVariable, Filtro, ForPk, Formulario, 
@@ -506,6 +507,7 @@ function useSelectorVivienda(forPk:ForPk){
             respuestas,
             feedbackRow: state.feedbackRowValidator[toPlainForPk(forPk)].feedback,
             actual: state.feedbackRowValidator[toPlainForPk(forPk)].actual,
+            completo: !state.feedbackRowValidator[toPlainForPk(forPk)].feedbackResumen.pendiente,
             resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
             formulario: state.estructura.formularios[forPk.formulario].casilleros,
             modoDespliegue: state.modo.demo?state.opciones.modoDespliegue:'relevamiento',
@@ -566,11 +568,13 @@ const FormularioEncabezado = DespliegueEncabezado;
 
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var {formulario, modoDespliegue, modo, feedbackRow, actual} = useSelectorVivienda(props.forPk);
+    var {formulario, modoDespliegue, modo, feedbackRow, actual, completo} = useSelectorVivienda(props.forPk);
     const dispatch = useDispatch();
     useEffect(() => {
         if(actual){
             focusToId(actual, {moveToElement:true, moveBehavior:'smooth'});
+        }else if(completo){
+            scrollToBottom()
         }else{
             scrollToTop()
         }
