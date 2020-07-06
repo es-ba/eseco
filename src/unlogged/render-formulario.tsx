@@ -14,7 +14,7 @@ import {Bloque, BotonFormulario,
     ModoDespliegue,
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor, TEM,
+    Respuestas, Valor, TEM, IdCarga, Carga, HojaDeRuta,
 } from "./tipos";
 import { dmTraerDatosFormulario, dispatchers, 
     getFuncionHabilitar, 
@@ -649,6 +649,49 @@ export function Atributo(props:{nombre:string, valor:string}){
     </span>:null
 }
 
+export function DesplegarCarga(props:{carga:Carga, idCarga:IdCarga, hdr:HojaDeRuta, mainForm:IdFormulario}){
+    const {carga, idCarga, hdr, mainForm} = props;
+    const dispatch = useDispatch();
+    return <Paper className="carga">
+        <div className="informacion-carga">
+            <div>Fecha carga: {carga.fecha}</div>
+            <div>Observaciones: {carga.observaciones}</div>
+        </div>
+        <Table className="tabla-carga-hoja-de-ruta">
+            <colgroup>
+                <col style={{width:"15%"}}/>
+                <col style={{width:"80%"}}/>
+            </colgroup>
+            <TableHead style={{fontSize: "1.2rem"}}>
+                <TableRow className="tr-carga">
+                    <TableCell>vivienda</TableCell>
+                    <TableCell>domicilio</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {likeAr(hdr).filter((datosVivienda:DatosVivienda)=>datosVivienda.tem.carga==idCarga).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
+                    <TableRow>
+                        <TableCell>
+                            <Button
+                                resumen-vivienda={calcularResumenVivienda(idCaso)}
+                                variant="outlined"
+                                onClick={()=>{
+                                    dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
+                                }}
+                            >
+                                {idCaso}
+                            </Button>
+                        </TableCell>
+                        <TableCell>
+                            <DesplegarTem tem={datosVivienda.tem}/>
+                        </TableCell>
+                    </TableRow>
+                ).array()}
+            </TableBody>
+        </Table>
+    </Paper>
+}
+
 export function DesplegarTem(props:{tem:TEM}){
     const {tem} = props;
     return <div>
@@ -665,7 +708,7 @@ export function DesplegarTem(props:{tem:TEM}){
 }
 
 export function HojaDeRutaDespliegue(){
-    var {hdr, mainForm, modo} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, mainForm:state.estructura.mainForm, modo:state.modo}));
+    var {hdr, cargas, mainForm, modo} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, cargas: state.datos.cargas, mainForm:state.estructura.mainForm, modo:state.modo}));
     var dispatch = useDispatch();
     const updateOnlineStatus = function(){
         setOnline(window.navigator.onLine);
@@ -700,50 +743,19 @@ export function HojaDeRutaDespliegue(){
                     :null}
                 </Toolbar>
             </AppBar>
-            <main>
-                <Paper className="hoja-de-ruta">
-                    {modo.demo?<div>
-                        <Typography>Modo demo </Typography>
-                        <Button variant="outlined" color="secondary"
-                            onClick={()=>dispatch(dispatchers.REINICIAR_DEMO({}))}
-                        >
-                            reiniciar
-                        </Button>
-                    </div>:null}
-                    <Table className="tabla-hoja-de-ruta" style={{borderTopStyle: "groove"}}>
-                        <colgroup>
-                            <col style={{width:"15%"}}/>
-                            <col style={{width:"80%"}}/>
-                        </colgroup>      
-                        <TableHead style={{fontSize: "1.2rem"}}>
-                            <TableRow className="tr-caso">
-                                <TableCell>vivienda</TableCell>
-                                <TableCell>domicilio</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {likeAr(hdr).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
-                                <TableRow>
-                                    <TableCell>
-                                        <Button
-                                            resumen-vivienda={calcularResumenVivienda(idCaso)}
-                                            variant="outlined"
-                                            onClick={()=>{
-                                                dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
-                                            }}
-                                        >
-                                            {idCaso}
-                                        </Button>
-                                    </TableCell>
-                                    <TableCell>
-                                        <DesplegarTem tem={datosVivienda.tem}/>
-                                    </TableCell>
-                                </TableRow>
-                            ).array()}
-                        </TableBody>
-                    </Table>
-                </Paper>
-            </main>
+            <div className="hoja-de-ruta">
+                {modo.demo?<div>
+                    <Typography>Modo demo </Typography>
+                    <Button variant="outlined" color="secondary"
+                        onClick={()=>dispatch(dispatchers.REINICIAR_DEMO({}))}
+                    >
+                        reiniciar
+                    </Button>
+                </div>:null}
+                {likeAr(cargas).map((carga: Carga, idCarga: IdCarga)=>
+                    <DesplegarCarga carga={carga} idCarga={idCarga} hdr={hdr} mainForm={mainForm}/>
+                ).array()}
+            </div>
         </>
     );
 }

@@ -229,7 +229,7 @@ export type CasoState={
     }
     datos:{
         hdr:HojaDeRuta
-        lotes: Cargas
+        cargas: Cargas
     }
     opciones:{ // datos de navegación que elije el usuario
         forPk:ForPk|null // índice dentro de las unidades de análisis. Null = en hoja de ruta
