@@ -97,20 +97,20 @@ anchoNormal(ancho)
   display flex
   @media screen and (max-width 599px)
     flex-direction column
-  .id
-    margin-right 8px
-    color colorFondoEncabezadoBloque
-    background-color colorFondoIdBloque
-    flex-shrink 0
-    flex-grow 0
-    text-align center
-    min-width 24px
-    width auto
-    height 24px
-    padding-top 2px
-    vertical-align middle
-    border-bottom-right-radius 7px
   > .encabezado
+    .id
+      margin-right 8px
+      color colorFondoEncabezadoBloque
+      background-color colorFondoIdBloque
+      flex-shrink 0
+      flex-grow 0
+      text-align center
+      min-width 24px
+      width auto
+      height 24px
+      padding-top 2px
+      vertical-align middle
+      border-bottom-right-radius 7px
     min-width 50%
     flex-shrink 1
     @media print
@@ -363,6 +363,21 @@ boton-id-div-invalido()
     margin-right 2px
 .observaciones
   font-size 95%
+
+[modo-despliegue=relevamiento]
+  .opcion
+    padding 6px
+    .id
+      border-radius 5px
+      color transparent
+      border 1px solid #555
+      font-weight bold
+      margin 4px
+      margin-top 12px
+      height 10px
+    [opcion-seleccionada="SI"]
+      .id
+        background-color #555
 
 .boton-confirmar-campo
   .MuiButton-root

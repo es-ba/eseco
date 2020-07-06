@@ -122,6 +122,9 @@ export type FocusOpts={
 
 export function focusToId(id:string, opts:FocusOpts, cb?:(e:HTMLElement)=>void){
     var element=document.getElementById(id);
+    var padre=element;
+    while(padre && padre.className!='pregunta' && padre!=document.body) padre = padre.parentElement;
+    if(padre && padre.className=='pregunta') element=padre;
     if(element){
         if(cb){
             cb(element);

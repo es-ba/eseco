@@ -54,11 +54,6 @@ var useStyles = makeStyles((_theme: Theme) =>
             margin:'4px',
             color:'gray'
         },
-        idOpcion:{
-            fontWeight:'bold',
-            margin:'6px',
-            color:'gray'
-        },
         textoOpcion:{
             margin:'6px'
         },
@@ -68,9 +63,7 @@ var useStyles = makeStyles((_theme: Theme) =>
             textTransform: 'none',
             color:'inherit'
         },
-        itemOpcion:{
-            padding:'6px',
-        },
+
         itemOpciones:{
             border:'1px dashed red'
         },
@@ -120,16 +113,17 @@ function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, va
     const {casillero} = props;
     var classes = useStyles();
     var dispatch = useDispatch();
-    return <Grid className={classes.itemOpcion}> 
+    return <Grid className="opcion"> 
         <Button 
-            variant={props.elegida?"contained":"outlined"}
+            variant="outlined"
+            opcion-seleccionada={props.elegida?"SI":"NO"}
             className={classes.buttonOpcion}
             onClick={()=>{
                 dispatch(dispatchers.REGISTRAR_RESPUESTA({respuesta:props.valorOpcion, variable:props.variable, forPk:props.forPk}))
             }}
         >
             <Grid container>
-                <Grid className={classes.idOpcion}>
+                <Grid className="id">
                     {casillero.ver_id || casillero.casillero}
                 </Grid>
                 <Grid className={classes.textoOpcion} debe-leer={casillero.despliegue?.includes('si_leer')?'SI':casillero.despliegue?.includes('no_leer')?'NO':props.leer?'SI':'NO'}>
@@ -572,8 +566,8 @@ function FormularioDespliegue(props:{forPk:ForPk}){
     const dispatch = useDispatch();
     useEffect(() => {
         if(actual){
-            focusToId(actual, {moveToElement:true, moveBehavior:'smooth'});
-        }else if(completo){
+            focusToId(actual, {moveToElement:true, moveBehavior:'smooth'});            
+        }else if(completo && forPk.formulario!=('F:F2' as IdFormulario)){ // TODO generalizar los que van siempre arriba
             scrollToBottom()
         }else{
             scrollToTop()
