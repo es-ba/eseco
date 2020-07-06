@@ -3,7 +3,9 @@ import * as ReactDOM from "react-dom";
 import {  
     FocusOpts, RenderPrincipal, 
     clsx, memoize, adaptarTipoVarCasillero,
-    ICON
+    ICON,
+    focusToId,
+    scrollToTop
 } from "./render-general";
 import {Bloque, BotonFormulario, 
     CasilleroBase, CasoState, Consistencia, DatosVivienda, FeedbackVariable, Filtro, ForPk, Formulario, 
@@ -197,7 +199,7 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolea
         debe-leer={props.leer?'SI':'NO'} 
         tiene-valor={props.tieneValor} 
     >
-        <div className="id-div"
+        <div id={casillero.var_name || undefined} className="id-div"
             onClick={event=>{
                 if(casillero.var_name!=null && props.tieneValor=='invalido'){
                     dispatch(dispatchers.REGISTRAR_RESPUESTA({forPk:props.forPk, variable:casillero.var_name, respuesta:null}))
@@ -553,10 +555,24 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
 
 const FormularioEncabezado = DespliegueEncabezado;
 
+function calcularActual(feedbackRow:any):IdVariable|null{
+    var filtroActual = (likeAr(feedbackRow).filter((feedback: FeedbackVariable)=>feedback.estado == 'actual').plain()) || {};
+    var actual = likeAr(filtroActual).map((_feedback:FeedbackVariable, variable)=>variable).array();
+    return actual.length?actual[0]:null
+}
+
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var {formulario, modoDespliegue, modo} = useSelectorVivienda(props.forPk);
+    var {formulario, modoDespliegue, modo, feedbackRow} = useSelectorVivienda(props.forPk);
     const dispatch = useDispatch();
+    useEffect(() => {
+        var actual = calcularActual(feedbackRow);
+        if(actual){
+            focusToId(actual, {moveToElement:true, moveBehavior:'smooth'});
+        }else{
+            scrollToTop()
+        }
+    }, [formulario]);
     var listaModos:ModoDespliegue[]=['metadatos','relevamiento','PDF'];
     return (
         <>
@@ -590,6 +606,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
                     <FormularioEncabezado casillero={formulario}/>
                     <DesplegarContenidoInternoBloqueOFormulario bloqueOFormulario={formulario} forPk={forPk} multiple={false}/>
                 </Paper>
+                <div className='espacio-final-formulario'></div>
             </main>
         </>
     );

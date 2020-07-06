@@ -87,7 +87,7 @@ const useStylesScrollTop = makeStyles((theme: Theme) =>
     }),
 );
 
-const handleScroll = () => () => {
+export const scrollToTop = () => () => {
     window.scroll({behavior:'smooth', top:0, left:0})
 };
 
@@ -104,7 +104,7 @@ export function ScrollTop(props: any) {
     });
     return (
         <Zoom in={trigger}>
-            <div onClick={handleScroll()} role="presentation" className={classes.root}>
+            <div onClick={scrollToTop()} role="presentation" className={classes.root}>
                 {children}
             </div>
         </Zoom>
@@ -113,6 +113,7 @@ export function ScrollTop(props: any) {
 
 export type FocusOpts={
     moveToElement: boolean
+    moveBehavior?: 'auto' | 'smooth'
 }
 
 export function focusToId(id:string, opts:FocusOpts, cb?:(e:HTMLElement)=>void){
@@ -124,7 +125,7 @@ export function focusToId(id:string, opts:FocusOpts, cb?:(e:HTMLElement)=>void){
             element.focus();
             if(opts.moveToElement){
                 element.scrollIntoView();
-                window.scroll({behavior:'auto', top:window.scrollY-120, left:0})
+                window.scroll({behavior:opts.moveBehavior||'auto', top:window.scrollY-100, left:0})
             }
         }
     }
