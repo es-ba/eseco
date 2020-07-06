@@ -409,10 +409,14 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                 mainForm:MAIN_FORM
             },
             datos:{
+                cargas:{
+                    "2020-07-07":{fecha:bestGlobals.date.iso("2020-07-07").toDmy(), observaciones:'lugar de entrega: Hospital San Martín. Ascasubi 333'},
+                    "2020-07-08":{fecha:bestGlobals.date.iso("2020-07-08").toDmy(), observaciones:'lugar de entrega: Hospital San Martín. Ascasubi 333'}
+                },
                 hdr:{
                     '10902':{
                         tem:{
-                            observaciones:'Encuesta vacía',
+                            observaciones:'Encuesta vacía', carga:"2020-07-08",
                             nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
                         } as TEM,
                         // @ts-ignore
@@ -423,11 +427,11 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                             "dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"1"
                             ,personas:[{},{},{}],
                         } as unknown as Respuestas,
-                        tem:{observaciones:'Lista para cargar la lista de personas', nomcalle:'Bolivar', nrocatastral:'531' } as TEM
+                        tem:{observaciones:'Lista para cargar la lista de personas',carga:"2020-07-08", nomcalle:'Bolivar', nrocatastral:'531' } as TEM
                     },
                     '13303':{
                         tem:{
-                            observaciones:'Con 3 miembros cargados',
+                            observaciones:'Con 3 miembros cargados',carga:"2020-07-08",
                             nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
                             edificio:'SUR', sector:'2'
                         } as TEM,
@@ -438,7 +442,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                     },
                     '13308':{
                         tem:{
-                            observaciones:'Encuesta terminada',
+                            observaciones:'Encuesta terminada',carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'541', piso:'PB', departamento:'A',
                         } as TEM,
                         respuestas:{
@@ -449,7 +453,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                     },
                     '13309':{
                         tem:{
-                            observaciones:'Encuesta avanzada',
+                            observaciones:'Encuesta avanzada',carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'609',
                         } as TEM,
                         respuestas:{

@@ -188,6 +188,7 @@ export type TEM = {
     casa:string
     prioridad:1|2|3
     observaciones:string
+    carga:string
 }
 
 export type DatosVivienda= {
@@ -197,6 +198,17 @@ export type DatosVivienda= {
 
 export type HojaDeRuta={
     [idCaso in IdCaso]: DatosVivienda
+}
+
+export type IdCarga="2020-07-07"|"2020-07-08"
+
+export type Carga={
+    fecha: Date
+    observaciones: string
+}
+
+export type Cargas={
+    [idCarga in IdCarga]: Carga
 }
 
 export type EstructuraRowValidator=Structure<IdVariable,IdFin>;
@@ -217,6 +229,7 @@ export type CasoState={
     }
     datos:{
         hdr:HojaDeRuta
+        lotes: Cargas
     }
     opciones:{ // datos de navegación que elije el usuario
         forPk:ForPk|null // índice dentro de las unidades de análisis. Null = en hoja de ruta
