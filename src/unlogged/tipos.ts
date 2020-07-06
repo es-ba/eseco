@@ -74,7 +74,7 @@ export type OpcionMultiple=CasilleroBase & {
 
 export type PreguntaBase = CasilleroBase & {
     tipoc:'P'
-    optativa:boolean|null
+    optativo:boolean|null
     casillero:IdPregunta
 }
 

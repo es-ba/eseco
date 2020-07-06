@@ -219,7 +219,15 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolea
             :null}
             <div los-metadatos="si">
                 <span el-metadato="variable">{casillero.var_name}</span>
-                <span el-metadato="expresion_habilitar">{casillero.expresion_habilitar}</span>
+                {casillero.tipovar && casillero.tipovar!='opciones' && casillero.tipovar!='si_no'?
+                    <span el-metadato="tipovar">{casillero.tipovar}</span>
+                :null}
+                {   //@ts-ignore una opción múltiple nunca lo a a ser, no tiene el campo, no importa
+                    casillero.optativo?<span el-metadato="optativa">optativa</span>:null
+                }
+                {casillero.despliegue?.includes('calculada')?<span el-metadato="calculada">calculada</span>:null}
+                {casillero.despliegue?.includes('oculta')?<span el-metadato="oculta">oculta</span>:null}
+                {casillero.expresion_habilitar?<span el-metadato="expresion_habilitar">habilita: {casillero.expresion_habilitar}</span>:null}
             </div>
         </div>
         <Popover
@@ -699,7 +707,7 @@ export function HojaDeRutaDespliegue(){
                     {modo.demo?<div>
                         <Typography>Modo demo </Typography>
                         <Button variant="outlined" color="secondary"
-                            onClick={()=>dispatch(dispatchers.REINICIAR_DEMO())}
+                            onClick={()=>dispatch(dispatchers.REINICIAR_DEMO({}))}
                         >
                             reiniciar
                         </Button>
