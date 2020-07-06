@@ -25,7 +25,7 @@ ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;
 ESECO|F:F2||F|formulario|F2|2|✔|Habitantes de la vivienda||||||viviendas||||||2|F:F2||||||
 ESECO|CP!|F:F2|P|pregunta|CP!|1|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;1|F:F2||cp!|cp!|||
 ESECO|LN|F:F2|B|bloque|LN|10|✔|Lista de nombres||||||personas||true||||2;10|F:F2||||||
-ESECO|P1!|LN|P|pregunta|P1!||✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||||true||||2;10;0|F:F2||p1!|p1!|||
+ESECO|P1!|LN|P|pregunta|P1!|1|✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||||true||||2;10;1|F:F2||p1!|p1!|||
 ESECO|LP|F:F2|B|bloque|LP|100|✔|Lista de personas||||||personas||true||||2;100|F:F2||||||
 ESECO|P1|LP|P|pregunta|P1|110|✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||personas||true||||2;100;110|F:F2||p1||||
 ESECO|P2|LP|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||personas||true||||2;100;120|F:F2||p2||||
@@ -37,9 +37,9 @@ ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;100;140;1|F:F2||||||
 ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;100;140;2|F:F2||||||
 ESECO|B9|F:F2|B|bloque|B9|330|✔|confirmación de la lista de personas||||||||true||||2;330|F:F2||||||
 ESECO|P9|B9|P|pregunta|P9|333|✔|¿Esos son todos los habitantes de la vivienda? (incluidos los ausentes)|opciones|||||||true||||2;330;333|F:F2||p9||_personas_incompletas=0||
-ESECO|P9/2|P9|O|opción|2||✔|No, faltó anotar a alguien||||||||||||2;330;333;0|F:F2||||||
-ESECO|P9/1|P9|O|opción|1||✔|Sí, son todos||||||||||||2;330;333;0|F:F2||||||
-ESECO|F3|F:F2|BF|Botón para formulario|F3|999|✔|Continuar|||||F3|||true||||2;999|F:F2||||||
+ESECO|P9/1|P9|O|opción|1|1|✔|Sí, son todos||||||||||||2;330;333;1|F:F2||||||
+ESECO|P9/2|P9|O|opción|2|2|✔|No, faltó anotar a alguien||||||||||||2;330;333;2|F:F2||||||
+ESECO|F3|F:F2|BF|Botón para formulario|F3|999|✔|Continuar|||||F3|||true||||2;999|F:F2||||p9=1||
 ESECO|F:F3||F|formulario|F3|3|✔|Formulario individual||||||viviendas||||||3|F:F3||||||
 ESECO|S|F:F3|B|bloque|S|137|✔|Realización de test, cuestionario y firma de consentimiento||||||||true||||3;137|F:F3||||||
 ESECO|S1|S|P|pregunta|S1|138|✔|¿La persona seleccionada aceptó firmar el consentimiento?|si_no|||||||true|no_leer|||3;137;138|F:F3||s1||||
@@ -201,8 +201,8 @@ ESECO|E4/8|E4|O|opción|8|1680|✔|Otro (especificar)||||||||||||3;1520;1600;168
 ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no_leer|||3;1520;1690|F:F3||e5||e4=8||
 ESECO|E6|E|P|pregunta|E6|1700|✔|Número|texto|medio||||||true|no_leer|||3;1520;1700|F:F3||e6||||
 ESECO|C|F:F3|B|bloque|C|1710|✔|Datos de contacto del entrevistado||||||||true||||3;1710|F:F3||||||
-ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|medio||||||true||||3;1710;1720|F:F3||c1||||
-ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true||||3;1710;1730|F:F3||c2||||
-ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|medio||||||true||||3;1710;1740|F:F3||c3||||
-ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|medio||||||true||||3;1710;1750|F:F3||c4||||
-ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no_leer|||3;2000|F:F3||fin||||
+ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|medio||||||true|||true|3;1710;1720|F:F3||c1||||
+ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true|||true|3;1710;1730|F:F3||c2||||
+ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|medio||||||true|||true|3;1710;1740|F:F3||c3||||
+ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|medio||||||true|||true|3;1710;1750|F:F3||c4||||
+ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no_leer||true|3;2000|F:F3||fin||||

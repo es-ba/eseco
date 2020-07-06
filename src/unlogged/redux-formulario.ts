@@ -328,7 +328,7 @@ function rellenarVariablesYOpciones(estructura:EstructuraRowValidator, casillero
         var variableDef={
             tipo:casillero.tipoc=='OM' || casillero.tipovar=='si_no'?'opciones':casillero.tipovar,
             // @ts-ignore optativa podría no existir, quedará null.
-            optativa:casillero.optativa!,
+            optativa:casillero.optativo!,
             opciones:(casillero.tipoc=='OM' || casillero.tipovar=='opciones' || casillero.tipovar=='si_no'?
                 likeAr.createIndex(casillero.casilleros, 'casillero'):{}) as unknown as { [key: string]: RowValidatorOpcion<IdVariable> },
             salto:casillero.salto as IdVariable,
