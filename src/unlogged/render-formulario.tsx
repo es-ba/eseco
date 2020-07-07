@@ -670,18 +670,21 @@ export function DesplegarCarga(props:{carga:Carga, idCarga:IdCarga, hdr:HojaDeRu
         </div>
         <Table className="tabla-carga-hoja-de-ruta">
             <colgroup>
-                <col style={{width:"15%"}}/>
                 <col style={{width:"80%"}}/>
+                <col style={{width:"20%"}}/>
             </colgroup>
             <TableHead style={{fontSize: "1.2rem"}}>
                 <TableRow className="tr-carga">
-                    <TableCell>vivienda</TableCell>
                     <TableCell>domicilio</TableCell>
+                    <TableCell>vivienda</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {likeAr(hdr).filter((datosVivienda:DatosVivienda)=>datosVivienda.tem.carga==idCarga).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
                     <TableRow>
+                        <TableCell>
+                            <DesplegarTem tem={datosVivienda.tem}/>
+                        </TableCell>
                         <TableCell>
                             <Button
                                 resumen-vivienda={calcularResumenVivienda(idCaso)}
@@ -692,9 +695,6 @@ export function DesplegarCarga(props:{carga:Carga, idCarga:IdCarga, hdr:HojaDeRu
                             >
                                 {idCaso}
                             </Button>
-                        </TableCell>
-                        <TableCell>
-                            <DesplegarTem tem={datosVivienda.tem}/>
                         </TableCell>
                     </TableRow>
                 ).array()}
