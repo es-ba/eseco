@@ -94,11 +94,19 @@ var rowValidator = getRowValidator({getFuncionHabilitar})
 // TODO: GENERALIZAR
 type Persona={p1:string, p2:number, p3:number, p4:number}
 
+function num(num:number|string|null):number{
+    //@ts-ignore la gracia es meter num cuando es string
+    if(isNaN(num-0)) return 0;
+    //@ts-ignore la gracia es meter num cuando es string
+    return num-0;
+}
+
 function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
     // TODO: GENERALIZAR
     var cp='cp' as IdVariable;
     var _personas_incompletas = '_personas_incompletas' as IdVariable
     var p9='p9' as IdVariable;
+    var p11='p11' as IdVariable;
     //@ts-ignore
     var cantidadPersonasActual:number = datosVivienda.respuestas.personas?.length||0;
     //@ts-ignore
@@ -106,10 +114,10 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
     if(
         (datosVivienda.respuestas[cp]||1)==cantidadPersonasActual
         && datosVivienda.respuestas[_personas_incompletas]==personasIncompletas
-        && datosVivienda.respuestas[p9]!=2
+        && (datosVivienda.respuestas[p9]==null && datosVivienda.respuestas[p11]==null)
     ) return datosVivienda;
     datosVivienda=bestGlobals.changing({respuestas:{personas:[{}]}},datosVivienda) // deepCopy
-    var respuestas = datosVivienda.respuestas as unknown as {cp:number, personas:Persona[], _personas_incompletas:number, p9:number|null};
+    var respuestas = datosVivienda.respuestas as unknown as {cp:number, personas:Persona[], _personas_incompletas:number, p9:number|null, p11:number|null, p12:string|null};
     if(respuestas.p9==2){
         respuestas.cp=Math.max(respuestas.personas.length,respuestas.cp)+1
         respuestas.p9=null;
@@ -127,6 +135,17 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
         respuestas.personas.push({} as Persona)
     }
     respuestas._personas_incompletas=respuestas.personas.filter(p=>!p.p1 || !p.p2 || !p.p3 || p.p3>=18 && !p.p4).length;
+    if(respuestas.p9!=1){
+        respuestas.p11=null;
+        respuestas.p12=null;
+    }
+    if(respuestas.p9==1 && !respuestas.p11 && respuestas._personas_incompletas==0){
+        var sortear=likeAr(respuestas.personas).filter(p=>p.p4==1 && p.p3>=18).map((p,i)=>({p0:num(i)+1, ...p})).array();
+        sortear.sort(bestGlobals.compareForOrder([{column:"p2"},{column:"p3"},{column:"p1"},{column:"p0"}]));
+        var posicionSorteada=((num(datosVivienda.tem.nrocatastral)*13+num(datosVivienda.tem.piso))*17 % 3127) % sortear.length
+        respuestas.p11=sortear[posicionSorteada].p0;
+        respuestas.p12 = respuestas.personas[respuestas.p11-1].p1;
+    }
     return datosVivienda;
 }
 

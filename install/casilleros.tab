@@ -37,8 +37,10 @@ ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;100;140;1|F:F2||||||
 ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;100;140;2|F:F2||||||
 ESECO|B9|F:F2|B|bloque|B9|330|✔|confirmación de la lista de personas||||||||true||||2;330|F:F2||||||
 ESECO|P9|B9|P|pregunta|P9|333|✔|¿Esos son todos los habitantes de la vivienda? (incluidos los ausentes)|opciones|||||||true||||2;330;333|F:F2||p9||_personas_incompletas=0||
-ESECO|P9/1|P9|O|opción|1|1|✔|Sí, son todos||||||||||||2;330;333;1|F:F2||||||
+ESECO|P9/1|P9|O|opción|1|1|✔|Sí, son todos. Proceder al sorteo||||||||||||2;330;333;1|F:F2||||||
 ESECO|P9/2|P9|O|opción|2|2|✔|No, faltó anotar a alguien||||||||||||2;330;333;2|F:F2||||||
+ESECO|P11|B9|P|pregunta|P11|340|✔|Número de la persona seleccionada|numero|||||||true|calculada|||2;330;340|F:F2||p11||||
+ESECO|P12|B9|P|pregunta|P12|350|✔|Nombre de la persona seleccionada|texto|||||||true|calculada|||2;330;350|F:F2||p12||||
 ESECO|F3|F:F2|BF|Botón para formulario|F3|999|✔|Continuar|||||F3|||true||||2;999|F:F2||||p9=1||
 ESECO|F:F3||F|formulario|F3|3|✔|Formulario individual||||||viviendas||||||3|F:F3||||||
 ESECO|S|F:F3|B|bloque|S|137|✔|Realización de test, cuestionario y firma de consentimiento||||||||true||||3;137|F:F3||||||

@@ -648,8 +648,8 @@ export function DesplegarCarga(props:{carga:Carga, idCarga:IdCarga, hdr:HojaDeRu
     const dispatch = useDispatch();
     return <Paper className="carga">
         <div className="informacion-carga">
-            <div>Fecha carga: {carga.fecha}</div>
-            <div>Observaciones: {carga.observaciones}</div>
+            <div className="fecha">{carga.fecha}</div>
+            <div className="observaciones">{carga.observaciones}</div>
         </div>
         <Table className="tabla-carga-hoja-de-ruta">
             <colgroup>

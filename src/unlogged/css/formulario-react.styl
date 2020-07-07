@@ -301,7 +301,9 @@ boton-id-div-invalido()
   [nuestro-validator=calculada]
     background-color #EEE
     input
-      background-color #BBB
+      background-color #DDE
+      color black
+      font-weight bold
   [nuestro-validator=salteada]
     &[ocultar-salteada=SI]
       display none
@@ -364,6 +366,12 @@ boton-id-div-invalido()
 .observaciones
   font-size 95%
 
+.opcion
+  padding 6px
+  .id
+    font-weight bold
+    margin 4px
+
 [modo-despliegue=relevamiento]
   .opcion
     padding 6px
@@ -398,6 +406,13 @@ boton-id-div-invalido()
     display none
   @media (min-width 600px)
     display none
+
+.informacion-carga
+  display flex
+  font-size 120%
+  .fecha
+    font-weight bold
+    width 20%
 
 .espacio-final-formulario
   height 250px
