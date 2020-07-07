@@ -60,10 +60,21 @@ anchoNormal(ancho)
   .bloque[es-multiple=SI]
     > .casilleros
       flex-direction row
-      > *
+      > div
         width 24%
+      > div:nth-child(2)
+        min-width 180px
+      > div:nth-child(4)
+        min-width 155px
+      > div:nth-child(3)
+        flex-shrink 1
+        min-width 90px
+        x-width calc(24%-(25%-180px))
+        max-width 24%
       .pregunta
         flex-direction column
+        justify-content space-between
+        height 100%
         > .encabezado
           display none
           width 100%
@@ -78,6 +89,10 @@ anchoNormal(ancho)
     > .casilleros:nth-child(2)
       .pregunta
         > .encabezado
+          border-right 1px solid #888
+          border-left 1px solid #888
+          padding-right 4px
+          padding-left 2px
           display block
 
 .casilleros

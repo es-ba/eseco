@@ -20,15 +20,14 @@ ESECO|DV4|DV|P|pregunta|DV4|160|✔|¿Alguna persona de esta vivienda fue diagno
 ESECO|DV4/1|DV4|O|opción|1|1|✔|Sí||||||||||||1;100;160;1|F:F1||||||
 ESECO|DV4/2|DV4|O|opción|2|2|✔|No||||||||||||1;100;160;2|F:F1||||||
 ESECO|CC1|DV|CONS|consistencia|CC1|165|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||1;100;165|F:F1||||dv4=1||
-ESECO|CP|DV|P|pregunta|CP|170|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true|ocultar|||1;100;170|F:F1||cp||dv4=2||
-ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||cp>0 & dv4=2||
+ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv4=2||
 ESECO|F:F2||F|formulario|F2|2|✔|Habitantes de la vivienda||||||viviendas||||||2|F:F2||||||
-ESECO|CP!|F:F2|P|pregunta|CP!|1|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;1|F:F2||cp!|cp!|||
+ESECO|CP|F:F2|P|pregunta|CP|1|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;1|F:F2||cp||||
 ESECO|LN|F:F2|B|bloque|LN|10|✔|Lista de nombres||||||personas||true||||2;10|F:F2||||||
 ESECO|P1!|LN|P|pregunta|P1!|1|✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||||true||||2;10;1|F:F2||p1!|p1!|||
 ESECO|LP|F:F2|B|bloque|LP|100|✔|Lista de personas||||||personas||true||||2;100|F:F2||||||
 ESECO|P1|LP|P|pregunta|P1|110|✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||personas||true||||2;100;110|F:F2||p1||||
-ESECO|P2|LP|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||personas||true||||2;100;120|F:F2||p2||||
+ESECO|P2|LP|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a)||personas||true|horizontal|||2;100;120|F:F2||p2||||
 ESECO|P2/1|P2|O|opción|1|1|✔|Varón||||||||||||2;100;120;1|F:F2||||||
 ESECO|P2/2|P2|O|opción|2|2|✔|Mujer||||||||||||2;100;120;2|F:F2||||||
 ESECO|P3|LP|P|pregunta|P3|130|✔|¿Cuántos años cumplidos tiene en este momento?|numero|2||Si tiene menos de un año anote 0||personas||true||||2;100;130|F:F2||p3||||
@@ -63,7 +62,7 @@ ESECO|D2/2|D2|O|opción|2|154|✔|Más de una||||||||||||3;147;152;154|F:F3|||||
 ESECO|D3|D|P|pregunta|D3|153|✔|¿Cuántas?|numero|2||||||true|no_leer|||3;147;153|F:F3||d3||d2=2||
 ESECO|D4|D|P|pregunta|D4|154|✔|¿Hace cuánto le hicieron la última prueba?|opciones|||||||true||||3;147;154|F:F3||d4||||
 ESECO|D4/1|D4|O|opción|1|1|✔|Menos de 14 días||||||||||||3;147;154;1|F:F3||||||
-ESECO|D4/2|D4|O|opción|2|2|✔|Más de 14 días||||||||||||3;147;154;2|F:F3||||||
+ESECO|D4/2|D4|O|opción|2|2|✔|Más de 14 días ó 14 días||||||||||||3;147;154;2|F:F3||||||
 ESECO|D5|D|P|pregunta|D5|155|✔|¿Cuál fue el resultado de la última prueba?|opciones|||||||true|ocultar|||3;147;155|F:F3||d5||d4!=1||
 ESECO|D5/1|D5|O|opción|1|1|✔|Positivo||||||||||||3;147;155;1|F:F3||||d4 != 1||
 ESECO|D5/2|D5|O|opción|2|2|✔|Negativo||||||||||||3;147;155;2|F:F3||||||

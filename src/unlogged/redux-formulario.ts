@@ -141,7 +141,7 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
     }
     if(respuestas.p9==1 && !respuestas.p11 && respuestas._personas_incompletas==0){
         var sortear=likeAr(respuestas.personas).filter(p=>p.p4==1 && p.p3>=18).map((p,i)=>({p0:num(i)+1, ...p})).array();
-        sortear.sort(bestGlobals.compareForOrder([{column:"p2"},{column:"p3"},{column:"p1"},{column:"p0"}]));
+        sortear.sort(bestGlobals.compareForOrder([{column:"p3"},{column:"p2"},{column:"p1"},{column:"p0"}]));
         var posicionSorteada=((num(datosVivienda.tem.nrocatastral)*13+num(datosVivienda.tem.piso))*17 % 3127) % sortear.length
         respuestas.p11=sortear[posicionSorteada].p0;
         respuestas.p12 = respuestas.personas[respuestas.p11-1].p1;
@@ -159,26 +159,45 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
     var respuestas = state.datos.hdr[vivienda].respuestas;
     console.log(JSON.stringify(respuestas));
     var nuevosRows = likeAr([
-        {forPk:{vivienda, formulario:'F:F1' as IdFormulario}, formulario:'F:F1' as IdFormulario},
-        {forPk:{vivienda, formulario:'F:F2' as IdFormulario}, formulario:'F:F2' as IdFormulario},
-        {forPk:{vivienda, formulario:'F:F3' as IdFormulario}, formulario:'F:F3' as IdFormulario},
+        {forPk:{vivienda, formulario:'F:F1' as IdFormulario}, formulario:'F:F1' as IdFormulario, post:null},
+        {forPk:{vivienda, formulario:'F:F2' as IdFormulario}, formulario:'F:F2' as IdFormulario, post:null},
+        {forPk:{vivienda, formulario:'F:F3' as IdFormulario}, formulario:'F:F3' as IdFormulario, post:null},
         ...bestGlobals.serie({
             from:1, 
             //@ts-ignore existen las personas y es un array
             to:respuestas.personas.length
-        }).map(persona=>({forPk:{vivienda, formulario:'F:F2' as IdFormulario, persona}, formulario:'F:F2_personas' as IdFormulario}))
-    ]).build(({forPk, formulario})=>{
-        var respuestasUnidadAnalisis=state.datos.hdr[forPk.vivienda].respuestas;
+        }).map(persona=>({forPk:{vivienda, formulario:'F:F2' as IdFormulario, persona}, formulario:'F:F2_personas' as IdFormulario, 
+            post:true
+        }))
+    ]).build(({forPk, formulario, post})=>{
+        var respuestasUnidadAnalisis;
+        var respuestasVivienda=state.datos.hdr[forPk.vivienda].respuestas;
         // TODO: GENERALIZAR:
         if('persona' in forPk && forPk.persona!=null){
             // @ts-ignore exite
-            respuestasUnidadAnalisis=respuestasUnidadAnalisis.personas[forPk.persona-1];
+            respuestasUnidadAnalisis=respuestasVivienda.personas[forPk.persona-1];
+        }else{
+            respuestasUnidadAnalisis=respuestasVivienda;
+        }
+        var row=rowValidator(
+            state.estructura.formularios[formulario].estructuraRowValidator, 
+            respuestasUnidadAnalisis
+        )
+        // TODO: GENERALIZAR
+        if(post){
+            // @ts-ignore
+            if(row.feedback.p1.estado=='actual' && (
+            // @ts-ignore
+                forPk.persona==1 && respuestasVivienda.cp==null 
+            // @ts-ignore
+                || forPk.persona>1 && respuestasVivienda.personas[forPk.persona-2].p1 == null
+            )){
+            // @ts-ignore
+                row.feedback.p1.estado='todavia_no';
+            }
         }
         return {
-            [toPlainForPk(forPk)]: rowValidator(
-                state.estructura.formularios[formulario].estructuraRowValidator, 
-                respuestasUnidadAnalisis
-            )
+            [toPlainForPk(forPk)]: row
         }
     })
     return {
@@ -429,13 +448,15 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
             },
             datos:{
                 cargas:{
+                    // @ts-expect-error tengo que agregar toDmy en los tipos
                     "2020-07-07":{fecha:bestGlobals.date.iso("2020-07-07").toDmy(), observaciones:'lugar de entrega: Hospital San Martín. Ascasubi 333'},
+                    // @ts-expect-error tengo que agregar toDmy en los tipos
                     "2020-07-08":{fecha:bestGlobals.date.iso("2020-07-08").toDmy(), observaciones:'lugar de entrega: Hospital San Martín. Ascasubi 333'}
                 },
                 hdr:{
                     '10902':{
                         tem:{
-                            observaciones:'Encuesta vacía', carga:"2020-07-08",
+                            observaciones:'Encuesta vacía', carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
                         } as TEM,
                         // @ts-ignore
@@ -443,8 +464,8 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                     },
                     '10904':{
                         respuestas:{
-                            "dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"1"
-                            ,personas:[{},{},{}],
+                            "dv1":"1","dv2":"1/7/2020","dv4":"2"
+                            ,personas:[{}],
                         } as unknown as Respuestas,
                         tem:{observaciones:'Lista para cargar la lista de personas',carga:"2020-07-08", nomcalle:'Bolivar', nrocatastral:'531' } as TEM
                     },
@@ -456,7 +477,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                         } as TEM,
                         respuestas:{
                             // @ts-ignore
-                            "personas":[{"p1":"Carolina","p2":"2","p3":"33","p4":"1"},{"p1":"Alfonso","p2":"1","p3":"72","p4":"1"},{"p1":"Berta","p3":"68","p2":"2","p4":"1"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3","_personas_incompletas":0,"p9":"1"
+                            "personas":[{"p1":"Carolina","p2":"2","p3":"33","p4":"1"},{"p1":"Alfonso","p2":"1","p3":"72","p4":"1"},{"p1":"Berta","p3":"68","p2":"2","p4":"1"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3","_personas_incompletas":0
                         }
                     },
                     '13308':{
@@ -467,7 +488,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                         respuestas:{
                             // para ver cómo las opciones con ocultar se ocultan
                             // @ts-ignore
-                            "personas":[{"p1":"Carolina","p2":"2","p3":"33","p4":"1"},{"p1":"Alfonso","p2":"1","p3":"72","p4":"1"},{"p1":"Berta","p3":"68","p2":"2","p4":"1"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3","_personas_incompletas":0,"p9":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"1","d4":"1","d5c":"2","d6_1":"2","d6_2":"2","d6_3":"2","d6_4":"2","d6_5":"2","d6_6":"2","d6_7":"2","d6_8":"2","d6_9":"2","a1_1":"2","a1_2":"2","a1_3":"2","a1_4":"2","a1_5":"2","a2":"2","a3":"2","a4":"159","a5":"59","cv1":"2","cv3":"1","cv4_1":2,"cv4_2":2,"cv4_3":2,"cv4_4":2,"cv4_5":2,"cv4_6":1,"t1":"1","t2_1":"2","t2_2":"2","t2_3":"2","t2_4":"2","t2_5":"2","t2_6":"1","t2_7":"2","t2_8":"2","t3":"2","e1":"Carolina Martinez","e2":"1","e6":"34567890","c1":"15-16171819","c2":"preuba@prueba.com","fin":"dudó mucho en contestar"
+                            "p11":1,"p12":"Carolina","personas":[{"p1":"Carolina","p2":"2","p3":"33","p4":"1"},{"p1":"Alfonso","p2":"1","p3":"72","p4":"1"},{"p1":"Berta","p3":"68","p2":"2","p4":"1"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"3","_personas_incompletas":0,"p9":"1","s1":"1","s2":"1","s3":"1","d1":"1","d2":"1","d4":"1","d5c":"2","d6_1":"2","d6_2":"2","d6_3":"2","d6_4":"2","d6_5":"2","d6_6":"2","d6_7":"2","d6_8":"2","d6_9":"2","a1_1":"2","a1_2":"2","a1_3":"2","a1_4":"2","a1_5":"2","a2":"2","a3":"2","a4":"159","a5":"59","cv1":"2","cv3":"1","cv4_1":2,"cv4_2":2,"cv4_3":2,"cv4_4":2,"cv4_5":2,"cv4_6":1,"t1":"1","t2_1":"2","t2_2":"2","t2_3":"2","t2_4":"2","t2_5":"2","t2_6":"1","t2_7":"2","t2_8":"2","t3":"2","e1":"Carolina Martinez","e2":"1","e6":"34567890","c1":"15-16171819","c2":"preuba@prueba.com","fin":"dudó mucho en contestar"
                         }
                     },
                     '13309':{
@@ -478,7 +499,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                         respuestas:{
                             // para ver cómo las opciones con ocultar se ocultan
                             // @ts-ignore
-                            "personas":[{"p1":"sadfasdf"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"1","s1":"1","_personas_incompletas":1,"s2":"1","s3":"1","d1":"1","d2":"1","d3":null,"d4":"2","d5":"2","d6_1":"2","d6_2":"2","d6_3":"2","d6_4":"2","d6_6":"2","d6_7":"2","d6_5":"2","d6_8":"2","d6_9":"2","a1_1":"2","a1_2":"2","a1_3":"2","a1_4":"2","a1_5":"2","a2":"2","a3":"2","a4":"161","a5":"59","cv1":"2","cv3":"1","t1":null,"e1":null,"e2":null,"e6":null,"c3":null,"e4":null,"cv2_1":null
+                            "personas":[{"p1":"Carolina"}],"dv1":"1","dv2":"1/7/2020","dv4":"2","cp":"1","s1":"1","_personas_incompletas":1,"s2":"1","s3":"1","d1":"1","d2":"1","d3":null,"d4":"2","d5":"2","d6_1":"2","d6_2":"2","d6_3":"2","d6_4":"2","d6_6":"2","d6_7":"2","d6_5":"2","d6_8":"2","d6_9":"2","a1_1":"2","a1_2":"2","a1_3":"2","a1_4":"2","a1_5":"2","a2":"2","a3":"2","a4":"161","a5":"59","cv1":"2","cv3":"1","t1":null,"e1":null,"e2":null,"e6":null,"c3":null,"e4":null,"cv2_1":null
                         }
                     }
                 }
@@ -516,12 +537,21 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
         }else{
             var initialState = await createInitialState();
             if(opts.modoDemo){
-                initialState = {...initialState, modo:{...initialState.modo, 
-                    //@ts-ignore es un booleano pero pongo ahí los datos de demo!
-                    demo: initialState.datos
-                }};
+                initialState = {
+                    ...initialState, 
+                    modo:{
+                        ...initialState.modo, 
+                        //@ts-ignore es un booleano pero pongo ahí los datos de demo!
+                        demo: initialState.datos,
+                    }
+                };
                 if(casoState){
-                    initialState = {...initialState, datos:casoState.datos}
+                    initialState = {
+                        ...initialState, 
+                        datos:casoState.datos, 
+                        opciones:casoState.opciones,
+                        feedbackRowValidator:casoState.feedbackRowValidator
+                    }
                 }
             }
             return initialState;
