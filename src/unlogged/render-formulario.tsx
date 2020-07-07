@@ -560,9 +560,36 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
 
 const FormularioEncabezado = DespliegueEncabezado;
 
+function BarraDeNavegacion(props:{forPk:ForPk}){
+    const dispatch = useDispatch();
+    const forPk = props.forPk;
+    return <ButtonGroup>
+        <Button color="inherit" variant="outlined" onClick={()=>
+            dispatch(dispatchers.VOLVER_HDR({}))
+        }>
+            hoja de ruta
+        </Button>
+        <Button color="inherit" variant={forPk.formulario==('F:F1'as IdFormulario)?"contained":"outlined"} onClick={()=>
+            dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:'F:F1' as IdFormulario}}))
+        }>
+            vivienda
+        </Button>
+        <Button color="inherit" variant={forPk.formulario==('F:F2'as IdFormulario)?"contained":"outlined"} onClick={()=>
+            dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:'F:F2' as IdFormulario}}))
+        }>
+            personas
+        </Button>
+        <Button color="inherit" variant={forPk.formulario==('F:F3'as IdFormulario)?"contained":"outlined"} onClick={()=>
+            dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:'F:F3' as IdFormulario}}))
+        }>
+            individual
+        </Button>
+    </ButtonGroup>
+}
+
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var {formulario, modoDespliegue, modo, feedbackRow, actual, completo} = useSelectorVivienda(props.forPk);
+    var {formulario, modoDespliegue, modo, actual, completo} = useSelectorVivienda(props.forPk);
     const dispatch = useDispatch();
     useEffect(() => {
         if(actual){
@@ -578,17 +605,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
         <>
             <AppBar position="fixed">
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        onClick={()=>
-                            dispatch(dispatchers.VOLVER_HDR({}))
-                        }
-                    >
-                        <ICON.ChevronLeft/>
-                    </IconButton>
-                    <Typography variant="h6">
-                        Vivienda
-                    </Typography>
+                    <BarraDeNavegacion forPk={forPk}/>
                 </Toolbar>
             </AppBar>
             <main>
