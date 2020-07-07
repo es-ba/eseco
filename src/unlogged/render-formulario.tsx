@@ -563,27 +563,37 @@ const FormularioEncabezado = DespliegueEncabezado;
 function BarraDeNavegacion(props:{forPk:ForPk}){
     const dispatch = useDispatch();
     const forPk = props.forPk;
-    return <ButtonGroup>
-        <Button color="inherit" variant="outlined" onClick={()=>
-            dispatch(dispatchers.VOLVER_HDR({}))
-        }>
-            hoja de ruta
-        </Button>
-        <Button color="inherit" variant={forPk.formulario==('F:F1'as IdFormulario)?"contained":"outlined"} onClick={()=>
-            dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:'F:F1' as IdFormulario}}))
-        }>
-            vivienda
-        </Button>
-        <Button color="inherit" variant={forPk.formulario==('F:F2'as IdFormulario)?"contained":"outlined"} onClick={()=>
-            dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:'F:F2' as IdFormulario}}))
-        }>
-            personas
-        </Button>
-        <Button color="inherit" variant={forPk.formulario==('F:F3'as IdFormulario)?"contained":"outlined"} onClick={()=>
-            dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:'F:F3' as IdFormulario}}))
-        }>
-            individual
-        </Button>
+    const {respuestas} = useSelectorVivienda(forPk);
+    var botonesFormulario=[
+        {formulario: null, abr:'HdR', label:'hoja de ruta'},
+        {formulario: 'F:F1' as IdFormulario, abr:'Viv', label:'vivienda'  },
+        {formulario: 'F:F2' as IdFormulario, abr:'Per', label:'personas'  },
+        {formulario: 'F:F3' as IdFormulario, abr:'Ind', label:'individual'}
+    ];
+    // TODO: GENERALIZAR:
+    var seleccionado=respuestas['p11' as IdVariable];
+    if(seleccionado){
+        // @ts-ignore
+        var p=respuestas.personas[seleccionado-1];
+        botonesFormulario[3].label=p.p1+' '+p.p3;
+        botonesFormulario[3].abr=p.p1;
+    }else{
+        botonesFormulario.pop();
+    }
+    return <ButtonGroup className="barra-navegacion">
+        {botonesFormulario.map(b=>
+            <Button color="inherit" variant="outlined" 
+                disabled={b.formulario==forPk.formulario}
+                onClick={()=>
+                dispatch(
+                    b.formulario==null?dispatchers.VOLVER_HDR({}):
+                    dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:b.formulario}})
+                )
+            }>
+                <span className="abr">{b.abr}</span>
+                <span className="label">{b.label}</span>
+            </Button>
+        )}
     </ButtonGroup>
 }
 
