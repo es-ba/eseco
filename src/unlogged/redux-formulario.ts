@@ -19,7 +19,7 @@ var my=myOwn;
 export const MAXCP=20;
 const OPERATIVO='ESECO';
 const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
-export const LOCAL_STORAGE_STATE_NAME ='hdr-campo';
+export const LOCAL_STORAGE_STATE_NAME ='hdr-campo0.1-';
 
 /* REDUCERS */
 
