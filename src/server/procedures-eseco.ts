@@ -1,6 +1,6 @@
 "use strict";
 
-import { ProcedureDef, TableDefinition } from "./types-eseco";
+import { ProcedureDef, TableDefinition, Client } from "./types-eseco";
 import { adaptParameterTypes, TablaDatos, OperativoGenerator, ProcedureContext, CoreFunctionParameters, ForeignKey } from "meta-enc";
 import * as likeAr from "like-ar";
 export * from "./types-eseco";
@@ -326,12 +326,37 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
     {
+        action:'des_asignar_estado',
+        parameters:[
+            {name:'operativo'   ,references:'operativos',  typeName:'text'},
+            {name:'enc'                                 ,  typeName:'text'},
+        ],
+        progress:true,
+        coreFunction:async function(context:ProcedureContext, params: CoreFunctionParameters){
+            await cambiarATipoEstadoDentroDelMismoRol(context.client, params.operativo, params.enc, 'asignado', 'disponible');
+            return 'estado_cambiado';
+        }
+    },
+    {
+        action:'asignar_caso',
+        parameters:[
+            {name:'operativo'   ,references:'operativos',  typeName:'text'},
+            {name:'enc'                                 ,  typeName:'text'},
+            {name:'nuevo_rol'                           ,  typeName:'text'}
+        ],
+        progress:true,
+        coreFunction:async function(context:ProcedureContext, params: CoreFunctionParameters){
+            //acá no cambia de tipo de estado en el mismo rol porque puede cambiar de enc_descargado -> rec_asignado
+            await setEstadoViaTipoYRol(context.client, params.operativo, params.enc, 'asignado', params.nuevo_rol);
+            return 'estado_cambiado';
+        }
+    },
+    {
         action:'asignacion_recepcion',
         parameters:[
             {name:'operativo'        ,references:'operativos',  typeName:'text'   , defaultValue:OPERATIVO },
-            {name:'area1'                                    ,  typeName:'integer' },
-            {name:'area2'                                    ,  typeName:'integer' },
-            //TODO   areas???
+            {name:'semana'            ,references:'tem'       ,  typeName:'integer' },
+            {name:'lote'              ,references:'tem'       ,  typeName:'integer' },
         ],
         progress:true,
         // bitacora:{always:true},
@@ -339,9 +364,9 @@ export const ProceduresEseco : ProcedureDef[] = [
             let res = await context.client.query(`
                 select *
                   from tem
-                  where operativo=$1 and (area=$2 or area=$3)
-                  order by reserva, enc`,
-                [parameters.operativo, parameters.area1, parameters.area2]
+                  where operativo=$1 and semana=$2 and lote=$3
+                  order by reserva, enc `,
+                [parameters.operativo, parameters.semana, parameters.lote]
             ).fetchAll();
             return res.rows;
         }
@@ -393,3 +418,48 @@ export const ProceduresEseco : ProcedureDef[] = [
     },
 ];
 
+//TODO: HACER MAQUINA DE ESTADOS
+function tipoEstadoAnteriorAVerificado(rol: string) {
+    let tipoEstado = 'descargado';
+    if (rol == 'supervisor') {
+        tipoEstado = 'asignado';
+    }
+    return tipoEstado;
+}
+
+async function setEstado(client: Client, op:string, enc:string, nuevoEstado:string|null) {
+    // TODO: HACER aca LAS VALIDACIONES QUE CORRESPONDAN
+    await client.query(`
+        UPDATE tem
+            set estado = $1
+            WHERE operativo=$2 and enc=$3 
+    `, [nuevoEstado, op, enc]).execute();
+}
+
+async function setEstadoViaTipoYRol(client:Client, op:string, enc:string, tipo_estado:string, rol:string) {
+    const result = await client.query(`
+                SELECT estado
+                  FROM estados
+                  WHERE rol = $1 AND tipo_estado = $2`, [rol, tipo_estado]).fetchUniqueValue();
+    await setEstado(client, op, enc, result.value);
+}
+
+/**
+ * Setea un tipo de estado via tipo dentro del mismo rol del estado anterior
+ */
+async function cambiarATipoEstadoDentroDelMismoRol(client: Client, op:string, enc:string, tipoEstadoDesde: string, tipoEstadoHacia: string) {
+    // tomamos el rol del estado actual
+    let temConEstado = await client.query(`SELECT tem.*, estados.tipo_estado, estados.rol 
+                  FROM tem JOIN estados ON tem.estado = estados.estado
+                  WHERE operativo=$1 and enc=$2
+                `, [op, enc]).fetchUniqueRow();
+    //para los estados que no tienen tipo_estado usamos el parametro tipoEstadoDesde como el "estado desde"
+    if (temConEstado.row.tipo_estado != tipoEstadoDesde && temConEstado.row.estado != tipoEstadoDesde) {
+        throw new Error(`Para poner en estado ${tipoEstadoHacia} debe estar en estado ${tipoEstadoDesde}.`);
+    }
+    setEstadoViaTipoYRol(client, op, enc, tipoEstadoHacia, temConEstado.row.rol)
+    return 'listo';
+}
+async function blanquearEstado(client:Client, params: CoreFunctionParameters) {
+    await setEstado(client, params.operativo,params.enc, null);
+}

@@ -6,5 +6,7 @@ configurar      |ver       |true
 encuestas       |ingresar  |true
 encuestas       |procesar  |true
 encuestas       |justificar|true
-consistencias   |editar    |true 
-casilleros_texto|editar    |true 
+consistencias   |editar    |true
+casilleros_texto|editar    |true
+lab_resultado   |editar    |false
+lab_resultado   |ver       |true 

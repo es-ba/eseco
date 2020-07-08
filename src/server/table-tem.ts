@@ -31,7 +31,7 @@ export function tem(context:TableContext):TableDefinition {
             "defaultValue": 'ESECO'
         },
         {
-            "name": "enc",  //consulta se reemplaza por enc (integer)? 
+            "name": "enc",  // enc (integer)? 
             "editable": false,
             "typeName": "text",
             "nullable": false
@@ -42,6 +42,12 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "integer",
         },
 //        { name: "ver", typeName: 'text'    , clientSide:'verCaso', editable:false },
+        {
+            "name": "lote",
+            "typeName": "integer",
+            editable: hasSubCoordinadorPermission,
+            //"nullable":false
+        },
         {
             "name": "semana", //nullable false
             editable: hasSubCoordinadorPermission,

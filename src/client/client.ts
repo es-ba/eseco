@@ -63,8 +63,8 @@ myOwn.clientSides.mios={
 var grid2:any;
 myOwn.wScreens.asignacion_recepcion={
     parameters:[
-        {name:'area'          ,grilla:1, typeName:'integer'                  },
-        //{name:'area2'          ,grilla:1, typeName:'integer'                  },
+        {name:'semana'        ,grilla:1, typeName:'integer'                  , references:'semanas' },
+        {name:'lote'          ,grilla:1, typeName:'integer'                  , references:'lotes'   },
         {name:'carga_rol'     ,grilla:2, typeName:'text'    , label:'rol'    , references:'roles'   },
         {name:'carga_persona' ,grilla:2, typeName:'integer' , label:'persona', references:'personal'},
         {name:'carga'         ,grilla:2, typeName:'date'    , label:'fecha'  },
@@ -73,13 +73,13 @@ myOwn.wScreens.asignacion_recepcion={
     mainAction:async function(params:any,divResult:HTMLElement){
         //TODO definir cjto seleccionable a asignar
         var my=myOwn;
-        if(!params.area  ){
-            divResult.textContent='falta ingresar area.';
+        if(!params.semana && !params.lote){
+            divResult.textContent='falta ingresar semana y/o lote.';
         }else if(!params.carga_persona || !params.carga || !params.carga_rol){
             divResult.textContent='falta ingresar rol, persona y fecha.';
         }else{
-            var {area, carga_rol, ...params2} = params;
-            var params1 = {area};
+            var {semana, lote, carga_rol, ...params2} = params;
+            var params1 = {semana, lote};
             var gridDiv = html.div().create();
             var gridResult = html.div().create();
             var hdrDiv = html.div({class:['solo-para-imprimir','hdr-eseco']}).create();
@@ -130,7 +130,7 @@ myOwn.wScreens.asignacion_recepcion={
                         })
                     )].concat(
                         arrayFlat(grid2.depots.filter(function(depot:myOwn.Depot){
-                            return depot.row.cnombre != 'PRUEBA' //HACKAZO para que no imprima encuestas de prueba
+                            return depot.row.nomcalle != 'PRUEBA' //HACKAZO para que no imprima encuestas de prueba
                         }).map(function(depot:myOwn.Depot){
                             return [
                                 html.tr(

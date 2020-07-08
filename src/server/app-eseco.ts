@@ -25,6 +25,8 @@ import {cargas} from "./table-cargas";
 import {carga_fechas} from "./table-carga_fechas";
 import {tem_estados} from "./table-tem_estados";
 import {tem_seleccionable} from "./table-tem_seleccionable";
+import {lotes} from "./table-lotes";
+import {semanas} from "./table-semanas";
 
 
 
@@ -210,8 +212,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             {menuType:'menu', name:'configurar', menuContent:[
                 {menuType:'menu', name:'muestra', label:'muestra', menuContent:[
                     {menuType:'table', name:'tem', label: 'TEM'} ,
+                    {menuType:'table', name:'lotes'} ,
+                    {menuType:'table', name:'semanas'} ,
                     {menuType:'table', name:'personal'},
-                    {menuType:'table', name:'personal_rol'},
+                   // {menuType:'table', name:'personal_rol'},
                     ]},
                 {menuType:'menu', name:'metadatos', menuContent:[
                     {menuType:'table', name:'operativos'},
@@ -243,6 +247,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , roles_permisos
             , tipos_estados
             , estados
+            , lotes
+            , semanas
             , tem
             , tem_estados
             , carga_tem

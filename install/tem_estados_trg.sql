@@ -10,7 +10,7 @@ $BODY$
 begin
   if new.estado is not null then  
     insert into tem_estados (operativo, estado, enc, cuando, carga, carga_persona, carga_rol, carga_observaciones)
-      values (new.operativo, new.estado, new.enc, current_timestamp, new.carga, new.carga_persona, new.carga_rol);
+      values (new.operativo, new.estado, new.enc, current_timestamp, new.carga, new.carga_persona, new.carga_rol, new.carga_observaciones);
   end if;
   return new;
 end;
