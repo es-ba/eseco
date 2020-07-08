@@ -139,6 +139,7 @@ ESECO|CV2/3|CV2|OM|opción múltiple|3|1070|!O|Compañero/a de trabajo|si_no||||
 ESECO|CV2/4|CV2|OM|opción múltiple|4|1080|!O|Personal de limpieza, cuidadora, servicios del hogar, etc|si_no|||||||||||3;970;1040;1080|F:F3||cv2_4||||
 ESECO|CV2/5|CV2|OM|opción múltiple|5|1090|!O|Cliente profesional (o paciente en caso de personal sanitario)|si_no|||||||||||3;970;1040;1090|F:F3||cv2_5||||
 ESECO|CV2/6|CV2|OM|opción múltiple|6|1100|!O|Otro|si_no|||||||||||3;970;1040;1100|F:F3||cv2_6||||
+ESECO|C.CV2|CV|CONS|consistencia|C.CV2|1105|⛔|Si en CV1 dice que estuvo en contacto con alguna persona diagnosticada de COVID-19, en CV2 debería indicar al menos una respuesta positiva||||||||true||||3;970;1105|F:F3||||cv1=1 & cv2_1=2 & cv2_2=2 & cv2_3=2 & cv2_4=2 & cv2_5=2 & cv2_6=2||
 ESECO|CV3|CV|P|pregunta|CV3|1110|✔|En los últimos dos meses, ¿estuvo en contacto con alguna persona con síntomas gripales?|opciones|||||||true||||3;970;1110|F:F3||cv3||||
 ESECO|CV3/1|CV3|O|opción|1|1120|✔|Sí||||||||||||3;970;1110;1120|F:F3||||||
 ESECO|CV3/2|CV3|O|opción|2|1130|✔|No, que yo sepa|||||T1|||||||3;970;1110;1130|F:F3||||||
@@ -149,6 +150,7 @@ ESECO|CV4/3|CV4|OM|opción múltiple|3|1170|!O|Compañero/a de trabajo|si_no||||
 ESECO|CV4/4|CV4|OM|opción múltiple|4|1180|!O|Personal de limpieza, cuidadora, servicios del hogar, etc|si_no|||||||||||3;970;1140;1180|F:F3||cv4_4||||
 ESECO|CV4/5|CV4|OM|opción múltiple|5|1190|!O|Cliente profesional (o paciente en caso de personal sanitario)|si_no|||||||||||3;970;1140;1190|F:F3||cv4_5||||
 ESECO|CV4/6|CV4|OM|opción múltiple|6|1200|!O|Otro|si_no|||||||||||3;970;1140;1200|F:F3||cv4_6||||
+ESECO|C.CV4|CV|CONS|consistencia|C.CV4|1145|⛔|Si en CV3 dice que estuvo en contacto con alguna persona con síntomas gripales, en CV4 debería indicar al menos una respuesta positiva||||||||true||||3;970;1145|F:F3||||cv3=1 & cv4_1=2 & cv4_2=2 & cv4_3=2 & cv4_4=2 & cv4_5=2 & cv4_6=2||
 ESECO|T|F:F3|B|bloque|T|1200|✔|Exposición en el ámbito laboral||||||||true||||3;1200|F:F3||||||
 ESECO|T1|T|P|pregunta|T1|1205|✔|En los últimos dos meses, ¿trabajó en la modalidad presencial?|si_no|||||||true||||3;1200;1205|F:F3||t1||||
 ESECO|T1/1|T1|O|opción|1|1|✔|Sí||||||||||||3;1200;1205;1|F:F3||||||
@@ -182,6 +184,7 @@ ESECO|T3|T|P|pregunta|T3|1410|✔|¿Cuántas horas semanales trabaja?|opciones||
 ESECO|T3/1|T3|O|opción|1|1420|✔|Hasta 34 horas|||||||||no_leer|||3;1200;1410;1420|F:F3||||||
 ESECO|T3/2|T3|O|opción|2|1430|✔|Entre 35 y 45 horas|||||||||no_leer|||3;1200;1410;1430|F:F3||||||
 ESECO|T3/3|T3|O|opción|3|1440|✔|Más de 45 horas|||||||||no_leer|||3;1200;1410;1440|F:F3||||||
+ESECO|C.T2|T|CONS|consistencia|C.T2|1415|⛔|Si en T1 dice que trabajó en la modalidad presencial, en T2 debería indicar al menos una respuesta positiva||||||||true||||3;1200;1415|F:F3||||t1=1 & t2_1=2 & t2_2=2 & t2_3=2 & t2_4=2 & t2_5=2 & t2_6=2 & t2_7=2 & t2_8=2||
 ESECO|E|F:F3|B|bloque|E|1520|✔|Datos del entrevistado para devolución de resultados y supervisión||||Los datos del entrevistado/a se deben copiar de un original, fotocopia o App||||true||||3;1520|F:F3||||||
 ESECO|E1|E|P|pregunta|E1|1530|✔|Apellido y nombre|texto|||||||true|no_leer|||3;1520;1530|F:F3||e1||||
 ESECO|E2|E|P|pregunta|E2|1540|✔|Tipo de documentación identificatoria|opciones|||||||true|no_leer|||3;1520;1540|F:F3||e2||||

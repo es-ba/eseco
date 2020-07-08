@@ -447,12 +447,12 @@ function FiltroDespliegue(props:{filtro:Filtro, forPk:ForPk}){
 function ConsistenciaDespliegue(props:{casillero:Consistencia, forPk:ForPk}){
     var {casillero, forPk} = props;
     var habilitador = casillero.expresion_habilitar?getFuncionHabilitar(casillero.expresion_habilitar):()=>true;
-    var {respuestas} = useSelectorVivienda(forPk);
+    var {respuestas, modoDespliegue} = useSelectorVivienda(forPk);
     var habilitado = habilitador(respuestas);
-    return habilitado?<div 
+    return habilitado || modoDespliegue=='metadatos'?<div 
         className="consistencia" 
     >
-        <DespliegueEncabezado casillero={casillero} leer={false}/>
+        <EncabezadoDespliegue casillero={casillero} leer={false} forPk={forPk}/>
     </div>:null
 }
 

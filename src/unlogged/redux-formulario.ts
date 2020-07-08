@@ -117,7 +117,13 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
         && (datosVivienda.respuestas[p9]==null && datosVivienda.respuestas[p11]==null)
     ) return datosVivienda;
     datosVivienda=bestGlobals.changing({respuestas:{personas:[{}]}},datosVivienda) // deepCopy
-    var respuestas = datosVivienda.respuestas as unknown as {cp:number, personas:Persona[], _personas_incompletas:number, p9:number|null, p11:number|null, p12:string|null};
+    var respuestas = datosVivienda.respuestas as unknown as {
+        cp:number, personas:Persona[],
+        _personas_incompletas:number, 
+        _edad_maxima:number, 
+        _edad_minima:number, 
+        p9:number|null, p11:number|null, p12:string|null
+    };
     if(respuestas.p9==2){
         respuestas.cp=Math.max(respuestas.personas.length,respuestas.cp)+1
         respuestas.p9=null;
@@ -135,6 +141,8 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
         respuestas.personas.push({} as Persona)
     }
     respuestas._personas_incompletas=respuestas.personas.filter(p=>!p.p1 || !p.p2 || !p.p3 || p.p3>=18 && !p.p4).length;
+    respuestas._edad_maxima=respuestas.personas.reduce((acc,p)=>Math.max(p.p3,acc),0);
+    respuestas._edad_minima=respuestas.personas.reduce((acc,p)=>Math.min(p.p3,acc),99);
     if(respuestas.p9!=1){
         respuestas.p11=null;
         respuestas.p12=null;
@@ -242,6 +250,9 @@ var reducers={
                 respuestas.personas[iPersona] = {...respuestas.personas[iPersona]}
                 //@ts-ignore personas existe
                 respuestasAModificar = respuestas.personas[iPersona];
+                // TODO: Generalizar
+                var p9 = 'p9' as IdVariable;
+                respuestas[p9] = null;
             }
             respuestasAModificar[payload.variable] = payload.respuesta;
             ////////// FIN ESPECIALES
