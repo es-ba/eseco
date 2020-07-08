@@ -8,7 +8,7 @@ ESECO|DV2|DV|P|pregunta|DV2|120|✔|Fecha de la visita|fecha|||||||true|calculad
 ESECO|DV3|DV|P|pregunta|DV3|130|✔|¿Por qué motivo no pudo realizar la entrevista?|opciones|||||||true|ocultar no_leer|||1;100;130|F:F1||dv3||dv1=2||
 ESECO|DV3/1|DV3|O|opción|1|1|✔|La vivienda está deshabitada||||||||||||1;100;130;1|F:F1||||||
 ESECO|DV3/2|DV3|O|opción|2|2|✔|La vivienda está demolida||||||||||||1;100;130;2|F:F1||||||
-ESECO|DV3/3|DV3|O|opción|3|3|✔|La vivinda se usa solo los fines de semana o muy esporádicamente||||||||||||1;100;130;3|F:F1||||||
+ESECO|DV3/3|DV3|O|opción|3|3|✔|La vivienda se usa solo los fines de semana o muy esporádicamente||||||||||||1;100;130;3|F:F1||||||
 ESECO|DV3/4|DV3|O|opción|4|4|✔|La vivienda está en construcción y allí no vivie nadie||||||||||||1;100;130;4|F:F1||||||
 ESECO|DV3/5|DV3|O|opción|5|5|✔|La vivienda se usa como establecimiento y no tiene uso residencial||||||||||||1;100;130;5|F:F1||||||
 ESECO|DV3/6|DV3|O|opción|6|6|✔|En la dirección de referencia no se encuetra la vivienda especificada||||||||||||1;100;130;6|F:F1||||||
@@ -58,10 +58,12 @@ ESECO|D|F:F3|B|bloque|D|147|✔|Presencia de cuadro diagnóstico compatible con 
 ESECO|D1|D|P|pregunta|D1|148|✔|¿Alguna vez le hicieron la prueba para ver si estaba infectado/a con COVID-19 con una muestra de la garganta o la nariz?|si_no|||||||true||||3;147;148|F:F3||d1||||
 ESECO|D1/1|D1|O|opción|1|149|✔|Sí||||||||||||3;147;148;149|F:F3||||||
 ESECO|D1/2|D1|O|opción|2|150|✔|No|||||D6|||||||3;147;148;150|F:F3||||||
-ESECO|D2|D|P|pregunta|D2|152|✔|¿Cuántas pruebas le hicieron?|opciones|||||||true||||3;147;152|F:F3||d2||||
-ESECO|D2/1|D2|O|opción|1|153|✔|Una||||||||||||3;147;152;153|F:F3||||||
-ESECO|D2/2|D2|O|opción|2|154|✔|Más de una||||||||||||3;147;152;154|F:F3||||||
-ESECO|D3|D|P|pregunta|D3|153|✔|¿Cuántas?|numero|2||||||true|no_leer|||3;147;153|F:F3||d3||d2=2||
+ESECO|D2|D|P|pregunta|D2|150|✔|¿Cuántas pruebas le hicieron?|opciones|||||||true||||3;147;150|F:F3||d2||||
+ESECO|D2/1|D2|O|opción|1|153|✔|Una||||||||||||3;147;150;153|F:F3||||||
+ESECO|D2/2|D2|O|opción|2|154|✔|Más de una||||||||||||3;147;150;154|F:F3||||||
+ESECO|D3|D|P|pregunta|D3|151|✔|¿Cuántas?|numero|2||||||true|no_leer|||3;147;151|F:F3||d3||d2=2||
+ESECO|C.D3A|D|CONS|consistencia|C.D3A|152|⛔|Verificar la cantidad de pruebas||||||||true||||3;147;152|F:F3||||d2=2 & d3>5||
+ESECO|C.D3B|D|CONS|consistencia|C.D3B|153|⛔|La cantidad debe ser mayor a cero ||||||||true||||3;147;153|F:F3||||d2=2 & d3<=0 & d3 !== null||
 ESECO|D4|D|P|pregunta|D4|154|✔|¿Hace cuánto le hicieron la última prueba?|opciones|||||||true||||3;147;154|F:F3||d4||||
 ESECO|D4/1|D4|O|opción|1|1|✔|Menos de 14 días||||||||||||3;147;154;1|F:F3||||||
 ESECO|D4/2|D4|O|opción|2|2|✔|Más de 14 días ó 14 días||||||||||||3;147;154;2|F:F3||||||
@@ -129,7 +131,11 @@ ESECO|A3|A|P|pregunta|A3|920|✔|¿Es fumador/a o fue fumador/a (más de 1 cigar
 ESECO|A3/1|A3|O|opción|1|930|✔|Sí||||||||||||3;670;920;930|F:F3||||||
 ESECO|A3/2|A3|O|opción|2|940|✔|No||||||||||||3;670;920;940|F:F3||||||
 ESECO|A4|A|P|pregunta|A4|950|✔|¿Podría decirme cuánto mide, aproximadamente, sin zapatos?|numero|3||cm||||true||||3;670;950|F:F3||a4||||
+ESECO|C.A4A|A|CONS|consistencia|C.A4A|955|⛔|Verificar altura en centímetros (cm).||||||||true||||3;670;955|F:F3||||a4>225||
+ESECO|C.A4B|A|CONS|consistencia|C.A4B|956|⛔|Verificar altura en centímetros (cm).||||||||true||||3;670;956|F:F3||||a4<80 & a4 !== null||
 ESECO|A5|A|P|pregunta|A5|960|✔|¿Podría decirme cuánto pesa, aproximadamente, sin zapatos ni ropa?|numero|3||Kg||||true||||3;670;960|F:F3||a5||||
+ESECO|C.A5A|A|CONS|consistencia|C.A5A|965|⛔|Verificar peso en kilos (sin gramos ni decimales).||||||||true||||3;670;965|F:F3||||a5>200||
+ESECO|C.A5B|A|CONS|consistencia|C.A5B|966|⛔|Verificar peso en kilos (sin gramos ni decimales).||||||||true||||3;670;966|F:F3||||a5<35 & a5 !== null||
 ESECO|CV|F:F3|B|bloque|CV|970|✔|Contacto con casos y viajes||||||||true||||3;970|F:F3||||||
 ESECO|CV1|CV|P|pregunta|CV1|980|✔|En los últimos dos meses, ¿estuvo en contacto con alguna persona diagnosticada de COVID-19?|opciones|||||||true||||3;970;980|F:F3||cv1||||
 ESECO|CV1/1|CV1|O|opción|1|990|✔|Sí||||||||||||3;970;980;990|F:F3||||||
