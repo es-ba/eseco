@@ -14,11 +14,11 @@ import {Bloque, BotonFormulario,
     ModoDespliegue,
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor, TEM, IdCarga, Carga, HojaDeRuta,
+    Respuestas, Valor, TEM, IdCarga, Carga, HojaDeRuta, PlainForPk, IdFin,
 } from "./tipos";
 import { dmTraerDatosFormulario, dispatchers, 
     getFuncionHabilitar, 
-    toPlainForPk 
+    toPlainForPk
 } from "./redux-formulario";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"; 
@@ -36,6 +36,7 @@ import {
     useScrollTrigger,
     createStyles, makeStyles
 } from "@material-ui/core";
+import { FormStructureState } from "row-validator";
 
 var useStyles = makeStyles((_theme: Theme) =>
     createStyles({
@@ -639,28 +640,28 @@ function FormularioDespliegue(props:{forPk:ForPk}){
     );
 }
 
-function calcularResumenVivienda(idCaso:IdCaso){
+function calcularResumenVivienda(idCaso:IdCaso, feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}){
+    //TODO GENERALIZAR
+    var feedBackVivienda = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').array();
+    var feedBackViviendaPlain = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').plain();
+    console.log('feedBackVivienda: ', feedBackViviendaPlain)
     var prioridades = {
         'con problemas':{prioridad: 1, cantidad:0},
         'incompleto':{prioridad: 2, cantidad:0},
         'vacio':{prioridad: 3, cantidad:0},
         'ok':{prioridad: 4, cantidad:0}
     }
-    var {formularios} = useSelector((state:CasoState)=>({formularios: state.estructura.formularios}));
-    var forms = likeAr(formularios).map((_infoFormulario:InfoFormulario, idFormulario: IdFormulario)=>
-        idFormulario
-    ).array();
     var min = 4
     var minResumen: 'vacio' | 'con problemas' | 'incompleto' | 'ok' = 'ok';
-    forms.forEach((formulario:IdFormulario)=>{
-        var {resumen} = useSelectorVivienda({vivienda:idCaso, formulario});    
+    for(var feedback of feedBackVivienda){
+        var resumen = feedback.resumen;
+        prioridades[resumen].cantidad++;
         if(prioridades[resumen].prioridad<min){
             min=prioridades[resumen].prioridad;
-            min=prioridades[resumen].cantidad++;
             minResumen=resumen;
         }
         minResumen = minResumen=='vacio'&& prioridades['ok'].cantidad?'incompleto':minResumen;
-    })
+    }
     return minResumen
 }
 
@@ -670,8 +671,16 @@ export function Atributo(props:{nombre:string, valor:string}){
     </span>:null
 }
 
-export function DesplegarCarga(props:{carga:Carga, idCarga:IdCarga, hdr:HojaDeRuta, mainForm:IdFormulario}){
-    const {carga, idCarga, hdr, mainForm} = props;
+export function DesplegarCarga(props:{
+    carga:Carga, 
+    idCarga:IdCarga, 
+    hdr:HojaDeRuta, 
+    mainForm:IdFormulario, 
+    feedbackRowValidator:{
+        [formulario in PlainForPk]:FormStructureState<IdVariable,IdFin> 
+    }
+}){
+    const {carga, idCarga, hdr, mainForm, feedbackRowValidator} = props;
     const dispatch = useDispatch();
     return <Paper className="carga">
         <div className="informacion-carga">
@@ -697,7 +706,7 @@ export function DesplegarCarga(props:{carga:Carga, idCarga:IdCarga, hdr:HojaDeRu
                         </TableCell>
                         <TableCell>
                             <Button
-                                resumen-vivienda={calcularResumenVivienda(idCaso)}
+                                resumen-vivienda={calcularResumenVivienda(idCaso, feedbackRowValidator)}
                                 variant="outlined"
                                 onClick={()=>{
                                     dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
@@ -729,7 +738,7 @@ export function DesplegarTem(props:{tem:TEM}){
 }
 
 export function HojaDeRutaDespliegue(){
-    var {hdr, cargas, mainForm, modo} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, cargas: state.datos.cargas, mainForm:state.estructura.mainForm, modo:state.modo}));
+    var {hdr, cargas, mainForm, modo, feedbackRowValidator} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, cargas: state.datos.cargas, mainForm:state.estructura.mainForm, modo:state.modo, feedbackRowValidator:state.feedbackRowValidator}));
     var dispatch = useDispatch();
     const updateOnlineStatus = function(){
         setOnline(window.navigator.onLine);
@@ -774,7 +783,7 @@ export function HojaDeRutaDespliegue(){
                     </Button>
                 </div>:null}
                 {likeAr(cargas).map((carga: Carga, idCarga: IdCarga)=>
-                    <DesplegarCarga carga={carga} idCarga={idCarga} hdr={hdr} mainForm={mainForm}/>
+                    <DesplegarCarga carga={carga} idCarga={idCarga} hdr={hdr} mainForm={mainForm} feedbackRowValidator={feedbackRowValidator}/>
                 ).array()}
             </div>
         </>

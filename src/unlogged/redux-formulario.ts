@@ -554,6 +554,11 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                     }
                 }
             }
+            //inicializo feedbacks
+            for(var vivienda in initialState.datos.hdr){
+                initialState=calcularFeedback(initialState, {vivienda:vivienda as IdCaso, formulario: 'F:F1' as IdFormulario});
+            }
+            
             return initialState;
         }
     }
