@@ -36,7 +36,7 @@ import {
     useScrollTrigger,
     createStyles, makeStyles
 } from "@material-ui/core";
-import { FormStructureState } from "row-validator";
+import { EstadoVariable, FormStructureState } from "row-validator";
 
 var useStyles = makeStyles((_theme: Theme) =>
     createStyles({
@@ -367,12 +367,25 @@ function PreguntaDespliegue(props:{
     feedback:FeedbackVariable|null,
     feedbackRow:{[v in IdVariable]:FeedbackVariable}|null
 }){
-    var {pregunta} = props;
+    var {pregunta, feedbackRow} = props;
     var dispatch=useDispatch();
+    var estado:EstadoVariable;
+    if(pregunta.tipovar){
+        estado=props.feedback?.estado!;
+    }else{
+        var feedback = pregunta.casilleros.reduce((pv, om)=>{
+            var fb=feedbackRow?.[om.var_name!]!
+            return {
+                tieneActual: pv.tieneActual || fb.estado=='actual',
+                estaSalteada: pv.estaSalteada && (fb.estado=='salteada' || fb.estado=='fuera_de_flujo_por_salto')
+            }
+        }, {tieneActual:false, estaSalteada:true});
+        estado=feedback.tieneActual?'actual':feedback.estaSalteada?'salteada':'todavia_no'
+    }
     return <div 
         className="pregunta" 
         nuestro-tipovar={pregunta.tipovar||"multiple"} 
-        nuestro-validator={props.feedback?.estado}
+        nuestro-validator={estado}
         ocultar-salteada={pregunta.despliegue?.includes('ocultar')?(pregunta.expresion_habilitar?'INHABILITAR':'SI'):'NO'}
         esta-inhabilitada={props.feedback?.inhabilitada?'SI':'NO'}
     >

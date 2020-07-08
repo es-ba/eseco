@@ -6,6 +6,6 @@ jefe_equipo   |false    |Jefe de Equipo
 relevador     |false    |Relevador
 dis_conceptual|false    |Diseño Conceptual
 recepcionista |false    |Recepcionista
-supervisor    |false    |Supervisor
-recuperador   |false    |Recuperador
 procesamiento |false    |Procesamiento
+jefe_lab      |false    |Jefe de laboratorio
+lab           |false    |Laboratorio
