@@ -5,6 +5,6 @@ rel_cargado    |  23 |cargado en relevador                        |false   |rele
 rel_descargado |  25 |descargado desde relevador                  |true    |relevador    |descargado
 rel_verificado |  27 |verificada la tarea del relevador           |false   |relevador    |verificado
 rel_anulado    |  29 |relevamiento anulado                        |false   |relevador    |verificado
-a_revisar      | 100 |debería ser disponible pero es un caso raro |false   |supervisor   |
+a_revisar      | 100 |debería ser disponible pero es un caso raro |false   |coor_campo   |
 fin_de_campo   | 60  |fin de campo                                |false   |coor_campo   |
 procesamiento  |  70 |procesamiento                               |false   |procesamiento|
