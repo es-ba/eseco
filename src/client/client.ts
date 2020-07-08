@@ -53,6 +53,7 @@ myOwn.clientSides.mios={
     }
 }
 
+var grid2:any;
 myOwn.wScreens.asignacion_recepcion={
     parameters:[
         {name:'area'          ,grilla:1, typeName:'integer'                  },
@@ -105,7 +106,7 @@ myOwn.wScreens.asignacion_recepcion={
             likeAr(params2).forEach(function(value:any, attrName:string){
                 fixedFieldsResult.push({fieldName: attrName, value: value});
             });
-            var grid2=my.tableGrid('tem',gridResult,{tableDef:{
+            grid2=my.tableGrid('tem',gridResult,{tableDef:{
                 title:'asignación',
                 name:'Asignación',
                 //hiddenColumns:[],

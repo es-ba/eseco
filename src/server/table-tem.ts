@@ -5,8 +5,8 @@ import {TableDefinition, TableContext} from "./types-eseco";
 export function tem(context:TableContext):TableDefinition {
     var isAdmin=context.user.rol==='admin';
     var isProcesamiento=context.user.rol==='procesamiento'
-    var isCoordinador=context.user.rol==='coordinador'
-    var isSubCoordinador=context.user.rol==='subcoordinador'
+    var isCoordinador=context.user.rol==='direccion'
+    var isSubCoordinador=context.user.rol==='coor_campo'
     var isRecepcionista=context.user.rol==='recepcionista'
     var isSupervisor=context.user.rol==='supervisor'
     
@@ -148,7 +148,7 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "date"
         },
         {
-            "name": "sincro_rec", // ó carga_sincro
+            "name": "operacion",
             editable: hasRecepcionistaPermission,
             "typeName": "text",
             options: ['cargar','descargar','retirar','anular']
@@ -157,6 +157,11 @@ export function tem(context:TableContext):TableDefinition {
             "name": "carga_observaciones",  //va??? , pareceria por carga
             editable: hasRecepcionistaPermission,
             "typeName": "text"
+        },
+        {
+            "name": "json_encuesta",
+            editable: true,  //TODO revisar permisos
+            "typeName":"jsonb"
         },
         {
             "name": "dispositivo",
