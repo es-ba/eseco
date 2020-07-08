@@ -13,14 +13,21 @@ async function traerHdr(opts:{modoDemo:boolean}){
 myOwn.wScreens.sincronizar_dm=function(){
     var mainLayout = document.getElementById('main_layout')!;
     if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
+        var caso: CasoState = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
         mainLayout.appendChild(html.p('El dispositivo tiene información cargada').create());
         var downloadButton = html.button({class:'download-dm-button'},'descargar').create();
         mainLayout.appendChild(downloadButton);
         downloadButton.onclick = async function(){
-            //TODO descargar hdr
-            
-            //traer nueva
-            await traerHdr({modoDemo:false});
+            downloadButton.disabled=true;
+            try{
+                await my.ajax.dm_descargar({datos:caso.datos});
+                //traer nueva
+                await traerHdr({modoDemo:false});
+            }catch(err){
+                alertPromise(err.message)
+            }finally{
+                downloadButton.disabled=false;
+            }
         }
     }else{
         mainLayout.appendChild(html.p('Sincronizar dispositivo').create());

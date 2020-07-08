@@ -51,6 +51,14 @@ function createStructure(context:ProcedureContext, tableName:string){
 
 type AnyObject = {[k:string]:any}
 
+function json(sql, orderby){
+    return `COALESCE((SELECT jsonb_agg(to_jsonb(j.*) ORDER BY ${orderby}) from (${sql}) as j),'[]'::jsonb)`
+}
+
+function jsono(sql, indexedby){
+    return `COALESCE((SELECT jsonb_object_agg(${indexedby},to_jsonb(j.*)) from (${sql}) as j),'{}'::jsonb)`
+}
+
 export const ProceduresEseco : ProcedureDef[] = [
     {
         action:'generar_formularios',
@@ -336,6 +344,51 @@ export const ProceduresEseco : ProcedureDef[] = [
                 [parameters.operativo, parameters.area1, parameters.area2]
             ).fetchAll();
             return res.rows;
+        }
+    },
+    {
+        action:'dm_cargar',
+        parameters:[],
+        coreFunction:async function(context: ProcedureContext, _parameters: CoreFunctionParameters){
+            var persona = null;
+            try{
+                persona = await context.client.query(
+                    `select *
+                        from personal
+                        where usuario = $1`
+                    ,
+                    [context.user.usuario]
+                ).fetchUniqueRow();
+            }catch(err){
+                throw new Error(err.message + '. Usuario no registrado en tabla personal')
+            }
+            var casos = await context.client.query(
+                `update tem
+                    set estado=$3
+                    where operativo=$1 and cod_enc = $2
+                    returning enc, json_encuesta`
+                ,
+                [OPERATIVO, persona.row.persona, 'rel_cargado']
+            ).fetchAll();
+            return {estado:"ok", casos: casos.rows}
+        }
+    },
+    {
+        action:'dm_descargar',
+        parameters:[
+            {name:'datos'       , typeName:'jsonb'},
+        ],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            await Promise.all(likeAr(parameters.datos.hdr).map(async (hdr,idCaso)=>{
+                return await context.client.query(
+                    `update tem
+                        set json_encuesta = $3
+                        where operativo= $1 and enc = $2`
+                    ,
+                    [OPERATIVO, idCaso, hdr.respuestas]
+                ).execute();
+            }).array());
+            return 'ok'
         }
     },
 ];

@@ -21,7 +21,7 @@ window.addEventListener('load', async function(){
         layout.appendChild(html.div([
             html.p('Dispositivo sin carga'), 
             //html.img({src:'img/logo-dm.png'}),
-            html.p([html.a({href:'./menu#w=sincronizar'},'Sincronizar')])
+            html.p([html.a({href:'./menu#i=encuestadores,sincronizar'},'Sincronizar')])
         ]).create());        
     }
     //}

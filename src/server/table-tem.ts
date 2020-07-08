@@ -174,7 +174,7 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "text",
             //"nullable": false
         },
-        {name:'cod_enc'       , typeName:'bigint' ,editable:false    },
+        {name:'cod_enc'       , typeName:'bigint' ,editable:isAdmin    },
         {name:'cod_recu'      , typeName:'bigint' ,editable:false    },
         {name:'cod_sup'       , typeName:'bigint' ,editable:false    },
         {name:'rea'           , typeName:'bigint' ,editable:false    },
