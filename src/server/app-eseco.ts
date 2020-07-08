@@ -17,6 +17,17 @@ import { personal_rol        } from "./table-personal_rol";
 import { permisos            } from "./table-permisos";
 import { roles_permisos      } from "./table-roles_permisos";
 
+import {tipos_estados} from "./table-tipos_estados";
+import {estados} from "./table-estados";
+import {tem} from "./table-tem";
+import {carga_tem} from "./table-carga_tem";
+import {cargas} from "./table-cargas";
+import {carga_fechas} from "./table-carga_fechas";
+import {tem_estados} from "./table-tem_estados";
+import {tem_seleccionable} from "./table-tem_seleccionable";
+
+
+
 import {defConfig} from "./def-config"
 import { FieldDefinition } from "procesamiento";
 
@@ -191,7 +202,17 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             {menuType:'menu', name:'encuestadores', menuContent:[
                 {menuType:'sincronizar_dm', name:'sincronizar_dm', label:'sincronizar'},
             ]},
+            {menuType:'menu', name:'recepcion', label:'recepción' ,menuContent:[
+                //{menuType:'carga_recepcionista', name:'cargar'},
+                {menuType:'asignacion_recepcion', name:'asignacion', label:'asignación'},
+                {menuType:'table', name:'recepcion', label:'recepción', table:'carga_fechas'},
+            ]},            
             {menuType:'menu', name:'configurar', menuContent:[
+                {menuType:'menu', name:'muestra', label:'muestra', menuContent:[
+                    {menuType:'table', name:'tem', label: 'TEM'} ,
+                    {menuType:'table', name:'personal'},
+                    {menuType:'table', name:'personal_rol'},
+                    ]},
                 {menuType:'menu', name:'metadatos', menuContent:[
                     {menuType:'table', name:'operativos'},
                     {menuType:'table', name:'formularios' , table:'casilleros_principales'},
@@ -205,8 +226,6 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {menuType:'table', name:'roles'},
                 {menuType:'table', name:'permisos'},
                 {menuType:'table', name:'roles_permisos'},
-                {menuType:'table', name:'personal'},
-                {menuType:'table', name:'personal_rol'},
             ]},
             {menuType:'proc', name:'generate_tabledef', proc:'tabledef_generate', label:'generar tablas'  },
         ]}
@@ -222,6 +241,14 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , personal_rol
             , permisos
             , roles_permisos
+            , tipos_estados
+            , estados
+            , tem
+            , tem_estados
+            , carga_tem
+            , cargas
+            , carga_fechas
+            , tem_seleccionable
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){

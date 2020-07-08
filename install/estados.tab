@@ -1,0 +1,17 @@
+estado         |orden|nombre                                      |editable|rol          |tipo_estado
+rel_disponible |  21 |disponible para asignar a relevador         |false   |relevador    |disponible
+rec_disponible |  31 |disponible para asignar a recuperador       |false   |recuperador  |disponible
+sup_disponible |  41 |disponible para asignar a supervisor        |false   |supervisor   |disponible
+rel_asignado   |  22 |asignado para relevador                     |false   |relevador    |asignado
+rec_asignado   |  32 |asignado para recuperador                   |false   |recuperador  |asignado
+sup_asignado   |  42 |asignado para supervisor                    |true    |supervisor   |asignado
+rel_cargado    |  23 |cargado en relevador                        |false   |relevador    |cargado
+rec_cargado    |  33 |cargado en recuperador                      |false   |recuperador  |cargado
+rel_descargado |  25 |descargado desde relevador                  |true    |relevador    |descargado
+rec_descargado |  35 |descargado desde recuperador                |true    |recuperador  |descargado
+rel_verificado |  27 |verificada la tarea del relevador           |false   |relevador    |verificado
+rec_verificado |  37 |verificada la tarea del recuperador         |false   |recuperador  |verificado
+sup_verificado |  49 |verificada la tarea del supervisor          |false   |supervisor   |verificado
+a_revisar      | 100 |debería ser disponible pero es un caso raro |false   |supervisor   |
+fin_de_campo   | 60  |fin de campo                                |false   |coor_campo   |
+procesamiento  |  70 |procesamiento                               |false   |procesamiento|

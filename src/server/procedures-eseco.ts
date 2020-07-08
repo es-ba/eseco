@@ -12,7 +12,7 @@ var sqlTools = require('sql-tools');
 
 var discrepances = require('discrepances');
 
-const OPERATIVO = 'eseco';
+const OPERATIVO = 'ESECO';
 const formPrincipal = 'F:F1';
 
 /*definición de estructura completa, cuando exista ing-enc hay que ponerlo ahí*/ 
@@ -315,6 +315,27 @@ export const ProceduresEseco : ProcedureDef[] = [
             }).then(function(result){
                 return result;
             })
+        }
+    },
+    {
+        action:'asignacion_recepcion',
+        parameters:[
+            {name:'operativo'        ,references:'operativos',  typeName:'text'   , defaultValue:OPERATIVO },
+            {name:'area1'                                    ,  typeName:'integer' },
+            {name:'area2'                                    ,  typeName:'integer' },
+            //TODO   areas???
+        ],
+        progress:true,
+        // bitacora:{always:true},
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            let res = await context.client.query(`
+                select *
+                  from tem
+                  where operativo=$1 and (area=$2 or area=$3)
+                  order by reserva, enc`,
+                [parameters.operativo, parameters.area1, parameters.area2]
+            ).fetchAll();
+            return res.rows;
         }
     },
 ];

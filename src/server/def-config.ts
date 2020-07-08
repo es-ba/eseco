@@ -29,6 +29,7 @@ install:
       - ../node_modules/meta-enc/install/prepare.sql
       - ../node_modules/varcal/install/wrappers.sql
       - ../node_modules/operativos/install/sql2tabla_datos.sql
+      - tem_cod_per_trg.sql      
       post-adapt: 
       - para-install.sql
       - ../node_modules/pg-triggers/lib/recreate-his.sql
@@ -45,7 +46,7 @@ install:
       - desintegrarpk.sql
       - agregar_adjunto_carto_trg
       - estados_permisos_trg.sql
-      - proximo_estado_posible.sql
+      - tem_estados_trg.sql      
 login:
   plus:
     maxAge-5-sec: 5000    
