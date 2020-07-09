@@ -160,8 +160,12 @@ function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, va
     const {opcionM} = props;
     var classes = useStyles();
     var tieneValor=props.valorActual!=null?(props.feedback.conProblema?'invalido':'valido'):'NO';
-    return <div className="multiple" nuestro-validator={props.feedback.estado} esta-inhabilitada={props.feedback?.inhabilitada?'SI':'NO'}
->
+    return <div 
+        className="multiple" 
+        nuestro-validator={props.feedback.estado} 
+        esta-inhabilitada={props.feedback?.inhabilitada?'SI':'NO'}
+        tiene-valor={tieneValor} 
+    >
         <EncabezadoDespliegue 
             casillero={opcionM} 
             verIdGuion={true} 
@@ -598,7 +602,7 @@ function BarraDeNavegacion(props:{forPk:ForPk}){
     }
     return <ButtonGroup className="barra-navegacion">
         {botonesFormulario.map(b=>
-            <Button color="inherit" variant="outlined" 
+            <Button color={b.formulario==forPk.formulario?"primary":"inherit"} variant="outlined"
                 disabled={b.formulario==forPk.formulario}
                 onClick={()=>
                 dispatch(
