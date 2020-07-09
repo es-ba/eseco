@@ -253,9 +253,6 @@ anchoNormal(ancho)
   min-width 36px
   margin-right 8px
 
-boton-id-div()
-  x-nada 1
-
 boton-id-div-invalido()
   .id-div
     .id
@@ -275,7 +272,7 @@ boton-id-div-invalido()
 
 [modo-despliegue=estricto], [modo-despliegue=relevamiento]
   [nuestro-validator=optativa_sd]
-    background-color #FFe
+    background-color #FfFff8
     color #050
   [nuestro-validator=valida]
     background-color #EEE
@@ -315,10 +312,12 @@ boton-id-div-invalido()
     background repeating-linear-gradient(45deg, #eee, #eee 10px, #f99 10px, #f99 12px)
   [esta-inhabilitada=SI]
     &[ocultar-salteada=INHABILITAR]
-      display none
+      &[tiene-valor=NO]
+        display none
   [nuestro-validator=todavia_no]
     &[ocultar-salteada=SI]
-      display none
+      &[tiene-valor=NO]
+        display none
     background-color #EEE
     color #888
   [nuestro-validator=calculada]
@@ -329,7 +328,8 @@ boton-id-div-invalido()
       font-weight bold
   [nuestro-validator=salteada]
     &[ocultar-salteada=SI]
-      display none
+      &[tiene-valor=NO]
+        display none
     background-image url("../img/fondo-salteado.png")
     background-size 32px
     background-repeat repeat

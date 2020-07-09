@@ -123,7 +123,7 @@ function OpcionDespliegue(props:{casillero:CasilleroBase, valorOpcion:number, va
                 dispatch(dispatchers.REGISTRAR_RESPUESTA({respuesta:props.valorOpcion, variable:props.variable, forPk:props.forPk}))
             }}
         >
-            <Grid container>
+            <Grid container wrap="nowrap">
                 <Grid className="id">
                     {casillero.ver_id || casillero.casillero}
                 </Grid>
@@ -159,13 +159,14 @@ function SiNoDespliegue(props:{casilleroConOpciones:IcasilleroConOpciones, forPk
 function OpcionMultipleDespliegue(props:{opcionM:OpcionMultiple, forPk:ForPk, valorActual:Valor, feedback:FeedbackVariable}){
     const {opcionM} = props;
     var classes = useStyles();
+    var tieneValor=props.valorActual!=null?(props.feedback.conProblema?'invalido':'valido'):'NO';
     return <div className="multiple" nuestro-validator={props.feedback.estado} esta-inhabilitada={props.feedback?.inhabilitada?'SI':'NO'}
 >
         <EncabezadoDespliegue 
             casillero={opcionM} 
             verIdGuion={true} 
             leer={!opcionM.despliegue?.includes('no_leer')} 
-            tieneValor={props.valorActual!=null?(props.feedback.conProblema?'invalido':'valido'):'NO'}
+            tieneValor={tieneValor}
             feedback={props.feedback}
             forPk={props.forPk}
         />
@@ -193,7 +194,6 @@ function EncabezadoDespliegue(props:{casillero:CasilleroBase, verIdGuion?:boolea
     return <div 
         className="encabezado" 
         debe-leer={props.leer?'SI':'NO'} 
-        tiene-valor={props.tieneValor} 
     >
         <div id={casillero.var_name || undefined} className="id-div"
             onClick={event=>{
@@ -370,6 +370,7 @@ function PreguntaDespliegue(props:{
     var {pregunta, feedbackRow} = props;
     var dispatch=useDispatch();
     var estado:EstadoVariable;
+    var tieneValor=props.valorActual!=null && props.feedback!=null?(props.feedback.conProblema?'invalido':'valido'):'NO';
     if(pregunta.tipovar){
         estado=props.feedback?.estado!;
     }else{
@@ -386,13 +387,14 @@ function PreguntaDespliegue(props:{
         className="pregunta" 
         nuestro-tipovar={pregunta.tipovar||"multiple"} 
         nuestro-validator={estado}
+        tiene-valor={tieneValor} 
         ocultar-salteada={pregunta.despliegue?.includes('ocultar')?(pregunta.expresion_habilitar?'INHABILITAR':'SI'):'NO'}
         esta-inhabilitada={props.feedback?.inhabilitada?'SI':'NO'}
     >
         <EncabezadoDespliegue 
             casillero={pregunta} 
             leer={!pregunta.despliegue?.includes('no_leer')}  
-            tieneValor={props.valorActual!=null && props.feedback!=null?(props.feedback.conProblema?'invalido':'valido'):'NO'}
+            tieneValor={tieneValor}
             feedback={props.feedback}
             forPk={props.forPk}
         />
@@ -815,7 +817,7 @@ export function BienvenidaDespliegue(){
         <Typography>DEMO del sistema de relevamiento de ESECO</Typography>
         <Typography>En esta demo:</Typography>
         <ListaTextos textos={[
-            "Algunas viviendas aparecen relevadas (el botón está de color) sirven para ver cómo se ve",
+            "Algunas viviendas aparecen relevadas (el botón está de color) sirven de ejemplo",
             "Lo que se carguen se guardan localmente pero no se trasmiten a la base de datos",
             "Se puede volver a la versión inicial (o sea borrar lo que se guardó localmente) desde la hoja de ruta boton [reiniciar demo]",
             "Todavía hay cosas que faltan o pueden cambiar",

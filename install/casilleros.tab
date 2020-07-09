@@ -63,7 +63,7 @@ ESECO|D2/1|D2|O|opción|1|153|✔|Una||||||||||||3;147;150;153|F:F3||||||
 ESECO|D2/2|D2|O|opción|2|154|✔|Más de una||||||||||||3;147;150;154|F:F3||||||
 ESECO|D3|D|P|pregunta|D3|151|✔|¿Cuántas?|numero|2||||||true|no_leer|||3;147;151|F:F3||d3||d2=2||
 ESECO|C.D3A|D|CONS|consistencia|C.D3A|152|⛔|Verificar la cantidad de pruebas||||||||true||||3;147;152|F:F3||||d2=2 & d3>5||
-ESECO|C.D3B|D|CONS|consistencia|C.D3B|153|⛔|La cantidad debe ser mayor a cero ||||||||true||||3;147;153|F:F3||||d2=2 & d3<=0 & d3 !== null||
+ESECO|C.D3B|D|CONS|consistencia|C.D3B|153|⛔|La cantidad debe ser mayor a cero||||||||true||||3;147;153|F:F3||||d2=2 & d3<=0 & d3 !== null||
 ESECO|D4|D|P|pregunta|D4|154|✔|¿Hace cuánto le hicieron la última prueba?|opciones|||||||true||||3;147;154|F:F3||d4||||
 ESECO|D4/1|D4|O|opción|1|1|✔|Menos de 14 días||||||||||||3;147;154;1|F:F3||||||
 ESECO|D4/2|D4|O|opción|2|2|✔|Más de 14 días ó 14 días||||||||||||3;147;154;2|F:F3||||||
@@ -217,4 +217,5 @@ ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|medio|||||
 ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true|||true|3;1710;1730|F:F3||c2||||
 ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|medio||||||true|||true|3;1710;1740|F:F3||c3||||
 ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|medio||||||true|||true|3;1710;1750|F:F3||c4||||
+ESECO|C5|C|P|pregunta|C5|1800|✔|CÓDIGO DE LA MUESTRA|texto|7||||||true|no_leer|||3;1710;1800|F:F3||c5||||
 ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no_leer||true|3;2000|F:F3||fin||||
