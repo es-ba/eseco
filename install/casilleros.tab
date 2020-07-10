@@ -1,7 +1,7 @@
 operativo|id_casillero|padre|tipoc|tipoc__denominacion|casillero|orden|ok|nombre|tipovar|longitud|tipoe|aclaracion|salto|unidad_analisis|cantidad_resumen|irrepetible|despliegue|ver_id|optativo|orden_total|ultimo_ancestro|formulario_principal|var_name|var_name_especial|expresion_habilitar|valor_ns_nc|valor_sin_dato
 ESECO|F:F1||F|formulario|F1|1|✔|Estudio de seroprevalencia COVID-19||||||viviendas||||||1|F:F1||||||
 ESECO|DV|F:F1|B|bloque|DV|100|✔|Datos de la Visita||||||||true||||1;100|F:F1||||||
-ESECO|DV1|DV|P|pregunta|DV1|110|✔|¿Puede realizar la entrevista?|si_no|||||||true||||1;100;110|F:F1||dv1||||
+ESECO|DV1|DV|P|pregunta|DV1|110|✔|¿Puede realizar la entrevista?|si_no|||||||true|no_leer|||1;100;110|F:F1||dv1||||
 ESECO|DV1/1|DV1|O|opción|1|1|✔|Sí||||||||||||1;100;110;1|F:F1||||||
 ESECO|DV1/2|DV1|O|opción|2|2|✔|No||||||||||||1;100;110;2|F:F1||||||
 ESECO|DV2|DV|P|pregunta|DV2|120|✔|Fecha de la visita|fecha|||||||true|calculada no_leer|||1;100;120|F:F1||dv2||||
@@ -20,7 +20,11 @@ ESECO|DV4|DV|P|pregunta|DV4|160|✔|¿Alguna persona de esta vivienda fue diagno
 ESECO|DV4/1|DV4|O|opción|1|1|✔|Sí||||||||||||1;100;160;1|F:F1||||||
 ESECO|DV4/2|DV4|O|opción|2|2|✔|No||||||||||||1;100;160;2|F:F1||||||
 ESECO|CC1|DV|CONS|consistencia|CC1|165|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||1;100;165|F:F1||||dv4=1||
-ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv4=2||
+ESECO|DV5|DV|P|pregunta|DV5|170|✔|¿En esta vivienda vive y está presente alguna persona de 18 años o más?|si_no|||||||true|ocultar|||1;100;170|F:F1||dv5||dv1=1||
+ESECO|DV5/1|DV5|O|opción|1|1|✔|Sí||||||||||||1;100;170;1|F:F1||||||
+ESECO|DV5/2|DV5|O|opción|2|2|✔|No||||||||||||1;100;170;2|F:F1||||||
+ESECO|CC3|DV|CONS|consistencia|CC3|175|⛔|Cuando en la vivienda no hay personas de 18 años o más se finaliza la entrevista||||||||true||||1;100;175|F:F1||||dv5=2||
+ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv5=1||
 ESECO|F:F2||F|formulario|F2|2|✔|Habitantes de la vivienda||||||viviendas||||||2|F:F2||||||
 ESECO|CP|F:F2|P|pregunta|CP|1|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;1|F:F2||cp||||
 ESECO|LN|F:F2|B|bloque|LN|10|✔|Lista de nombres||||||personas||true||||2;10|F:F2||||||
@@ -66,7 +70,7 @@ ESECO|C.D3A|D|CONS|consistencia|C.D3A|152|⛔|Verificar la cantidad de pruebas||
 ESECO|C.D3B|D|CONS|consistencia|C.D3B|153|⛔|La cantidad debe ser mayor a cero||||||||true||||3;147;153|F:F3||||d2=2 & d3<=0 & d3 !== null||
 ESECO|D4|D|P|pregunta|D4|154|✔|¿Hace cuánto le hicieron la última prueba?|opciones|||||||true||||3;147;154|F:F3||d4||||
 ESECO|D4/1|D4|O|opción|1|1|✔|Menos de 14 días||||||||||||3;147;154;1|F:F3||||||
-ESECO|D4/2|D4|O|opción|2|2|✔|Más de 14 días ó 14 días||||||||||||3;147;154;2|F:F3||||||
+ESECO|D4/2|D4|O|opción|2|2|✔|14 días o más||||||||||||3;147;154;2|F:F3||||||
 ESECO|D5|D|P|pregunta|D5|155|✔|¿Cuál fue el resultado de la última prueba?|opciones|||||||true|ocultar|||3;147;155|F:F3||d5||d4!=1||
 ESECO|D5/1|D5|O|opción|1|1|✔|Positivo||||||||||||3;147;155;1|F:F3||||d4 != 1||
 ESECO|D5/2|D5|O|opción|2|2|✔|Negativo||||||||||||3;147;155;2|F:F3||||||
@@ -75,7 +79,7 @@ ESECO|D5C|D|P|pregunta|D5C|156|✔|¿Cuál fue el resultado de la última prueba
 ESECO|D5C/1|D5C|O|opción|1|1|✔|Positivo|||||FIN|||||||3;147;156;1|F:F3||||||
 ESECO|D5C/2|D5C|O|opción|2|2|✔|Negativo||||||||||||3;147;156;2|F:F3||||||
 ESECO|D5C/9|D5C|O|opción|9|9|✔|No sabe||||||||||||3;147;156;9|F:F3||||||
-ESECO|CC2|D|CONS|consistencia|CC2|161|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||3;147;161|F:F3||||d5c=1 & d4=1||
+ESECO|CC4|D|CONS|consistencia|CC4|161|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||3;147;161|F:F3||||d5c=1 & d4=1||
 ESECO|D6|D|P|pregunta|D6|166|✔|En los últimos dos meses, ¿tuvo alguno de los siguientes síntomas...||||||||true||||3;147;166|F:F3||||||
 ESECO|D6/1|D6|OM|opción múltiple|1|157|✔|fiebre?|si_no|||||||||||3;147;166;157|F:F3||d6_1||||
 ESECO|D6/1/1|D6/1|O|opción|1|158|✔|Sí||||||||||||3;147;166;157;158|F:F3||||||
@@ -200,8 +204,8 @@ ESECO|E2/1|E2|O|opción|1|1550|✔|DNI argentino|||||E6|||||||3;1520;1540;1550|F
 ESECO|E2/2|E2|O|opción|2|1560|✔|Documento extranjero|||||E4|||||||3;1520;1540;1560|F:F3||||||
 ESECO|E2/3|E2|O|opción|3|1570|✔|No tiene documento|||||C1|||||||3;1520;1540;1570|F:F3||||||
 ESECO|E2/4|E2|O|opción|4|1580|✔|Otro||||||||||||3;1520;1540;1580|F:F3||||||
-ESECO|E3|E|P|pregunta|E3|1590|✔|¿Cuál?|texto|||||||true|no_leer|||3;1520;1590|F:F3||e3||||
-ESECO|E4|E|P|pregunta|E4|1600|✔|País emisor del documento|opciones|||||||true|no_leer|||3;1520;1600|F:F3||e4||||
+ESECO|E3|E|P|pregunta|E3|1590|✔|¿Cuál?|texto|||||||true|no_leer ocultar|||3;1520;1590|F:F3||e3||||
+ESECO|E4|E|P|pregunta|E4|1600|✔|País emisor del documento|opciones|||||||true|no_leer ocultar|||3;1520;1600|F:F3||e4||||
 ESECO|E4/1|E4|O|opción|1|1610|✔|Uruguay||||||||||||3;1520;1600;1610|F:F3||||||
 ESECO|E4/2|E4|O|opción|2|1620|✔|Paraguay||||||||||||3;1520;1600;1620|F:F3||||||
 ESECO|E4/3|E4|O|opción|3|1630|✔|Brasil||||||||||||3;1520;1600;1630|F:F3||||||
@@ -210,7 +214,7 @@ ESECO|E4/5|E4|O|opción|5|1650|✔|Chile||||||||||||3;1520;1600;1650|F:F3||||||
 ESECO|E4/6|E4|O|opción|6|1660|✔|Perú||||||||||||3;1520;1600;1660|F:F3||||||
 ESECO|E4/7|E4|O|opción|7|1670|✔|Venezuela||||||||||||3;1520;1600;1670|F:F3||||||
 ESECO|E4/8|E4|O|opción|8|1680|✔|Otro (especificar)||||||||||||3;1520;1600;1680|F:F3||||||
-ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no_leer|||3;1520;1690|F:F3||e5||e4=8||
+ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no_leer ocultar|||3;1520;1690|F:F3||e5||e4=8||
 ESECO|E6|E|P|pregunta|E6|1700|✔|Número|texto|medio||||||true|no_leer|||3;1520;1700|F:F3||e6||||
 ESECO|C|F:F3|B|bloque|C|1710|✔|Datos de contacto del entrevistado||||||||true||||3;1710|F:F3||||||
 ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|medio||||||true|||true|3;1710;1720|F:F3||c1||||
