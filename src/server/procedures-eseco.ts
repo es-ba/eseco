@@ -416,6 +416,25 @@ export const ProceduresEseco : ProcedureDef[] = [
             return 'ok'
         }
     },
+    {
+        action:'qrs_traer',
+        parameters:[],
+        coreFunction:async function(context: ProcedureContext, _parameters: CoreFunctionParameters){
+            var etiquetas=[];
+            const DGEyC = "DGEyC";
+            const OPERATIVO = "ESECO201";
+            for(var i=0; i<=9;i++){
+                etiquetas.push(
+                    {
+                        dgeyc: DGEyC,
+                        operativo: OPERATIVO,
+                        numero: "1234-5"+i.toString();               
+                    }
+                );
+            }
+            return {etiquetas}
+        }
+    },
 ];
 
 //TODO: HACER MAQUINA DE ESTADOS

@@ -1,7 +1,8 @@
 import {html} from "js-to-html";
 import * as myOwn from "myOwn";
 import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario} from "../unlogged/redux-formulario";
-import { CasoState } from "../unlogged/tipos";
+import { CasoState, EtiquetaOpts } from "../unlogged/tipos";
+import { crearEtiqueta } from "./unlogged/generador-qr";
 
 
 async function traerHdr(opts:{modoDemo:boolean}){
@@ -38,6 +39,27 @@ myOwn.wScreens.sincronizar_dm=function(){
             await traerHdr({modoDemo:false});
         }
     }
+};
+
+myOwn.wScreens.generar_qrs=function(){
+    var mainLayout = document.getElementById('main_layout')!;
+    var generarQrButton = html.button({class:'download-dm-button'},'generar').create();
+    mainLayout.appendChild(generarQrButton);
+    generarQrButton.onclick = async function(){
+        generarQrButton.disabled=true;
+        try{
+            var result = await my.ajax.qrs_traer({});
+            for(let etiqueta of result.etiquetas){
+                let etiquetaDiv = await crearEtiqueta(etiqueta, 128);
+                mainLayout.appendChild(etiquetaDiv);
+            }
+        }catch(err){
+            alertPromise(err.message)
+        }finally{
+            generarQrButton.disabled=false;
+        }
+    }
+    
 };
 
 myOwn.wScreens.demo=function(){

@@ -1,0 +1,38 @@
+//import * as QRCode from 'qrcode';
+import {html, HtmlTag} from "js-to-html";
+import { EtiquetaOpts } from "./tipos";
+
+async function crearQr(text:string, width:number ):Promise<HTMLImageElement>{
+    //@ts-ignore // QRCode es una funcion global
+    var src = await QRCode.toDataURL(text,{width:width})
+    var img = html.img({id:'imagen-qr', src}).create();
+    return img;
+}
+
+export async function crearEtiqueta(etiquetaOpts:EtiquetaOpts, width:number ):Promise<HTMLDivElement>{
+    var qrImg = await crearQr(etiquetaOpts.dgeyc+'-'+etiquetaOpts.operativo+'-'+etiquetaOpts.numero, width);
+    var div = html.div({class:'etiqueta'},[
+        html.div({class:'columna'},[
+            html.div({class:'codigo-qr'},[
+                qrImg
+            ]),
+        ]),
+        html.div({class:'columna'},[
+            html.div({class:'logo-estadistica'},[
+                html.img({src:'img/logo_etiqueta.jpg'}),
+            ]),
+            html.div({class:'texto-codigo'},[
+                etiquetaOpts.numero
+            ]),
+        ]),
+        html.div({class:'columna'},[
+            html.div({class:'logo-eseco'},[
+                html.img({src:'img/eseco_etiqueta.jpg'}),
+            ]),
+            html.div({class:'logo-ba'},[
+                html.img({src:'img/ba_etiqueta.jpg'}),
+            ]),
+        ]),
+    ]).create();
+    return div
+}

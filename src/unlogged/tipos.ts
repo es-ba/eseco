@@ -244,3 +244,8 @@ export type CasoState={
     }
 }
 
+export type EtiquetaOpts={
+    dgeyc: string,
+    operativo: string,
+    numero: string
+}

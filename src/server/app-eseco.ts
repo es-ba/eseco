@@ -16,6 +16,7 @@ import { personal            } from "./table-personal";
 import { personal_rol        } from "./table-personal_rol";
 import { permisos            } from "./table-permisos";
 import { roles_permisos      } from "./table-roles_permisos";
+import { parametros } from "./table-parametros";
 
 import {tipos_estados} from "./table-tipos_estados";
 import {estados} from "./table-estados";
@@ -164,15 +165,18 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             { type: 'js', module: 'redux', modPath:'../dist', fileDevelopment:'redux.js', file:'redux.min.js' },
             { type: 'js', module: 'react-redux', modPath:'../dist', fileDevelopment:'react-redux.js', file:'react-redux.min.js' },
             { type: 'js', module: 'memoize-one',  file:'memoize-one.js' },
+            { type: 'js', module: 'qrcode', modPath: '../build', file: 'qrcode.js'},
             ...super.clientIncludes(req, opts).filter(m=>m.file!='formularios.css'),
             { type: 'js', module: 'redux-typed-reducer', modPath:'../dist', file:'redux-typed-reducer.js' },
             { type: 'js', src: 'adapt.js' },
             { type: 'js', src: 'tipos.js' },
+            { type: 'js', src: 'generador-qr.js' },
             { type: 'js', src: 'redux-formulario.js' },
             { type: 'js', src: 'render-general.js' },
             { type: 'js', src: 'render-formulario.js' },
             { type: 'css', file: 'menu.css' },
             { type: 'css', file: 'formulario-react.css' },
+            { type: 'css', file: 'etiquetas-qr.css' },
             ... menuedResources
         ]
         // .map(m=>({...m, file:m.fileDevelopment||m.file}));
@@ -224,6 +228,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'tipoc'       , label:'tipos de celdas'},
                     {menuType:'table', name:'tipoc_tipoc' , label:'inclusiones de celdas'},
                 ]},
+                {menuType:'table', name:'parametros'},
+                {menuType:'generar_qrs', name:'generar qrs', label:'generar qr'},
             ]},
             {menuType:'menu', name:'usuarios', menuContent:[
                 {menuType:'table', name:'usuarios'},
@@ -255,6 +261,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , cargas
             , carga_fechas
             , tem_seleccionable
+            , parametros
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
