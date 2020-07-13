@@ -192,11 +192,11 @@ ESECO|T2/7/2|T2/7|O|opción|2|2|✔|No||||||||||||3;1200;1210;1310;2|F:F3||||||
 ESECO|T2/8|T2|OM|opción múltiple|8|1320|✔|En otros sectores|si_no|||||||||||3;1200;1210;1320|F:F3||t2_8||t8>0 OR t10<>2||
 ESECO|T2/8/1|T2/8|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1320;1|F:F3||||||
 ESECO|T2/8/2|T2/8|O|opción|2|2|✔|No||||||||||||3;1200;1210;1320;2|F:F3||||||
+ESECO|C.T2|T|CONS|consistencia|C.T2|1405|⛔|Si en T1 dice que trabajó en la modalidad presencial, en T2 debería indicar al menos una respuesta positiva||||||||true||||3;1200;1405|F:F3||||t1=1 & t2_1=2 & t2_2=2 & t2_3=2 & t2_4=2 & t2_5=2 & t2_6=2 & t2_7=2 & t2_8=2||
 ESECO|T3|T|P|pregunta|T3|1410|✔|¿Cuántas horas semanales trabaja?|opciones|||||||true||||3;1200;1410|F:F3||t3||||
 ESECO|T3/1|T3|O|opción|1|1420|✔|Hasta 34 horas|||||||||no_leer|||3;1200;1410;1420|F:F3||||||
 ESECO|T3/2|T3|O|opción|2|1430|✔|Entre 35 y 45 horas|||||||||no_leer|||3;1200;1410;1430|F:F3||||||
 ESECO|T3/3|T3|O|opción|3|1440|✔|Más de 45 horas|||||||||no_leer|||3;1200;1410;1440|F:F3||||||
-ESECO|C.T2|T|CONS|consistencia|C.T2|1415|⛔|Si en T1 dice que trabajó en la modalidad presencial, en T2 debería indicar al menos una respuesta positiva||||||||true||||3;1200;1415|F:F3||||t1=1 & t2_1=2 & t2_2=2 & t2_3=2 & t2_4=2 & t2_5=2 & t2_6=2 & t2_7=2 & t2_8=2||
 ESECO|E|F:F3|B|bloque|E|1520|✔|Datos del entrevistado para devolución de resultados y supervisión||||Los datos del entrevistado/a se deben copiar de un original, fotocopia o App||||true||||3;1520|F:F3||||||
 ESECO|E1|E|P|pregunta|E1|1530|✔|Apellido y nombre|texto|||||||true|no_leer|||3;1520;1530|F:F3||e1||||
 ESECO|E2|E|P|pregunta|E2|1540|✔|Tipo de documentación identificatoria|opciones|||||||true|no_leer|||3;1520;1540|F:F3||e2||||
