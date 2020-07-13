@@ -141,7 +141,7 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
     }
     if(respuestas.cp>MAXCP) respuestas.cp=MAXCP;
     if(respuestas.cp<respuestas.personas.length){
-        respuestas.personas=respuestas.personas.filter(p=>p.p1||p.p2||p.p3||p.p4);
+        respuestas.personas=respuestas.personas.filter(p=>p.p1||p.p3);
     }
     if(respuestas.cp>respuestas.personas.length){
         while(respuestas.cp>respuestas.personas.length){
