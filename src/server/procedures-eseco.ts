@@ -6,6 +6,7 @@ import * as likeAr from "like-ar";
 export * from "./types-eseco";
 
 var changing = require('best-globals').changing;
+var datetime = require('best-globals').datetime;
 var fs = require('fs-extra');
 var path = require('path');
 var sqlTools = require('sql-tools');
@@ -13,6 +14,7 @@ var sqlTools = require('sql-tools');
 var discrepances = require('discrepances');
 
 const OPERATIVO = 'ESECO';
+const OPERATIVO_ETIQUETAS = 'ESECO201';
 const formPrincipal = 'F:F1';
 
 /*definición de estructura completa, cuando exista ing-enc hay que ponerlo ahí*/ 
@@ -380,12 +382,12 @@ export const ProceduresEseco : ProcedureDef[] = [
                 persona = await context.client.query(
                     `select *
                         from personal
-                        where usuario = $1`
+                        where usuario = $1 and activo`
                     ,
                     [context.user.usuario]
                 ).fetchUniqueRow();
             }catch(err){
-                throw new Error(err.message + '. Usuario no registrado en tabla personal')
+                throw new Error(err.message + '. Usuario no registrado o inactivo en tabla personal')
             }
             var casos = await context.client.query(
                 `update tem
@@ -434,6 +436,56 @@ export const ProceduresEseco : ProcedureDef[] = [
                 );
             }
             return {etiquetas}
+        }
+    },
+    {
+        action:'resultado_cargar',
+        parameters:[
+            {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
+            {name:'etiqueta'       , typeName: 'text' },
+            {name:'resultado'      , typeName: 'text' },
+            {name:'observaciones'  , typeName: 'text' },
+        ],
+        roles:['lab','jefe_lab'],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var persona = await context.client.query(
+                `select *
+                    from personal
+                    where usuario = $1 and activo`
+                ,
+                [context.user.usuario]
+            ).fetchOneRowIfExists();
+            if(persona.rowCount === 0){
+                throw new Error('No se encuentra el usuario en personal o el mismo se encuentra inactivo.');
+            }
+            var result = await context.client.query(
+                `select * 
+                    from etiquetas where etiqueta = $1`,
+                [parameters.etiqueta]
+            ).fetchOneRowIfExists();
+            if (result.rowCount === 0){
+                throw new Error('No se encuentra la etiqueta ingresada.');
+            }else{
+                if(result.row.resultado){
+                    throw new Error('Ya hay un resultado cargado para la etiqueta ingresada.');
+                }else{
+                    await context.client.query(
+                        `update etiquetas 
+                            set resultado = $2, observaciones = $3, fecha = current_date, 
+                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4
+                            where etiqueta = $1`,
+                        [parameters.etiqueta, parameters.resultado, parameters.observaciones, persona.row.persona]
+                    ).execute();
+                }
+                var tem = await context.client.query(
+                    `select * 
+                        from tem
+                        where etiqueta = $1`,
+                    [parameters.etiqueta]
+                ).fetchOneRowIfExists();
+                //TODO DEVOLVER DATOS DE LA TEM SI HAY
+                return 'ok, falta traer los datos de la tem si es que se encuentra algo';
+            }
         }
     },
 ];

@@ -210,6 +210,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             {menuType:'menu', name:'encuestadores', menuContent:[
                 {menuType:'sincronizar_dm', name:'sincronizar_dm', label:'sincronizar'},
             ]},
+            {menuType:'menu', name:'laboratorio', menuContent:[
+                {menuType:'table', name:'etiquetas', table:'etiquetas'},
+                {menuType:'proc', name:'resultado_cargar', proc:'resultado_cargar', label:'carga resultado'},
+            ]},
             {menuType:'menu', name:'recepcion', label:'recepción' ,menuContent:[
                 //{menuType:'carga_recepcionista', name:'cargar'},
                 {menuType:'asignacion_recepcion', name:'asignacion', label:'asignación'},
