@@ -7,7 +7,7 @@ export function etiquetas(context:TableContext):TableDefinition {
     return {
         name:'etiquetas',
         elementName:'etiqueta',
-        editable:false,
+        editable:admin,
         fields:[
             {name:'operativo'        , typeName:'text'      , nullable:false, defaultValue:'ESECO201'  },
             {name:'etiqueta'         , typeName:'text'      , nullable:false  },
