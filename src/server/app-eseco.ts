@@ -16,18 +16,20 @@ import { personal            } from "./table-personal";
 import { personal_rol        } from "./table-personal_rol";
 import { permisos            } from "./table-permisos";
 import { roles_permisos      } from "./table-roles_permisos";
-import { parametros } from "./table-parametros";
+import { parametros          } from "./table-parametros";
 
-import {tipos_estados} from "./table-tipos_estados";
-import {estados} from "./table-estados";
-import {tem} from "./table-tem";
-import {carga_tem} from "./table-carga_tem";
-import {cargas} from "./table-cargas";
-import {carga_fechas} from "./table-carga_fechas";
-import {tem_estados} from "./table-tem_estados";
-import {tem_seleccionable} from "./table-tem_seleccionable";
-import {lotes} from "./table-lotes";
-import {semanas} from "./table-semanas";
+import {tipos_estados        } from "./table-tipos_estados";
+import {estados              } from "./table-estados";
+import {tem                  } from "./table-tem";
+import {carga_tem            } from "./table-carga_tem";
+import {cargas               } from "./table-cargas";
+import {carga_fechas         } from "./table-carga_fechas";
+import {tem_estados          } from "./table-tem_estados";
+import {tem_seleccionable    } from "./table-tem_seleccionable";
+import {lotes                } from "./table-lotes";
+import {semanas              } from "./table-semanas";
+import { planchas            } from './table-planchas';
+import { etiquetas           } from './table-etiquetas';
 
 
 
@@ -229,7 +231,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'tipoc_tipoc' , label:'inclusiones de celdas'},
                 ]},
                 {menuType:'table', name:'parametros'},
-                {menuType:'generar_qrs', name:'generar qrs', label:'generar qr'},
+                {menuType:'proc', name:'g_qrs', proc:'qrs_traer', label:'etiquetas qr'},
             ]},
             {menuType:'menu', name:'usuarios', menuContent:[
                 {menuType:'table', name:'usuarios'},
@@ -262,6 +264,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , carga_fechas
             , tem_seleccionable
             , parametros
+            , planchas
+            , etiquetas
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){

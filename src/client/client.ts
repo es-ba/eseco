@@ -41,26 +41,18 @@ myOwn.wScreens.sincronizar_dm=function(){
     }
 };
 
-myOwn.wScreens.generar_qrs=function(){
-    var mainLayout = document.getElementById('main_layout')!;
-    var generarQrButton = html.button({class:'download-dm-button'},'generar').create();
-    mainLayout.appendChild(generarQrButton);
-    generarQrButton.onclick = async function(){
-        generarQrButton.disabled=true;
-        try{
-            var result = await my.ajax.qrs_traer({});
-            for(let etiqueta of result.etiquetas){
-                let etiquetaDiv = await crearEtiqueta(etiqueta, 128);
-                mainLayout.appendChild(etiquetaDiv);
-            }
-        }catch(err){
-            alertPromise(err.message)
-        }finally{
-            generarQrButton.disabled=false;
-        }
+type Etiquetas = {
+    dgeyc: string,
+    operativo: string,
+    numero: string               
+}
+
+myOwn.wScreens.proc.result.qrs_traer = async (result:{etiquetas:Etiquetas[]}, divResult:HTMLDivElement)=>{
+    for(let etiqueta of result.etiquetas){
+        let etiquetaDiv = await crearEtiqueta(etiqueta, 128);
+        divResult.appendChild(etiquetaDiv);
     }
-    
-};
+}
 
 myOwn.wScreens.demo=function(){
     window.desplegarFormularioActual({modoDemo:true});

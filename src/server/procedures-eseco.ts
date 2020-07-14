@@ -418,6 +418,7 @@ export const ProceduresEseco : ProcedureDef[] = [
     },
     {
         action:'qrs_traer',
+        resultOk:'qrs_traer',
         parameters:[],
         coreFunction:async function(context: ProcedureContext, _parameters: CoreFunctionParameters){
             var etiquetas=[];
@@ -428,7 +429,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                     {
                         dgeyc: DGEyC,
                         operativo: OPERATIVO,
-                        numero: "1234-5"+i.toString();               
+                        numero: "1234-5"+i.toString()             
                     }
                 );
             }
