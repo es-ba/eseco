@@ -9,9 +9,9 @@ ESECO|DV3|DV|P|pregunta|DV3|130|✔|¿Por qué motivo no pudo realizar la entrev
 ESECO|DV3/1|DV3|O|opción|1|1|✔|La vivienda está deshabitada||||||||||||1;100;130;1|F:F1||||||
 ESECO|DV3/2|DV3|O|opción|2|2|✔|La vivienda está demolida||||||||||||1;100;130;2|F:F1||||||
 ESECO|DV3/3|DV3|O|opción|3|3|✔|La vivienda se usa solo los fines de semana o muy esporádicamente||||||||||||1;100;130;3|F:F1||||||
-ESECO|DV3/4|DV3|O|opción|4|4|✔|La vivienda está en construcción y allí no vivie nadie||||||||||||1;100;130;4|F:F1||||||
+ESECO|DV3/4|DV3|O|opción|4|4|✔|La vivienda está en construcción y allí no vive nadie||||||||||||1;100;130;4|F:F1||||||
 ESECO|DV3/5|DV3|O|opción|5|5|✔|La vivienda se usa como establecimiento y no tiene uso residencial||||||||||||1;100;130;5|F:F1||||||
-ESECO|DV3/6|DV3|O|opción|6|6|✔|En la dirección de referencia no se encuetra la vivienda especificada||||||||||||1;100;130;6|F:F1||||||
+ESECO|DV3/6|DV3|O|opción|6|6|✔|En la dirección de referencia no se encuentra la vivienda especificada||||||||||||1;100;130;6|F:F1||||||
 ESECO|DV3/7|DV3|O|opción|7|7|✔|Los habitantes de la vivienda están ausentes||||||||||||1;100;130;7|F:F1||||||
 ESECO|DV3/8|DV3|O|opción|8|8|✔|Los habitantes de la vivienda rechazan ser entrevistados||||||||||||1;100;130;8|F:F1||||||
 ESECO|DV3/9|DV3|O|opción|9|9|✔|Otras causas||||||||||||1;100;130;9|F:F1||||||
