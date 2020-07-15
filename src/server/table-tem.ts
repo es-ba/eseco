@@ -359,10 +359,10 @@ export function tem(context:TableContext):TableDefinition {
         isReferable:true,
         from:`
             (select *, null telefonos, null seleccionado
-               -- nullif((select string_agg(CASE when telefono_fijo is not null then 'h'||hogar || ' tel: '|| telefono_fijo else '' end || CASE when telefono_movil is not null then ',h'||hogar ||  ' cel: '|| telefono_movil else '' end, ' | ') from hogares where operativo= t.operativo and enc=t.enc group by operativo, enc),'') as telefonos,
-               -- nullif((select string_agg('h'||hogar || ' ' || ti2,', ') from personas where operativo= t.operativo and enc=t.enc group by operativo, enc),'')as seleccionado 
-               left join etiquetas using(etiqueta)
+               -- nullif((select string_agg(CASE when telefono_fijo is not null then 'h'||hogar || ' tel: '|| telefono_fijo else '' end || CASE when telefono_movil is not null then ',h'||hogar ||  ' cel: '|| telefono_movil else '' end, ' | ') from hogares where t.operativo= t.operativo and enc=t.enc group by operativo, enc),'') as telefonos,
+               -- nullif((select string_agg('h'||hogar || ' ' || ti2,', ') from personas where operativo= operativo and enc=t.enc group by operativo, enc),'')as seleccionado 
                 from tem t
+                
             )
         `, 
         postCreateSqls:`

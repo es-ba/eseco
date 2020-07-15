@@ -17,6 +17,7 @@ export function etiquetas(context:TableContext):TableDefinition {
             {name:'hora'             , typeName:'interval'  },
             {name:'laboratorista'    , typeName:'integer'   },
             {name:'observaciones'    , typeName:'text'      },
+            {name:'rectificacion'    , typeName:'integer', defaultDbValue: 0},
         ],
         primaryKey:['etiqueta'],
         foreignKeys:[

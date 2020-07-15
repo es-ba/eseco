@@ -54,6 +54,51 @@ myOwn.wScreens.proc.result.qrs_traer = async (result:{etiquetas:Etiquetas[]}, di
     }
 }
 
+function mostrarDatosPersona(hayDatos:boolean, datos:any, divResult:HTMLDivElement){
+    divResult.appendChild(
+        hayDatos?
+            html.div({class:'datos-persona-cargada'},[
+                html.h4("datos persona"),
+                html.div([
+                    html.div('Apellido: '+ datos.apellido),
+                    html.div('Nombres: '+ datos.nombres),
+                    html.div('Tipo documento: '+ datos.tipoDocumento),
+                    html.div('TipoDocumentoEspecificado: '+ datos.tipoDocumentoEspecificado),
+                    html.div('PaisDocumento: '+ datos.paisDocumento),
+                    html.div('PaisDocumentoEspecificado: '+ datos.paisDocumentoEspecificado),
+                    html.div('Nº Documento: '+ datos.documento),
+                    html.div('Cel.: '+ datos.celular),
+                    html.div('Email: '+ datos.email),
+                    html.div('Tel. alternativo: '+ datos.telefonoAlternativo),
+                    html.div('Observaciones: '+ datos.observaciones),
+                ])
+            ]).create()
+        :
+            html.p("No se encontró una encuesta para la etiqueta cargada").create()
+    )
+}
+
+myOwn.wScreens.proc.result.resultado_cargar = async (result:{estado:'ok'|'tenia', hayDatos:boolean, datos:any}, divResult:HTMLDivElement)=>{
+    divResult.removeAttribute("style");
+    divResult.setAttribute('resultado-cargar',result.estado);
+    divResult.appendChild(
+        html.h2({class:result.estado}, result.estado=="ok"?
+            "El resultado se cargó correctamente."
+        :
+            "No se cargó el resultado ya que fue cargado anteriormente. Rectifique si desea modificalo."
+        ).create()
+    )
+    mostrarDatosPersona(result.hayDatos, result.datos, divResult);
+}
+myOwn.wScreens.proc.result.resultado_rectificar = async (result:{estado:'ok', hayDatos:boolean, datos:any}, divResult:HTMLDivElement)=>{
+    divResult.removeAttribute("style");
+    divResult.setAttribute('resultado-rectificar',result.estado);
+    divResult.appendChild(
+        html.h2({class:result.estado},"El resultado se rectificó correctamente.").create()
+    )
+    mostrarDatosPersona(result.hayDatos, result.datos, divResult);
+}
+
 myOwn.wScreens.demo=function(){
     window.desplegarFormularioActual({modoDemo:true});
 }

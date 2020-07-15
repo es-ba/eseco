@@ -1,3 +1,4 @@
 usuario|rol      |activo|nombre|apellido|telefono|interno|mail|mail_alternativo|md5clave
 bob    |admin    |true  |||||||6bdb73cceeff578319840176854246e5
 prueba |relevador|true  |||||||f3fb77a2667c130185a7098c14bd606c
+lab |lab|true  |||||||db0b959c6adf3b396f1cc9770ab0b949

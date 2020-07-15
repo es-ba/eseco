@@ -216,7 +216,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             }
             if(context.puede.lab_resultado.editar){
                 menuContent.push(
-                    {menuType:'proc', name:'resultado_rectificar', proc:'resultado_cargar', label:'rectificar resultado'},
+                    {menuType:'proc', name:'resultado_rectificar', proc:'resultado_rectificar', label:'rectificar resultado'},
                 )
             }
             menu = [ ...menu, 

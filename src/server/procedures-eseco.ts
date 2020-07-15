@@ -406,13 +406,15 @@ export const ProceduresEseco : ProcedureDef[] = [
             {name:'datos'       , typeName:'jsonb'},
         ],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var be=context.be;
             await Promise.all(likeAr(parameters.datos.hdr).map(async (hdr,idCaso)=>{
+                var etiqueta = (hdr.respuestas?.c5)?hdr.respuestas.c5:null;
                 return await context.client.query(
                     `update tem
-                        set json_encuesta = $3
+                        set json_encuesta = $3, etiqueta = $4
                         where operativo= $1 and enc = $2`
                     ,
-                    [OPERATIVO, idCaso, hdr.respuestas]
+                    [OPERATIVO, idCaso, hdr.respuestas, etiqueta]
                 ).execute();
             }).array());
             return 'ok'
@@ -439,13 +441,12 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
     {
-        action:'resultado_cargar',
+        action:'etiqueta_verificar',
         parameters:[
             {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
-            {name:'etiqueta'       , typeName: 'text' },
-            {name:'resultado'      , typeName: 'text' },
-            {name:'observaciones'  , typeName: 'text' },
+            {name:'etiqueta'       , typeName: 'text' }
         ],
+        resultOk:'resultado_cargar',
         roles:['lab','jefe_lab'],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var persona = await context.client.query(
@@ -465,27 +466,109 @@ export const ProceduresEseco : ProcedureDef[] = [
             ).fetchOneRowIfExists();
             if (result.rowCount === 0){
                 throw new Error('No se encuentra la etiqueta ingresada.');
-            }else{
-                if(result.row.resultado){
-                    throw new Error('Ya hay un resultado cargado para la etiqueta ingresada.');
-                }else{
-                    await context.client.query(
-                        `update etiquetas 
-                            set resultado = $2, observaciones = $3, fecha = current_date, 
-                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4
-                            where etiqueta = $1`,
-                        [parameters.etiqueta, parameters.resultado, parameters.observaciones, persona.row.persona]
-                    ).execute();
-                }
-                var tem = await context.client.query(
-                    `select * 
-                        from tem
-                        where etiqueta = $1`,
-                    [parameters.etiqueta]
-                ).fetchOneRowIfExists();
-                //TODO DEVOLVER DATOS DE LA TEM SI HAY
-                return 'ok, falta traer los datos de la tem si es que se encuentra algo';
             }
+            return {etiqueta:result.row, persona: persona.row};
+        }
+    },
+    {
+        action:'datos_tem_traer',
+        parameters:[
+            {name:'etiqueta'       , typeName: 'text' }
+        ],
+        resultOk:'resultado_cargar',
+        roles:['lab','jefe_lab'],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var tem = await context.client.query(
+                `select * 
+                    from tem
+                    where etiqueta = $1`,
+                [parameters.etiqueta]
+            ).fetchOneRowIfExists();
+            var datos = null;
+            var hayDatos= tem.rowCount != 0;
+            if(hayDatos){
+                datos = {
+                    apellido: tem.row.json_encuesta.e1,
+                    nombres: tem.row.json_encuesta.e2,
+                    tipoDocumento: tem.row.json_encuesta.e3,
+                    tipoDocumentoEspecificado: tem.row.json_encuesta.e4,
+                    paisDocumento: tem.row.json_encuesta.e5,
+                    paisDocumentoEspecificado: tem.row.json_encuesta.e6,
+                    documento: tem.row.json_encuesta.e7,
+                    celular: tem.row.json_encuesta.c1,
+                    email: tem.row.json_encuesta.c2,
+                    numLineaVivienda: tem.row.json_encuesta.c3,
+                    telefonoAlternativo: tem.row.json_encuesta.c4,
+                    observaciones: tem.row.json_encuesta.fin,
+                    
+                }
+            }
+            return {hayDatos, datos}
+        }
+    },
+    {
+        action:'resultado_cargar',
+        parameters:[
+            {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
+            {name:'etiqueta'       , typeName: 'text' },
+            {name:'resultado'      , typeName: 'text' },
+            {name:'observaciones'  , typeName: 'text' },
+        ],
+        resultOk:'resultado_cargar',
+        roles:['lab','jefe_lab'],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var be = context.be;
+            var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
+            var estado;
+            if(etiqueta.resultado){
+                estado = 'tenia';
+            }else{
+                estado = 'ok';
+                await context.client.query(
+                    `update etiquetas 
+                        set resultado = $2, observaciones = $3, fecha = current_date, 
+                        hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4
+                        where etiqueta = $1`,
+                    [parameters.etiqueta, parameters.resultado, parameters.observaciones, persona.persona]
+                ).execute();
+            }
+            var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
+            return {estado, hayDatos, datos}
+        }
+    },
+    {
+        action:'resultado_rectificar',
+        parameters:[
+            {name:'operativo'             , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
+            {name:'etiqueta'              , typeName: 'text'    },
+            {name:'resultado'             , typeName: 'text'    },
+            {name:'observaciones'         , typeName: 'text'    },
+            {name:'numero_rectificacion'  , typeName: 'integer' },
+        ],
+        resultOk:'resultado_rectificar',
+        roles:['lab','jefe_lab'],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var be = context.be;
+            var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
+            var estado;
+            estado = 'ok';
+            try{
+                await context.client.query(
+                    `update etiquetas 
+                        set resultado = $2, observaciones = $3, fecha = current_date, rectificacion = $6,
+                        hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4
+                        where etiqueta = $1 and rectificacion + 1 = $5
+                    returning *`,
+                    [
+                        parameters.etiqueta, parameters.resultado, parameters.observaciones, 
+                        persona.persona, parameters.numero_rectificacion, parameters.numero_rectificacion
+                    ]
+                ).fetchUniqueRow();
+            }catch(err){
+                throw new Error('Numero de rectificacion incorrecto.')
+            }
+            var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
+            return {estado, hayDatos, datos}
         }
     },
 ];
