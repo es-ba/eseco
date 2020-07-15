@@ -107,5 +107,6 @@ relevador|consistencias|editar|false
 relevador|encuestas|ingresar|true
 relevador|encuestas|justificar|true
 relevador|encuestas|procesar|false
+relevador|encuestas|relevar|true
 relevador|lab_resultado|editar|false
 relevador|lab_resultado|ver|false

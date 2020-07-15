@@ -5,7 +5,7 @@ import {ProceduresEseco} from "./procedures-eseco";
 
 import * as pg from "pg-promise-strict";
 import * as miniTools from "mini-tools";
-import {Request, Response} from "./types-eseco";
+import {Context, MenuInfoBase, Request, Response} from "./types-eseco";
 
 import * as yazl from "yazl";
 import { NextFunction } from "express-serve-static-core";
@@ -31,15 +31,7 @@ import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
 import { etiquetas           } from './table-etiquetas';
 
-
-
 import {defConfig} from "./def-config"
-import { FieldDefinition } from "procesamiento";
-
-interface Context extends procesamiento.Context{
-  puede:object
-  superuser?:true
-}
 
 export type Constructor<T> = new(...args: any[]) => T;
 export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamientoType>>(Base:T){
@@ -196,57 +188,80 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         }
         return {puede:{}, ...fatherContext};
     }
-    getMenu(){
-        let menu = {menu:[
-            {menuType:'demo', name:'demo', selectedByDefault:true},
-            /*
-            {menuType:'menu', name:'procesar', menuContent:[
-                {menuType:'table', name:'variables'    },
-                {menuType:'table', name:'consistencias'},
-                {menuType:'table', name:'inconsistencias'},
-                {menuType:'table', name:'tabla_datos'  },
-                {menuType:'table', name:'diccionario'  , label:'diccionarios' },
-            ]},
-            */
-            {menuType:'menu', name:'encuestadores', menuContent:[
-                {menuType:'sincronizar_dm', name:'sincronizar_dm', label:'sincronizar'},
-            ]},
-            {menuType:'menu', name:'laboratorio', menuContent:[
-                {menuType:'table', name:'etiquetas', table:'etiquetas'},
-                {menuType:'proc', name:'resultado_cargar', proc:'resultado_cargar', label:'carga resultado'},
-            ]},
-            {menuType:'menu', name:'recepcion', label:'recepción' ,menuContent:[
-                //{menuType:'carga_recepcionista', name:'cargar'},
-                {menuType:'asignacion_recepcion', name:'asignacion', label:'asignación'},
-                {menuType:'table', name:'recepcion', label:'recepción', table:'carga_fechas'},
-            ]},            
-            {menuType:'menu', name:'configurar', menuContent:[
-                {menuType:'menu', name:'muestra', label:'muestra', menuContent:[
-                    {menuType:'table', name:'tem', label: 'TEM'} ,
-                    {menuType:'table', name:'lotes'} ,
-                    {menuType:'table', name:'semanas'} ,
-                    {menuType:'table', name:'personal'},
-                   // {menuType:'table', name:'personal_rol'},
-                    ]},
-                {menuType:'menu', name:'metadatos', menuContent:[
-                    {menuType:'table', name:'operativos'},
-                    {menuType:'table', name:'formularios' , table:'casilleros_principales'},
-                    {menuType:'table', name:'plano'       , table:'casilleros'},
-                    {menuType:'table', name:'tipoc'       , label:'tipos de celdas'},
-                    {menuType:'table', name:'tipoc_tipoc' , label:'inclusiones de celdas'},
+    getContextForDump():Context{
+        var fatherContext = super.getContextForDump();
+        return {superuser:true, puede: this.permisosSuperuser, ...fatherContext};
+    }
+    getMenu(context:Context){
+        let menu:MenuInfoBase[] = [];
+        if(context.puede.encuestas.relevar){
+            menu = [ ...menu,
+                {menuType:'demo', name:'demo', selectedByDefault:true},
+                {menuType:'menu', name:'encuestadores', menuContent:[
+                    {menuType:'sincronizar_dm', name:'sincronizar_dm', label:'sincronizar'},
                 ]},
-                {menuType:'table', name:'parametros'},
-                {menuType:'proc', name:'g_qrs', proc:'qrs_traer', label:'etiquetas qr'},
-            ]},
-            {menuType:'menu', name:'usuarios', menuContent:[
-                {menuType:'table', name:'usuarios'},
-                {menuType:'table', name:'roles'},
-                {menuType:'table', name:'permisos'},
-                {menuType:'table', name:'roles_permisos'},
-            ]},
-            {menuType:'proc', name:'generate_tabledef', proc:'tabledef_generate', label:'generar tablas'  },
-        ]}
-        return menu;
+            ]
+        }
+        if(context.puede.lab_resultado.editar || context.puede.lab_resultado.ver){
+            let menuContent=[];
+            if(context.puede.lab_resultado.editar){
+                menuContent.push(
+                    {menuType:'proc', name:'resultado_cargar'    , proc:'resultado_cargar', label:'carga resultado'}
+                )
+            }
+            if(context.puede.lab_resultado.ver){
+                menuContent.push(
+                    {menuType:'proc', name:'resultados_ver'      , proc:'resultado_cargar', label:'ver resultados'},
+                )
+            }
+            if(context.puede.lab_resultado.editar){
+                menuContent.push(
+                    {menuType:'proc', name:'resultado_rectificar', proc:'resultado_cargar', label:'rectificar resultado'},
+                )
+            }
+            menu = [ ...menu, 
+                {menuType:'menu', name:'laboratorio', menuContent}
+            ]
+        }
+        if(context.superuser){
+            menu = [ ...menu,
+                {menuType:'menu', name:'recepcion', label:'recepción' ,menuContent:[
+                    //{menuType:'carga_recepcionista', name:'cargar'},
+                    {menuType:'asignacion_recepcion', name:'asignacion', label:'asignación'},
+                    {menuType:'table', name:'recepcion', label:'recepción', table:'carga_fechas'},
+                ]},            
+                {menuType:'menu', name:'configurar', menuContent:[
+                    {menuType:'menu', name:'etiquetas', menuContent:[
+                        {menuType:'table', name:'planchas'},
+                        {menuType:'table', name:'etiquetas'},
+                    ]},
+                    {menuType:'menu', name:'muestra', label:'muestra', menuContent:[
+                        {menuType:'table', name:'tem', label: 'TEM'} ,
+                        {menuType:'table', name:'lotes'} ,
+                        {menuType:'table', name:'semanas'} ,
+                        {menuType:'table', name:'personal'},
+                    // {menuType:'table', name:'personal_rol'},
+                        ]},
+                    {menuType:'menu', name:'metadatos', menuContent:[
+                        {menuType:'table', name:'operativos'},
+                        {menuType:'table', name:'formularios' , table:'casilleros_principales'},
+                        {menuType:'table', name:'plano'       , table:'casilleros'},
+                        {menuType:'table', name:'tipoc'       , label:'tipos de celdas'},
+                        {menuType:'table', name:'tipoc_tipoc' , label:'inclusiones de celdas'},
+                    ]},
+                    {menuType:'table', name:'parametros'},
+                    {menuType:'proc', name:'g_qrs', proc:'qrs_traer', label:'etiquetas qr'},
+                ]},
+                {menuType:'menu', name:'usuarios', menuContent:[
+                    {menuType:'table', name:'usuarios'},
+                    {menuType:'table', name:'roles'},
+                    {menuType:'table', name:'permisos'},
+                    {menuType:'table', name:'roles_permisos'},
+                ]},
+                {menuType:'proc', name:'generate_tabledef', proc:'tabledef_generate', label:'generar tablas'  },
+            ]
+        }
+        return {menu};
     }
     prepareGetTables(){
         var be=this;

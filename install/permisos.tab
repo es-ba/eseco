@@ -1,12 +1,13 @@
 permiso         |accion    |predeterminado
-campo           |editar    |true
-campo           |ver       |true
-configurar      |editar    |true
-configurar      |ver       |true
-encuestas       |ingresar  |true
-encuestas       |procesar  |true
-encuestas       |justificar|true
-consistencias   |editar    |true
-casilleros_texto|editar    |true
+campo           |editar    |false
+campo           |ver       |false
+configurar      |editar    |false
+configurar      |ver       |false
+encuestas       |ingresar  |false
+encuestas       |procesar  |false
+encuestas       |justificar|false
+encuestas       |relevar   |false
+consistencias   |editar    |false
+casilleros_texto|editar    |false
 lab_resultado   |editar    |false
-lab_resultado   |ver       |true 
+lab_resultado   |ver       |false
