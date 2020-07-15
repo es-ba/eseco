@@ -35,6 +35,18 @@
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Fast dumpDb",
+            "program": "${workspaceFolder}/dist/server/server-eseco.js",
+            "args": [
+                "--dump-db"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
         }
     ]
 }

@@ -12,6 +12,7 @@ admin|lab_resultado|editar|true
 admin|lab_resultado|ver|true
 coor_campo|campo|editar|true
 coor_campo|campo|ver|true
+coor_campo|campo|administrar|true
 coor_campo|casilleros_texto|editar|false
 coor_campo|configurar|editar|true
 coor_campo|configurar|ver|true
