@@ -1,8 +1,8 @@
-import {html} from "js-to-html";
+import {html, HtmlTag} from "js-to-html";
 import * as myOwn from "myOwn";
 import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario} from "../unlogged/redux-formulario";
 import { CasoState, EtiquetaOpts } from "../unlogged/tipos";
-import { crearEtiqueta } from "./unlogged/generador-qr";
+import { crearEtiqueta } from "../unlogged/generador-qr";
 
 
 async function traerHdr(opts:{modoDemo:boolean}){
@@ -41,17 +41,31 @@ myOwn.wScreens.sincronizar_dm=function(){
     }
 };
 
-type Etiquetas = {
-    dgeyc: string,
-    operativo: string,
-    numero: string               
-}
 
-myOwn.wScreens.proc.result.qrs_traer = async (result:{etiquetas:Etiquetas[]}, divResult:HTMLDivElement)=>{
+myOwn.wScreens.proc.result.qrs_traer = async (result:{etiquetas:EtiquetaOpts[]}, divResult:HTMLDivElement)=>{
+    var planchas=html.div({class:"planchas"}).create();
+    // var etiquetas:HtmlTag<HTMLDivElement>[]=[];
+    var etiquetas:HTMLDivElement[]=[];
+    divResult.appendChild(planchas);
+    var planchaAnterior='';
+    var cerrarPlancha=function(){
+        planchas.appendChild(html.div({class:'pre-plancha'}, [
+            html.div("PLANCHA "+planchaAnterior+" - Dirección General de Estadística y Censos - ESECO 201")
+        ]).create());
+        planchas.appendChild(html.div({class:'plancha'},etiquetas).create());
+        etiquetas=[];
+    }
     for(let etiqueta of result.etiquetas){
         let etiquetaDiv = await crearEtiqueta(etiqueta, 128);
-        divResult.appendChild(etiquetaDiv);
+        if(planchaAnterior!=etiqueta.plancha){
+            if(planchaAnterior){
+                cerrarPlancha();
+            }
+            planchaAnterior=etiqueta.plancha;
+        }
+        etiquetas.push(etiquetaDiv);
     }
+    cerrarPlancha();
 }
 
 myOwn.wScreens.demo=function(){

@@ -421,20 +421,17 @@ export const ProceduresEseco : ProcedureDef[] = [
     {
         action:'qrs_traer',
         resultOk:'qrs_traer',
-        parameters:[],
-        coreFunction:async function(context: ProcedureContext, _parameters: CoreFunctionParameters){
-            var etiquetas=[];
+        parameters:[
+            {name:'desde', typeName:'text', references:'planchas', defaultValue:'101'},
+            {name:'hasta', typeName:'text', references:'planchas', defaultValue:'103'}
+        ],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             const DGEyC = "DGEyC";
             const OPERATIVO = "ESECO201";
-            for(var i=0; i<=9;i++){
-                etiquetas.push(
-                    {
-                        dgeyc: DGEyC,
-                        operativo: OPERATIVO,
-                        numero: "1234-5"+i.toString()             
-                    }
-                );
-            }
+            var {rows:etiquetas} = await context.client.query(
+                `SELECT 'DGEyC' as dgeyc, * FROM etiquetas WHERE plancha BETWEEN $1 AND $2 ORDER BY plancha, etiqueta`,
+                [parameters.desde, parameters.hasta||parameters.desde]
+            ).fetchAll();
             return {etiquetas}
         }
     },
