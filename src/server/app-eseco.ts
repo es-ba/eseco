@@ -234,6 +234,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'menu', name:'etiquetas', menuContent:[
                         {menuType:'table', name:'planchas'},
                         {menuType:'table', name:'etiquetas'},
+                        {menuType:'proc', name:'imprimir', proc:'qrs_traer'},
                     ]},
                     {menuType:'menu', name:'muestra', label:'muestra', menuContent:[
                         {menuType:'table', name:'tem', label: 'TEM'} ,
@@ -250,7 +251,6 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                         {menuType:'table', name:'tipoc_tipoc' , label:'inclusiones de celdas'},
                     ]},
                     {menuType:'table', name:'parametros'},
-                    {menuType:'proc', name:'g_qrs', proc:'qrs_traer', label:'etiquetas qr'},
                 ]},
                 {menuType:'menu', name:'usuarios', menuContent:[
                     {menuType:'table', name:'usuarios'},
@@ -313,8 +313,15 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             })
         })
         be.appendToTableDefinition('usuarios', function (tableDef) {
+            tableDef.fields.splice(2,0,
+                {name:'idper', typeName:'text'}
+            );
             tableDef.foreignKeys = tableDef.foreignKeys||[];
             tableDef.foreignKeys.push({references:'roles'  , fields:['rol'] , onDelete: 'cascade'});
+            tableDef.constraints=tableDef.constraints||[];
+            tableDef.constraints.push(
+                {constraintType:'unique', fields:['idper']}
+            );
         });
     }
   }

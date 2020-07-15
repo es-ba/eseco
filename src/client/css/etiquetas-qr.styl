@@ -1,6 +1,6 @@
-altoEtiqueta = 150px
+altoEtiqueta = 148px
 mitadAltoEtiqueta = 75px
-anchoEtiqueta = 194px
+anchoEtiqueta = 390px
 altoQr = 128px
 altoLogoEstadistica = 73px
 altoTexto = 41px
@@ -26,7 +26,7 @@ altoBA = 55px
     .texto-codigo
       height altoTexto
       padding 6px 0px
-      background-color yellow
+      x-background-color yellow
       text-align center
       vertical-align middle
       font-size 30px
@@ -42,6 +42,35 @@ altoBA = 55px
 .not_print
   @media print
     display none
+
+.pre-plancha
+  display flex
+  color blue
+  margin-left 25px
+  padding-top 22px
+  min-height 32px
+  height 32px
+  vertical-align bottom
+  align-items bottom 
+  font-size 130%
+.plancha
+  margin-left 10px
+  display grid
+  grid-template-columns repeat(3, 1fr)
+  page-break-after always
+
+
+.table-param-screen, .result-progress
+  @media print
+    display none
+
+.etiqueta
+  @media screen
+    border 1px dashed orange
+
+.result-div
+  @media print
+    zoom 0.65
 
 .result-div[resultado-cargar=ok], .result-div[resultado-rectificar=ok]
 	background-color #5F5

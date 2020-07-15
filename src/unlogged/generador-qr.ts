@@ -10,7 +10,7 @@ async function crearQr(text:string, width:number ):Promise<HTMLImageElement>{
 }
 
 export async function crearEtiqueta(etiquetaOpts:EtiquetaOpts, width:number ):Promise<HTMLDivElement>{
-    var qrImg = await crearQr(etiquetaOpts.dgeyc+'-'+etiquetaOpts.operativo+'-'+etiquetaOpts.numero, width);
+    var qrImg = await crearQr(etiquetaOpts.dgeyc.toUpperCase()+' '+etiquetaOpts.operativo+' '+etiquetaOpts.etiqueta, width);
     var div = html.div({class:'etiqueta'},[
         html.div({class:'columna'},[
             html.div({class:'codigo-qr'},[
@@ -22,7 +22,7 @@ export async function crearEtiqueta(etiquetaOpts:EtiquetaOpts, width:number ):Pr
                 html.img({src:'img/logo_etiqueta.jpg'}),
             ]),
             html.div({class:'texto-codigo'},[
-                etiquetaOpts.numero
+                etiquetaOpts.etiqueta
             ]),
         ]),
         html.div({class:'columna'},[

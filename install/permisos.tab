@@ -1,6 +1,7 @@
 permiso         |accion    |predeterminado
 campo           |editar    |false
 campo           |ver       |false
+campo           |administrar|false
 configurar      |editar    |false
 configurar      |ver       |false
 encuestas       |ingresar  |false
