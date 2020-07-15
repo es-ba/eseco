@@ -13,13 +13,14 @@ import { getRowValidator, Structure, Opcion as RowValidatorOpcion, FormStructure
 import * as JSON4all from "json4all";
 import * as likeAr from "like-ar";
 import * as bestGlobals from "best-globals";
+import { controlarCodigoDV2 } from "./digitov";
 
 var my=myOwn;
 
 export const MAXCP=20;
 const OPERATIVO='ESECO';
 const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
-export const LOCAL_STORAGE_STATE_NAME ='hdr-campo-0.4';
+export const LOCAL_STORAGE_STATE_NAME ='hdr-campo-0.5';
 
 /* REDUCERS */
 
@@ -125,8 +126,15 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
         _edad_maxima:number, 
         _edad_minima:number, 
         d4:number|null, d5:number|null, d5c:number|null, 
-        p9:number|null, p11:number|null, p12:string|null
+        p9:number|null, p11:number|null, p12:string|null,
+        c5:string|null,
+        c5ok:number|null
     };
+    if(respuestas.c5==null){
+        respuestas.c5ok=null;
+    }else{
+        respuestas.c5ok=controlarCodigoDV2(respuestas.c5)?1:2;
+    }
     if(respuestas.d4==1){
         respuestas.d5c=respuestas.d5c||respuestas.d5;
         respuestas.d5=null;
@@ -184,7 +192,7 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
         ...bestGlobals.serie({
             from:1, 
             //@ts-ignore existen las personas y es un array
-            to:respuestas.personas.length
+            to:respuestas.personas?.length||0
         }).map(persona=>({forPk:{vivienda, formulario:'F:F2' as IdFormulario, persona}, formulario:'F:F2_personas' as IdFormulario, 
             post:true
         }))
@@ -479,7 +487,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                     '10901':{
                         tem:{
                             observaciones:'Ejemplo de relevamiento vacío', carga:"2020-07-07",
-                            nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
+                            nomcalle:'Bolivar', nrocatastral:'541', piso:'6', departamento:'C'
                         } as TEM,
                         // @ts-ignore
                         respuestas:{personas:[]}
@@ -555,6 +563,14 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
             // @ts-ignore lo lleno después
             feedbackRowValidator:{}
         };
+        // @ts-ignore variable global
+        if(myOwn.config.config.ambiente!='demo'){
+            likeAr(initialState.datos.hdr).forEach((viv,_k,_,i)=>{ 
+                // @ts-ignore lo lleno después
+                viv.respuestas={personas:[]}; 
+                viv.tem.observaciones=i==1?'Timbre verde':''
+            })
+        }
         var vivienda:IdCaso;
         var formulario:IdFormulario;
         // @ts-ignore esto se va
@@ -582,7 +598,9 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                     modo:{
                         ...initialState.modo, 
                         //@ts-ignore es un booleano pero pongo ahí los datos de demo!
-                        demo: initialState.datos,
+                        demo: initialState.datos && 
+                            // @ts-ignore
+                            myOwn.config.config.ambiente=='test',
                     }
                 };
                 if(casoState){

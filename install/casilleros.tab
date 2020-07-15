@@ -9,9 +9,9 @@ ESECO|DV3|DV|P|pregunta|DV3|130|✔|¿Por qué motivo no pudo realizar la entrev
 ESECO|DV3/1|DV3|O|opción|1|1|✔|La vivienda está deshabitada||||||||||||1;100;130;1|F:F1||||||
 ESECO|DV3/2|DV3|O|opción|2|2|✔|La vivienda está demolida||||||||||||1;100;130;2|F:F1||||||
 ESECO|DV3/3|DV3|O|opción|3|3|✔|La vivienda se usa solo los fines de semana o muy esporádicamente||||||||||||1;100;130;3|F:F1||||||
-ESECO|DV3/4|DV3|O|opción|4|4|✔|La vivienda está en construcción y allí no vive nadie||||||||||||1;100;130;4|F:F1||||||
+ESECO|DV3/4|DV3|O|opción|4|4|✔|La vivienda está en construcción y allí no vivie nadie||||||||||||1;100;130;4|F:F1||||||
 ESECO|DV3/5|DV3|O|opción|5|5|✔|La vivienda se usa como establecimiento y no tiene uso residencial||||||||||||1;100;130;5|F:F1||||||
-ESECO|DV3/6|DV3|O|opción|6|6|✔|En la dirección de referencia no se encuentra la vivienda especificada||||||||||||1;100;130;6|F:F1||||||
+ESECO|DV3/6|DV3|O|opción|6|6|✔|En la dirección de referencia no se encuetra la vivienda especificada||||||||||||1;100;130;6|F:F1||||||
 ESECO|DV3/7|DV3|O|opción|7|7|✔|Los habitantes de la vivienda están ausentes||||||||||||1;100;130;7|F:F1||||||
 ESECO|DV3/8|DV3|O|opción|8|8|✔|Los habitantes de la vivienda rechazan ser entrevistados||||||||||||1;100;130;8|F:F1||||||
 ESECO|DV3/9|DV3|O|opción|9|9|✔|Otras causas||||||||||||1;100;130;9|F:F1||||||
@@ -20,11 +20,12 @@ ESECO|DV4|DV|P|pregunta|DV4|160|✔|¿Alguna persona de esta vivienda fue diagno
 ESECO|DV4/1|DV4|O|opción|1|1|✔|Sí||||||||||||1;100;160;1|F:F1||||||
 ESECO|DV4/2|DV4|O|opción|2|2|✔|No||||||||||||1;100;160;2|F:F1||||||
 ESECO|CC1|DV|CONS|consistencia|CC1|165|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||1;100;165|F:F1||||dv4=1||
-ESECO|DV5|DV|P|pregunta|DV5|170|✔|¿En esta vivienda vive y está presente alguna persona de 18 años o más?|si_no|||||||true|ocultar|||1;100;170|F:F1||dv5||dv1=1||
+ESECO|DV5|DV|P|pregunta|DV5|170|✔|¿En esta vivienda vive y está presente alguna persona de 18 años o más?|si_no|||||||true|ocultar|||1;100;170|F:F1||dv5||dv1=1 & dv4=2||
 ESECO|DV5/1|DV5|O|opción|1|1|✔|Sí||||||||||||1;100;170;1|F:F1||||||
 ESECO|DV5/2|DV5|O|opción|2|2|✔|No||||||||||||1;100;170;2|F:F1||||||
 ESECO|CC3|DV|CONS|consistencia|CC3|175|⛔|Cuando en la vivienda no hay personas de 18 años o más se finaliza la entrevista||||||||true||||1;100;175|F:F1||||dv5=2||
 ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv5=1||
+ESECO|F1FIN|F:F1|BF|Botón para formulario|F1FIN|190|✔|FIN||||||||true|ocultar|||1;190|F:F1||||dv5=2 or dv1=2 & dv3>0 or dv4=1||
 ESECO|F:F2||F|formulario|F2|2|✔|Habitantes de la vivienda||||||viviendas||||||2|F:F2||||||
 ESECO|CP|F:F2|P|pregunta|CP|1|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;1|F:F2||cp||||
 ESECO|LN|F:F2|B|bloque|LN|10|✔|Lista de nombres||||||personas||true||||2;10|F:F2||||||
@@ -58,6 +59,7 @@ ESECO|S2/2|S2|O|opción|2|143|✔|No|||||FIN|||||||3;137;141;143|F:F3||||||
 ESECO|S3|S|P|pregunta|S3|144|✔|¿La persona seleccionada aceptó realizarse el test?|si_no|||||||true|no_leer|||3;137;144|F:F3||s3||||
 ESECO|S3/1|S3|O|opción|1|145|✔|Sí||||||||||||3;137;144;145|F:F3||||||
 ESECO|S3/2|S3|O|opción|2|146|✔|No|||||FIN|||||||3;137;144;146|F:F3||||||
+ESECO|F3FIN1|F:F3|BF|Botón para formulario|F3FIN1|146|✔|FIN||||||||true|ocultar|||3;146|F:F3||||s1=2 or s2=2 or s3=2||
 ESECO|D|F:F3|B|bloque|D|147|✔|Presencia de cuadro diagnóstico compatible con COVID-19||||||||true||||3;147|F:F3||||||
 ESECO|D1|D|P|pregunta|D1|148|✔|¿Alguna vez le hicieron la prueba para ver si estaba infectado/a con COVID-19 con una muestra de la garganta o la nariz?|si_no|||||||true||||3;147;148|F:F3||d1||||
 ESECO|D1/1|D1|O|opción|1|149|✔|Sí||||||||||||3;147;148;149|F:F3||||||
@@ -80,6 +82,7 @@ ESECO|D5C/1|D5C|O|opción|1|1|✔|Positivo|||||FIN|||||||3;147;156;1|F:F3||||||
 ESECO|D5C/2|D5C|O|opción|2|2|✔|Negativo||||||||||||3;147;156;2|F:F3||||||
 ESECO|D5C/9|D5C|O|opción|9|9|✔|No sabe||||||||||||3;147;156;9|F:F3||||||
 ESECO|CC4|D|CONS|consistencia|CC4|161|⛔|Cuando en la vivienda hay al menos una persona diagnosticada con COVID-19 se finaliza la entrevista||||||||true||||3;147;161|F:F3||||d5c=1 & d4=1||
+ESECO|F3FIN2|D|BF|Botón para formulario|F3FIN2|163|⛔|FIN||||||||true|ocultar|||3;147;163|F:F3||||d5c=1 & d4=1||
 ESECO|D6|D|P|pregunta|D6|166|✔|En los últimos dos meses, ¿tuvo alguno de los siguientes síntomas...||||||||true||||3;147;166|F:F3||||||
 ESECO|D6/1|D6|OM|opción múltiple|1|157|✔|fiebre?|si_no|||||||||||3;147;166;157|F:F3||d6_1||||
 ESECO|D6/1/1|D6/1|O|opción|1|158|✔|Sí||||||||||||3;147;166;157;158|F:F3||||||
@@ -198,28 +201,32 @@ ESECO|T3/1|T3|O|opción|1|1420|✔|Hasta 34 horas|||||||||no_leer|||3;1200;1410;
 ESECO|T3/2|T3|O|opción|2|1430|✔|Entre 35 y 45 horas|||||||||no_leer|||3;1200;1410;1430|F:F3||||||
 ESECO|T3/3|T3|O|opción|3|1440|✔|Más de 45 horas|||||||||no_leer|||3;1200;1410;1440|F:F3||||||
 ESECO|E|F:F3|B|bloque|E|1520|✔|Datos del entrevistado para devolución de resultados y supervisión||||Los datos del entrevistado/a se deben copiar de un original, fotocopia o App||||true||||3;1520|F:F3||||||
-ESECO|E1|E|P|pregunta|E1|1530|✔|Apellido y nombre|texto|||||||true|no_leer|||3;1520;1530|F:F3||e1||||
-ESECO|E2|E|P|pregunta|E2|1540|✔|Tipo de documentación identificatoria|opciones|||||||true|no_leer|||3;1520;1540|F:F3||e2||||
-ESECO|E2/1|E2|O|opción|1|1550|✔|DNI argentino|||||E6|||||||3;1520;1540;1550|F:F3||||||
-ESECO|E2/2|E2|O|opción|2|1560|✔|Documento extranjero|||||E4|||||||3;1520;1540;1560|F:F3||||||
-ESECO|E2/3|E2|O|opción|3|1570|✔|No tiene documento|||||C1|||||||3;1520;1540;1570|F:F3||||||
-ESECO|E2/4|E2|O|opción|4|1580|✔|Otro||||||||||||3;1520;1540;1580|F:F3||||||
-ESECO|E3|E|P|pregunta|E3|1590|✔|¿Cuál?|texto|||||||true|no_leer ocultar|||3;1520;1590|F:F3||e3||||
-ESECO|E4|E|P|pregunta|E4|1600|✔|País emisor del documento|opciones|||||||true|no_leer ocultar|||3;1520;1600|F:F3||e4||||
-ESECO|E4/1|E4|O|opción|1|1610|✔|Uruguay||||||||||||3;1520;1600;1610|F:F3||||||
-ESECO|E4/2|E4|O|opción|2|1620|✔|Paraguay||||||||||||3;1520;1600;1620|F:F3||||||
-ESECO|E4/3|E4|O|opción|3|1630|✔|Brasil||||||||||||3;1520;1600;1630|F:F3||||||
-ESECO|E4/4|E4|O|opción|4|1640|✔|Bolivia||||||||||||3;1520;1600;1640|F:F3||||||
-ESECO|E4/5|E4|O|opción|5|1650|✔|Chile||||||||||||3;1520;1600;1650|F:F3||||||
-ESECO|E4/6|E4|O|opción|6|1660|✔|Perú||||||||||||3;1520;1600;1660|F:F3||||||
-ESECO|E4/7|E4|O|opción|7|1670|✔|Venezuela||||||||||||3;1520;1600;1670|F:F3||||||
-ESECO|E4/8|E4|O|opción|8|1680|✔|Otro (especificar)||||||||||||3;1520;1600;1680|F:F3||||||
-ESECO|E5|E|P|pregunta|E5|1690|✔|Especificar|texto|||||||true|no_leer ocultar|||3;1520;1690|F:F3||e5||e4=8||
-ESECO|E6|E|P|pregunta|E6|1700|✔|Número|texto|medio||||||true|no_leer|||3;1520;1700|F:F3||e6||||
+ESECO|E1|E|P|pregunta|E1|1530|✔|Apellido|texto|||||||true|no_leer|||3;1520;1530|F:F3||e1||||
+ESECO|E2|E|P|pregunta|E2|1535|✔|Nombres|texto|||||||true|no_leer|||3;1520;1535|F:F3||e2||||
+ESECO|E3|E|P|pregunta|E3|1540|✔|Tipo de documentación identificatoria|opciones|||||||true|no_leer|||3;1520;1540|F:F3||e3||||
+ESECO|E3/1|E3|O|opción|1|1550|✔|DNI argentino|||||E7|||||||3;1520;1540;1550|F:F3||||||
+ESECO|E3/2|E3|O|opción|2|1560|✔|Documento extranjero|||||E5|||||||3;1520;1540;1560|F:F3||||||
+ESECO|E3/3|E3|O|opción|3|1570|✔|No tiene documento|||||C1|||||||3;1520;1540;1570|F:F3||||||
+ESECO|E3/4|E3|O|opción|4|1580|✔|Otro||||||||||||3;1520;1540;1580|F:F3||||||
+ESECO|E4|E|P|pregunta|E4|1590|✔|¿Cuál?|texto|||||||true|no_leer ocultar|||3;1520;1590|F:F3||e4||||
+ESECO|E5|E|P|pregunta|E5|1600|✔|País emisor del documento|opciones|||||||true|no_leer ocultar|||3;1520;1600|F:F3||e5||||
+ESECO|E5/1|E5|O|opción|1|1610|✔|Uruguay||||||||||||3;1520;1600;1610|F:F3||||||
+ESECO|E5/2|E5|O|opción|2|1620|✔|Paraguay||||||||||||3;1520;1600;1620|F:F3||||||
+ESECO|E5/3|E5|O|opción|3|1630|✔|Brasil||||||||||||3;1520;1600;1630|F:F3||||||
+ESECO|E5/4|E5|O|opción|4|1640|✔|Bolivia||||||||||||3;1520;1600;1640|F:F3||||||
+ESECO|E5/5|E5|O|opción|5|1650|✔|Chile||||||||||||3;1520;1600;1650|F:F3||||||
+ESECO|E5/6|E5|O|opción|6|1660|✔|Perú||||||||||||3;1520;1600;1660|F:F3||||||
+ESECO|E5/7|E5|O|opción|7|1670|✔|Venezuela||||||||||||3;1520;1600;1670|F:F3||||||
+ESECO|E5/8|E5|O|opción|8|1680|✔|Otro (especificar)||||||||||||3;1520;1600;1680|F:F3||||||
+ESECO|E6|E|P|pregunta|E6|1690|✔|Especificar|texto|||||||true|no_leer ocultar|||3;1520;1690|F:F3||e6||e5=8||
+ESECO|E7|E|P|pregunta|E7|1700|✔|Número|texto|medio||||||true|no_leer|||3;1520;1700|F:F3||e7||||
 ESECO|C|F:F3|B|bloque|C|1710|✔|Datos de contacto del entrevistado||||||||true||||3;1710|F:F3||||||
 ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|medio||||||true|||true|3;1710;1720|F:F3||c1||||
 ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true|||true|3;1710;1730|F:F3||c2||||
 ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|medio||||||true|||true|3;1710;1740|F:F3||c3||||
 ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|medio||||||true|||true|3;1710;1750|F:F3||c4||||
 ESECO|C5|C|P|pregunta|C5|1800|✔|CÓDIGO DE LA MUESTRA|texto|7||||||true|no_leer|||3;1710;1800|F:F3||c5||||
+ESECO|C5OK|C|P|pregunta|C5OK|1810|✔|Validación del código de la muestra|numero|2||||||true|calculada ocultar|||3;1710;1810|F:F3||c5ok||1>2||
+ESECO|CONS.C5|C|CONS|consistencia|CONS.C5|1820|⛔|El código de la muestra no coincide con un código válido||||||||true||||3;1710;1820|F:F3||||c5ok=2||
 ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no_leer||true|3;2000|F:F3||fin||||
+ESECO|F3FINU|F:F3|BF|Botón para formulario|F3FINU|2100|✔|FIN||||||||true|ocultar|||3;2100|F:F3||||s1=2 or s2=2 or s3=2 or d5c=1 & d4=1 or c5ok=1||

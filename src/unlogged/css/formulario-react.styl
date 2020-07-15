@@ -314,6 +314,8 @@ boton-id-div-invalido()
     &[ocultar-salteada=INHABILITAR]
       &[tiene-valor=NO]
         display none
+      &[nuestro-validator=calculada]
+        display none
   [nuestro-validator=todavia_no]
     &[ocultar-salteada=SI]
       &[tiene-valor=NO]
@@ -493,3 +495,10 @@ app-cache-version, #app-dm-version
     color black
     x-background-color rgba(63, 81, 181, 1);
     background-color #7A8DE8
+
+.nuestro-dialogo
+  padding 8px
+
+.seccion-boton-formulario
+  svg
+    margin-left 8px

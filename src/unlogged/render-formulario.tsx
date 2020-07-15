@@ -462,7 +462,7 @@ function ConsistenciaDespliegue(props:{casillero:Consistencia, forPk:ForPk}){
     </div>:null
 }
 
-function BotonFomulario(props:{casillero:BotonFormulario, forPk:ForPk}){
+function BotonFormularioDespliegue(props:{casillero:BotonFormulario, forPk:ForPk}){
     var {casillero, forPk} = props;
     var habilitador = casillero.expresion_habilitar?getFuncionHabilitar(casillero.expresion_habilitar):()=>true;
     var {respuestas} = useSelectorVivienda(forPk);
@@ -470,31 +470,39 @@ function BotonFomulario(props:{casillero:BotonFormulario, forPk:ForPk}){
     var dispatch = useDispatch();
     var [confirmarForzarIr, setConfirmarForzarIr] = useState(false);
     const ir = ()=>{
-        dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{...forPk, formulario:'F:'+casillero.salto! as IdFormulario}}));
+        if(!casillero.salto){
+            dispatch(dispatchers.VOLVER_HDR({}));
+        }else{
+            dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{...forPk, formulario:'F:'+casillero.salto! as IdFormulario}}));
+        }
         if(confirmarForzarIr){setConfirmarForzarIr(false)}
     };
     return <div 
         className="seccion-boton-formulario" 
         nuestro-validator={habilitado?'actual':'todavia_no'}
+        esta-inhabilitada={!habilitado?'SI':'NO'}
         ocultar-salteada={casillero.despliegue?.includes('ocultar')?(casillero.expresion_habilitar?'INHABILITAR':'SI'):'NO'}
+        tiene-valor="NO"
     >
         <div className="aclaracion">{casillero.aclaracion}</div>
         <Button
             variant="contained"
             color={habilitado?"primary":"default"}
-            disabled={!casillero.salto}
             onClick={()=>{
                 if(habilitado) ir(); 
                 else setConfirmarForzarIr(true);
             }}
-        >{casillero.nombre}<ICON.Send/></Button>
+        >{casillero.nombre}{casillero.salto?<ICON.Send/>:<ICON.ExitToApp/>}</Button>
         <Dialog 
+            className="nuestro-dialogo"
             open={confirmarForzarIr}
             onClose={()=>setConfirmarForzarIr(false)}
         >
-            <Typography>No se puede avanzar al siguiente formulario.</Typography>
-            <Typography>Quizás no terminó de contestar las preguntas correspondientes</Typography>
-            <Typography>Quizás no corresponde en base a las respuestas obtenidas</Typography>
+            <div className="nuestro-dialogo">
+                <Typography>No se puede avanzar al siguiente formulario.</Typography>
+                <Typography>Quizás no terminó de contestar las preguntas correspondientes</Typography>
+                <Typography>Quizás no corresponde en base a las respuestas obtenidas</Typography>
+            </div>
             <Button color="secondary" onClick={ir}>forzar</Button>
             <Button color="primary" variant="contained" onClick={()=>setConfirmarForzarIr(false)}>Entendido</Button>
         </Dialog>
@@ -547,7 +555,7 @@ function DesplegarContenidoInternoBloqueOFormulario(props:{bloqueOFormulario:Blo
                         />:
                     casillero.tipoc == "B"?<BloqueDespliegue bloque={casillero} forPk={props.forPk}/>:
                     casillero.tipoc == "FILTRO"?<FiltroDespliegue filtro={casillero} forPk={props.forPk}/>:
-                    casillero.tipoc == "BF"?<BotonFomulario casillero={casillero} forPk={props.forPk}/>:
+                    casillero.tipoc == "BF"?<BotonFormularioDespliegue casillero={casillero} forPk={props.forPk}/>:
                     casillero.tipoc == "CONS"?<ConsistenciaDespliegue casillero={casillero} forPk={props.forPk}/>:
                     <CasilleroDesconocido casillero={casillero}/>
                 }

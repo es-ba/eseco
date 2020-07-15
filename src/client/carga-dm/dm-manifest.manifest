@@ -18,6 +18,7 @@ CACHE:
 ../lib/memoize-one.js
 ../adapt.js
 ../tipos.js
+../digitov.js
 ../redux-formulario.js
 ../render-general.js
 ../render-formulario.js
