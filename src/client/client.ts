@@ -3,6 +3,7 @@ import * as myOwn from "myOwn";
 import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario} from "../unlogged/redux-formulario";
 import { CasoState, EtiquetaOpts } from "../unlogged/tipos";
 import { crearEtiqueta } from "../unlogged/generador-qr";
+import * as TypedControls from "typed-controls";
 
 
 async function traerHdr(opts:{modoDemo:boolean}){
@@ -111,6 +112,40 @@ myOwn.wScreens.proc.result.resultado_rectificar = async (result:{estado:'ok', ha
         html.h2({class:result.estado},"El resultado se rectificó correctamente.").create()
     )
     mostrarDatosPersona(result.hayDatos, result.datos, divResult);
+}
+
+myOwn.wScreens.resultados_ver = ()=>{
+    var mainLayout = document.getElementById('main_layout')!;
+    mainLayout.appendChild(html.h1('ingrese fecha de busqueda').create());
+    var fechaElement=html.td({style:'min-width:100px; border:solid 1px black', "typed-controls-direct-input":"true"}).create();
+    var searchButton = html.button({class:'ver-resultados-button'},'buscar').create();
+    var allButton = html.button({class:'ver-todos-resultados-button'},'todos').create();
+    mainLayout.appendChild(html.label(['fecha:',fechaElement]).create());
+    mainLayout.appendChild(searchButton);
+    mainLayout.appendChild(allButton);
+    TypedControls.adaptElement(fechaElement,{typeName:'date'});
+    var resultDiv=html.div({id:"grilla-resultados-div"}).create();
+    mainLayout.appendChild(resultDiv);
+    searchButton.onclick=async ()=>{
+        resultDiv.innerHTML='';
+        var fecha;
+        try{
+            fecha = fechaElement.getPlainValue();
+        }catch(err){
+            fechaElement.setTypedValue(null)
+        }
+        var fixedFields = [];
+        if(fecha){
+            fixedFields.push({fieldName: 'fecha', value: fecha})
+            
+        }
+        my.tableGrid('etiquetas',resultDiv,{tableDef:{}, fixedFields})
+    }
+    allButton.onclick=async ()=>{
+        resultDiv.innerHTML='';
+        fechaElement.setTypedValue(null)
+        my.tableGrid('etiquetas',resultDiv,{tableDef:{}})
+    }
 }
 
 myOwn.wScreens.demo=function(){

@@ -211,7 +211,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             }
             if(context.puede.lab_resultado.ver){
                 menuContent.push(
-                    {menuType:'proc', name:'resultados_ver'      , proc:'resultado_cargar', label:'ver resultados'},
+                    {menuType:'resultados_ver', name:'resultados_ver',  label:'ver resultados'},
                 )
             }
             if(context.puede.lab_resultado.editar){
