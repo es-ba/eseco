@@ -70,22 +70,37 @@ myOwn.wScreens.proc.result.qrs_traer = async (result:{etiquetas:EtiquetaOpts[]},
 }
 
 function mostrarDatosPersona(hayDatos:boolean, datos:any, divResult:HTMLDivElement){
+    //TODO: EVALUAR SI CONVIENE TRAERLO DE LA BASE
+    var tiposDocumento = ['DNI argentino', 'Documento extranjero', 'No tiene documento', 'Otro'];
+    var paisDocumento = ['Uruguay', 'Paraguay', 'Brasil', 'Bolivia', 'Chile', 'Perú', 'Venezuela', 'Otro'];
     divResult.appendChild(
         hayDatos?
             html.div({class:'datos-persona-cargada'},[
-                html.h4("datos persona"),
-                html.div([
-                    html.div('Apellido: '+ datos.apellido),
-                    html.div('Nombres: '+ datos.nombres),
-                    html.div('Tipo documento: '+ datos.tipoDocumento),
-                    html.div('TipoDocumentoEspecificado: '+ datos.tipoDocumentoEspecificado),
-                    html.div('PaisDocumento: '+ datos.paisDocumento),
-                    html.div('PaisDocumentoEspecificado: '+ datos.paisDocumentoEspecificado),
-                    html.div('Nº Documento: '+ datos.documento),
-                    html.div('Cel.: '+ datos.celular),
-                    html.div('Email: '+ datos.email),
-                    html.div('Tel. alternativo: '+ datos.telefonoAlternativo),
-                    html.div('Observaciones: '+ datos.observaciones),
+                html.h2("Datos persona"),
+                html.div({class:'ficha-persona'},[
+                    html.div([html.label('Apellido: '), datos.apellido]),
+                    html.div([html.label('Nombres: '), datos.nombres]),
+                    datos.tipoDocumento?
+                        html.div([
+                            html.label('Tipo documento: '), 
+                            tiposDocumento[datos.tipoDocumento-1],
+                            datos.tipoDocumento==4 && datos.tipoDocumentoEspecificado?' ('+ datos.tipoDocumentoEspecificado+')':'',
+                        ])
+                    :
+                        '',
+                    datos.tipoDocumento==2 && datos.paisDocumento?
+                        html.div([
+                            html.label('Pais: '), 
+                            paisDocumento[datos.paisDocumento-1],
+                            datos.paisDocumento==8 && datos.paisDocumentoEspecificado?' ('+datos.paisDocumentoEspecificado+')':'',
+                        ])
+                    :
+                        '',
+                    datos.tipoDocumento!=3 && datos.tipoDocumento?html.div([html.label('Nº Documento: '), datos.documento]):'',
+                    datos.celular?html.div([html.label('Cel.: '), datos.celular]):'',
+                    datos.email?html.div([html.label('Email: '), datos.email]):'',
+                    datos.telefonoAlternativo?html.div([html.label('Tel. alternativo: '), datos.telefonoAlternativo]):'',
+                    datos.observaciones?html.div([html.label('Observaciones: '), datos.observaciones]):'',
                 ])
             ]).create()
         :
