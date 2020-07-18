@@ -188,8 +188,8 @@ myOwn.wScreens.asignacion_recepcion={
     parameters:[
         {name:'semana'        ,grilla:1, typeName:'integer'                  , references:'semanas' },
         {name:'lote'          ,grilla:1, typeName:'integer'                  , references:'lotes'   },
-        {name:'carga_rol'     ,grilla:2, typeName:'text'    , label:'rol'    , references:'roles'   },
-        {name:'carga_persona' ,grilla:2, typeName:'integer' , label:'persona', references:'personal'},
+        {name:'carga_rol'     ,grilla:2, typeName:'text'    , label:'rol'    , references:'roles'   , defaultValue:'relevador'},
+        {name:'carga_persona' ,grilla:2, typeName:'text'    , label:'persona', references:'personal'},
         {name:'carga'         ,grilla:2, typeName:'date'    , label:'fecha'  },
     ],
     proceedLabel:'buscar',

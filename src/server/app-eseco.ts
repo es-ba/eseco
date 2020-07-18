@@ -32,6 +32,7 @@ import {lotes                } from "./table-lotes";
 import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
 import { etiquetas           } from './table-etiquetas';
+import { usuarios            } from './table-usuarios';
 
 import {defConfig} from "./def-config"
 
@@ -47,7 +48,6 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         parentProc = parentProc.filter((procedure:any) => !procedimientoAReemplazar.includes(procedure.action));
         return parentProc.concat(ProceduresEseco);
     }
-
     addSchrödingerServices(mainApp:procesamiento.Express, baseUrl:string){
         let be=this;
         super.addSchrödingerServices(mainApp, baseUrl);
@@ -276,6 +276,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         this.getTableDefinition={
             ...this.getTableDefinition
             , roles
+            , usuarios
             , personal
             , personal_rol
             , permisos
@@ -320,38 +321,38 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 }
             })
         })
-        be.appendToTableDefinition('usuarios', function (tableDef,context) {
-            tableDef.fields.splice(2,0,
-                {name:'idper', typeName:'text'}
-            );
-            tableDef.fields.forEach(function(field){
-                if(field.name=='clave_nueva'){
-                    field.allow=changing(field.allow, {
-                        select:true, update:true, insert:true
-                    });
-                    //field.editable=true;
-                    // no deja cambiar clave_nueva por condicion en admin_chpass
-                }
-            })
-            var q = context.be.db.quoteLiteral;
-            var esSuperUser=context.superuser||false;
-            //o filtrar por usuario ${q(context.user.usuario)}
-            //asumo solo relacion de rol de un nivel
-            tableDef.sql=changing(tableDef.sql,{
-                isTable:true,
-                where:` (${q(esSuperUser)} 
-                    or usuarios.rol= ${q(context.user.rol)}
-                    or exists (select rol_subordinado from roles_subordinados s where s.rol=${q(context.user.rol)} and usuarios.rol=s.rol_subordinado)                      
-                )`
-            });
-            tableDef.editable=true;
-            tableDef.foreignKeys = tableDef.foreignKeys||[];
-            tableDef.foreignKeys.push({references:'roles'  , fields:['rol'] , onDelete: 'cascade'});
-            tableDef.constraints=tableDef.constraints||[];
-            tableDef.constraints.push(
-                {constraintType:'unique', fields:['idper']}
-            );
-        });
+        // be.appendToTableDefinition('usuarios', function (tableDef,context) {
+        //     tableDef.fields.splice(2,0,
+        //         {name:'idper', typeName:'text'}
+        //     );
+        //     tableDef.fields.forEach(function(field){
+        //         if(field.name=='clave_nueva'){
+        //             field.allow=changing(field.allow, {
+        //                 select:true, update:true, insert:true
+        //             });
+        //             //field.editable=true;
+        //             // no deja cambiar clave_nueva por condicion en admin_chpass
+        //         }
+        //     })
+        //     var q = context.be.db.quoteLiteral;
+        //     var esSuperUser=context.superuser||false;
+        //     //o filtrar por usuario ${q(context.user.usuario)}
+        //     //asumo solo relacion de rol de un nivel
+        //     tableDef.sql=changing(tableDef.sql,{
+        //         isTable:true,
+        //         where:` (${q(esSuperUser)} 
+        //             or usuarios.rol= ${q(context.user.rol)}
+        //             or exists (select rol_subordinado from roles_subordinados s where s.rol=${q(context.user.rol)} and usuarios.rol=s.rol_subordinado)                      
+        //         )`
+        //     });
+        //     tableDef.editable=true;
+        //     tableDef.foreignKeys = tableDef.foreignKeys||[];
+        //     tableDef.foreignKeys.push({references:'roles'  , fields:['rol'] , onDelete: 'cascade'});
+        //     tableDef.constraints=tableDef.constraints||[];
+        //     tableDef.constraints.push(
+        //         {constraintType:'unique', fields:['idper']}
+        //     );
+        // });
     }
   }
 }

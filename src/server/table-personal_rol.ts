@@ -13,9 +13,19 @@ export function personal_rol(context:TableContext):TableDefinition {
             { name: "rol"         , typeName: "text"    },
         ],
         primaryKey: ['persona','rol'],
-        foreignKeys:[
+        softForeignKeys:[
             {references:'personal', fields:['persona']},
             {references:'roles'   , fields:['rol']    },
-        ]
+        ],
+        sql:{
+            isTable:false,
+            viewBody:`select idper as persona, rol
+                from usuarios
+                where idper is not null 
+            union 
+                select idper as persona, rol2
+                from usuarios
+                where idper is not null and rol2 is not null`,
+        }
     };
 }

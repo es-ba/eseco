@@ -14,7 +14,7 @@ export function tem_estados(context:TableContext):TableDefinition {
             {name:'enc'                , typeName:'text'     },
             {name:'cuando'             , typeName:'timestamp'},
             {name:'carga'              , typeName:'date'     },
-            {name:'carga_persona'      , typeName:'integer'  },
+            {name:'carga_persona'      , typeName:'text'     },
             {name:'carga_rol'          , typeName:'text'     },
             {name:'carga_observaciones', typeName:'text'     },
         ],
@@ -23,7 +23,7 @@ export function tem_estados(context:TableContext):TableDefinition {
             {references:'tem'     , fields:['operativo','enc']},
             {references:'estados' , fields:['estado']},
             {references:'roles'   , fields:[{source:'carga_rol'    , target:'rol'}]},
-            {references:'personal', fields:[{source:'carga_persona', target:'persona'}]},
+            {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}]},
         ],
         constraints:[
             // {constraintType:'unique', fields:['operativo', 'carga', 'carga_persona', 'enc']}

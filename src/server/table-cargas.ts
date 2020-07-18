@@ -11,14 +11,14 @@ export function cargas(context:TableContext):TableDefinition {
         editable:admin,
         fields:[
             {name:'carga'           , typeName:'date'   },
-            {name:'carga_persona'   , typeName:'integer'},
+            {name:'carga_persona'   , typeName:'text'   },
             {name:'carga_rol'       , typeName:'text'   },
             {name:'encuestas'       , typeName:'integer'},
             {name:'mio'             , typeName:'boolean', label:'mío'},
         ],
         primaryKey:['carga', 'carga_persona'],
         softForeignKeys:[
-            {references:'personal', fields:[{source:'carga_persona',target:'persona'}]},
+            {references:'usuarios', fields:[{source:'carga_persona',target:'idper'}]},
             {references:'roles'   , fields:[{source:'carga_rol'    ,target:'rol'}]}
         ],
         detailTables:[

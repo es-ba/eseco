@@ -16,14 +16,14 @@ export function etiquetas(context:TableContext):TableDefinition {
             {name:'resultado'        , typeName:'text'      ,editable:false },
             {name:'fecha'            , typeName:'date'      ,editable:false },
             {name:'hora'             , typeName:'interval'  ,editable:false },
-            {name:'laboratorista'    , typeName:'integer'   ,editable:false },
+            {name:'laboratorista'    , typeName:'text'      ,editable:false },
             {name:'observaciones'    , typeName:'text'      ,editable:false },
 			{name:'rectificacion'    , typeName:'integer'   ,editable:false, defaultDbValue: 0}
         ],
         primaryKey:['etiqueta'],
         foreignKeys:[
             {references:'planchas'     , fields:['plancha']},
-            {references:'personal'     , fields:[{source:'laboratorista', target:'persona'}]},
+            {references:'usuarios'     , fields:[{source:'laboratorista', target:'usuario'}]},
         ],
     };
 }

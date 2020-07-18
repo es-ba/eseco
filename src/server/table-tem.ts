@@ -146,7 +146,7 @@ export function tem(context:TableContext):TableDefinition {
         {
             "name": "carga_persona",
             editable: hasRecepcionistaPermission,
-            "typeName": "integer"
+            "typeName": "text"
         },
         {
             "name": "carga",
@@ -180,9 +180,9 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "text",
             //"nullable": false
         },
-        {name:'cod_enc'       , typeName:'bigint' ,editable:isAdmin    },
-        {name:'cod_recu'      , typeName:'bigint' ,editable:false    },
-        {name:'cod_sup'       , typeName:'bigint' ,editable:false    },
+        {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
+        {name:'cod_recu'      , typeName:'text'   ,editable:false    },
+        {name:'cod_sup'       , typeName:'text'   ,editable:false    },
         {name:'rea'           , typeName:'bigint' ,editable:false    },
         {name:'norea'         , typeName:'text'   ,editable:false    },
         {name:'rea_p'         , typeName:'bigint' ,editable:false      },
@@ -345,11 +345,11 @@ export function tem(context:TableContext):TableDefinition {
 //        {references:'zonas'   , fields:['zona'   ]},
 //        {references:'sexo'    , fields:['sexo'   ]},
         {references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
-        {references:'personal' , fields:[{source:'carga_persona', target:'persona'}]},
-        {references:'personal_rol' , fields:[{source:'carga_persona', target:'persona'},{source:'carga_rol', target:'rol'}], alias:'pertem', displayFields:[]},
-        {references:'personal' , fields:[{source:'cod_enc', target:'persona'}], alias:'per_enc', displayFields:[]},
-        {references:'personal' , fields:[{source:'cod_recu', target:'persona'}], alias:'per_recu', displayFields:[]},
-        {references:'personal' , fields:[{source:'cod_sup', target:'persona'}], alias:'per_sup', displayFields:[]},
+        {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
+        {references:'usuarios', fields:[{source:'carga_persona', target:'idper'},{source:'carga_rol', target:'rol'}], alias:'pertem', displayFields:[]},
+        {references:'usuarios', fields:[{source:'cod_enc', target:'idper'}], alias:'per_enc', displayFields:[]},
+        {references:'usuarios', fields:[{source:'cod_recu', target:'idper'}], alias:'per_recu', displayFields:[]},
+        {references:'usuarios', fields:[{source:'cod_sup', target:'idper'}], alias:'per_sup', displayFields:[]},
     ], 
     "detailTables": [
         {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
