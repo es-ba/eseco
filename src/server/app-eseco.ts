@@ -6,6 +6,7 @@ import {ProceduresEseco} from "./procedures-eseco";
 import * as pg from "pg-promise-strict";
 import * as miniTools from "mini-tools";
 import {Context, MenuInfoBase, Request, Response} from "./types-eseco";
+import { changing } from "best-globals";
 
 import * as yazl from "yazl";
 import { NextFunction } from "express-serve-static-core";
@@ -17,6 +18,7 @@ import { personal_rol        } from "./table-personal_rol";
 import { permisos            } from "./table-permisos";
 import { roles_permisos      } from "./table-roles_permisos";
 import { parametros          } from "./table-parametros";
+import { roles_subordinados  } from "./table-roles_subordinados";
 
 import {tipos_estados        } from "./table-tipos_estados";
 import {estados              } from "./table-estados";
@@ -218,6 +220,11 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 menuContent.push(
                     {menuType:'proc', name:'resultado_rectificar', proc:'resultado_rectificar', label:'rectificar resultado'},
                 )
+                if(!context.superuser){
+                    menuContent.push(
+                        {menuType:'table', name:'usuarios'}
+                    )
+                }
             }
             menu = [ ...menu, 
                 {menuType:'menu', name:'laboratorio', menuContent}
@@ -273,6 +280,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , personal_rol
             , permisos
             , roles_permisos
+            , roles_subordinados
             , tipos_estados
             , estados
             , lotes
@@ -312,10 +320,31 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 }
             })
         })
-        be.appendToTableDefinition('usuarios', function (tableDef) {
+        be.appendToTableDefinition('usuarios', function (tableDef,context) {
             tableDef.fields.splice(2,0,
                 {name:'idper', typeName:'text'}
             );
+            tableDef.fields.forEach(function(field){
+                if(field.name=='clave_nueva'){
+                    field.allow=changing(field.allow, {
+                        select:true, update:true, insert:true
+                    });
+                    //field.editable=true;
+                    // no deja cambiar clave_nueva por condicion en admin_chpass
+                }
+            })
+            var q = context.be.db.quoteLiteral;
+            var esSuperUser=context.superuser||false;
+            //o filtrar por usuario ${q(context.user.usuario)}
+            //asumo solo relacion de rol de un nivel
+            tableDef.sql=changing(tableDef.sql,{
+                isTable:true,
+                where:` (${q(esSuperUser)} 
+                    or usuarios.rol= ${q(context.user.rol)}
+                    or exists (select rol_subordinado from roles_subordinados s where s.rol=${q(context.user.rol)} and usuarios.rol=s.rol_subordinado)                      
+                )`
+            });
+            tableDef.editable=true;
             tableDef.foreignKeys = tableDef.foreignKeys||[];
             tableDef.foreignKeys.push({references:'roles'  , fields:['rol'] , onDelete: 'cascade'});
             tableDef.constraints=tableDef.constraints||[];
