@@ -10,6 +10,7 @@ import { changing } from "best-globals";
 
 import * as yazl from "yazl";
 import { NextFunction } from "express-serve-static-core";
+import * as likeAr from "like-ar";
 
 //import { casos               } from "./table-casos";
 import { roles               } from "./table-roles";
@@ -138,8 +139,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             be.permisosRol=results[0].value;
             be.permisosRolSoloTrue=results[1].value;
             be.permisosSuperuser=results[2].value;
+            be.permisosParaNadie=likeAr(be.permisosSuperuser).map(p=>likeAr(p).map(va=>false).plain()).plain()
             console.dir(be.permisosRolSoloTrue,{depth:9});
             console.dir(be.permisosSuperuser,{depth:9});
+            console.dir(be.permisosParaNadie,{depth:9});
         });
     }
     configStaticConfig(){
@@ -148,7 +151,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
     }
     clientIncludes(req, opts) {
         var be = this;
-        var menuedResources=req && opts && !opts.skipMenu ? [
+        var logged = req && opts && !opts.skipMenu ;
+        var menuedResources=logged ? [
             { type:'js' , src: 'client/client.js' },
         ]:[
             {type:'js' , src:'unlogged.js' },
@@ -165,7 +169,14 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             { type: 'js', module: 'react-redux', modPath:'../dist', fileDevelopment:'react-redux.js', file:'react-redux.min.js' },
             { type: 'js', module: 'memoize-one',  file:'memoize-one.js' },
             { type: 'js', module: 'qrcode', modPath: '../build', file: 'qrcode.js'},
-            ...super.clientIncludes(req, opts).filter(m=>m.file!='formularios.css'),
+            ...super.clientIncludes(req, opts).filter(m=>m.file!='formularios.css')
+                .filter(m=>logged || m.file!='operativos.js'
+                                  && m.file!='meta-enc.js'
+                                  && m.file!='datos-ext.js'
+                                  && m.file!='consistencias.js'
+                                  && m.file!='var-cal.js'
+                                  && m.file!='var-cal.js'
+                                  && m.file!='varcal.js'),
             { type: 'js', module: 'redux-typed-reducer', modPath:'../dist', file:'redux-typed-reducer.js' },
             { type: 'js', src: 'adapt.js' },
             { type: 'js', src: 'tipos.js' },
@@ -191,7 +202,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 return {puede: be.permisosRol[req.user.rol].puede, ...fatherContext}
             }
         }
-        return {puede:{}, ...fatherContext};
+        return {puede:be.permisosParaNadie, ...fatherContext};
     }
     getContextForDump():Context{
         var fatherContext = super.getContextForDump();

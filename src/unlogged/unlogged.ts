@@ -4,6 +4,17 @@ import * as AjaxBestPromise from "ajax-best-promise";
 import {LOCAL_STORAGE_STATE_NAME} from "../unlogged/redux-formulario";
 import { desplegarFormularioActual } from './render-formulario';
 
+function siExisteId(id: string, hacer: (arg0: HTMLElement) => void){
+    var elemento = document.getElementById(id);
+    if(elemento!=null){
+        hacer(elemento);
+    }
+}
+
+function mostrarElementoId(id:string, mostrar:boolean){
+    siExisteId(id, e=>e.style.display=mostrar?'block':'none');
+}
+
 window.addEventListener('load', async function(){
     var layout = document.getElementById('total-layout')!;
     if(!layout){
@@ -14,22 +25,36 @@ window.addEventListener('load', async function(){
     await myOwn.ready;
     layout.innerHTML='<div id=main_layout></div><span id="mini-console"></span>';
     var url = new URL(window.location.href);
-    //if(location.pathname.endsWith('/campo')){
-    if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
-        desplegarFormularioActual({modoDemo:false});
-    }else{
-        layout.appendChild(html.div([
-            html.p('Dispositivo sin carga'), 
-            //html.img({src:'img/logo-dm.png'}),
-            html.p([html.a({href:'./menu#i=encuestadores,sincronizar'},'Sincronizar')])
-        ]).create());        
+    if(location.pathname.endsWith('/campo')){
+        if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
+            desplegarFormularioActual({modoDemo:false});
+        }else{
+            var avisoInicial=html.div({class:'aviso-inicial'},[
+                html.div({id:'dm-instalado-ok', style:'display:none'},[
+                    html.p('Sistema instalado'), 
+                    //html.img({src:'img/logo-dm.png'}),
+                    html.p([html.a({href:'./menu#i=encuestadores,sincronizar'},'Sincronizar')])
+                ]),
+                html.div({id:'dm-instalandose', style:'display:none'},[
+                    html.p('Instalando el sistema de relevamiento'),
+                    //html.img({src:'img/logo-dm.png'}),
+                ]),
+                html.div({id:'dm-comprobando', style:'display:block'},[
+                    html.p('Verificando la instalación del sistema'),
+                    //html.img({src:'img/logo-dm.png'}),
+                ])
+            ]).create()
+            layout.appendChild(avisoInicial);        
+        }
     }
-    //}
 })
 
 var wasDownloading=false;
 var appCache = window.applicationCache;
 appCache.addEventListener('downloading', async function() {
+    mostrarElementoId('dm-comprobando', false)
+    mostrarElementoId('dm-instalandose', true)
+    mostrarElementoId('dm-instalado-ok', false)
     wasDownloading=true;
     var layout = await awaitForCacheLayout;
     layout.insertBefore(
@@ -65,6 +90,9 @@ async function cacheReady(){
         data:{}
     });
     myOwn.setLocalVar('app-cache-version',result.split('\n')[1]);
+    mostrarElementoId('dm-comprobando', false)
+    mostrarElementoId('dm-instalandose', false)
+    mostrarElementoId('dm-instalado-ok', true)
     setTimeout(function(){
         var cacheStatusElement = document.getElementById('cache-status')!;
         if(!cacheStatusElement){

@@ -421,6 +421,27 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
     {
+        action:'dm_backup',
+        parameters:[
+            {name:'datos'       , typeName:'jsonb'},
+        ],
+        unlogged:true,
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var be=context.be;
+            await Promise.all(likeAr(parameters.datos.hdr).map(async (hdr,idCaso)=>{
+                var etiqueta = (hdr.respuestas?.c5)?hdr.respuestas.c5:null;
+                return await context.client.query(
+                    `update tem
+                        set json_encuesta = $3, etiqueta = $4
+                        where operativo= $1 and enc = $2`
+                    ,
+                    [OPERATIVO, idCaso, hdr.respuestas, etiqueta]
+                ).execute();
+            }).array());
+            return 'ok'
+        }
+    },
+    {
         action:'qrs_traer',
         resultOk:'qrs_traer',
         parameters:[
