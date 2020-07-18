@@ -33,6 +33,9 @@ import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
 import { etiquetas           } from './table-etiquetas';
 import { usuarios            } from './table-usuarios';
+import { operaciones         } from './table-operaciones';
+import { areas               } from './table-areas';
+
 
 import {defConfig} from "./def-config"
 
@@ -295,6 +298,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , parametros
             , planchas
             , etiquetas
+            , operaciones
+            , areas
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
