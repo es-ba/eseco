@@ -165,6 +165,16 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "text"
         },
         {
+            "name": "cargado_dm",
+            editable: false,
+            "typeName": "text"
+        },
+        {
+            "name": "habilitada",
+            editable: hasRecepcionistaPermission,
+            "typeName": "boolean"
+        },        
+        {
             "name": "json_encuesta",
             editable: true,  //TODO revisar permisos
             "typeName":"jsonb"
@@ -342,8 +352,8 @@ export function tem(context:TableContext):TableDefinition {
         "enc"
     ],
     foreignKeys:[
-//        {references:'zonas'   , fields:['zona'   ]},
-//        {references:'sexo'    , fields:['sexo'   ]},
+        {references:'areas' , fields:['area']},
+        {references:'operaciones' , fields:['operacion']},
         {references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
         {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
         {references:'usuarios', fields:[{source:'carga_persona', target:'idper'},{source:'carga_rol', target:'rol'}], alias:'pertem', displayFields:[]},
@@ -368,6 +378,10 @@ export function tem(context:TableContext):TableDefinition {
         postCreateSqls:`
             create index "carga 4 tem IDX" ON tem (carga);
             CREATE TRIGGER tem_cod_per_trg before UPDATE OF carga_rol, carga_persona  ON tem FOR EACH ROW  EXECUTE PROCEDURE tem_cod_per_trg();
+            CREATE TRIGGER tem_area_sincro_trg
+                AFTER INSERT OR DELETE OR UPDATE OF cargado_dm, etiqueta, json_encuesta, habilitada
+                ON tem FOR EACH ROW
+                EXECUTE PROCEDURE tem_area_sincro_trg();  
         `
     }
 };

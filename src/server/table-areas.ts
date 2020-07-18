@@ -9,13 +9,27 @@ export function areas(context:TableContext):TableDefinition {
         elementName:'area',
         editable:puedeEditar,
         fields:[
-            {name:'area'                    , typeName:'integer'                , nullable:false  },
+            /*
+            {
+                "name": "operativo",
+                "editable": false,
+                "typeName": "text",
+                "nullable": false,
+                "defaultValue": 'ESECO'
+            },
+            */    
+            { 
+                name: 'area',
+                typeName: 'integer',
+                nullable: false,
+                editable: false
+            },
             {name:'recepcionista'           , typeName:'text'                      },
             {name:'relevador'               , typeName:'text'                      },
             {name:'operacion_area'          , typeName:'text'                      },
             {name:'fecha'                   , typeName:'date'                      },
             {name:'observaciones_hdr'       , typeName:'text'                      },
-            {name:'cantidad_cargadas'       , typeName:'integer' , editable:false  },
+            {name:'cargadas'                , typeName:'integer' , editable:false  },
             {name:'reas'                    , typeName:'integer' , editable:false  },
             {name:'no_reas'                 , typeName:'integer' , editable:false  },
             {name:'incompletas'             , typeName:'integer' , editable:false  },
@@ -31,6 +45,7 @@ export function areas(context:TableContext):TableDefinition {
         ],
         primaryKey:['area'],
         foreignKeys:[
+            //{references:'operativos', fields:['operativo']},
             {references:'operaciones', fields:[{source:'operacion_area', target:'operacion'}]},
             {references:'usuarios', fields:[{source:'relevador'    , target:'idper'}], alias:'per_enc', displayFields:[]},
             {references:'usuarios', fields:[{source:'recepcionista', target:'idper'}], alias:'per_recep', displayFields:[]},
