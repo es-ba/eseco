@@ -600,7 +600,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                         //@ts-ignore es un booleano pero pongo ahí los datos de demo!
                         demo: initialState.datos && 
                             // @ts-ignore
-                            myOwn.config.config.ambiente=='test',
+                            myOwn.config.config.ambiente=='test' || myOwn.config.config.ambiente=='demo',
                     }
                 };
                 if(casoState){
