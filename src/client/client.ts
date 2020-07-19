@@ -1,10 +1,10 @@
 import {html, HtmlTag} from "js-to-html";
 import * as myOwn from "myOwn";
 import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario} from "../unlogged/redux-formulario";
-import { CasoState, EtiquetaOpts } from "../unlogged/tipos";
+import { CasoState, EtiquetaOpts, IdVariable } from "../unlogged/tipos";
 import { crearEtiqueta } from "../unlogged/generador-qr";
 import * as TypedControls from "typed-controls";
-
+import * as likeAr from "like-ar";
 
 async function traerHdr(opts:{modoDemo:boolean}){
     await dmTraerDatosFormulario(opts);
@@ -12,17 +12,31 @@ async function traerHdr(opts:{modoDemo:boolean}){
     location.reload();   
 }
 
+function htmlNumero(num:number){
+    return html.span({class:'numero'},''+(num??''))
+}
+
 myOwn.wScreens.sincronizar_dm=function(){
     var mainLayout = document.getElementById('main_layout')!;
+    // TODO: Generalizar
+    var dv1='dv1' as IdVariable;
+    var c5ok='c5ok' as IdVariable;
+
     if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
-        var caso: CasoState = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
-        mainLayout.appendChild(html.p('El dispositivo tiene información cargada').create());
-        var downloadButton = html.button({class:'download-dm-button'},'descargar').create();
+        var state: CasoState = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
+        mainLayout.appendChild(html.div({class:'aviso'},[
+            html.h5('Proceso de sincronización'),
+            html.p([htmlNumero(likeAr(state.datos.cargas).array().length),' cargas']),
+            html.p([htmlNumero(likeAr(state.datos.hdr).array().length),' viviendas']),
+            html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas[dv1]==1 && dv.respuestas[c5ok]==1).array().length),' viviendas con muestras']),
+            html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas[dv1]==2).array().length),' viviendas con "no respuesta"']),
+        ]).create());
+        var downloadButton = html.button({class:'download-dm-button'},'proceder').create();
         mainLayout.appendChild(downloadButton);
         downloadButton.onclick = async function(){
             downloadButton.disabled=true;
             try{
-                await my.ajax.dm_descargar({datos:caso.datos});
+                await my.ajax.dm_descargar({datos:state.datos});
                 //traer nueva
                 await traerHdr({modoDemo:false});
             }catch(err){
@@ -32,8 +46,12 @@ myOwn.wScreens.sincronizar_dm=function(){
             }
         }
     }else{
-        mainLayout.appendChild(html.p('Sincronizar dispositivo').create());
-        var loadButton = html.button({class:'load-dm-button'},'cargar').create();
+        mainLayout.appendChild(html.div({class:'aviso'},[
+            html.h6('Sistema vacío'),
+            html.p('No hay información de formularios'),
+            html.p('No hay información de viviendas')
+        ]).create());
+        var loadButton = html.button({class:'load-dm-button'},'proceder').create();
         mainLayout.appendChild(loadButton);
         loadButton.onclick = async function(){
             //traer nueva
