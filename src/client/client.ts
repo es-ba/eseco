@@ -16,6 +16,18 @@ function htmlNumero(num:number){
     return html.span({class:'numero'},''+(num??''))
 }
 
+async function sincronizarDatos(){
+    var datos = await my.ajax.dm_sincronizar({datos:state.datos});
+    if(my.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
+        var state:CasoState = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
+    }else{
+        state={}
+    }
+    state.datos=datos;
+    state.feedbackRowValidator={};
+    my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+}
+
 myOwn.wScreens.sincronizar_dm=function(){
     var mainLayout = document.getElementById('main_layout')!;
     // TODO: Generalizar
@@ -36,7 +48,7 @@ myOwn.wScreens.sincronizar_dm=function(){
         downloadButton.onclick = async function(){
             downloadButton.disabled=true;
             try{
-                await my.ajax.dm_descargar({datos:state.datos});
+                await sincronizarDatos({datos:state.datos})
                 //traer nueva
                 await traerHdr({modoDemo:false});
             }catch(err){
@@ -55,6 +67,7 @@ myOwn.wScreens.sincronizar_dm=function(){
         mainLayout.appendChild(loadButton);
         loadButton.onclick = async function(){
             //traer nueva
+            await sincronizarDatos({datos:null});
             await traerHdr({modoDemo:false});
         }
     }

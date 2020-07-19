@@ -4,7 +4,7 @@ import { CasilleroBase, CasillerosImplementados, CasoState,
     FeedbackVariable, Formulario, ForPk, 
     IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdVariable, 
     ModoDespliegue, 
-    Opcion, PlainForPk, Respuestas,
+    Opcion, PlainForPk, Respuestas, ResumenEstado,
     TEM
 } from "./tipos";
 import { deepFreeze } from "best-globals";
@@ -227,13 +227,54 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
             [toPlainForPk(forPk)]: row
         }
     })
+    var resumenEstado = calcularResumenVivienda(forPk.vivienda, 
+        // @ts-ignore sí, tiene los feedbacks de los formularios 
+        nuevosRows
+    );
+    var datosVivienda = state.datos.hdr[forPk.vivienda];
     return {
         ...state,
+        datos:{
+            ...state.datos,
+            hdr:{
+                ...state.datos.hdr,
+                [forPk.vivienda]:{
+                    ...datosVivienda,
+                    resumenEstado
+                }
+            }
+        },
         feedbackRowValidator:{
             ...state.feedbackRowValidator,
             ...nuevosRows
         }
     }
+}
+
+function calcularResumenVivienda(idCaso:IdCaso, feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}){
+    //TODO GENERALIZAR
+    var feedBackVivienda = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').array();
+    var feedBackViviendaPlain = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').plain();
+    console.log('feedBackVivienda: ', feedBackViviendaPlain)
+    var prioridades:{[key in ResumenEstado]: {prioridad:number, cantidad:number}} = {
+        'no rea':{prioridad: 1, cantidad:0},
+        'con problemas':{prioridad: 2, cantidad:0},
+        'incompleto':{prioridad: 3, cantidad:0},
+        'vacio':{prioridad: 4, cantidad:0},
+        'ok':{prioridad: 5, cantidad:0}
+    }
+    var min = 5;
+    var minResumen: ResumenEstado = 'ok';
+    for(var feedback of feedBackVivienda){
+        var resumen = feedback.resumen;
+        prioridades[resumen].cantidad++;
+        if(prioridades[resumen].prioridad<min){
+            min=prioridades[resumen].prioridad;
+            minResumen=resumen;
+        }
+        minResumen = minResumen=='vacio'&& prioridades['ok'].cantidad?'incompleto':minResumen;
+    }
+    return minResumen
 }
 
 var reducers={

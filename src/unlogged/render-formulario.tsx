@@ -668,31 +668,6 @@ function FormularioDespliegue(props:{forPk:ForPk}){
     );
 }
 
-function calcularResumenVivienda(idCaso:IdCaso, feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}){
-    //TODO GENERALIZAR
-    var feedBackVivienda = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').array();
-    var feedBackViviendaPlain = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').plain();
-    console.log('feedBackVivienda: ', feedBackViviendaPlain)
-    var prioridades = {
-        'con problemas':{prioridad: 1, cantidad:0},
-        'incompleto':{prioridad: 2, cantidad:0},
-        'vacio':{prioridad: 3, cantidad:0},
-        'ok':{prioridad: 4, cantidad:0}
-    }
-    var min = 4
-    var minResumen: 'vacio' | 'con problemas' | 'incompleto' | 'ok' = 'ok';
-    for(var feedback of feedBackVivienda){
-        var resumen = feedback.resumen;
-        prioridades[resumen].cantidad++;
-        if(prioridades[resumen].prioridad<min){
-            min=prioridades[resumen].prioridad;
-            minResumen=resumen;
-        }
-        minResumen = minResumen=='vacio'&& prioridades['ok'].cantidad?'incompleto':minResumen;
-    }
-    return minResumen
-}
-
 export function Atributo(props:{nombre:string, valor:string}){
     return props.valor!=null && props.valor!=''?<span className="atributo-par">
         <span className="atributo-nombre">{props.nombre}</span> <span className="atributo-valor">{props.valor}</span>
@@ -728,13 +703,13 @@ export function DesplegarCarga(props:{
             </TableHead>
             <TableBody>
                 {likeAr(hdr).filter((datosVivienda:DatosVivienda)=>datosVivienda.tem.carga==idCarga).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
-                    <TableRow>
+                    <TableRow key={idCaso}>
                         <TableCell>
                             <DesplegarTem tem={datosVivienda.tem}/>
                         </TableCell>
                         <TableCell>
                             <Button
-                                resumen-vivienda={calcularResumenVivienda(idCaso, feedbackRowValidator)}
+                                resumen-vivienda={datosVivienda.resumenEstado}
                                 variant="outlined"
                                 onClick={()=>{
                                     dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))

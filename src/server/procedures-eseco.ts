@@ -5,6 +5,8 @@ import { adaptParameterTypes, TablaDatos, OperativoGenerator, ProcedureContext, 
 import * as likeAr from "like-ar";
 export * from "./types-eseco";
 
+import {json, jsono} from "pg-promise-strict";
+
 var changing = require('best-globals').changing;
 var datetime = require('best-globals').datetime;
 var fs = require('fs-extra');
@@ -52,14 +54,6 @@ function createStructure(context:ProcedureContext, tableName:string){
 /* fin definicion estructura completa */
 
 type AnyObject = {[k:string]:any}
-
-function json(sql, orderby){
-    return `COALESCE((SELECT jsonb_agg(to_jsonb(j.*) ORDER BY ${orderby}) from (${sql}) as j),'[]'::jsonb)`
-}
-
-function jsono(sql, indexedby){
-    return `COALESCE((SELECT jsonb_object_agg(${indexedby},to_jsonb(j.*)) from (${sql}) as j),'{}'::jsonb)`
-}
 
 export const ProceduresEseco : ProcedureDef[] = [
     {
@@ -401,6 +395,58 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
     {
+        action:'dm_sincronizar',
+        parameters:[
+            {name:'datos'       , typeName:'jsonb'},
+        ],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var be=context.be;
+            if(parameters.datos){
+                await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
+                    return await context.client.query(
+                        `update tem
+                            set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
+                            where operativo= $1 and enc = $2`
+                        ,
+                        [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
+                    ).execute();
+                }).array());
+            }
+            var result = await context.client.query(`
+                select ${jsono(`select enc, respuestas, "resumenEstado", tem`, 'enc')} as hdr
+                        ${jsono(`select fecha as carga from viviendas group by areas`)}
+                    from (
+                        select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
+                                jsonb_build_object(
+                                    'nomcalle'      , nomcalle      ,
+                                    'sector'        , sector        ,
+                                    'edificio'      , edificio      ,
+                                    'entrada'       , entrada       ,
+                                    'nrocatastral'  , nrocatastral  ,
+                                    'piso'          , piso          ,
+                                    'departamento'  , departamento  ,
+                                    'habitacion'    , habitacion    ,
+                                    'casa'          , casa          ,
+                                    'prioridad'     , reserva+1     ,
+                                    'observaciones' , observaciones ,
+                                    'carga'         , carga         
+                                ) as tem,
+                                fecha,
+                                observacion_area
+                            from tem inner join areas using (area)
+                                (select usuarios from usuario=$1) usuario
+                            where relevador = idper
+                                and (operacion='cargar' 
+                                    or operacion='descargar' and resumen_estado in ('vacia', 'incompleta', 'con problemas')
+                                )
+                    ) viviendas
+                `,
+                [context.username]
+            ).fetchAll();
+            return result.rows;
+        }
+    },
+    {
         action:'dm_descargar',
         parameters:[
             {name:'datos'       , typeName:'jsonb'},
@@ -408,13 +454,12 @@ export const ProceduresEseco : ProcedureDef[] = [
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
             await Promise.all(likeAr(parameters.datos.hdr).map(async (hdr,idCaso)=>{
-                var etiqueta = (hdr.respuestas?.c5)?hdr.respuestas.c5:null;
                 return await context.client.query(
                     `update tem
-                        set json_encuesta = $3, etiqueta = $4
+                        set json_encuesta = $3
                         where operativo= $1 and enc = $2`
                     ,
-                    [OPERATIVO, idCaso, hdr.respuestas, etiqueta]
+                    [OPERATIVO, idCaso, hdr.respuestas]
                 ).execute();
             }).array());
             return 'ok'

@@ -191,9 +191,12 @@ export type TEM = {
     carga:string
 }
 
+export type ResumenEstado = 'vacio' | 'con problemas' | 'incompleto' | 'ok' | 'no rea';
+
 export type DatosVivienda= {
     respuestas: Respuestas
     tem: TEM
+    resumenEstado: ResumenEstado
 }
 
 export type HojaDeRuta={
