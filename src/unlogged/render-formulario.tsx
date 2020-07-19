@@ -9,7 +9,8 @@ import {
     scrollToBottom
 } from "./render-general";
 import {Bloque, BotonFormulario, 
-    CasilleroBase, CasoState, Consistencia, DatosVivienda, FeedbackVariable, Filtro, ForPk, Formulario, 
+    CasilleroBase, CasoState, Consistencia, DatosVivienda,
+    EstadoCarga, FeedbackVariable, Filtro, ForPk, Formulario, 
     IdCaso, IdFormulario, IdVariable, InfoFormulario,
     ModoDespliegue,
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
@@ -668,15 +669,18 @@ function FormularioDespliegue(props:{forPk:ForPk}){
     );
 }
 
-export function Atributo(props:{nombre:string, valor:string}){
+export function Atributo(props:{nombre:string, valor:string|null}){
     return props.valor!=null && props.valor!=''?<span className="atributo-par">
         <span className="atributo-nombre">{props.nombre}</span> <span className="atributo-valor">{props.valor}</span>
     </span>:null
 }
 
+const listaEstadosCarga:EstadoCarga[]=['pendiente','abierta','cerrada'];
+
 export function DesplegarCarga(props:{
     carga:Carga, 
     idCarga:IdCarga, 
+    posicion:number,
     hdr:HojaDeRuta, 
     mainForm:IdFormulario, 
     feedbackRowValidator:{
@@ -687,9 +691,18 @@ export function DesplegarCarga(props:{
     const dispatch = useDispatch();
     return <Paper className="carga">
         <div className="informacion-carga">
+            <div className="carga">{idCarga}</div>
             <div className="fecha">{carga.fecha}</div>
             <div className="observaciones">{carga.observaciones}</div>
+            <ButtonGroup>
+            {listaEstadosCarga.map(estado_carga=>
+                <Button key={estado_carga} variant={estado_carga==carga.estado_carga?"contained":"outlined"} onClick={
+                    ()=>dispatch(dispatchers.ESTADO_CARGA({idCarga, estado_carga}))
+                }>{estado_carga}</Button>
+            )}
+            </ButtonGroup>
         </div>
+        {carga.estado_carga==null && !props.posicion || carga.estado_carga=='abierta'?
         <Table className="tabla-carga-hoja-de-ruta">
             <colgroup>
                 <col style={{width:"80%"}}/>
@@ -721,7 +734,7 @@ export function DesplegarCarga(props:{
                     </TableRow>
                 ).array()}
             </TableBody>
-        </Table>
+        </Table>:null}
     </Paper>
 }
 
@@ -730,6 +743,7 @@ export function DesplegarTem(props:{tem:TEM}){
     return <div>
         <div className="tem-domicilio">{tem.nomcalle} {tem.nrocatastral} <Atributo nombre="piso" valor={tem.piso}/> <Atributo nombre="dpto" valor={tem.departamento}/> </div>
         <div>
+            <Atributo nombre="suplente" valor={tem.prioridad==2?'!':tem.prioridad>2?tem.prioridad-1+'':null}/>
             <Atributo nombre="sector" valor={tem.sector}/>
             <Atributo nombre="edificio" valor={tem.edificio}/>
             <Atributo nombre="casa" valor={tem.casa}/>
@@ -783,8 +797,8 @@ export function HojaDeRutaDespliegue(){
                         reiniciar
                     </Button>
                 </div>:null}
-                {likeAr(cargas).map((carga: Carga, idCarga: IdCarga)=>
-                    <DesplegarCarga carga={carga} idCarga={idCarga} hdr={hdr} mainForm={mainForm} feedbackRowValidator={feedbackRowValidator}/>
+                {likeAr(cargas).map((carga: Carga, idCarga: IdCarga, _, posicion:number)=>
+                    <DesplegarCarga key={idCarga} carga={carga} idCarga={idCarga} posicion={posicion} hdr={hdr} mainForm={mainForm} feedbackRowValidator={feedbackRowValidator}/>
                 ).array()}
             </div>
         </>

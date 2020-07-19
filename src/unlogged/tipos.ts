@@ -205,8 +205,12 @@ export type HojaDeRuta={
 
 export type IdCarga="2020-07-07"|"2020-07-08"
 
+export type EstadoCarga='pendiente'|'abierta'|'cerrada'
+
 export type Carga={
     fecha: Date
+    estado_carga: EstadoCarga
+    necesarias: number
     observaciones: string
 }
 

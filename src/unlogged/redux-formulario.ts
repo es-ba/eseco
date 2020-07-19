@@ -1,8 +1,8 @@
 import { createStore } from "redux";
 import { CasilleroBase, CasillerosImplementados, CasoState, 
-    DatosVivienda, EstructuraRowValidator, 
+    DatosVivienda, EstadoCarga, EstructuraRowValidator, 
     FeedbackVariable, Formulario, ForPk, 
-    IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdVariable, 
+    IdCarga, IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdVariable, 
     ModoDespliegue, 
     Opcion, PlainForPk, Respuestas, ResumenEstado,
     TEM
@@ -353,6 +353,22 @@ var reducers={
                 opciones:{
                     ...state.opciones,
                     forPk: payload.forPk
+                }
+            })
+        },
+    ESTADO_CARGA: (payload: {idCarga:IdCarga, estado_carga:EstadoCarga}) =>
+        function(state: CasoState){
+            return calcularFeedback({
+                ...state,
+                datos:{
+                    ...state.datos,
+                    cargas:{
+                        ...state.datos.cargas,
+                        [payload.idCarga]: {
+                            ...state.datos.cargas[payload.idCarga],
+                            estado_carga: payload.estado_carga
+                        }
+                    }
                 }
             })
         },
