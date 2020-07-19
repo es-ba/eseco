@@ -31,6 +31,7 @@ install:
       - ../node_modules/operativos/install/sql2tabla_datos.sql
       - tem_cod_per_trg.sql
       - tem_area_sincro_trg.sql
+      - upd_operacion_area_tem_trg.sql
       post-adapt: 
       - para-install.sql
       - ../node_modules/pg-triggers/lib/recreate-his.sql

@@ -7,7 +7,7 @@ import * as likeAr from "like-ar";
 export function personal(context:TableContext):TableDefinition {
     var esEditable = context.user.rol === 'admin'||context.puede.configurar.editar;
     var fields:FieldDefinition[]=[
-        { name: "persona"       , typeName: "integer" , originalName:"idper"},
+        { name: "persona"       , typeName: "text" , originalName:"idper"},
         { name: "nombre"        , typeName: "text"    ,isName:true},
         { name: "apellido"      , typeName: "text"    ,isName:true},
         { name: "rol"           , typeName: "text"    },

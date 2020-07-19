@@ -36,7 +36,7 @@ export function areas(context:TableContext):TableDefinition {
             {name:'vacias'                  , typeName:'integer' , editable:false  },
             {name:'inhabilitadas'           , typeName:'integer' , editable:false  },
             {name:'obs_recepcionista'       , typeName:'text'                      },
-            {name:'cantidad_cargadas_bkp'   , typeName:'integer' , editable:false  },
+            {name:'cargadas_bkp'            , typeName:'integer' , editable:false  },
             {name:'reas_bkp'                , typeName:'integer' , editable:false  },
             {name:'no_reas_bkp'             , typeName:'integer' , editable:false  },
             {name:'incompletas_bkp'         , typeName:'integer' , editable:false  },
@@ -53,6 +53,16 @@ export function areas(context:TableContext):TableDefinition {
         detailTables:[
             {table:'tem'     , fields:['area'], abr:'E'},
         ],
+        sql:{
+        postCreateSqls:`
+            CREATE TRIGGER upd_operacion_area_tem_trg
+                AFTER UPDATE OF operacion_area
+                ON areas  
+                FOR EACH ROW
+                EXECUTE PROCEDURE upd_operacion_area_tem_trg();     
+            `
+        }
+
     };
 }
 
