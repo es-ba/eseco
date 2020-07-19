@@ -176,8 +176,13 @@ export function tem(context:TableContext):TableDefinition {
         },        
         {
             "name": "json_encuesta",
-            editable: true,  //TODO revisar permisos
+            editable: false,
             "typeName":"jsonb"
+        },
+        {
+            "name": "resumen_estado",
+            editable: false,
+            "typeName":text
         },
         {
             "name": "dispositivo",
