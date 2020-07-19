@@ -413,10 +413,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                 }).array());
             }
             var result = await context.client.query(`
-                select ${jsono(`select enc, respuestas, "resumenEstado", tem`, 'enc')} as hdr
-                        ${jsono(`select fecha as carga from viviendas group by areas`)}
-                    from (
-                        select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
+                with viviendas as (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
                                 jsonb_build_object(
                                     'nomcalle'      , nomcalle      ,
                                     'sector'        , sector        ,
@@ -428,22 +425,24 @@ export const ProceduresEseco : ProcedureDef[] = [
                                     'habitacion'    , habitacion    ,
                                     'casa'          , casa          ,
                                     'prioridad'     , reserva+1     ,
-                                    'observaciones' , observaciones ,
-                                    'carga'         , carga         
+                                    'observaciones' , carga_observaciones ,
+                                    'carga'         , areas.fecha         
                                 ) as tem,
                                 fecha,
-                                observacion_area
-                            from tem inner join areas using (area)
-                                (select usuarios from usuario=$1) usuario
+                                observaciones_hdr
+                            from tem inner join areas using (area), 
+                                (select idper from usuarios where usuario=$1) usuario
                             where relevador = idper
                                 and (operacion='cargar' 
                                     or operacion='descargar' and resumen_estado in ('vacia', 'incompleta', 'con problemas')
                                 )
-                    ) viviendas
+                    )
+                select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
+                        ${jsono(`select fecha as carga, string_agg(distinct observaciones_hdr, ', ') as observaciones from viviendas group by fecha`, 'carga')} as cargas
                 `,
                 [context.username]
-            ).fetchAll();
-            return result.rows;
+            ).fetchUniqueRow();
+            return result.row;
         }
     },
     {

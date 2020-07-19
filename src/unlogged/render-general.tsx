@@ -11,6 +11,8 @@ export var clsx: (<T>(a1:string|T, a2?:T)=> string) = clsxx;
 //@ts-ignore el módulo memoize-one no tiene bien puesto los tipos en su .d.ts
 export var memoize:typeof memoizeBadTyped.default = memoizeBadTyped;
 
+import {gotoSincronizar} from "./redux-formulario"
+
 import {
     AppBar, Badge, Button, ButtonGroup, Card, Chip, CircularProgress, CssBaseline, 
     Dialog, DialogActions, DialogContent, DialogContentText, 
@@ -170,6 +172,11 @@ export class RenderAndCaptureError extends React.Component<
                 <ReseterForm dispatchers={this.props.dispatchers} mensaje={this.props.mensajeRetorno} onTryAgain={()=>
                     this.setState({ hasError: false, error:{}})
                 }/>
+                <Button variant="outlined" color="secondary"
+                    onClick={()=>{
+                        gotoSincronizar();
+                    }}
+                >Ir a sincronizar</Button>
                 <Typography>Error detectado:</Typography>
                 <Typography>{this.state.error instanceof Error ? this.state.error.message : 'unknown error'}</Typography>
                 <Typography>{JSON.stringify(this.state.info)}</Typography>

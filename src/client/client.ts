@@ -16,12 +16,10 @@ function htmlNumero(num:number){
     return html.span({class:'numero'},''+(num??''))
 }
 
-async function sincronizarDatos(){
-    var datos = await my.ajax.dm_sincronizar({datos:state.datos});
-    if(my.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
-        var state:CasoState = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
-    }else{
-        state={}
+async function sincronizarDatos(state:CasoState|null){
+    var datos = await my.ajax.dm_sincronizar({datos:state?.datos||null});
+    if(state==null){
+        state={};
     }
     state.datos=datos;
     state.feedbackRowValidator={};
@@ -37,18 +35,18 @@ myOwn.wScreens.sincronizar_dm=function(){
     if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
         var state: CasoState = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
         mainLayout.appendChild(html.div({class:'aviso'},[
-            html.h5('Proceso de sincronización'),
-            html.p([htmlNumero(likeAr(state.datos.cargas).array().length),' cargas']),
+            html.h4('Proceso de sincronización'),
+            html.p([htmlNumero(likeAr(state.datos.cargas).array().length),' cargas ',likeAr(state.datos.cargas).keys().join(', ')]),
             html.p([htmlNumero(likeAr(state.datos.hdr).array().length),' viviendas']),
-            html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas[dv1]==1 && dv.respuestas[c5ok]==1).array().length),' viviendas con muestras']),
-            html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas[dv1]==2).array().length),' viviendas con "no respuesta"']),
+            html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas?.[dv1]==1 && dv.respuestas?.[c5ok]==1).array().length),' viviendas con muestras']),
+            html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas?.[dv1]==2).array().length),' viviendas con "no respuesta"']),
         ]).create());
         var downloadButton = html.button({class:'download-dm-button'},'proceder').create();
         mainLayout.appendChild(downloadButton);
         downloadButton.onclick = async function(){
             downloadButton.disabled=true;
             try{
-                await sincronizarDatos({datos:state.datos})
+                await sincronizarDatos(state)
                 //traer nueva
                 await traerHdr({modoDemo:false});
             }catch(err){
@@ -59,7 +57,7 @@ myOwn.wScreens.sincronizar_dm=function(){
         }
     }else{
         mainLayout.appendChild(html.div({class:'aviso'},[
-            html.h6('Sistema vacío'),
+            html.h4('Sistema vacío'),
             html.p('No hay información de formularios'),
             html.p('No hay información de viviendas')
         ]).create());
@@ -67,7 +65,7 @@ myOwn.wScreens.sincronizar_dm=function(){
         mainLayout.appendChild(loadButton);
         loadButton.onclick = async function(){
             //traer nueva
-            await sincronizarDatos({datos:null});
+            await sincronizarDatos(null);
             await traerHdr({modoDemo:false});
         }
     }

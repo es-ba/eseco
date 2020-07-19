@@ -184,53 +184,58 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
     console.log('forPk',forPk);
     var vivienda = forPk.vivienda;
     var respuestas = state.datos.hdr[vivienda].respuestas;
-    console.log(JSON.stringify(respuestas));
-    var nuevosRows = likeAr([
-        {forPk:{vivienda, formulario:'F:F1' as IdFormulario}, formulario:'F:F1' as IdFormulario, post:null},
-        {forPk:{vivienda, formulario:'F:F2' as IdFormulario}, formulario:'F:F2' as IdFormulario, post:null},
-        {forPk:{vivienda, formulario:'F:F3' as IdFormulario}, formulario:'F:F3' as IdFormulario, post:null},
-        ...bestGlobals.serie({
-            from:1, 
-            //@ts-ignore existen las personas y es un array
-            to:respuestas.personas?.length||0
-        }).map(persona=>({forPk:{vivienda, formulario:'F:F2' as IdFormulario, persona}, formulario:'F:F2_personas' as IdFormulario, 
-            post:true
-        }))
-    ]).build(({forPk, formulario, post})=>{
-        var respuestasUnidadAnalisis;
-        var respuestasVivienda=state.datos.hdr[forPk.vivienda].respuestas;
-        // TODO: GENERALIZAR:
-        if('persona' in forPk && forPk.persona!=null){
-            // @ts-ignore exite
-            respuestasUnidadAnalisis=respuestasVivienda.personas[forPk.persona-1];
-        }else{
-            respuestasUnidadAnalisis=respuestasVivienda;
-        }
-        var row=rowValidator(
-            state.estructura.formularios[formulario].estructuraRowValidator, 
-            respuestasUnidadAnalisis
-        )
-        // TODO: GENERALIZAR
-        if(post){
-            // @ts-ignore
-            if(row.feedback.p1.estado=='actual' && (
-            // @ts-ignore
-                forPk.persona==1 && respuestasVivienda.cp==null 
-            // @ts-ignore
-                || forPk.persona>1 && respuestasVivienda.personas[forPk.persona-2].p1 == null
-            )){
-            // @ts-ignore
-                row.feedback.p1.estado='todavia_no';
+    if(respuestas){
+        var nuevosRows = likeAr([
+            {forPk:{vivienda, formulario:'F:F1' as IdFormulario}, formulario:'F:F1' as IdFormulario, post:null},
+            {forPk:{vivienda, formulario:'F:F2' as IdFormulario}, formulario:'F:F2' as IdFormulario, post:null},
+            {forPk:{vivienda, formulario:'F:F3' as IdFormulario}, formulario:'F:F3' as IdFormulario, post:null},
+            ...bestGlobals.serie({
+                from:1, 
+                //@ts-ignore existen las personas y es un array
+                to:respuestas.personas?.length||0
+            }).map(persona=>({forPk:{vivienda, formulario:'F:F2' as IdFormulario, persona}, formulario:'F:F2_personas' as IdFormulario, 
+                post:true
+            }))
+        ]).build(({forPk, formulario, post})=>{
+            var respuestasUnidadAnalisis;
+            var respuestasVivienda=state.datos.hdr[forPk.vivienda].respuestas;
+            // TODO: GENERALIZAR:
+            if('persona' in forPk && forPk.persona!=null){
+                // @ts-ignore exite
+                respuestasUnidadAnalisis=respuestasVivienda.personas[forPk.persona-1];
+            }else{
+                respuestasUnidadAnalisis=respuestasVivienda;
             }
-        }
-        return {
-            [toPlainForPk(forPk)]: row
-        }
-    })
-    var resumenEstado = calcularResumenVivienda(forPk.vivienda, 
-        // @ts-ignore sí, tiene los feedbacks de los formularios 
-        nuevosRows
-    );
+            var row=rowValidator(
+                state.estructura.formularios[formulario].estructuraRowValidator, 
+                respuestasUnidadAnalisis
+            )
+            // TODO: GENERALIZAR
+            if(post){
+                // @ts-ignore
+                if(row.feedback.p1.estado=='actual' && (
+                // @ts-ignore
+                    forPk.persona==1 && respuestasVivienda.cp==null 
+                // @ts-ignore
+                    || forPk.persona>1 && respuestasVivienda.personas[forPk.persona-2].p1 == null
+                )){
+                // @ts-ignore
+                    row.feedback.p1.estado='todavia_no';
+                }
+            }
+            return {
+                [toPlainForPk(forPk)]: row
+            }
+        })
+        var resumenEstado = calcularResumenVivienda(forPk.vivienda, 
+            // @ts-ignore sí, tiene los feedbacks de los formularios 
+            nuevosRows
+        );
+    }else{
+        //@ts-ignore sin nuevas rows
+        nuevosRows={};
+        resumenEstado='vacio';
+    }
     var datosVivienda = state.datos.hdr[forPk.vivienda];
     return {
         ...state,
@@ -635,7 +640,10 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
     var loadState = async function loadState():Promise<CasoState>{
         var casoState:CasoState|null = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
         if(casoState && !opts.modoDemo){
-            return casoState;
+            if(casoState.estructura==null){
+                initialState = await createInitialState();
+                casoState = {...initialState, ...casoState};
+            }
         }else{
             var initialState = await createInitialState();
             if(opts.modoDemo){
@@ -659,12 +667,13 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                 }
             }
             //inicializo feedbacks
-            for(var vivienda in initialState.datos.hdr){
-                initialState=calcularFeedback(initialState, {vivienda:vivienda as IdCaso, formulario: 'F:F1' as IdFormulario});
-            }
             
             return initialState;
         }
+        for(var vivienda in casoState.datos.hdr){
+            casoState=calcularFeedback(casoState, {vivienda:vivienda as IdCaso, formulario: 'F:F1' as IdFormulario});
+        }
+        return casoState;
     }
     var saveState = function saveState(state:CasoState){
         my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
