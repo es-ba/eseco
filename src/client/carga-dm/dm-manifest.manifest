@@ -1,5 +1,5 @@
 CACHE MANIFEST
-#20200706
+#20200718c
 
 CACHE:
 #--------------------------- JS ------------------------------------
@@ -42,10 +42,10 @@ CACHE:
 ../lib/my-websqldb.js
 ../lib/my-localdb.js.map
 ../lib/my-websqldb.js.map
-../lib/my-things.js
-../lib/my-tables.js
+# NO VA ../lib/my-things.js
+# NO VA ../lib/my-tables.js
 ../lib/my-inform-net-status.js
-../lib/my-menu.js
+# NO VA ../lib/my-menu.js
 ../lib/my-skin.js
 ../lib/cliente-en-castellano.js
 ../client/client.js
@@ -54,9 +54,9 @@ CACHE:
 #------------------------------ CSS ---------------------------------
 ../dialog-promise/dialog-promise.css
 ../pikaday/pikaday.css
-../css/my-things.css
-../css/my-tables.css
-../css/my-menu.css
+# NO VA ../css/my-things.css
+# NO VA ../css/my-tables.css
+# NO VA ../css/my-menu.css
 ../css/offline-mode.css
 ../css/formulario-react.css
 

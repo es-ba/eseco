@@ -18,6 +18,7 @@ import {Bloque, BotonFormulario,
 } from "./tipos";
 import { dmTraerDatosFormulario, dispatchers, 
     getFuncionHabilitar, 
+    gotoSincronizar,
     toPlainForPk
 } from "./redux-formulario";
 import { useState, useEffect } from "react";
@@ -790,9 +791,7 @@ export function HojaDeRutaDespliegue(){
                         <IconButton
                             color="inherit"
                             onClick={()=>{
-                                //PROVISORIO
-                                history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=encuestadores,sincronizar_dm`);
-                                location.reload();   
+                                gotoSincronizar()
                             }}
                         >
                             <ICON.SyncAlt/>
@@ -823,31 +822,45 @@ export function ListaTextos(props:{textos:string[]}){
     </ul>;
 }
 
-export function BienvenidaDespliegue(){
+export function BienvenidaDespliegue(props:{modo:CasoState["modo"]}){
     var dispatch=useDispatch();
     return <Paper className="bienvenida">
-        <Typography>DEMO del sistema de relevamiento de ESECO</Typography>
-        <Typography>En esta demo:</Typography>
-        <ListaTextos textos={[
-            "Algunas viviendas aparecen relevadas (el botón está de color) sirven de ejemplo",
-            "Lo que se carguen se guardan localmente pero no se trasmiten a la base de datos",
-            "Se puede volver a la versión inicial (o sea borrar lo que se guardó localmente) desde la hoja de ruta boton [reiniciar demo]",
-            "Todavía hay cosas que faltan o pueden cambiar",
-        ]} />
+        {props.modo.demo?
+            <>
+                <Typography>DEMO del sistema de relevamiento de ESECO</Typography>
+                <Typography>En esta demo:</Typography>
+                <ListaTextos textos={[
+                    "Algunas viviendas aparecen relevadas (el botón está de color) sirven de ejemplo",
+                    "Lo que se carguen se guardan localmente pero no se trasmiten a la base de datos",
+                    "Se puede volver a la versión inicial (o sea borrar lo que se guardó localmente) desde la hoja de ruta boton [reiniciar demo]",
+                    "Todavía hay cosas que faltan o pueden cambiar",
+                ]} />
+            </>
+            :<>
+                <Typography>Encuesta de Seroprevalencia de COVID-19</Typography>
+            </>
+        }
+        <Button
+            variant="contained"
+            color="secondary"
+            onClick={()=>{ gotoSincronizar(); }}
+        >
+            <span>Sincronizar </span> <ICON.SyncAlt/>
+        </Button>
         <Button
             variant="contained"
             color="primary"
             onClick={()=>dispatch(dispatchers.SET_OPCION({opcion:'bienvenido', valor:true}))}
         >
-            Continuar <ICON.Send/>
+            <span>Continuar </span> <ICON.Send/>
         </Button>
     </Paper>
 }
 
 export function AppEseco(){
-    var {forPk, bienvenido} = useSelector((state:CasoState)=>({...state.opciones, ...state.modo}));
+    var {forPk, bienvenido, modo} = useSelector((state:CasoState)=>({...state.opciones, ...state.modo, ...state}));
     if(!bienvenido){
-        return <BienvenidaDespliegue /> 
+        return <BienvenidaDespliegue modo={modo}/> 
     }else if(forPk==null){
         return <HojaDeRutaDespliegue /> 
     }else{

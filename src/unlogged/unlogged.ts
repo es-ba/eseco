@@ -30,10 +30,9 @@ window.addEventListener('load', async function(){
             desplegarFormularioActual({modoDemo:false});
         }else{
             var avisoInicial=html.div({class:'aviso-inicial'},[
-                html.div({id:'dm-instalado-ok', style:'display:none'},[
-                    html.p('Sistema instalado'), 
+                html.div({id:'dm-cargando', style:'display:none'},[
+                    html.p('Cargando el formulario'), 
                     //html.img({src:'img/logo-dm.png'}),
-                    html.p([html.a({href:'./menu#i=encuestadores,sincronizar'},'Sincronizar')])
                 ]),
                 html.div({id:'dm-instalandose', style:'display:none'},[
                     html.p('Instalando el sistema de relevamiento'),
@@ -45,6 +44,12 @@ window.addEventListener('load', async function(){
                 ])
             ]).create()
             layout.appendChild(avisoInicial);        
+            if(window.applicationCache.status==window.applicationCache.IDLE){
+                mostrarElementoId('dm-comprobando', false)
+                mostrarElementoId('dm-instalandose', false)
+                mostrarElementoId('dm-cargando', true)
+                desplegarFormularioActual({modoDemo:false});
+            }
         }
     }
 })
@@ -54,7 +59,7 @@ var appCache = window.applicationCache;
 appCache.addEventListener('downloading', async function() {
     mostrarElementoId('dm-comprobando', false)
     mostrarElementoId('dm-instalandose', true)
-    mostrarElementoId('dm-instalado-ok', false)
+    mostrarElementoId('dm-cargando', false)
     wasDownloading=true;
     var layout = await awaitForCacheLayout;
     layout.insertBefore(
@@ -92,7 +97,7 @@ async function cacheReady(){
     myOwn.setLocalVar('app-cache-version',result.split('\n')[1]);
     mostrarElementoId('dm-comprobando', false)
     mostrarElementoId('dm-instalandose', false)
-    mostrarElementoId('dm-instalado-ok', true)
+    mostrarElementoId('dm-cargando', true)
     setTimeout(function(){
         var cacheStatusElement = document.getElementById('cache-status')!;
         if(!cacheStatusElement){
@@ -102,7 +107,7 @@ async function cacheReady(){
         }
         setTimeout(function(){
             cacheStatusElement.classList.add('all-ok')
-            cacheStatusElement.textContent='aplicación actualizada, puede desconectar el dispositivo';
+            cacheStatusElement.textContent='aplicación actualizada, espere a cargar el formulario';
             setTimeout(function(){
                 cacheStatusElement.style.display='none';
             }, 5000);

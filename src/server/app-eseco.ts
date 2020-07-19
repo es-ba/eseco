@@ -64,11 +64,14 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         mainApp.get(baseUrl+'/campo',async function(req,res,_next){
             // @ts-ignore sé que voy a recibir useragent por los middlewares de Backend-plus
             var {useragent, user} = req;
-            var parameters = req.query;
-            var manifestPath = 'carga-dm/dm-manifest.manifest';
-            /** @type {{type:'js', src:string}[]} */
-            var htmlMain=be.mainPage({useragent, user}, !be.config.devel["no-offline"], {skipMenu:true, manifestPath}).toHtmlDoc();
-            miniTools.serveText(htmlMain,'html')(req,res);
+            if(user){
+                var manifestPath = 'carga-dm/dm-manifest.manifest';
+                /** @type {{type:'js', src:string}[]} */
+                var htmlMain=be.mainPage({useragent, user}, !be.config.devel["no-offline"], {skipMenu:true, manifestPath}).toHtmlDoc();
+               miniTools.serveText(htmlMain,'html')(req,res);
+            }else{
+                res.redirect(baseUrl+'/login#w=path&path=/campo')
+            }
         });
     }
     addLoggedServices(){
@@ -211,12 +214,14 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
     getMenu(context:Context){
         let menu:MenuInfoBase[] = [];
         if(context.puede.encuestas.relevar){
-            menu = [ ...menu,
-                {menuType:'demo', name:'demo', selectedByDefault:true},
-                {menuType:'menu', name:'encuestadores', menuContent:[
-                    {menuType:'sincronizar_dm', name:'sincronizar_dm', label:'sincronizar'},
-                ]},
-            ]
+            if(this.config['client-setup'].ambiente=='demo' || this.config['client-setup'].ambiente=='test' || this.config['client-setup'].ambiente=='capa'){
+                menu.push({menuType:'demo', name:'demo', selectedByDefault:true})
+            }else{
+                menu.push({menuType:'path', name:'relevamiento', path:'/campo'})
+            }
+            menu.push(
+                {menuType:'sincronizar_dm', name:'sincronizar'},
+            );
         }
         if(context.puede.lab_resultado.editar || context.puede.lab_resultado.ver){
             let menuContent=[];

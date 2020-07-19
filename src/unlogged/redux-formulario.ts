@@ -453,6 +453,11 @@ export function toPlainForPk(forPk:ForPk):PlainForPk{
     return JSON.stringify(forPk);
 }
 
+export function gotoSincronizar(){
+    history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=sincronizar`);
+    location.reload();   
+}
+
 export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
     var createInitialState = async function createInitialState(){
         var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
