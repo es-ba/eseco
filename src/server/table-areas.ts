@@ -53,15 +53,6 @@ export function areas(context:TableContext):TableDefinition {
         detailTables:[
             {table:'tem'     , fields:['area'], abr:'E'},
         ],
-        sql:{
-        postCreateSqls:`
-            CREATE TRIGGER upd_operacion_area_tem_trg
-                AFTER UPDATE OF operacion_area
-                ON areas  
-                FOR EACH ROW
-                EXECUTE PROCEDURE upd_operacion_area_tem_trg();     
-            `
-        }
     };
 }
 

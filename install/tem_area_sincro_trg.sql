@@ -26,10 +26,11 @@ end;
 $BODY$
   LANGUAGE plpgsql ;
 
-/*
+
+--DROP TRIGGER IF EXISTS tem_area_sincro_trg ON tem 
 CREATE TRIGGER tem_area_sincro_trg
   AFTER INSERT OR DELETE OR UPDATE OF cargado_dm, etiqueta, json_encuesta, habilitada
   ON tem
   FOR EACH ROW
   EXECUTE PROCEDURE tem_area_sincro_trg();  
-*/  
+  

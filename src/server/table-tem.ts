@@ -384,10 +384,6 @@ export function tem(context:TableContext):TableDefinition {
         postCreateSqls:`
             create index "carga 4 tem IDX" ON tem (carga);
             CREATE TRIGGER tem_cod_per_trg before UPDATE OF carga_rol, carga_persona  ON tem FOR EACH ROW  EXECUTE PROCEDURE tem_cod_per_trg();
-            CREATE TRIGGER tem_area_sincro_trg
-                AFTER INSERT OR DELETE OR UPDATE OF cargado_dm, etiqueta, json_encuesta, habilitada
-                ON tem FOR EACH ROW
-                EXECUTE PROCEDURE tem_area_sincro_trg();  
         `
     }
 };

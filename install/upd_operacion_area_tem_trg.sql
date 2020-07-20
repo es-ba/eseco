@@ -17,10 +17,13 @@ end;
 $BODY$
   LANGUAGE plpgsql ;
 
-/*
+--/*
+DROP TRIGGER IF EXISTS upd_operacion_area_tem_trg ON encu.areas;
+
 CREATE TRIGGER upd_operacion_area_tem_trg
   AFTER UPDATE OF operacion_area, relevador 
   ON areas  
   FOR EACH ROW
   EXECUTE PROCEDURE upd_operacion_area_tem_trg();  
+
 -- */

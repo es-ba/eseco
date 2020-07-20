@@ -30,9 +30,6 @@ install:
       - ../node_modules/varcal/install/wrappers.sql
       - ../node_modules/operativos/install/sql2tabla_datos.sql
       - tem_cod_per_trg.sql
-      - tem_area_sincro_trg.sql
-      - upd_operacion_area_tem_trg.sql
-      - sincronizacion_tem.sql
       post-adapt: 
       - para-install.sql
       - ../node_modules/pg-triggers/lib/recreate-his.sql
@@ -49,7 +46,10 @@ install:
       - desintegrarpk.sql
       - agregar_adjunto_carto_trg
       - estados_permisos_trg.sql
-      - tem_estados_trg.sql      
+      - tem_estados_trg.sql
+      - tem_area_sincro_trg.sql
+      - upd_operacion_area_tem_trg.sql
+      - sincronizacion_tem.sql
 login:
   plus:
     maxAge-5-sec: 5000    
