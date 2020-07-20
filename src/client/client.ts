@@ -187,6 +187,23 @@ myOwn.wScreens.resultados_ver = ()=>{
         my.tableGrid('etiquetas_resultado',resultDiv,{tableDef:{}})
     }
 }
+myOwn.clientSides.abrir={
+    prepare: async (depot, fieldName)=>{
+        var openButton = html.button({class:'download-dm-button'},'abrir').create();
+        depot.rowControls[fieldName].appendChild(openButton);
+        openButton.onclick = async function(){
+            openButton.disabled=true;
+            try{
+                alertPromise('abre formulario')
+            }catch(err){
+                alertPromise(err.message)
+            }finally{
+                openButton.disabled=false;
+            }
+        }
+    },
+    update: false
+};
 
 myOwn.wScreens.demo=function(){
     window.desplegarFormularioActual({modoDemo:true});

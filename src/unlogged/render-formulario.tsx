@@ -705,12 +705,14 @@ export function DesplegarCarga(props:{
         {carga.estado_carga==null && !props.posicion || carga.estado_carga=='abierta'?
         <Table className="tabla-carga-hoja-de-ruta">
             <colgroup>
-                <col style={{width:"80%"}}/>
-                <col style={{width:"20%"}}/>
+                <col style={{width:"70%"}}/>
+                <col style={{width:"15%"}}/>
+                <col style={{width:"15%"}}/>
             </colgroup>
             <TableHead style={{fontSize: "1.2rem"}}>
                 <TableRow className="tr-carga">
                     <TableCell>domicilio</TableCell>
+                    <TableCell>etiqueta</TableCell>
                     <TableCell>vivienda</TableCell>
                 </TableRow>
             </TableHead>
@@ -719,6 +721,9 @@ export function DesplegarCarga(props:{
                     <TableRow key={idCaso}>
                         <TableCell>
                             <DesplegarTem tem={datosVivienda.tem}/>
+                        </TableCell>
+                        <TableCell>
+                            {datosVivienda.respuestas.c5}
                         </TableCell>
                         <TableCell>
                             <Button

@@ -36,6 +36,7 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "text",
             "nullable": false
         },
+        {name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrir'},
         {
             "name": "enc_vieja",
             "editable": false,
