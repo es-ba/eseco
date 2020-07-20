@@ -262,7 +262,7 @@ function calcularResumenVivienda(
     feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}, 
     respuestas:Respuestas
 ){
-    if(respuestas && respuestas.cv1==2){
+    if(respuestas && respuestas.dv1==2){
        return "no rea";
     }
     //TODO GENERALIZAR
