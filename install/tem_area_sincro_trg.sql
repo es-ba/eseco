@@ -4,19 +4,24 @@
 CREATE OR REPLACE FUNCTION tem_area_sincro_trg()
   RETURNS trigger AS
 $BODY$
+declare
+  js_enc_vacio jsonb= '{"personas":[]}'::jsonb;
 begin
+    
     update areas a
-    set (cargadas,reas,no_reas,incompletas,vacias,inhabilitadas)=(
-        select count(cargado_dm) as cargadas,
-            count(etiqueta)        as reas,
-            count(*) filter ( where etiqueta is null and json_encuesta is not null ) as no_reas,
-            null::integer as incompletas, -- definir 
-            count(*) filter ( where etiqueta is null and json_encuesta is null )as vacias,
-            count(*) filter ( where habilitada is not true ) as inhabilitadas
-            from tem
-            where area=a.area)
-    where a.area=new.area;
+      set (cargadas,reas,no_reas,incompletas,vacias,inhabilitadas)=(
+          select count(cargado_dm)                                as cargadas,
+              count(etiqueta)                                     as reas,
+              count(*) filter ( where etiqueta is null and coalesce(json_encuesta,js_enc_vacio) <> js_enc_vacio )            as no_reas,
+              count(*) filter ( where coalesce(json_encuesta,js_enc_vacio) <> js_enc_vacio and resumen_estado='incompleto' ) as incompletas, 
+              count(*) filter ( where etiqueta is null and nullif(json_encuesta,js_enc_vacio) is null )                      as vacias,
+              count(*) filter ( where habilitada is not true )    as inhabilitadas
+              from tem
+              where area=a.area
+      )
+      where a.area=new.area;
     return new;
+
 end;
 $BODY$
   LANGUAGE plpgsql ;
