@@ -62,7 +62,6 @@ export function areas(context:TableContext):TableDefinition {
                 EXECUTE PROCEDURE upd_operacion_area_tem_trg();     
             `
         }
-
     };
 }
 

@@ -81,7 +81,7 @@ export function tem(context:TableContext):TableDefinition {
         {
             "name": "codviviendaparticular",
             editable: false,
-            "typeName": "integer"
+            "typeName": "text"
         },
         {
             "name": "codcalle",
@@ -157,7 +157,6 @@ export function tem(context:TableContext):TableDefinition {
             "name": "operacion",
             editable: hasRecepcionistaPermission,
             "typeName": "text",
-            options: ['cargar','descargar','retirar','anular']
         },
         {
             "name": "carga_observaciones",  //va??? , pareceria por carga
@@ -182,7 +181,7 @@ export function tem(context:TableContext):TableDefinition {
         {
             "name": "resumen_estado",
             editable: false,
-            "typeName":text
+            "typeName":"text"
         },
         {
             "name": "dispositivo",
@@ -351,6 +350,7 @@ export function tem(context:TableContext):TableDefinition {
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
         { name:'etiqueta'         , typeName:'text'     },
+        { name:'relevador'        , typeName:'text'     },
     ],
     "primaryKey": [
         "operativo",

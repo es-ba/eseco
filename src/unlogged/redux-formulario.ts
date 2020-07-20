@@ -631,12 +631,17 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
             feedbackRowValidator:{}
         };
         // @ts-ignore variable global
-        if(myOwn.config.config.ambiente!='demo'){
+        if(myOwn.config.config.ambiente=='test'){
             likeAr(initialState.datos.hdr).forEach((viv,_k,_,i)=>{ 
                 // @ts-ignore lo lleno después
                 viv.respuestas={personas:[]}; 
                 viv.tem.observaciones=i==1?'Timbre verde':''
             })
+        }
+        // @ts-ignore variable global
+        if(myOwn.config.config.ambiente=='produccion'){
+            // @ts-ignore lo vacio
+            initialState.datos={hdr:{}, casos:{}}
         }
         var vivienda:IdCaso;
         var formulario:IdFormulario;

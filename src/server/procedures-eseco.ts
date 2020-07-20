@@ -7,8 +7,8 @@ export * from "./types-eseco";
 
 import {json, jsono} from "pg-promise-strict";
 
-var changing = require('best-globals').changing;
-var datetime = require('best-globals').datetime;
+import {changing, datetime, date } from 'best-globals';
+import { carga_fechas } from "./table-carga_fechas";
 var fs = require('fs-extra');
 var path = require('path');
 var sqlTools = require('sql-tools');
@@ -412,7 +412,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                     ).execute();
                 }).array());
             }
-            var result = await context.client.query(`
+            var {row} = await context.client.query(`
                 with viviendas as (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
                                 jsonb_build_object(
                                     'nomcalle'      , nomcalle      ,
@@ -426,23 +426,28 @@ export const ProceduresEseco : ProcedureDef[] = [
                                     'casa'          , casa          ,
                                     'prioridad'     , reserva+1     ,
                                     'observaciones' , carga_observaciones ,
-                                    'carga'         , areas.fecha         
+                                    'carga'         , area         
                                 ) as tem,
-                                fecha,
-                                observaciones_hdr
-                            from tem inner join areas using (area), 
+                                area
+                            from tem, 
                                 (select idper from usuarios where usuario=$1) usuario
                             where relevador = idper
-                                and (operacion='cargar' 
-                                    or operacion='descargar' and resumen_estado in ('vacia', 'incompleta', 'con problemas')
-                                )
+                                and operacion='cargar' 
+                                and habilitada 
                     )
                 select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
-                        ${jsono(`select fecha as carga, string_agg(distinct observaciones_hdr, ', ') as observaciones from viviendas group by fecha`, 'carga')} as cargas
+                        ${json(`
+                            select area as carga, observaciones_hdr as observaciones, fecha
+                                from viviendas inner join areas using (area) 
+                                group by area, observaciones_hdr, fecha`, 
+                            'fecha')} as cargas
                 `,
                 [context.username]
             ).fetchUniqueRow();
-            return result.row;
+            return {
+                ...row,
+                cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:date.iso(carga.fecha).toDmy()})), 'carga')
+            };
         }
     },
     {

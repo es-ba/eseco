@@ -6,9 +6,9 @@ CREATE OR REPLACE FUNCTION upd_operacion_area_tem_trg()
 $BODY$
 begin
     update tem
-      set operacion=new.operacion_area
-      where area=new.area; 
-
+      set operacion=new.operacion_area,
+          relevador=new.relevador
+      where area=new.area and habilitada; 
     return new;
 end;
 $BODY$
@@ -20,4 +20,4 @@ CREATE TRIGGER upd_operacion_area_tem_trg
   ON areas  
   FOR EACH ROW
   EXECUTE PROCEDURE upd_operacion_area_tem_trg();  
-*/  
+-- */  
