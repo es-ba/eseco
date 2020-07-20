@@ -83,4 +83,5 @@ client-setup:
   background-img: ../img/background-test.png
   deviceWidthForMobile: device-width
   user-scalable: no
+  grid-buffer: wsql
 `

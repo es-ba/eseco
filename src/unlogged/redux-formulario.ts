@@ -229,7 +229,8 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
         })
         var resumenEstado = calcularResumenVivienda(forPk.vivienda, 
             // @ts-ignore sí, tiene los feedbacks de los formularios 
-            nuevosRows
+            nuevosRows,
+            respuestas
         );
     }else{
         //@ts-ignore sin nuevas rows
@@ -256,7 +257,14 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
     }
 }
 
-function calcularResumenVivienda(idCaso:IdCaso, feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}){
+function calcularResumenVivienda(
+    idCaso:IdCaso, 
+    feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}, 
+    respuestas:Respuestas
+){
+    if(respuestas && respuestas.cv1==2){
+       return "no rea";
+    }
     //TODO GENERALIZAR
     var feedBackVivienda = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').array();
     var feedBackViviendaPlain = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').plain();

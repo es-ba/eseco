@@ -399,6 +399,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'datos'       , typeName:'jsonb'},
         ],
+        setCookies:true,
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
             if(parameters.datos){
@@ -412,6 +413,12 @@ export const ProceduresEseco : ProcedureDef[] = [
                     ).execute();
                 }).array());
             }
+            var condviv= `
+                        operativo= $1 
+                          and relevador = (select idper from usuarios where usuario=$2)
+                          and operacion='cargar' 
+                          and habilitada
+            `
             var {row} = await context.client.query(`
                 with viviendas as (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
                                 jsonb_build_object(
@@ -429,11 +436,8 @@ export const ProceduresEseco : ProcedureDef[] = [
                                     'carga'         , area         
                                 ) as tem,
                                 area
-                            from tem, 
-                                (select idper from usuarios where usuario=$1) usuario
-                            where relevador = idper
-                                and operacion='cargar' 
-                                and habilitada 
+                            from tem
+                            where ${condviv}
                     )
                 select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
                         ${json(`
@@ -442,8 +446,23 @@ export const ProceduresEseco : ProcedureDef[] = [
                                 group by area, observaciones_hdr, fecha`, 
                             'fecha')} as cargas
                 `,
-                [context.username]
+                [OPERATIVO,context.username]
             ).fetchUniqueRow();
+            var token = context.cookies['token_dm'];
+            if(!token){
+                token = (await be.procedure.token_get.coreFunction(context, {
+                    useragent: context.session.req.useragent, 
+                    username: context.username
+                })).token;
+                context.setCookie('token_dm', token, {});
+            }
+            await context.client.query(
+                `update tem
+                    set  cargado_dm=$3
+                    where ${condviv} `
+                ,
+                [OPERATIVO, context.username, token]
+            ).execute();
             return {
                 ...row,
                 cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:date.iso(carga.fecha).toDmy()})), 'carga')
