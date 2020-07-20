@@ -15,6 +15,8 @@ var sqlTools = require('sql-tools');
 
 var discrepances = require('discrepances');
 
+const  ResultadosLaboratorio = ['Positivo', 'Negativo', 'Indeterminado','Escasa muestra'];
+
 const OPERATIVO = 'ESECO';
 const OPERATIVO_ETIQUETAS = 'ESECO201';
 const formPrincipal = 'F:F1';
@@ -612,9 +614,10 @@ export const ProceduresEseco : ProcedureDef[] = [
                     `update etiquetas 
                         set laboratorista = $2,
                             ingreso_lab = coalesce(ingreso_lab, current_timestamp)
-                        where etiqueta = $1`,
+                        where etiqueta = $1
+                        returning true`,
                     [parameters.etiqueta, context.username]
-                ).execute();
+                ).fetchUniqueRow();
             }
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
             return {estado, hayDatos, datos}
@@ -625,7 +628,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
             {name:'etiqueta'       , typeName: 'text' },
-            {name:'resultado'      , typeName: 'text' },
+            {name:'resultado'      , typeName: 'text' , options:ResultadosLaboratorio},
             {name:'observaciones'  , typeName: 'text', defaultValue:null},
         ],
         resultOk:'resultado_cargar',
@@ -643,9 +646,10 @@ export const ProceduresEseco : ProcedureDef[] = [
                         set resultado = $2, observaciones = $3, fecha = current_date, 
                             hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4,
                             ingreso_lab = coalesce(ingreso_lab, current_timestamp)
-                        where etiqueta = $1`,
+                        where etiqueta = $1
+                        returning true`,
                     [parameters.etiqueta, parameters.resultado, parameters.observaciones, context.username]
-                ).execute();
+                ).fetchUniqueRow();
             }
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
             return {estado, hayDatos, datos}
@@ -656,7 +660,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'operativo'             , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
             {name:'etiqueta'              , typeName: 'text'    },
-            {name:'resultado'             , typeName: 'text'    },
+            {name:'resultado'             , typeName: 'text' , options:ResultadosLaboratorio   },
             {name:'observaciones'         , typeName: 'text', defaultValue:null},
             {name:'numero_rectificacion'  , typeName: 'integer' },
         ],

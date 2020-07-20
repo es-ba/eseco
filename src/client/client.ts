@@ -179,12 +179,12 @@ myOwn.wScreens.resultados_ver = ()=>{
             fixedFields.push({fieldName: 'fecha', value: fecha})
             
         }
-        my.tableGrid('etiquetas',resultDiv,{tableDef:{}, fixedFields})
+        my.tableGrid('etiquetas_resultado',resultDiv,{tableDef:{}, fixedFields})
     }
     allButton.onclick=async ()=>{
         resultDiv.innerHTML='';
         fechaElement.setTypedValue(null)
-        my.tableGrid('etiquetas',resultDiv,{tableDef:{}})
+        my.tableGrid('etiquetas_resultado',resultDiv,{tableDef:{}})
     }
 }
 
