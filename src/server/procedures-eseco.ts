@@ -399,6 +399,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'datos'       , typeName:'jsonb'},
         ],
+        setCookies:true,
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
             if(parameters.datos){
@@ -444,6 +445,23 @@ export const ProceduresEseco : ProcedureDef[] = [
                 `,
                 [context.username]
             ).fetchUniqueRow();
+            var token = context.cookies['token_dm'];
+            if(!token){
+                token = (await be.procedure.token_get.coreFunction(context, {
+                    useragent: context.session.req.useragent, 
+                    username: context.username
+                })).token;
+                context.setCookie('token_dm', token, {});
+            }
+            await context.client.query(
+                `update tem
+                    set  cargado_dm=$3
+                    where operativo= $1 and relevador = (select idper from usuarios where usuario=$2)
+                        and operacion='cargar' 
+                        and habilitada `
+                ,
+                [OPERATIVO, context.username, token]
+            ).execute();
             return {
                 ...row,
                 cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:date.iso(carga.fecha).toDmy()})), 'carga')
