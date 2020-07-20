@@ -47,4 +47,6 @@ $BODY$
 
 ---- NOVEDADES DE EMILIO
 
+alter table encu.etiquetas add column ingreso_lab timestamp;
+
 ---- FIN

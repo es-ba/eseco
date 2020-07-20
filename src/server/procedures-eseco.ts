@@ -574,6 +574,34 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
     {
+        action:'laboratorio_ingresar',
+        parameters:[
+            {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
+            {name:'etiqueta'       , typeName: 'text' },
+        ],
+        resultOk:'laboratorio_ingresar',
+        roles:['lab','jefe_lab'],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var be = context.be;
+            var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
+            var estado;
+            if(etiqueta.resultado){
+                estado = 'tenia';
+            }else{
+                estado = 'ok';
+                await context.client.query(
+                    `update etiquetas 
+                        set laboratorista = $2,
+                            ingreso_lab = coalesce(ingreso_lab, current_timestamp)
+                        where etiqueta = $1`,
+                    [parameters.etiqueta, context.username]
+                ).execute();
+            }
+            var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
+            return {estado, hayDatos, datos}
+        }
+    },
+    {
         action:'resultado_cargar',
         parameters:[
             {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
@@ -594,7 +622,8 @@ export const ProceduresEseco : ProcedureDef[] = [
                 await context.client.query(
                     `update etiquetas 
                         set resultado = $2, observaciones = $3, fecha = current_date, 
-                        hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4
+                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4,
+                            ingreso_lab = coalesce(ingreso_lab, current_timestamp)
                         where etiqueta = $1`,
                     [parameters.etiqueta, parameters.resultado, parameters.observaciones, context.username]
                 ).execute();
@@ -623,7 +652,8 @@ export const ProceduresEseco : ProcedureDef[] = [
                 await context.client.query(
                     `update etiquetas 
                         set resultado = $2, observaciones = $3, fecha = current_date, rectificacion = $6,
-                        hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4
+                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4,
+                            ingreso_lab = coalesce(ingreso_lab, current_timestamp)
                         where etiqueta = $1 and rectificacion + 1 = $5
                     returning *`,
                     [

@@ -137,26 +137,22 @@ function mostrarDatosPersona(hayDatos:boolean, datos:any, divResult:HTMLDivEleme
     )
 }
 
-myOwn.wScreens.proc.result.resultado_cargar = async (result:{estado:'ok'|'tenia', hayDatos:boolean, datos:any}, divResult:HTMLDivElement)=>{
-    divResult.removeAttribute("style");
-    divResult.setAttribute('resultado-cargar',result.estado);
-    divResult.appendChild(
-        html.h2({class:result.estado}, result.estado=="ok"?
-            "El resultado se cargó correctamente."
-        :
-            "No se cargó el resultado ya que fue cargado anteriormente. Rectifique si desea modificalo."
-        ).create()
-    )
-    mostrarDatosPersona(result.hayDatos, result.datos, divResult);
+var wScreenProcResultResultadoLaboratorio = function(atributo:string, mensajeNo){
+    return async (result:{estado:'ok'|'tenia', hayDatos:boolean, datos:any}, divResult:HTMLDivElement)=>{
+        divResult.removeAttribute("style");
+        divResult.setAttribute(atributo,result.estado);
+        divResult.appendChild(
+            html.h2({class:result.estado}, result.estado=="ok"?'ok':mensajeNo).create()
+        )
+        mostrarDatosPersona(result.hayDatos, result.datos, divResult);
+    }
 }
-myOwn.wScreens.proc.result.resultado_rectificar = async (result:{estado:'ok', hayDatos:boolean, datos:any}, divResult:HTMLDivElement)=>{
-    divResult.removeAttribute("style");
-    divResult.setAttribute('resultado-rectificar',result.estado);
-    divResult.appendChild(
-        html.h2({class:result.estado},"El resultado se rectificó correctamente.").create()
-    )
-    mostrarDatosPersona(result.hayDatos, result.datos, divResult);
-}
+
+myOwn.wScreens.proc.result.resultado_cargar = wScreenProcResultResultadoLaboratorio('resultado-rectificar', "No se cargó el resultado ya que fue cargado anteriormente. Vaya a rectificar si desea modificalo.");
+
+myOwn.wScreens.proc.result.resultado_rectificar = wScreenProcResultResultadoLaboratorio('resultado-rectificar', "No se cargó la rectificación revise el número de rectificación.");
+
+myOwn.wScreens.proc.result.laboratorio_ingresar = wScreenProcResultResultadoLaboratorio('resultado-cargar', "Recepción de la muestra ya había sido registrada");
 
 myOwn.wScreens.resultados_ver = ()=>{
     var mainLayout = document.getElementById('main_layout')!;
