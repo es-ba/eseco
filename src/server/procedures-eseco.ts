@@ -399,7 +399,8 @@ export const ProceduresEseco : ProcedureDef[] = [
     {
         action:'dm_sincronizar',
         parameters:[
-            {name:'datos'       , typeName:'jsonb'},
+            {name:'datos'       , typeName:'jsonb', defaultValue: null},
+            {name:'enc'       , typeName:'text', defaultValue: null},
         ],
         setCookies:true,
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
@@ -421,6 +422,9 @@ export const ProceduresEseco : ProcedureDef[] = [
                           and operacion='cargar' 
                           and habilitada
             `
+            if(parameters.enc){
+                condviv= ` operativo= $1 and enc =$2 `
+            }
             var {row} = await context.client.query(`
                 with viviendas as (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
                                 jsonb_build_object(
@@ -448,7 +452,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                                 group by area, observaciones_hdr, fecha`, 
                             'fecha')} as cargas
                 `,
-                [OPERATIVO,context.username]
+                [OPERATIVO,parameters.enc?parameters.enc:context.username]
             ).fetchUniqueRow();
             var token = context.cookies['token_dm'];
             if(!token){
@@ -463,7 +467,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                     set  cargado_dm=$3
                     where ${condviv} `
                 ,
-                [OPERATIVO, context.username, token]
+                [OPERATIVO, parameters.enc?parameters.enc:context.username, token]
             ).execute();
             return {
                 ...row,

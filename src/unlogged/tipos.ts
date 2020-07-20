@@ -242,6 +242,7 @@ export type CasoState={
         forPk:ForPk|null // índice dentro de las unidades de análisis. Null = en hoja de ruta
         modoDespliegue:ModoDespliegue
         bienvenido:boolean
+        modoDirecto:boolean
     },
     modo:{ // no se persiste
         demo:boolean

@@ -1,16 +1,17 @@
 import {html, HtmlTag} from "js-to-html";
 import * as myOwn from "myOwn";
 import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario} from "../unlogged/redux-formulario";
-import { CasoState, EtiquetaOpts, IdVariable } from "../unlogged/tipos";
+import { CasoState, EtiquetaOpts, IdVariable, IdCaso } from "../unlogged/tipos";
 import { crearEtiqueta } from "../unlogged/generador-qr";
 import * as TypedControls from "typed-controls";
 import * as likeAr from "like-ar";
 
-async function traerHdr(opts:{modoDemo:boolean}){
+async function traerHdr(opts:{modoDemo:boolean, vivienda?:IdCaso}){
     await dmTraerDatosFormulario(opts);
     history.replaceState(null, '', `${location.origin+location.pathname}/../campo`);
     location.reload();   
 }
+
 
 function htmlNumero(num:number){
     return html.span({class:'numero'},''+(num??''))
@@ -21,6 +22,14 @@ async function sincronizarDatos(state:CasoState|null){
     if(state==null){
         state={};
     }
+    state.datos=datos;
+    state.feedbackRowValidator={};
+    my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+}
+
+async function abrirDirecto(enc:IdCaso){
+    var datos = await my.ajax.dm_sincronizar({enc:enc});
+    var state={};
     state.datos=datos;
     state.feedbackRowValidator={};
     my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
@@ -189,12 +198,13 @@ myOwn.wScreens.resultados_ver = ()=>{
 }
 myOwn.clientSides.abrir={
     prepare: async (depot, fieldName)=>{
-        var openButton = html.button({class:'download-dm-button'},'abrir').create();
+        var openButton = html.button({class:'open-dm-button'},'abrir').create();
         depot.rowControls[fieldName].appendChild(openButton);
         openButton.onclick = async function(){
             openButton.disabled=true;
             try{
-                alertPromise('abre formulario')
+                await abrirDirecto(depot.row.enc);
+                await traerHdr({modoDemo:false, vivienda:depot.row.enc});
             }catch(err){
                 alertPromise(err.message)
             }finally{

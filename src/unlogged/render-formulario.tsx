@@ -20,7 +20,8 @@ import {Bloque, BotonFormulario,
 import { dmTraerDatosFormulario, dispatchers, 
     getFuncionHabilitar, 
     gotoSincronizar,
-    toPlainForPk
+    toPlainForPk,
+    goToTem
 } from "./redux-formulario";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"; 
@@ -535,7 +536,8 @@ function useSelectorVivienda(forPk:ForPk){
             resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
             formulario: state.estructura.formularios[forPk.formulario].casilleros,
             modoDespliegue: state.modo.demo?state.opciones.modoDespliegue:'relevamiento',
-            modo: state.modo
+            modo: state.modo,
+            opciones: state.opciones
         }
     })
 }
@@ -590,7 +592,7 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
 
 const FormularioEncabezado = DespliegueEncabezado;
 
-function BarraDeNavegacion(props:{forPk:ForPk}){
+function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean}){
     const dispatch = useDispatch();
     const forPk = props.forPk;
     const {respuestas} = useSelectorVivienda(forPk);
@@ -610,6 +612,9 @@ function BarraDeNavegacion(props:{forPk:ForPk}){
     }else{
         botonesFormulario.pop();
     }
+    if(props.modoDirecto){
+        botonesFormulario.shift();
+    }
     return <ButtonGroup className="barra-navegacion">
         {botonesFormulario.map(b=>
             <Button color={b.formulario==forPk.formulario?"primary":"inherit"} variant="outlined"
@@ -624,12 +629,22 @@ function BarraDeNavegacion(props:{forPk:ForPk}){
                 <span className="label">{b.label}</span>
             </Button>
         )}
+        {props.modoDirecto?
+            <Button
+                color="inherit"
+                onClick={async ()=>{
+                    goToTem();
+                }}
+            >
+                <ICON.ExitToApp/>
+            </Button>
+        :null}
     </ButtonGroup>
 }
 
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var {formulario, modoDespliegue, modo, actual, completo} = useSelectorVivienda(props.forPk);
+    var {formulario, modoDespliegue, modo, actual, completo, opciones} = useSelectorVivienda(props.forPk);
     const dispatch = useDispatch();
     useEffect(() => {
         if(actual){
@@ -645,7 +660,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
         <>
             <AppBar position="fixed">
                 <Toolbar>
-                    <BarraDeNavegacion forPk={forPk}/>
+                    <BarraDeNavegacion forPk={forPk} modoDirecto={opciones.modoDirecto}/>
                 </Toolbar>
             </AppBar>
             <main>

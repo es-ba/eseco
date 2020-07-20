@@ -528,7 +528,12 @@ export function gotoSincronizar(){
     location.reload();   
 }
 
-export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
+export function goToTem(){
+    history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=configurar,muestra,tem`);
+    location.reload();   
+}
+
+export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: IdCaso}){
     var createInitialState = async function createInitialState(){
         var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
         console.log(casillerosOriginales)
@@ -631,6 +636,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
                 modoDespliegue:'relevamiento',
                 bienvenido:false,
                 forPk:null,
+                modoDirecto: false
             },
             modo:{
                 demo:false
@@ -672,6 +678,15 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean}){
             if(casoState.estructura==null){
                 initialState = await createInitialState();
                 casoState = {...initialState, ...casoState};
+                casoState={
+                    ...casoState,
+                    opciones: {
+                        ...casoState.opciones,
+                        modoDirecto: opts.vivienda?true:false,
+                        forPk: opts.vivienda?{vivienda:opts.vivienda, formulario:MAIN_FORM}:null,
+                        bienvenido:true,
+                    }
+                }
             }
         }else{
             var initialState = await createInitialState();
