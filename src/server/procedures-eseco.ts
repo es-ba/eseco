@@ -596,7 +596,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                         set resultado = $2, observaciones = $3, fecha = current_date, 
                         hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4
                         where etiqueta = $1`,
-                    [parameters.etiqueta, parameters.resultado, parameters.observaciones, persona.persona]
+                    [parameters.etiqueta, parameters.resultado, parameters.observaciones, context.username]
                 ).execute();
             }
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
@@ -628,7 +628,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                     returning *`,
                     [
                         parameters.etiqueta, parameters.resultado, parameters.observaciones, 
-                        persona.persona, parameters.numero_rectificacion, parameters.numero_rectificacion
+                        context.username, parameters.numero_rectificacion, parameters.numero_rectificacion
                     ]
                 ).fetchUniqueRow();
             }catch(err){
