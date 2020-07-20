@@ -5,12 +5,12 @@ CREATE OR REPLACE FUNCTION upd_operacion_area_tem_trg()
   RETURNS trigger AS
 $BODY$
 begin
-    if new.recepcionista is not null and new.relevador is not null then
+    if new.relevador is not null then
         update tem
             set operacion=new.operacion_area,
                 relevador=new.relevador
-            where area=new.area and habilitada; 
-            --TODO falta contemplar excluir las encuestas que no se vincularan mas a un dm
+            where area=new.area and habilitada;
+            --TODO falta contemplar excluir las encuestas que no se vincularan mas a un dm            
     end if;
     return new;
 end;
