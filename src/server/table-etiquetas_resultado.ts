@@ -5,7 +5,7 @@ import {TableDefinition, TableContext} from "./types-eseco";
 export function etiquetas_resultado(context:TableContext):TableDefinition {
     var admin = context.user.rol==='admin';
     return {
-        name:'etiquetas',
+        name:'etiquetas_resultado',
         elementName:'etiqueta',
         editable:false,
         fields:[
@@ -29,7 +29,6 @@ export function etiquetas_resultado(context:TableContext):TableDefinition {
         ],
         primaryKey:['etiqueta'],
         foreignKeys:[
-            {references:'planchas'     , fields:['plancha']},
             {references:'usuarios'     , fields:[{source:'laboratorista', target:'usuario'}]},
         ],
         sql:{
