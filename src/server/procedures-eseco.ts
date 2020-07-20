@@ -413,6 +413,12 @@ export const ProceduresEseco : ProcedureDef[] = [
                     ).execute();
                 }).array());
             }
+            var condviv= `
+                        operativo= $1 
+                          and relevador = (select idper from usuarios where usuario=$2)
+                          and operacion='cargar' 
+                          and habilitada
+            `
             var {row} = await context.client.query(`
                 with viviendas as (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
                                 jsonb_build_object(
@@ -430,11 +436,8 @@ export const ProceduresEseco : ProcedureDef[] = [
                                     'carga'         , area         
                                 ) as tem,
                                 area
-                            from tem, 
-                                (select idper from usuarios where usuario=$1) usuario
-                            where relevador = idper
-                                and operacion='cargar' 
-                                and habilitada 
+                            from tem
+                            where ${condviv}
                     )
                 select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
                         ${json(`
@@ -443,7 +446,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                                 group by area, observaciones_hdr, fecha`, 
                             'fecha')} as cargas
                 `,
-                [context.username]
+                [OPERATIVO,context.username]
             ).fetchUniqueRow();
             var token = context.cookies['token_dm'];
             if(!token){
@@ -456,9 +459,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             await context.client.query(
                 `update tem
                     set  cargado_dm=$3
-                    where operativo= $1 and relevador = (select idper from usuarios where usuario=$2)
-                        and operacion='cargar' 
-                        and habilitada `
+                    where ${condviv} `
                 ,
                 [OPERATIVO, context.username, token]
             ).execute();
