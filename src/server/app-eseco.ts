@@ -33,6 +33,7 @@ import {lotes                } from "./table-lotes";
 import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
 import { etiquetas           } from './table-etiquetas';
+import { etiquetas_resultado } from './table-etiquetas_resultado';
 import { usuarios            } from './table-usuarios';
 import { operaciones         } from './table-operaciones';
 import { areas               } from './table-areas';
@@ -227,7 +228,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             let menuContent=[];
             if(context.puede.lab_resultado.editar){
                 menuContent.push(
-                    {menuType:'proc', name:'resultado_cargar'    , proc:'resultado_cargar', label:'carga resultado'}
+                    {menuType:'proc', name:'laboratorio_ingresar' , label:'recepción muestra'}
+                )
+                menuContent.push(
+                    {menuType:'proc', name:'resultado_cargar'    , label:'carga resultado'}
                 )
             }
             if(context.puede.lab_resultado.ver){
@@ -237,7 +241,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             }
             if(context.puede.lab_resultado.editar){
                 menuContent.push(
-                    {menuType:'proc', name:'resultado_rectificar', proc:'resultado_rectificar', label:'rectificar resultado'},
+                    {menuType:'proc', name:'resultado_rectificar', label:'rectificar resultado'},
                 )
                 if(!context.superuser){
                     menuContent.push(
@@ -314,6 +318,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , parametros
             , planchas
             , etiquetas
+            , etiquetas_resultado
             , operaciones
             , areas
         }
