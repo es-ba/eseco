@@ -471,7 +471,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             ).execute();
             return {
                 ...row,
-                cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:date.iso(carga.fecha).toDmy()})), 'carga')
+                cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:carga.fecha?date.iso(carga.fecha).toDmy():null})), 'carga')
             };
         }
     },
