@@ -361,7 +361,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
     ],
     sql:{
-        isTable: true,
+        isTable: false,
         isReferable:true,
         from:`
             (select *, cargado_dm is not null as cargado, 
