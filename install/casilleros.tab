@@ -219,13 +219,13 @@ ESECO|E5/6|E5|O|opción|6|1660|✔|Perú||||||||||||3;1520;1600;1660|F:F3||||||
 ESECO|E5/7|E5|O|opción|7|1670|✔|Venezuela||||||||||||3;1520;1600;1670|F:F3||||||
 ESECO|E5/8|E5|O|opción|8|1680|✔|Otro (especificar)||||||||||||3;1520;1600;1680|F:F3||||||
 ESECO|E6|E|P|pregunta|E6|1690|✔|Especificar|texto|||||||true|no_leer ocultar|||3;1520;1690|F:F3||e6||e5=8||
-ESECO|E7|E|P|pregunta|E7|1700|✔|Número|texto|medio||||||true|no_leer|||3;1520;1700|F:F3||e7||||
+ESECO|E7|E|P|pregunta|E7|1700|✔|Número|texto|medio||||||true|no_leer telefono|||3;1520;1700|F:F3||e7||||
 ESECO|C|F:F3|B|bloque|C|1710|✔|Datos de contacto del entrevistado||||||||true||||3;1710|F:F3||||||
-ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|medio||||||true|||true|3;1710;1720|F:F3||c1||||
-ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true|||true|3;1710;1730|F:F3||c2||||
-ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|medio||||||true|||true|3;1710;1740|F:F3||c3||||
-ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|medio||||||true|||true|3;1710;1750|F:F3||c4||||
-ESECO|C5|C|P|pregunta|C5|1800|✔|CÓDIGO DE LA MUESTRA|texto|7||||||true|no_leer|||3;1710;1800|F:F3||c5||||
+ESECO|C1|C|P|pregunta|C1|1720|✔|N° celular del entrevistado:|texto|medio||||||true|telefono||true|3;1710;1720|F:F3||c1||||
+ESECO|C2|C|P|pregunta|C2|1730|✔|E-mail del entrevistado:|texto|||||||true|email||true|3;1710;1730|F:F3||c2||||
+ESECO|C3|C|P|pregunta|C3|1740|✔|N° de línea de la vivienda:|texto|medio||||||true|telefono||true|3;1710;1740|F:F3||c3||||
+ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|medio||||||true|telefono||true|3;1710;1750|F:F3||c4||||
+ESECO|C5|C|P|pregunta|C5|1800|✔|CÓDIGO DE LA MUESTRA|texto|7||||||true|no_leer telefono|||3;1710;1800|F:F3||c5||||
 ESECO|C5OK|C|P|pregunta|C5OK|1810|✔|Validación del código de la muestra|numero|2||||||true|calculada ocultar|||3;1710;1810|F:F3||c5ok||1>2||
 ESECO|CONS.C5|C|CONS|consistencia|CONS.C5|1820|⛔|El código de la muestra no coincide con un código válido||||||||true||||3;1710;1820|F:F3||||c5ok=2||
 ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no_leer||true|3;2000|F:F3||fin||||
