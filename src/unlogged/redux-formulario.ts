@@ -21,6 +21,15 @@ export const MAXCP=20;
 // TODO: Generalizar
 const OPERATIVO='ESECO';
 var dv1 = 'dv1' as IdVariable;
+var dv4 = 'dv4' as IdVariable;
+var dv5 = 'dv5' as IdVariable;
+var s1 = 's1' as IdVariable;
+var s2 = 's2' as IdVariable;
+var s3 = 's3' as IdVariable;
+var d4 = 'd4' as IdVariable;
+var d5c = 'd5c' as IdVariable;
+
+
 const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
 export const LOCAL_STORAGE_STATE_NAME ='hdr-campo-0.5';
 
@@ -264,7 +273,15 @@ function calcularResumenVivienda(
     feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}, 
     respuestas:Respuestas
 ){
-    if(respuestas && respuestas[dv1]==2){
+    if(respuestas && (
+        respuestas[dv1]==2 ||
+        respuestas[dv4]==1 ||  
+        respuestas[dv5]==2 ||  
+        respuestas[s1]==2 ||  
+        respuestas[s2]==2 ||  
+        respuestas[s3]==2 ||  
+        respuestas[d4]==1 && respuestas[d5c]==1
+    )){
        return "no rea";
     }
     //TODO GENERALIZAR
