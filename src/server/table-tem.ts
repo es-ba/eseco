@@ -352,6 +352,7 @@ export function tem(context:TableContext):TableDefinition {
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
         { name:'etiqueta'         , typeName:'text'     },
         { name:'relevador'        , typeName:'text'     },
+        { name:'rea_m'            , typeName:'integer'  }
     ],
     "primaryKey": [
         "operativo",

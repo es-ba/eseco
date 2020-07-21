@@ -79,6 +79,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             editable: hasRecepcionistaPermission,
             "typeName": "boolean"
         },        
+        { name:'rea_m'            , typeName:'integer'  },
         {
             "name": "resumen_estado",
             editable: false,

@@ -400,30 +400,40 @@ export const ProceduresEseco : ProcedureDef[] = [
         action:'dm_sincronizar',
         parameters:[
             {name:'datos'       , typeName:'jsonb', defaultValue: null},
-            {name:'enc'       , typeName:'text', defaultValue: null},
+            {name:'enc'         , typeName:'text', defaultValue: null},
         ],
-        setCookies:true,
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
+            var token:string|null=null;
+            if(!parameters.enc){
+                token = parameters.datos?.token;
+                if(!token){
+                    token = (await be.procedure.token_get.coreFunction(context, {
+                        useragent: context.session.req.useragent, 
+                        username: context.username
+                    })).token;
+                }
+                var condviv= `
+                            operativo= $1 
+                            and relevador = (select idper from usuarios where usuario=$2)
+                            and operacion='cargar' 
+                            and habilitada
+                            and (cargado_dm is null or cargado_dm = ${context.be.db.quoteLiteral(token)})
+                `
+            }else{
+                condviv= ` operativo= $1 and enc =$2 `
+            }
             if(parameters.datos){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
                     return await context.client.query(
                         `update tem
                             set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
-                            where operativo= $1 and enc = $2`
+                            where operativo= $1 and enc = $2 and cargado_dm = ${context.be.db.quoteLiteral(token)}
+                            returning 'ok'`
                         ,
                         [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
-                    ).execute();
+                    ).fetchUniqueRow();
                 }).array());
-            }
-            var condviv= `
-                        operativo= $1 
-                          and relevador = (select idper from usuarios where usuario=$2)
-                          and operacion='cargar' 
-                          and habilitada
-            `
-            if(parameters.enc){
-                condviv= ` operativo= $1 and enc =$2 `
             }
             var {row} = await context.client.query(`
                 with viviendas as (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
@@ -454,14 +464,6 @@ export const ProceduresEseco : ProcedureDef[] = [
                 `,
                 [OPERATIVO,parameters.enc?parameters.enc:context.username]
             ).fetchUniqueRow();
-            var token = context.cookies['token_dm'];
-            if(!token){
-                token = (await be.procedure.token_get.coreFunction(context, {
-                    useragent: context.session.req.useragent, 
-                    username: context.username
-                })).token;
-                context.setCookie('token_dm', token, {});
-            }
             await context.client.query(
                 `update tem
                     set  cargado_dm=$3
@@ -471,6 +473,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             ).execute();
             return {
                 ...row,
+                token,
                 cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:carga.fecha?date.iso(carga.fecha).toDmy():null})), 'carga')
             };
         }
