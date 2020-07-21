@@ -144,6 +144,10 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
     if(respuestas.c5==null){
         respuestas.c5ok=null;
     }else{
+        respuestas.c5 = respuestas.c5.replace(/[\+\*\.# _\/,]/g,'-');
+        if(!/-/.test(respuestas.c5) && respuestas.c5.length>4){
+            respuestas.c5=respuestas.c5.substr(0,4)+'-'+respuestas.c5.substr(4);
+        }
         respuestas.c5ok=controlarCodigoDV2(respuestas.c5)?1:2;
     }
     if(respuestas.d4==1){
