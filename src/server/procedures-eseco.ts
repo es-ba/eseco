@@ -423,7 +423,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             }else{
                 condviv= ` operativo= $1 and enc =$2 `
             }
-            if(parameters.datos){
+            if(parameters.datos && !parameters.enc){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
                     return await context.client.query(
                         `update tem
@@ -464,13 +464,15 @@ export const ProceduresEseco : ProcedureDef[] = [
                 `,
                 [OPERATIVO,parameters.enc?parameters.enc:context.username]
             ).fetchUniqueRow();
-            await context.client.query(
-                `update tem
-                    set  cargado_dm=$3
-                    where ${condviv} `
-                ,
-                [OPERATIVO, parameters.enc?parameters.enc:context.username, token]
-            ).execute();
+            if(!parameters.enc){
+                await context.client.query(
+                    `update tem
+                        set  cargado_dm=$3
+                        where ${condviv} `
+                    ,
+                    [OPERATIVO, parameters.enc?parameters.enc:context.username, token]
+                ).execute();
+            }
             return {
                 ...row,
                 token,
