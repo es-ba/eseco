@@ -18,7 +18,9 @@ import { controlarCodigoDV2 } from "./digitov";
 var my=myOwn;
 
 export const MAXCP=20;
+// TODO: Generalizar
 const OPERATIVO='ESECO';
+var dv1 = 'dv1' as IdVariable;
 const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
 export const LOCAL_STORAGE_STATE_NAME ='hdr-campo-0.5';
 
@@ -262,7 +264,7 @@ function calcularResumenVivienda(
     feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}, 
     respuestas:Respuestas
 ){
-    if(respuestas && respuestas.dv1==2){
+    if(respuestas && respuestas[dv1]==2){
        return "no rea";
     }
     //TODO GENERALIZAR

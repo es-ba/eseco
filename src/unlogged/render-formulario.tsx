@@ -41,6 +41,9 @@ import {
 } from "@material-ui/core";
 import { EstadoVariable, FormStructureState } from "row-validator";
 
+// TODO: Generalizar
+var c5 = 'c5' as IdVariable;
+
 var useStyles = makeStyles((_theme: Theme) =>
     createStyles({
         root:{},
@@ -738,7 +741,7 @@ export function DesplegarCarga(props:{
                             <DesplegarTem tem={datosVivienda.tem}/>
                         </TableCell>
                         <TableCell>
-                            {datosVivienda.respuestas.c5}
+                            {datosVivienda.respuestas[c5]}
                         </TableCell>
                         <TableCell>
                             <Button
