@@ -709,9 +709,11 @@ export function DesplegarCarga(props:{
     const dispatch = useDispatch();
     return <Paper className="carga">
         <div className="informacion-carga">
-            <div className="carga">{idCarga}</div>
-            <div className="fecha">{carga.fecha}</div>
+            <div className="carga">Área: {idCarga}</div>
             <div className="observaciones">{carga.observaciones}</div>
+        </div>
+        <div className="informacion-carga">
+            <div className="fecha">{carga.fecha}</div>
             <ButtonGroup>
             {listaEstadosCarga.map(estado_carga=>
                 <Button key={estado_carga} variant={estado_carga==carga.estado_carga?"contained":"outlined"} onClick={
