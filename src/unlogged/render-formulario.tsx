@@ -324,7 +324,7 @@ function Campo(props:{disabled:boolean, pregunta:PreguntaSimple, valor:Valor, on
                 fullWidth={true}
                 inputProps={inputProps}
                 value={valor?valor:''} 
-                type={adaptarTipoVarCasillero(pregunta.tipovar)}
+                type={pregunta.despliegue?.includes('telefono')?'tel':adaptarTipoVarCasillero(pregunta.tipovar)}
                 onChange={(event)=>setValor(event.target.value || null)}
                 onFocus={(_event)=>setEditando(true)}
                 onBlur={(_event)=>{
