@@ -543,7 +543,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var persona = await context.client.query(
                 `select *
-                    from personal
+                    from usuarios
                     where usuario = $1 and activo`
                 ,
                 [context.user.usuario]
