@@ -24,8 +24,8 @@ export function areas(context:TableContext):TableDefinition {
                 nullable: false,
                 editable: false
             },
-            {name:'recepcionista'           , typeName:'text'                      },
-            {name:'relevador'               , typeName:'text'                      },
+            {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
+            {name:'relevador'               , typeName:'text', references:'relevadores'   },
             {name:'operacion_area'          , typeName:'text'                      },
             {name:'fecha'                   , typeName:'date'                      },
             {name:'observaciones_hdr'       , typeName:'text'                      },

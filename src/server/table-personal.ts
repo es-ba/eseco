@@ -4,7 +4,7 @@ import {TableDefinition, TableContext} from "./types-eseco";
 import { FieldDefinition } from "rel-enc";
 import * as likeAr from "like-ar";
 
-export function personal(context:TableContext):TableDefinition {
+export function personal(context:TableContext, opts:{rol:string, name:string}|null):TableDefinition {
     var esEditable = context.user.rol === 'admin'||context.puede.configurar.editar;
     var fields:FieldDefinition[]=[
         { name: "persona"       , typeName: "text" , originalName:"idper"},
@@ -17,8 +17,11 @@ export function personal(context:TableContext):TableDefinition {
         { name: "recepcionista" , typeName: "integer" },
         // { name: "jefe_equipo"   , typeName: "boolean" ,"defaultValue": false},
     ];
+    var from = `select ${likeAr(fields).map(f=>f.originalName||f.name).join(', ')}
+                from usuarios
+                where idper is not null ${opts && opts.rol?`and rol = ${context.be.db.quoteLiteral(opts.rol)}`:''}`;
     return {
-        name: 'personal',
+        name: opts && opts.name || 'personal',
         elementName: 'persona',
         editable: esEditable,
         fields,
@@ -31,9 +34,12 @@ export function personal(context:TableContext):TableDefinition {
         ],
         sql:{
             isTable:false,
-            viewBody:`select ${likeAr(fields).map(f=>f.originalName||f.name).join(', ')}
+            viewBody:opts?null:`select ${likeAr(fields).map(f=>f.originalName||f.name).join(', ')}
                 from usuarios
                 where idper is not null`,
+            from:opts?`(select ${likeAr(fields).map(f=>`${f.originalName||f.name} as ${f.name}`).join(', ')}
+                from usuarios
+                where idper is not null ${opts && opts.rol?`and rol = ${context.be.db.quoteLiteral(opts.rol)}`:''})`:null
                 /*
             fields:{
                 rol:{

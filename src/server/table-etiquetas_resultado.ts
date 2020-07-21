@@ -16,7 +16,7 @@ export function etiquetas_resultado(context:TableContext):TableDefinition {
             {name:'hora'                    , typeName:'interval'  ,editable:false },
             {name:'laboratorista'           , typeName:'text'      ,editable:false },
             {name:'observaciones'           , typeName:'text'      ,editable:false },
-            {name:'rectificacion'           , typeName:'integer'   ,editable:false, defaultDbValue: 0}
+            {name:'rectificacion'           , typeName:'integer'   ,editable:false, defaultDbValue: 0},
             {name:'apellido'                , typeName:'text'      ,editable:false, inTable: false },
             {name:'nombre'                  , typeName:'text'      ,editable:false, inTable: false },
             {name:'tipo_documento'          , typeName:'text'      ,editable:false, inTable: false },

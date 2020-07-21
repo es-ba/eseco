@@ -18,6 +18,7 @@ export interface Puedes{
             ver:boolean
         },
         campo:{
+            editar:boolean
             administrar:boolean
         }
     }

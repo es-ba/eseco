@@ -51,6 +51,7 @@ install:
       - upd_operacion_area_tem_trg.sql
       - sincronizacion_tem.sql
 login:
+  infoFieldList: [usuario, idper, rol]
   plus:
     maxAge-5-sec: 5000    
     maxAge: 864000000

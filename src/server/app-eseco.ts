@@ -15,6 +15,8 @@ import * as likeAr from "like-ar";
 //import { casos               } from "./table-casos";
 import { roles               } from "./table-roles";
 import { personal            } from "./table-personal";
+import { recepcionistas      } from "./table-recepcionistas";
+import { relevadores         } from "./table-relevadores";
 import { personal_rol        } from "./table-personal_rol";
 import { permisos            } from "./table-permisos";
 import { roles_permisos      } from "./table-roles_permisos";
@@ -253,13 +255,18 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {menuType:'menu', name:'laboratorio', menuContent}
             ]
         }
-        if(context.superuser){
-            menu = [ ...menu,
+        if(context.puede.campo.editar){
+            menu.push(
                 {menuType:'menu', name:'recepcion', label:'recepción' ,menuContent:[
                     //{menuType:'carga_recepcionista', name:'cargar'},
-                    {menuType:'asignacion_recepcion', name:'asignacion', label:'asignación'},
-                    {menuType:'table', name:'recepcion', label:'recepción', table:'carga_fechas'},
+                    {menuType:'table', name:'mis_areas', table:'areas', ff:{recepcionista:context.user.idper}},
+                    {menuType:'table', name:'areas'},
+                    {menuType:'table', name:'tem'  , label:'TEM'},
                 ]},            
+            )
+        }
+        if(context.superuser){
+            menu = [ ...menu,
                 {menuType:'menu', name:'configurar', menuContent:[
                     {menuType:'menu', name:'etiquetas', menuContent:[
                         {menuType:'table', name:'planchas'},
@@ -301,6 +308,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , roles
             , usuarios
             , personal
+            , recepcionistas
+            , relevadores
             , personal_rol
             , permisos
             , roles_permisos
