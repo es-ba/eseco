@@ -9,7 +9,7 @@ import {json, jsono} from "pg-promise-strict";
 
 import {changing, datetime, date } from 'best-globals';
 import { carga_fechas } from "./table-carga_fechas";
-var fs = require('fs-extra');
+import {promises as  fs} from "fs";
 var path = require('path');
 var sqlTools = require('sql-tools');
 
@@ -425,14 +425,17 @@ export const ProceduresEseco : ProcedureDef[] = [
             }
             if(parameters.datos && !parameters.enc){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
-                    return await context.client.query(
+                    var result = await context.client.query(
                         `update tem
                             set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
                             where operativo= $1 and enc = $2 and cargado_dm = ${context.be.db.quoteLiteral(token)}
                             returning 'ok'`
                         ,
                         [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
-                    ).fetchUniqueRow();
+                    ).fetchOneRowIfExists();
+                    if(result.rowCount==0){
+                        await fs.appendFile('local-recibido-sin-token.txt', JSON.stringify({now:new Date(),user:context.username,idCaso,vivienda})+'\n\n', 'utf8');
+                    }
                 }).array());
             }
             var {row} = await context.client.query(`

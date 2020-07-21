@@ -822,6 +822,10 @@ export function HojaDeRutaDespliegue(){
                         reiniciar
                     </Button>
                 </div>:null}
+                <div className="nombre-version">
+                    <div>Dirección General de Estadística y Censos - C.A.B.A.</div>
+                    <div>{my.getLocalVar('app-cache-version')}</div>
+                </div>
                 {likeAr(cargas).map((carga: Carga, idCarga: IdCarga, _, posicion:number)=>
                     <DesplegarCarga key={idCarga} carga={carga} idCarga={idCarga} posicion={posicion} hdr={hdr} mainForm={mainForm} feedbackRowValidator={feedbackRowValidator}/>
                 ).array()}
