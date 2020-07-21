@@ -196,20 +196,22 @@ myOwn.wScreens.resultados_ver = ()=>{
         my.tableGrid('etiquetas_resultado',resultDiv,{tableDef:{}})
     }
 }
+
+myOwn.wScreens.abrirDirecto=async function(addrParams){
+    try{
+        await abrirDirecto(addrParams.enc);
+        await traerHdr({modoDemo:false, vivienda:addrParams.enc});
+    }catch(err){
+        alertPromise(err.message)
+    }
+};
+
 myOwn.clientSides.abrir={
-    prepare: async (depot, fieldName)=>{
-        var openButton = html.button({class:'open-dm-button'},'abrir').create();
+    prepare: (depot, fieldName)=>{
+        var openButton = my.createForkeableButton({w:'abrirDirecto',enc:depot.row.enc},{label:'abrir'})
         depot.rowControls[fieldName].appendChild(openButton);
         openButton.onclick = async function(){
             openButton.disabled=true;
-            try{
-                await abrirDirecto(depot.row.enc);
-                await traerHdr({modoDemo:false, vivienda:depot.row.enc});
-            }catch(err){
-                alertPromise(err.message)
-            }finally{
-                openButton.disabled=false;
-            }
         }
     },
     update: false

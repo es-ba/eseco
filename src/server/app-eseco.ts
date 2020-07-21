@@ -26,6 +26,7 @@ import { roles_subordinados  } from "./table-roles_subordinados";
 import {tipos_estados        } from "./table-tipos_estados";
 import {estados              } from "./table-estados";
 import {tem                  } from "./table-tem";
+import {tem_recepcion        } from "./table-tem_recepcion";
 import {carga_tem            } from "./table-carga_tem";
 import {cargas               } from "./table-cargas";
 import {carga_fechas         } from "./table-carga_fechas";
@@ -261,7 +262,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     //{menuType:'carga_recepcionista', name:'cargar'},
                     {menuType:'table', name:'mis_areas', table:'areas', ff:{recepcionista:context.user.idper}},
                     {menuType:'table', name:'areas'},
-                    {menuType:'table', name:'tem'  , label:'TEM'},
+                    {menuType:'table', name:'tem_recepcion', label:'TEM'},
                 ]},            
             )
         }
@@ -319,6 +320,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , lotes
             , semanas
             , tem
+            , tem_recepcion
             , tem_estados
             , carga_tem
             , cargas

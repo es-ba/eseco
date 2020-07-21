@@ -51,7 +51,7 @@ export function areas(context:TableContext):TableDefinition {
             {references:'usuarios', fields:[{source:'recepcionista', target:'idper'}], alias:'per_recep', displayFields:[]},
         ],
         detailTables:[
-            {table:'tem'     , fields:['area'], abr:'E'},
+            {table:'tem_recepcion'     , fields:['area'], abr:'E'},
         ],
     };
 }
