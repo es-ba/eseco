@@ -17,6 +17,7 @@ import { roles               } from "./table-roles";
 import { personal            } from "./table-personal";
 import { recepcionistas      } from "./table-recepcionistas";
 import { relevadores         } from "./table-relevadores";
+import { mis_relevadores     } from "./table-mis_relevadores";
 import { personal_rol        } from "./table-personal_rol";
 import { permisos            } from "./table-permisos";
 import { roles_permisos      } from "./table-roles_permisos";
@@ -217,7 +218,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
     }
     getMenu(context:Context){
         let menu:MenuInfoBase[] = [];
-        if(context.puede.encuestas.relevar){
+        if(context.puede.encuestas.relevar && !this.config['client-setup'].gabinete){
             if(this.config['client-setup'].ambiente=='demo' || this.config['client-setup'].ambiente=='test' || this.config['client-setup'].ambiente=='capa'){
                 menu.push({menuType:'demo', name:'demo', selectedByDefault:true})
             }else{
@@ -261,6 +262,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {menuType:'menu', name:'recepcion', label:'recepción' ,menuContent:[
                     //{menuType:'carga_recepcionista', name:'cargar'},
                     {menuType:'table', name:'mis_areas', table:'areas', ff:{recepcionista:context.user.idper}},
+                    {menuType:'table', name:'mis_relevadores'},
                     {menuType:'table', name:'areas'},
                     {menuType:'table', name:'tem_recepcion', label:'TEM'},
                 ]},            
@@ -311,6 +313,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , personal
             , recepcionistas
             , relevadores
+            , mis_relevadores
             , personal_rol
             , permisos
             , roles_permisos

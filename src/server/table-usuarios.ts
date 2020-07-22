@@ -36,7 +36,7 @@ export function usuarios(context:TableContext):TableDefinition{
             {references:'usuarios', fields:[{source:'recepcionista', target:'idper'}], alias:'recepcionista'}
         ],
         sql:{
-            where:admin || context.forDump?'true':"usuario = "+context.be.db.quoteNullable(context.user.usuario)
+            where:admin || context.forDump?'true':"usuarios.usuario = "+context.be.db.quoteNullable(context.user.usuario)
             /*
             where:` (${q(esSuperUser)} 
                 or usuarios.rol= ${q(context.user.rol)}

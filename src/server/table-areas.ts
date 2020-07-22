@@ -25,7 +25,7 @@ export function areas(context:TableContext):TableDefinition {
                 editable: false
             },
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
-            {name:'relevador'               , typeName:'text', references:'relevadores'   },
+            {name:'relevador'               , typeName:'text', references:'mis_relevadores'},
             {name:'operacion_area'          , typeName:'text'                      },
             {name:'fecha'                   , typeName:'date'                      },
             {name:'observaciones_hdr'       , typeName:'text'                      },
@@ -49,6 +49,10 @@ export function areas(context:TableContext):TableDefinition {
             {references:'operaciones', fields:[{source:'operacion_area', target:'operacion'}]},
             {references:'usuarios', fields:[{source:'relevador'    , target:'idper'}], alias:'per_enc', displayFields:[]},
             {references:'usuarios', fields:[{source:'recepcionista', target:'idper'}], alias:'per_recep', displayFields:[]},
+        ],
+        softForeignKeys:[
+            //{references:'operativos', fields:['operativo']},
+            {references:'relevadores', fields:[{source:'relevador', target:'persona'}]},
         ],
         detailTables:[
             {table:'tem_recepcion'     , fields:['area'], abr:'E'},
