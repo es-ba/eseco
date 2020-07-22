@@ -230,7 +230,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         }
         if(context.puede.lab_resultado.editar || context.puede.lab_resultado.ver){
             let menuContent=[];
-            if(context.puede.lab_resultado.editar){
+            if(context.puede.lab_resultado.editar && !context.superuser){
                 menuContent.push(
                     {menuType:'proc', name:'laboratorio_ingresar' , label:'recepción muestra'}
                 )
@@ -244,10 +244,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 )
             }
             if(context.puede.lab_resultado.editar){
-                menuContent.push(
-                    {menuType:'proc', name:'resultado_rectificar', label:'rectificar resultado'},
-                )
                 if(!context.superuser){
+                    menuContent.push(
+                        {menuType:'proc', name:'resultado_rectificar', label:'rectificar resultado'},
+                    )
                     menuContent.push(
                         {menuType:'table', name:'usuarios'}
                     )
