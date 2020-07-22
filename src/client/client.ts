@@ -25,6 +25,7 @@ async function sincronizarDatos(state:CasoState|null){
     state.datos=datos;
     state.feedbackRowValidator={};
     my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+    return datos;
 }
 
 async function abrirDirecto(enc:IdCaso){
@@ -45,10 +46,9 @@ myOwn.wScreens.sincronizar_dm=function(){
         var state: CasoState = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
         mainLayout.appendChild(html.div({class:'aviso'},[
             html.h4('Proceso de sincronización'),
-            html.p([htmlNumero(likeAr(state.datos.cargas).array().length),' cargas ',likeAr(state.datos.cargas).keys().join(', ')]),
+            html.p([htmlNumero(likeAr(state.datos.cargas).array().length),' areas: ',likeAr(state.datos.cargas).keys().join(', ')]),
             html.p([htmlNumero(likeAr(state.datos.hdr).array().length),' viviendas']),
             html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas?.[dv1]==1 && dv.respuestas?.[c5ok]==1).array().length),' viviendas con muestras']),
-            html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas?.[dv1]==2).array().length),' viviendas con "no respuesta"']),
         ]).create());
         var downloadButton = html.button({class:'download-dm-button'},'proceder').create();
         mainLayout.appendChild(downloadButton);
@@ -58,7 +58,7 @@ myOwn.wScreens.sincronizar_dm=function(){
                 var datos = await sincronizarDatos(state);
                 mainLayout.appendChild(html.div({class:'aviso-sincro'}, [
                     html.p("número de sincronización: "+datos.num_sincro),
-                    html.a({href:'../campo'},'IR A LA HOJA DE RUTA')
+                    html.a({href:'./campo'},'IR A LA HOJA DE RUTA')
                 ]).create());
                 //traer nueva
                 // await traerHdr({modoDemo:false});

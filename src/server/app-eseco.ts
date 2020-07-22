@@ -41,6 +41,7 @@ import { etiquetas_resultado } from './table-etiquetas_resultado';
 import { usuarios            } from './table-usuarios';
 import { operaciones         } from './table-operaciones';
 import { areas               } from './table-areas';
+import { sincronizaciones    } from './table-sincronizaciones';
 
 
 import {defConfig} from "./def-config"
@@ -335,6 +336,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , etiquetas_resultado
             , operaciones
             , areas
+            , sincronizaciones
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
