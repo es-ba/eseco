@@ -20,15 +20,16 @@ export function mis_relevadores(context:TableContext):TableDefinition {
             {name:'interno'          , typeName:'text'                      },
             {name:'mail'             , typeName:'text'                      },
             {name:'mail_alternativo' , typeName:'text'                      },
-            {name:'carga_hoy'               , typeName:'integer' , editable:false  },
-            {name:'carga_1'                 , typeName:'integer' , editable:false  },
-            {name:'carga_2'                 , typeName:'integer' , editable:false  },
-            {name:'carga_3'                 , typeName:'integer' , editable:false  },
-            {name:'reas_m'                  , typeName:'integer' , editable:false  },
-            {name:'no_reas'                 , typeName:'integer' , editable:false  },
-            {name:'incompletas'             , typeName:'integer' , editable:false  },
-            {name:'vacias'                  , typeName:'integer' , editable:false  },
-            {name:'reas_dia'                , typeName:'decimal' , editable:false  , title:'reas/día'},
+            {name:'ultima_sincro'           , typeName:'timestamp', editable:false },
+            {name:'carga_hoy'               , typeName:'integer' , editable:false  , aggregate:'sum'},
+            {name:'carga_1'                 , typeName:'integer' , editable:false  , aggregate:'sum'},
+            {name:'carga_2'                 , typeName:'integer' , editable:false  , aggregate:'sum'},
+            {name:'carga_3'                 , typeName:'integer' , editable:false  , aggregate:'sum'},
+            {name:'reas_m'                  , typeName:'integer' , editable:false  , aggregate:'sum'},
+            {name:'no_reas'                 , typeName:'integer' , editable:false  , aggregate:'sum'},
+            {name:'incompletas'             , typeName:'integer' , editable:false  , aggregate:'sum'},
+            {name:'vacias'                  , typeName:'integer' , editable:false  , aggregate:'sum'},
+            {name:'reas_dia'                , typeName:'decimal' , editable:false  , title:'reas/día' , aggregate:'avg'},
         ],
         primaryKey:['relevador'],
         detailTables:[
@@ -38,7 +39,7 @@ export function mis_relevadores(context:TableContext):TableDefinition {
         sql:{
             isTable:false,
             from:`(
-                select u.idper as relevador, u.*, t.*
+                select u.idper as relevador, u.*, t.*, s.*
                     from usuarios u, lateral (
                         select sum(case when a.fecha = current_date then 1 else null end) as carga_hoy,
                                 sum(case when a.fecha = current_date + interval '1 day' then 1 else null end) as carga_1,
@@ -51,8 +52,13 @@ export function mis_relevadores(context:TableContext):TableDefinition {
                                 sum(case when a.fecha is not null and t.rea_m = 1 then 1 else null end)*1.0 / nullif(count(distinct a.fecha),0) as reas_dia
                             from tem t inner join areas a using (area)
                             where t.relevador = u.idper
-                    ) t
-                    ${context.user.rol=='recepcionista'?`where recepcionista = ${context.be.db.quoteLiteral(context.user.idper)}`:''}
+                    ) t left join lateral (
+                        select max(cuando) as ultima_sincro
+                            from sincronizaciones s
+                            where s.usuario = u.usuario
+                    ) s on true
+                    where rol='relevador' and u.idper is not null
+                    ${context.user.rol=='recepcionista'?` and recepcionista = ${context.be.db.quoteLiteral(context.user.idper)}`:''}
             )`
         }
     };
