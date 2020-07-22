@@ -22,6 +22,7 @@ export function tem(context:TableContext):TableDefinition {
     "name": "tem",
     editable: true,
     //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
+    "hiddenColumns":['carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado' ],
     "fields": [
         {
             "name": "operativo",
@@ -95,6 +96,26 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "text"
         },
         {
+            "name": "nrocatastral",
+            "editable": false,
+            "typeName": "integer"
+        },
+        {
+            "name": "piso",
+            "editable": false,
+            "typeName": "text" 
+        },
+        {
+            "name": "departamento",
+            "editable": false,
+            "typeName": "text"
+        },
+        {
+            "name": "habitacion",
+            "editable": false,
+            "typeName": "text"
+        },
+        {
             "name": "sector",
             editable: false,
             "typeName": "text"
@@ -138,6 +159,11 @@ export function tem(context:TableContext):TableDefinition {
             "name": "mapa",
             editable: false,
             "typeName": "integer"
+        },
+        {
+            "name": "barrio",
+            "editable": false,
+            "typeName": "text"
         },
         {
             "name": "carga_rol",
@@ -184,6 +210,9 @@ export function tem(context:TableContext):TableDefinition {
             editable: false,
             "typeName":"text"
         },
+        { name:'etiqueta'         , typeName:'text'     },
+        { name:'relevador'        , typeName:'text'     },
+        { name:'rea_m'            , typeName:'integer'  },
         {
             "name": "dispositivo",
             "editable": false,
@@ -302,31 +331,6 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "bigint"
         },
         {
-            "name": "nrocatastral",
-            "editable": false,
-            "typeName": "integer"
-        },
-        {
-            "name": "piso",
-            "editable": false,
-            "typeName": "text" 
-        },
-        {
-            "name": "departamento",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
-            "name": "habitacion",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
-            "name": "barrio",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
             "name": "obs",
             "editable": false,
             "typeName": "text"
@@ -350,9 +354,6 @@ export function tem(context:TableContext):TableDefinition {
         },
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
-        { name:'etiqueta'         , typeName:'text'     },
-        { name:'relevador'        , typeName:'text'     },
-        { name:'rea_m'            , typeName:'integer'  }
     ],
     "primaryKey": [
         "operativo",
