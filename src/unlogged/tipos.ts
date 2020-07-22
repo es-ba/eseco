@@ -236,6 +236,8 @@ export type CasoState={
     }
     datos:{
         hdr:HojaDeRuta
+        token:string
+        num_sincro:number
         cargas: Cargas
     }
     opciones:{ // datos de navegación que elije el usuario

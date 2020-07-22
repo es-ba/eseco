@@ -405,6 +405,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
             var token:string|null=null;
+            var num_sincro:number=0;
             if(!parameters.enc){
                 token = parameters.datos?.token;
                 if(!token){
@@ -413,6 +414,13 @@ export const ProceduresEseco : ProcedureDef[] = [
                         username: context.username
                     })).token;
                 }
+                var {value} = await context.client.query(`
+                    INSERT INTO sincronizaciones (token, usuario, datos)
+                        VALUES ($1,$2,$3) 
+                        RETURNING sincro
+                    `, [token, context.username, parameters.datos]
+                ).fetchUniqueValue();
+                num_sincro=value;
                 var condviv= `
                             operativo= $1 
                             and relevador = (select idper from usuarios where usuario=$2)
@@ -479,6 +487,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             return {
                 ...row,
                 token,
+                num_sincro,
                 cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:carga.fecha?date.iso(carga.fecha).toDmy():null})), 'carga')
             };
         }

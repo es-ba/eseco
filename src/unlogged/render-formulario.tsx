@@ -780,7 +780,7 @@ export function DesplegarTem(props:{tem:TEM}){
 }
 
 export function HojaDeRutaDespliegue(){
-    var {hdr, cargas, mainForm, modo, feedbackRowValidator} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, cargas: state.datos.cargas, mainForm:state.estructura.mainForm, modo:state.modo, feedbackRowValidator:state.feedbackRowValidator}));
+    var {hdr, cargas, mainForm, modo, feedbackRowValidator} = useSelector((state:CasoState)=>({hdr:state.datos.hdr, cargas: state.datos.cargas, mainForm:state.estructura.mainForm, modo:state.modo, feedbackRowValidator:state.feedbackRowValidator, num_sincro:state.datos.num_sincro}));
     var dispatch = useDispatch();
     const updateOnlineStatus = function(){
         setOnline(window.navigator.onLine);
@@ -824,7 +824,7 @@ export function HojaDeRutaDespliegue(){
                 </div>:null}
                 <div className="nombre-version">
                     <div>Dirección General de Estadística y Censos - C.A.B.A.</div>
-                    <div>{my.getLocalVar('app-cache-version')}</div>
+                    <div>{} {my.getLocalVar('app-cache-version')}</div>
                 </div>
                 {likeAr(cargas).map((carga: Carga, idCarga: IdCarga, _, posicion:number)=>
                     <DesplegarCarga key={idCarga} carga={carga} idCarga={idCarga} posicion={posicion} hdr={hdr} mainForm={mainForm} feedbackRowValidator={feedbackRowValidator}/>

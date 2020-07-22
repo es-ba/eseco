@@ -55,9 +55,13 @@ myOwn.wScreens.sincronizar_dm=function(){
         downloadButton.onclick = async function(){
             downloadButton.disabled=true;
             try{
-                await sincronizarDatos(state)
+                var datos = await sincronizarDatos(state);
+                mainLayout.appendChild(html.div({class:'aviso-sincro'}, [
+                    html.p("número de sincronización: "+datos.num_sincro),
+                    html.a({href:'../campo'},'IR A LA HOJA DE RUTA')
+                ]).create());
                 //traer nueva
-                await traerHdr({modoDemo:false});
+                // await traerHdr({modoDemo:false});
             }catch(err){
                 alertPromise(err.message)
             }finally{
