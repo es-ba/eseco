@@ -23,6 +23,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     editable: true,
     tableName:'tem',
     //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
+    "hiddenColumns":['carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado' ],
     "fields": [
         {
             "name": "operativo",
@@ -85,6 +86,8 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             editable: false,
             "typeName":"text"
         },
+        { name:'etiqueta'         , typeName:'text'     },
+        { name:'relevador'        , typeName:'text'     },
         {
             "name": "dispositivo",
             "editable": false,
@@ -104,6 +107,26 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         {
             "name": "nomcalle",
             editable: false,
+            "typeName": "text"
+        },
+        {
+            "name": "nrocatastral",
+            "editable": false,
+            "typeName": "integer"
+        },
+        {
+            "name": "piso",
+            "editable": false,
+            "typeName": "text" 
+        },
+        {
+            "name": "departamento",
+            "editable": false,
+            "typeName": "text"
+        },
+        {
+            "name": "habitacion",
+            "editable": false,
             "typeName": "text"
         },
         {
@@ -134,6 +157,11 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         {
             "name": "obsconjunto",
             editable: false,
+            "typeName": "text"
+        },
+        {
+            "name": "barrio",
+            "editable": false,
             "typeName": "text"
         },
         {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
@@ -238,31 +266,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "typeName": "bigint"
         },
         {
-            "name": "nrocatastral",
-            "editable": false,
-            "typeName": "integer"
-        },
-        {
-            "name": "piso",
-            "editable": false,
-            "typeName": "text" 
-        },
-        {
-            "name": "departamento",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
-            "name": "habitacion",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
-            "name": "barrio",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
             "name": "obs",
             "editable": false,
             "typeName": "text"
@@ -286,8 +289,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         },
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
-        { name:'etiqueta'         , typeName:'text'     },
-        { name:'relevador'        , typeName:'text'     },
         {
             "name": "nrocomuna",
             editable: false,
