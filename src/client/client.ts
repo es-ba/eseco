@@ -29,7 +29,7 @@ async function sincronizarDatos(state:CasoState|null){
 }
 
 async function abrirDirecto(enc:IdCaso){
-    if(!my.setSessionVar(LOCAL_STORAGE_STATE_NAME)){
+    if(!my.getSessionVar(LOCAL_STORAGE_STATE_NAME)){
         var datos = await my.ajax.dm_enc_cargar({enc:enc});
         var state={};
         state.datos=datos;
@@ -206,7 +206,7 @@ myOwn.wScreens.resultados_ver = ()=>{
 myOwn.wScreens.abrirDirecto=async function(addrParams){
     try{
         await abrirDirecto(addrParams.enc);
-        desplegarFormularioActual({modoDemo:false, vivienda:addrParams.enc});
+        desplegarFormularioActual({modoDemo:false, vivienda:addrParams.enc, useSessionStorage:true});
     }catch(err){
         alertPromise(err.message)
     }
