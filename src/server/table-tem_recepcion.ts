@@ -23,7 +23,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     editable: true,
     tableName:'tem',
     //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
-    "hiddenColumns":['carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado' ],
+    "hiddenColumns":['carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado','lote','semana','carga' ],
     "fields": [
         {
             "name": "operativo",
@@ -43,22 +43,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "name": "area",
             "editable": false,
             "typeName": "integer"
-        },
-        {
-            "name": "lote",
-            "typeName": "integer",
-            editable: hasSubCoordinadorPermission,
-            //"nullable":false
-        },
-        {
-            "name": "semana", //nullable false
-            editable: hasSubCoordinadorPermission,
-            "typeName": "integer"
-        },
-        {
-            "name": "carga",
-            editable: hasRecepcionistaPermission,
-            "typeName": "date"
         },
         {
             "name": "operacion",
@@ -88,17 +72,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         },
         { name:'etiqueta'         , typeName:'text'     },
         { name:'relevador'        , typeName:'text'     },
-        {
-            "name": "dispositivo",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
-            "name": "estado",
-            "editable": false,
-            "typeName": "text",
-            //"nullable": false
-        },
         {
             "name": "codcalle",
             editable: false,
@@ -164,9 +137,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
-        {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
-        {name:'cod_recu'      , typeName:'text'   ,editable:false    },
-        {name:'cod_sup'       , typeName:'text'   ,editable:false    },
         {name:'rea'           , typeName:'bigint' ,editable:false    },
         {name:'norea'         , typeName:'text'   ,editable:false    },
         {name:'rea_p'         , typeName:'bigint' ,editable:false      },
@@ -178,28 +148,27 @@ export function tem_recepcion(context:TableContext):TableDefinition {
 //        {name: "finalizar_campo", typeName:'boolean',editable:true, inTable:false, clientSide:'finalizarCampo'}, //fin_de_campo
 //        {name: "procesamiento", typeName:'boolean',editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
         {
-            "name": "zona",
-            "editable": hasProcesamientoPermission,
-            "typeName": "text"
-            ,visible: false
+        "name": "frel",
+        editable: hasRecepcionistaPermission,
+        "typeName": "date"
         },
         {
-            "name": "periodicidad",
-            "editable": false,
-            "typeName": "text"
-            ,visible: false
-        },
-        {
-            "name": "participacion",
+            "name": "tipo_domicilio",
             "editable": false,
             "typeName": "integer"
-            ,visible: false
-        },
+            //,visible: false
+        },        
         {
             "name": "reserva",
             "editable": false,
             "typeName": "integer"
             //,visible: false
+        },
+        {
+            "name": "zona",
+            "editable": hasProcesamientoPermission,
+            "typeName": "text"
+            ,visible: false
         },
         {
             "name": "areaup",
@@ -343,6 +312,48 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "name": "carga_persona",
             editable: hasRecepcionistaPermission,
             "typeName": "text"
+        },
+        {
+            "name": "lote",
+            "typeName": "integer",
+            editable: hasSubCoordinadorPermission,
+            //"nullable":false
+        },
+        {
+            "name": "semana", //nullable false
+            editable: hasSubCoordinadorPermission,
+            "typeName": "integer"
+        },
+        {
+            "name": "carga",
+            editable: hasRecepcionistaPermission,
+            "typeName": "date"
+        },
+        {
+            "name": "dispositivo",
+            "editable": false,
+            "typeName": "text"
+        },
+        {
+            "name": "estado",
+            "editable": false,
+            "typeName": "text",
+            //"nullable": false
+        },
+        {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
+        {name:'cod_recu'      , typeName:'text'   ,editable:false    },
+        {name:'cod_sup'       , typeName:'text'   ,editable:false    },
+        {
+            "name": "periodicidad",
+            "editable": false,
+            "typeName": "text"
+            ,visible: false
+        },
+        {
+            "name": "participacion",
+            "editable": false,
+            "typeName": "integer"
+            ,visible: false
         },
     ],
     "primaryKey": [
