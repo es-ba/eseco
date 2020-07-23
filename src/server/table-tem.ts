@@ -45,17 +45,6 @@ export function tem(context:TableContext):TableDefinition {
         },
 //        { name: "ver", typeName: 'text'    , clientSide:'verCaso', editable:false },
         {
-            "name": "lote",
-            "typeName": "integer",
-            editable: hasSubCoordinadorPermission,
-            //"nullable":false
-        },
-        {
-            "name": "semana", //nullable false
-            editable: hasSubCoordinadorPermission,
-            "typeName": "integer"
-        },
-        {
             "name": "nrocomuna",
             editable: false,
             "typeName": "integer"
@@ -166,21 +155,6 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "text"
         },
         {
-            "name": "carga_rol",
-            editable: hasRecepcionistaPermission,
-            "typeName": "text"
-        },
-        {
-            "name": "carga_persona",
-            editable: hasRecepcionistaPermission,
-            "typeName": "text"
-        },
-        {
-            "name": "carga",
-            editable: hasRecepcionistaPermission,
-            "typeName": "date"
-        },
-        {
             "name": "operacion",
             editable: hasRecepcionistaPermission,
             "typeName": "text",
@@ -213,20 +187,6 @@ export function tem(context:TableContext):TableDefinition {
         { name:'etiqueta'         , typeName:'text'     },
         { name:'relevador'        , typeName:'text'     },
         { name:'rea_m'            , typeName:'integer'  },
-        {
-            "name": "dispositivo",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
-            "name": "estado",
-            "editable": false,
-            "typeName": "text",
-            //"nullable": false
-        },
-        {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
-        {name:'cod_recu'      , typeName:'text'   ,editable:false    },
-        {name:'cod_sup'       , typeName:'text'   ,editable:false    },
         {name:'rea'           , typeName:'bigint' ,editable:false    },
         {name:'norea'         , typeName:'text'   ,editable:false    },
         {name:'rea_p'         , typeName:'bigint' ,editable:false      },
@@ -237,6 +197,34 @@ export function tem(context:TableContext):TableDefinition {
 //        {name: "verificar"    , typeName:'boolean',editable:true, inTable:false, clientSide:'verificarCaso'},
 //        {name: "finalizar_campo", typeName:'boolean',editable:true, inTable:false, clientSide:'finalizarCampo'}, //fin_de_campo
 //        {name: "procesamiento", typeName:'boolean',editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
+        {
+        "name": "frel",
+        editable: hasRecepcionistaPermission,
+        "typeName": "date"
+        },
+        {
+            "name": "tipo_domicilio",
+            "editable": false,
+            "typeName": "integer"
+            //,visible: false
+        },        
+        {
+            "name": "reserva",
+            "editable": false,
+            "typeName": "integer"
+            //,visible: false
+        },        
+        {
+            "name": "area",
+            "editable": false,
+            "typeName": "integer"
+        },
+        {
+            "name": "dominio",
+            "editable": false,
+            "typeName": "integer"
+            ,visible: false
+        },
         {
             "name": "zona",
             "editable": hasProcesamientoPermission,
@@ -254,12 +242,6 @@ export function tem(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "integer"
             ,visible: false
-        },
-        {
-            "name": "reserva",
-            "editable": false,
-            "typeName": "integer"
-            //,visible: false
         },
         {
             "name": "areaup",
@@ -309,17 +291,6 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "integer"
         },
         {
-            "name": "area",
-            "editable": false,
-            "typeName": "integer"
-        },
-        {
-            "name": "dominio",
-            "editable": false,
-            "typeName": "integer"
-            ,visible: false
-        },
-        {
             "name": "estrato_ing",
             "editable": false,
             "typeName": "integer"
@@ -351,6 +322,46 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "text",
             visible: false,
             inTable: false
+        },
+        {
+            "name": "dispositivo",
+            "editable": false,
+            "typeName": "text"
+        },
+        {
+            "name": "estado",
+            "editable": false,
+            "typeName": "text",
+            //"nullable": false
+        },
+        {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
+        {name:'cod_recu'      , typeName:'text'   ,editable:false    },
+        {name:'cod_sup'       , typeName:'text'   ,editable:false    },
+        {
+            "name": "carga_rol",
+            editable: hasRecepcionistaPermission,
+            "typeName": "text"
+        },
+        {
+            "name": "carga_persona",
+            editable: hasRecepcionistaPermission,
+            "typeName": "text"
+        },
+        {
+            "name": "carga",
+            editable: hasRecepcionistaPermission,
+            "typeName": "date"
+        },
+        {
+            "name": "lote",
+            "typeName": "integer",
+            editable: hasSubCoordinadorPermission,
+            //"nullable":false
+        },
+        {
+            "name": "semana", //nullable false
+            editable: hasSubCoordinadorPermission,
+            "typeName": "integer"
         },
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
