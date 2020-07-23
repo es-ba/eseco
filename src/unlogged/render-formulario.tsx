@@ -642,8 +642,9 @@ function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean, soloLectura
                 </Button>
             )}
         </ButtonGroup>
+        {props.soloLectura?<Typography component="span" style={{margin:'0 10px'}}> (Solo Lectura) </Typography>:null}
         {props.modoDirecto?
-            <ButtonGroup>
+            <ButtonGroup style={{margin:'0 0 0 30px'}}>
                 <Button
                     color="inherit"
                     variant="outlined"
@@ -775,7 +776,6 @@ function FormularioDespliegue(props:{forPk:ForPk}){
             <AppBar position="fixed" color={soloLectura?'secondary':'primary'}>
                 <Toolbar>
                     <BarraDeNavegacion forPk={forPk} modoDirecto={opciones.modoDirecto} soloLectura={soloLectura || false}/>
-                    {soloLectura?<Typography component="span"> (Solo Lectura)</Typography>:null}
                 </Toolbar>
             </AppBar>
             <main>
