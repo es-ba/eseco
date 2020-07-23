@@ -1,15 +1,15 @@
 operativo|id_casillero|padre|tipoc|tipoc__denominacion|casillero|orden|ok|nombre|tipovar|longitud|tipoe|aclaracion|salto|unidad_analisis|cantidad_resumen|irrepetible|despliegue|ver_id|optativo|orden_total|ultimo_ancestro|formulario_principal|var_name|var_name_especial|expresion_habilitar|valor_ns_nc|valor_sin_dato
 ESECO|F:F1||F|formulario|F1|1|✔|Estudio de seroprevalencia COVID-19||||||viviendas||||||1|F:F1||||||
 ESECO|UG|F:F1|B|bloque|UG|50|✔|Ubicación geográfica||||||||true||||1;50|F:F1||||||
-ESECO|G1|UG|P|pregunta|G1|1|✔|Tipo de domicilio|numero|1||||||true||||1;50;1|F:F1||g1||||
+ESECO|G1|UG|P|pregunta|G1|1|✔|Tipo de domicilio|numero|||||||true|calculada|||1;50;1|F:F1||g1||||
 ESECO|G2|UG|P|pregunta|G2|100|✔|Calle|texto|||||||true|ocultar no_leer|||1;50;100|F:F1||g2||g1=2||
 ESECO|G3|UG|P|pregunta|G3|110|✔|Número|texto|4||||||true|ocultar no_leer|||1;50;110|F:F1||g3||g1=2||
 ESECO|G4|UG|P|pregunta|G4|120|✔|Piso|texto|2||||||true|ocultar no_leer||true|1;50;120|F:F1||g4||g1=2||
 ESECO|G5|UG|P|pregunta|G5|130|✔|Departamento|texto|2||||||true|ocultar no_leer||true|1;50;130|F:F1||g5||g1=2||
-ESECO|UG2|UG|P|pregunta|UG2|210|✔|Comuna|numero|2||||||true|ocultar no_leer|||1;50;210|F:F1||ug2||g1=3||
-ESECO|UG3|UG|P|pregunta|UG3|220|✔|Fracción|numero|3||||||true|ocultar no_leer|||1;50;220|F:F1||ug3||g1=3||
-ESECO|UG4|UG|P|pregunta|UG4|230|✔|Radio|numero|3||||||true|ocultar no_leer|||1;50;230|F:F1||ug4||g1=3||
-ESECO|UG5|UG|P|pregunta|UG5|240|✔|Barrio|texto|medio||||||true|ocultar no_leer|||1;50;240|F:F1||ug5||g1=3||
+ESECO|UG2|UG|P|pregunta|UG2|200|✔|Barrio|texto|medio||||||true|ocultar no_leer|||1;50;200|F:F1||ug2||g1=3||
+ESECO|UG3|UG|P|pregunta|UG3|210|✔|Comuna|numero|2||||||true|ocultar no_leer|||1;50;210|F:F1||ug3||g1=3||
+ESECO|UG4|UG|P|pregunta|UG4|220|✔|Fracción|numero|3||||||true|ocultar no_leer|||1;50;220|F:F1||ug4||g1=3||
+ESECO|UG5|UG|P|pregunta|UG5|230|✔|Radio|numero|3||||||true|ocultar no_leer|||1;50;230|F:F1||ug5||g1=3||
 ESECO|UG6|UG|P|pregunta|UG6|250|✔|Manzana|texto|3||||||true|ocultar no_leer|||1;50;250|F:F1||ug6||g1=3||
 ESECO|UG7|UG|P|pregunta|UG7|260|✔|Casa|texto|3||||||true|ocultar no_leer||true|1;50;260|F:F1||ug7||g1=3||
 ESECO|G9|UG|P|pregunta|G9|300|✔|Otros datos domicilio|texto|||||||true|ocultar no_leer||true|1;50;300|F:F1||g9||g1=2 or g1=3||

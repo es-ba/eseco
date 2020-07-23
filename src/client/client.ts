@@ -1,10 +1,12 @@
 import {html, HtmlTag} from "js-to-html";
 import * as myOwn from "myOwn";
-import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario} from "../unlogged/redux-formulario";
+import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario, traerEstructura} from "../unlogged/redux-formulario";
 import { CasoState, EtiquetaOpts, IdVariable, IdCaso } from "../unlogged/tipos";
 import { crearEtiqueta } from "../unlogged/generador-qr";
 import * as TypedControls from "typed-controls";
 import * as likeAr from "like-ar";
+
+const OPERATIVO = 'ESECO';
 
 async function traerHdr(opts:{modoDemo:boolean, vivienda?:IdCaso}){
     await dmTraerDatosFormulario(opts);
@@ -19,10 +21,12 @@ function htmlNumero(num:number){
 
 async function sincronizarDatos(state:CasoState|null){
     var datos = await my.ajax.dm_sincronizar({datos:state?.datos||null});
+    var estructura = await traerEstructura({operativo:OPERATIVO})
     if(state==null){
         state={};
     }
     state.datos=datos;
+    state.estructura=estructura;
     state.feedbackRowValidator={};
     my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
     return datos;
@@ -45,20 +49,28 @@ myOwn.wScreens.sincronizar_dm=function(){
     if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
         var state: CasoState = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
         mainLayout.appendChild(html.div({class:'aviso'},[
-            html.h4('Proceso de sincronización'),
+            html.h4('información a transmitir'),
             html.p([htmlNumero(likeAr(state.datos.cargas).array().length),' areas: ',likeAr(state.datos.cargas).keys().join(', ')]),
             html.p([htmlNumero(likeAr(state.datos.hdr).array().length),' viviendas']),
             html.p([htmlNumero(likeAr(state.datos.hdr).filter(dv=>dv.respuestas?.[dv1]==1 && dv.respuestas?.[c5ok]==1).array().length),' viviendas con muestras']),
         ]).create());
-        var downloadButton = html.button({class:'download-dm-button'},'proceder').create();
+        var downloadButton = html.button({class:'download-dm-button-cont'},'proceder ⇒').create();
         mainLayout.appendChild(downloadButton);
+        var divAvisoSincro:HTMLDivElement=html.div().create();
+        mainLayout.appendChild(divAvisoSincro);
         downloadButton.onclick = async function(){
             downloadButton.disabled=true;
+            downloadButton.className='download-dm-button';
+            divAvisoSincro.innerHTML='';
             try{
                 var datos = await sincronizarDatos(state);
-                mainLayout.appendChild(html.div({class:'aviso-sincro'}, [
-                    html.p("número de sincronización: "+datos.num_sincro),
-                    html.a({href:'./campo'},'IR A LA HOJA DE RUTA')
+                divAvisoSincro.append(html.div({id:'aviso-sincro'}, [
+                    html.p(["Número de sincronización: ", html.b(""+datos.num_sincro)]),
+                    html.h4('datos recibidos'),
+                    html.p([htmlNumero(likeAr(datos.cargas).array().length),' areas: ',likeAr(state.datos.cargas).keys().join(', ')]),
+                    html.p([htmlNumero(likeAr(datos.hdr).array().length),' viviendas']),
+                    html.p([htmlNumero(likeAr(datos.hdr).filter(dv=>dv.respuestas?.[dv1]==1 && dv.respuestas?.[c5ok]==1).array().length),' viviendas con muestras']),
+                    html.a({href:'./campo'},[html.b('IR A LA HOJA DE RUTA')])
                 ]).create());
                 //traer nueva
                 // await traerHdr({modoDemo:false});

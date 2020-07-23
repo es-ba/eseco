@@ -556,29 +556,35 @@ export function goToTem(){
     location.reload();   
 }
 
+export async function traerEstructura(params:{operativo: string}){
+    var casillerosOriginales:{} = await my.ajax.operativo_estructura(params);
+    console.log(casillerosOriginales)
+    //TODO: GENERALIZAR
+    //@ts-ignore
+    casillerosOriginales['F:F2_personas']=casillerosOriginales['F:F2'].childs.find(casillero=>casillero.data.casillero=='LP');
+    //@ts-ignore
+    var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
+        likeAr(casillerosOriginales).map(
+            (casillerosJerarquizados:any)=>{
+                var casillerosAplanados:CasillerosImplementados = aplanarLaCurva(casillerosJerarquizados);
+                return {
+                    casilleros: casillerosAplanados,
+                    estructuraRowValidator: generarEstructuraRowValidator(casillerosAplanados)
+                }
+            }
+        ).plain();
+    var estructura={
+        formularios:casillerosTodosFormularios,
+        mainForm:MAIN_FORM
+    };
+    return estructura;
+}
+
 export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: IdCaso}){
     var createInitialState = async function createInitialState(){
-        var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
-        console.log(casillerosOriginales)
-        //TODO: GENERALIZAR
-        //@ts-ignore
-        casillerosOriginales['F:F2_personas']=casillerosOriginales['F:F2'].childs.find(casillero=>casillero.data.casillero=='LP');
-        //@ts-ignore
-        var casillerosTodosFormularios:{[f in IdFormulario]:{casilleros:Formulario, estructuraRowValidator:EstructuraRowValidator}}=
-            likeAr(casillerosOriginales).map(
-                (casillerosJerarquizados:any)=>{
-                    var casillerosAplanados:CasillerosImplementados = aplanarLaCurva(casillerosJerarquizados);
-                    return {
-                        casilleros: casillerosAplanados,
-                        estructuraRowValidator: generarEstructuraRowValidator(casillerosAplanados)
-                    }
-                }
-            ).plain();
+        var estructura = await traerEstructura({ operativo: OPERATIVO });
         var initialState:CasoState={
-            estructura:{
-                formularios:casillerosTodosFormularios,
-                mainForm:MAIN_FORM
-            },
+            estructura,
             datos:{
                 cargas:{
                     // @ts-expect-error tengo que agregar toDmy en los tipos
@@ -763,5 +769,4 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
     //HDR CON STORE CREADO
     return store;
 }
-
 
