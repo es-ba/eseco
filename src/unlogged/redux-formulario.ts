@@ -556,7 +556,8 @@ export function goToTem(){
     location.reload();   
 }
 
-export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: IdCaso}){
+export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: IdCaso, useSessionStorage?:boolean}){
+    opts.useSessionStorage= opts.useSessionStorage||false;
     var createInitialState = async function createInitialState(){
         var casillerosOriginales:{} = await my.ajax.operativo_estructura({ operativo: OPERATIVO });
         console.log(casillerosOriginales)
@@ -696,7 +697,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
         return initialState;
     }
     var loadState = async function loadState():Promise<CasoState>{
-        var casoState:CasoState|null = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
+        var casoState:CasoState|null = opts.useSessionStorage?my.getSessionVar(LOCAL_STORAGE_STATE_NAME):my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
         if(casoState && !opts.modoDemo){
             if(casoState.estructura==null){
                 initialState = await createInitialState();
@@ -743,7 +744,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
         return casoState;
     }
     var saveState = function saveState(state:CasoState){
-        my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+        opts.useSessionStorage?my.setSessionVar(LOCAL_STORAGE_STATE_NAME, state):my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
     }
     /* DEFINICION CONTROLADOR */
     var initialState:CasoState = await loadState();

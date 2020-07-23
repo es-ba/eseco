@@ -29,11 +29,13 @@ async function sincronizarDatos(state:CasoState|null){
 }
 
 async function abrirDirecto(enc:IdCaso){
-    var datos = await my.ajax.dm_enc_cargar({enc:enc});
-    var state={};
-    state.datos=datos;
-    state.feedbackRowValidator={};
-    my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+    if(!my.setSessionVar(LOCAL_STORAGE_STATE_NAME)){
+        var datos = await my.ajax.dm_enc_cargar({enc:enc});
+        var state={};
+        state.datos=datos;
+        state.feedbackRowValidator={};
+        my.setSessionVar(LOCAL_STORAGE_STATE_NAME, state);
+    }
 }
 
 myOwn.wScreens.sincronizar_dm=function(){
@@ -215,20 +217,9 @@ var crearBotonVer = (depot, fieldName, label:'abrir'|'ver'){
     var openButton = html.button({class:'open-dm-button'},label).create();
     depot.rowControls[fieldName].innerHTML='';
     depot.rowControls[fieldName].appendChild(openButton);
-    var abrirYguardarRef = function abrirYguardarRef(){
-        var windowObjRef = window.open('menu#w=abrirDirecto&enc='+depot.row.enc, 'menu#w=abrirDirecto&enc='+depot.row.enc);
-        my.windowObjRef = windowObjRef;
-    }
     openButton.onclick = async function(){
-        if(!my.windowObjRef){
-            abrirYguardarRef()
-        }else{
-            if(my.windowObjRef.closed) {
-                abrirYguardarRef()
-            else {
-                alertPromise('Solamente puede abrir de a 1 encuesta')
-            }
-        }
+        var urlAndWindowName = 'menu#w=abrirDirecto&enc='+depot.row.enc;
+        window.open(urlAndWindowName,urlAndWindowName);
     }
 }
 

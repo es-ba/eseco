@@ -886,7 +886,7 @@ export function AppEseco(){
     }
 }
 
-export async function desplegarFormularioActual(opts:{modoDemo:boolean}){
+export async function desplegarFormularioActual(opts:{modoDemo:boolean, useSessionStorage?:boolean}){
     // traer los metadatos en una "estructura"
     // traer los datos de localStorage
     // verificar el main Layout
