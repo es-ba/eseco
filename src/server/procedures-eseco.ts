@@ -488,21 +488,19 @@ export const ProceduresEseco : ProcedureDef[] = [
             {name:'datos'       , typeName:'jsonb'},
         ],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
-            if(parameters.datos){
-                await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
-                    var result = await context.client.query(
-                        `update tem
-                            set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
-                            where operativo= $1 and enc = $2 and cargado_dm is null
-                            returning 'ok'`
-                        ,
-                        [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
-                    ).fetchOneRowIfExists();
-                    if(result.rowCount==0){
-                        throw new Error('La encuesta que intenta guardar ha sido cargada por un encuestador.')
-                    }
-                }).array());
-            }
+            await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
+                var result = await context.client.query(
+                    `update tem
+                        set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
+                        where operativo= $1 and enc = $2 and cargado_dm is null
+                        returning 'ok'`
+                    ,
+                    [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
+                ).fetchOneRowIfExists();
+                if(result.rowCount==0){
+                    throw new Error('La encuesta que intenta guardar ha sido cargada por un encuestador.')
+                }
+            }).array());
             return 'ok'
         }
     },

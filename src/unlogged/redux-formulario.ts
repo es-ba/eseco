@@ -551,9 +551,26 @@ export function gotoSincronizar(){
     location.reload();   
 }
 
-export function goToTem(){
-    history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=configurar,muestra,tem`);
-    location.reload();   
+var redirectIfNotLogged = function redirectIfNotLogged(err:Error){
+    if(err.message == my.messages.notLogged){
+        setTimeout(()=>{
+            history.replaceState(null, '', `${location.origin+location.pathname}/../login${location.hash}`);
+            location.reload();   
+        },1500)
+        
+    }
+}
+
+export async function saveSurvey(){
+    try{
+        await my.ajax.dm_enc_descargar({
+            datos: my.getSessionVar(LOCAL_STORAGE_STATE_NAME)?.datos
+        });
+        return 'encuesta guardada'
+    }catch(err){
+        redirectIfNotLogged(err);
+        return err.message;
+    }
 }
 
 export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: IdCaso, useSessionStorage?:boolean}){

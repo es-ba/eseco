@@ -236,9 +236,10 @@ export type CasoState={
     }
     datos:{
         hdr:HojaDeRuta
-        token:string
-        num_sincro:number
+        token?:string
+        num_sincro?:number
         cargas: Cargas
+        soloLectura?: boolean
     }
     opciones:{ // datos de navegación que elije el usuario
         forPk:ForPk|null // índice dentro de las unidades de análisis. Null = en hoja de ruta
