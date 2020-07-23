@@ -29,7 +29,7 @@ async function sincronizarDatos(state:CasoState|null){
 }
 
 async function abrirDirecto(enc:IdCaso){
-    var datos = await my.ajax.dm_sincronizar({enc:enc});
+    var datos = await my.ajax.dm_enc_cargar({enc:enc});
     var state={};
     state.datos=datos;
     state.feedbackRowValidator={};
@@ -204,21 +204,48 @@ myOwn.wScreens.resultados_ver = ()=>{
 myOwn.wScreens.abrirDirecto=async function(addrParams){
     try{
         await abrirDirecto(addrParams.enc);
-        await traerHdr({modoDemo:false, vivienda:addrParams.enc});
+        desplegarFormularioActual({modoDemo:false, vivienda:addrParams.enc});
     }catch(err){
         alertPromise(err.message)
     }
 };
 
-myOwn.clientSides.abrir={
-    prepare: (depot, fieldName)=>{
-        var openButton = my.createForkeableButton({w:'abrirDirecto',enc:depot.row.enc},{label:'abrir'})
-        depot.rowControls[fieldName].appendChild(openButton);
-        openButton.onclick = async function(){
-            openButton.disabled=true;
+var crearBotonVer = (depot, fieldName, label:'abrir'|'ver'){
+    //var openButton = my.createForkeableButton({w:'abrirDirecto',enc:depot.row.enc},{label})
+    var openButton = html.button({class:'open-dm-button'},label).create();
+    depot.rowControls[fieldName].innerHTML='';
+    depot.rowControls[fieldName].appendChild(openButton);
+    var abrirYguardarRef = function abrirYguardarRef(){
+        var windowObjRef = window.open('menu#w=abrirDirecto&enc='+depot.row.enc, 'menu#w=abrirDirecto&enc='+depot.row.enc);
+        my.windowObjRef = windowObjRef;
+    }
+    openButton.onclick = async function(){
+        if(!my.windowObjRef){
+            abrirYguardarRef()
+        }else{
+            if(my.windowObjRef.closed) {
+                abrirYguardarRef()
+            else {
+                alertPromise('Solamente puede abrir de a 1 encuesta')
+            }
         }
-    },
-    update: false
+    }
+}
+
+myOwn.clientSides.abrir={
+    prepare: (depot, fieldName)=>{},
+    update: (depot, fieldName)=>{
+        var label = depot.row.cargado_dm?'ver':'abrir';
+        crearBotonVer(depot,fieldName,label);
+    }
+};
+
+myOwn.clientSides.abrirRecepcion={
+    prepare: (depot, fieldName)=>{},
+    update: (depot, fieldName)=>{
+        var label = depot.row.cargado?'ver':'abrir';
+        crearBotonVer(depot,fieldName,label);
+    }
 };
 
 myOwn.wScreens.demo=function(){
