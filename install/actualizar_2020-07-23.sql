@@ -27,3 +27,18 @@ update tem
   set json_encuesta= json_encuesta||jsonb_build_object('g1', tipo_domicilio, 'ug2',nomcalle,'ug3',nrocomuna,'ug4',nrofraccion,'ug5',nroradio,'ug6',nromanzana,'ug7',casa,'g9',obsdatosdomicilio)
   where tipo_domicilio=3;          --and not json_encuesta?'g1' ;
 --en nomcalle esta cargada la descripcion del barrio
+
+--tipo_domicilio=2
+with ar as(
+select area, max(enc) as ultimo 						  
+  from tem 
+  group by 1)
+, nuevas_2 as (
+  select ultimo::integer + n enc, area, 3 reserva, 2 as tipo_domicilio, '{"personas":[],"g1":2}'::jsonb json_encuesta, 3 dominio 
+    from ar ,generate_series(1, 6) n
+    where area<=700
+    order by 1
+)
+insert into tem(enc, area, reserva, tipo_domicilio, json_encuesta,dominio)
+  select enc, area,reserva,tipo_domicilio,json_encuesta,dominio
+    from nuevas_2;

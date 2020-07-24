@@ -8,11 +8,13 @@ $BODY$
 declare
   datos         jsonb=new.json_encuesta;
 begin
+    new.rea_m        = case when (datos->>'c5ok')::integer=1 and (datos ->>'dv1')::integer=1 then 1 else null end;
+    new.frel         = (datos ->>'dv2'):: date;
+    
     new.etiqueta     = datos ->>'c5'; 
     new.rea          = CASE (datos ->>'dv1')::integer when 1 then 1 when 2 then 0 else null end;
     new.norea        = (datos ->>'dv3')::integer ;
     new.cant_p       = (datos ->>'cp') ::integer ;
-    new.rea_m        = case when (datos->>'c5ok')::integer=1 and (datos ->>'dv1')::integer=1 then 1 else null end;
     return new;
 end;
 $BODY$;

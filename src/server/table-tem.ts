@@ -199,7 +199,7 @@ export function tem(context:TableContext):TableDefinition {
 //        {name: "procesamiento", typeName:'boolean',editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
         {
         "name": "frel",
-        editable: hasRecepcionistaPermission,
+        editable: false,
         "typeName": "date"
         },
         {
