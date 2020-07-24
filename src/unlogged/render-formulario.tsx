@@ -926,7 +926,7 @@ export function HojaDeRutaDespliegue(){
                 </Toolbar>
             </AppBar>
             <div className="hoja-de-ruta">
-                {modo.demo?<div>
+                {modo?.demo?<div>
                     <Typography>Modo demo </Typography>
                     <Button variant="outlined" color="secondary"
                         onClick={()=>dispatch(dispatchers.REINICIAR_DEMO({}))}
@@ -955,7 +955,7 @@ export function ListaTextos(props:{textos:string[]}){
 export function BienvenidaDespliegue(props:{modo:CasoState["modo"]}){
     var dispatch=useDispatch();
     return <Paper className="bienvenida">
-        {props.modo.demo?
+        {props.modo?.demo?
             <>
                 <Typography>DEMO del sistema de relevamiento de ESECO</Typography>
                 <Typography>En esta demo:</Typography>
