@@ -542,7 +542,7 @@ function useSelectorVivienda(forPk:ForPk){
             completo: !state.feedbackRowValidator[toPlainForPk(forPk)].feedbackResumen.pendiente,
             resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
             formulario: state.estructura.formularios[forPk.formulario].casilleros,
-            modoDespliegue: state.modo.demo?state.opciones.modoDespliegue:'relevamiento',
+            modoDespliegue: state.modo?.demo?state.opciones.modoDespliegue:'relevamiento',
             modo: state.modo,
             opciones: state.opciones
         }
@@ -783,7 +783,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
             </AppBar>
             <main>
                 <Paper className="formulario" modo-despliegue={modoDespliegue}>
-                    {modo.demo?<div>
+                    {modo?.demo?<div>
                         <Typography component="span">Modo de despliegue:</Typography>
                         <ButtonGroup>
                         {listaModos.map(modo=>
