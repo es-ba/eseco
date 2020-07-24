@@ -454,6 +454,10 @@ boton-id-div-invalido()
   .label
     @media (max-width 599px)
       display none
+  &[solo-lectura=si]
+    button.MuiButton-outlined.Mui-disabled
+      background-color #e87a8d
+      color #ffffff
 
 /*ESTILOS CACHE*/
 #cache-layout, #cache-log

@@ -33,11 +33,13 @@ async function sincronizarDatos(state:CasoState|null){
 }
 
 async function abrirDirecto(enc:IdCaso){
-    var datos = await my.ajax.dm_sincronizar({enc:enc});
-    var state={};
-    state.datos=datos;
-    state.feedbackRowValidator={};
-    my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+    if(!my.getSessionVar(LOCAL_STORAGE_STATE_NAME)){
+        var datos = await my.ajax.dm_enc_cargar({enc:enc});
+        var state={};
+        state.datos=datos;
+        state.feedbackRowValidator={};
+        my.setSessionVar(LOCAL_STORAGE_STATE_NAME, state);
+    }
 }
 
 myOwn.wScreens.sincronizar_dm=function(){
@@ -216,21 +218,37 @@ myOwn.wScreens.resultados_ver = ()=>{
 myOwn.wScreens.abrirDirecto=async function(addrParams){
     try{
         await abrirDirecto(addrParams.enc);
-        await traerHdr({modoDemo:false, vivienda:addrParams.enc});
+        desplegarFormularioActual({modoDemo:false, vivienda:addrParams.enc, useSessionStorage:true});
     }catch(err){
         alertPromise(err.message)
     }
 };
 
+var crearBotonVer = (depot, fieldName, label:'abrir'|'ver'){
+    //var openButton = my.createForkeableButton({w:'abrirDirecto',enc:depot.row.enc},{label})
+    var openButton = html.button({class:'open-dm-button'},label).create();
+    depot.rowControls[fieldName].innerHTML='';
+    depot.rowControls[fieldName].appendChild(openButton);
+    openButton.onclick = async function(){
+        var urlAndWindowName = 'menu#w=abrirDirecto&enc='+depot.row.enc;
+        window.open(urlAndWindowName,urlAndWindowName);
+    }
+}
+
 myOwn.clientSides.abrir={
-    prepare: (depot, fieldName)=>{
-        var openButton = my.createForkeableButton({w:'abrirDirecto',enc:depot.row.enc},{label:'abrir'})
-        depot.rowControls[fieldName].appendChild(openButton);
-        openButton.onclick = async function(){
-            openButton.disabled=true;
-        }
-    },
-    update: false
+    prepare: (depot, fieldName)=>{},
+    update: (depot, fieldName)=>{
+        var label = depot.row.cargado_dm?'ver':'abrir';
+        crearBotonVer(depot,fieldName,label);
+    }
+};
+
+myOwn.clientSides.abrirRecepcion={
+    prepare: (depot, fieldName)=>{},
+    update: (depot, fieldName)=>{
+        var label = depot.row.cargado?'ver':'abrir';
+        crearBotonVer(depot,fieldName,label);
+    }
 };
 
 myOwn.wScreens.demo=function(){

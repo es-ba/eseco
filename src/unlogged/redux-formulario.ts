@@ -551,9 +551,26 @@ export function gotoSincronizar(){
     location.reload();   
 }
 
-export function goToTem(){
-    history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=configurar,muestra,tem`);
-    location.reload();   
+var redirectIfNotLogged = function redirectIfNotLogged(err:Error){
+    if(err.message == my.messages.notLogged){
+        setTimeout(()=>{
+            history.replaceState(null, '', `${location.origin+location.pathname}/../login${location.hash}`);
+            location.reload();   
+        },1500)
+        
+    }
+}
+
+export async function saveSurvey(){
+    try{
+        await my.ajax.dm_enc_descargar({
+            datos: my.getSessionVar(LOCAL_STORAGE_STATE_NAME)?.datos
+        });
+        return 'encuesta guardada'
+    }catch(err){
+        redirectIfNotLogged(err);
+        return err.message;
+    }
 }
 
 export async function traerEstructura(params:{operativo: string}){
@@ -580,7 +597,8 @@ export async function traerEstructura(params:{operativo: string}){
     return estructura;
 }
 
-export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: IdCaso}){
+export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: IdCaso, useSessionStorage?:boolean}){
+    opts.useSessionStorage= opts.useSessionStorage||false;
     var createInitialState = async function createInitialState(){
         var estructura = await traerEstructura({ operativo: OPERATIVO });
         var initialState:CasoState={
@@ -702,7 +720,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
         return initialState;
     }
     var loadState = async function loadState():Promise<CasoState>{
-        var casoState:CasoState|null = my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
+        var casoState:CasoState|null = opts.useSessionStorage?my.getSessionVar(LOCAL_STORAGE_STATE_NAME):my.getLocalVar(LOCAL_STORAGE_STATE_NAME);
         if(casoState && !opts.modoDemo){
             if(casoState.estructura==null){
                 initialState = await createInitialState();
@@ -749,7 +767,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
         return casoState;
     }
     var saveState = function saveState(state:CasoState){
-        my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
+        opts.useSessionStorage?my.setSessionVar(LOCAL_STORAGE_STATE_NAME, state):my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
     }
     /* DEFINICION CONTROLADOR */
     var initialState:CasoState = await loadState();

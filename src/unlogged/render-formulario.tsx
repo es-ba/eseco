@@ -21,7 +21,7 @@ import { dmTraerDatosFormulario, dispatchers,
     getFuncionHabilitar, 
     gotoSincronizar,
     toPlainForPk,
-    goToTem
+    saveSurvey
 } from "./redux-formulario";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"; 
@@ -471,13 +471,17 @@ function ConsistenciaDespliegue(props:{casillero:Consistencia, forPk:ForPk}){
 function BotonFormularioDespliegue(props:{casillero:BotonFormulario, forPk:ForPk}){
     var {casillero, forPk} = props;
     var habilitador = casillero.expresion_habilitar?getFuncionHabilitar(casillero.expresion_habilitar):()=>true;
-    var {respuestas} = useSelectorVivienda(forPk);
+    var {respuestas, opciones} = useSelectorVivienda(forPk);
+    var {soloLectura} = useSelector((state:CasoState)=>({soloLectura:state.datos.soloLectura}));
     var habilitado = habilitador(respuestas);
     var dispatch = useDispatch();
     var [confirmarForzarIr, setConfirmarForzarIr] = useState(false);
     const ir = ()=>{
         if(!casillero.salto){
-            dispatch(dispatchers.VOLVER_HDR({}));
+            opciones.modoDirecto?
+                null
+            :
+                dispatch(dispatchers.VOLVER_HDR({}));
         }else{
             dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{...forPk, formulario:'F:'+casillero.salto! as IdFormulario}}));
         }
@@ -595,10 +599,14 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
 
 const FormularioEncabezado = DespliegueEncabezado;
 
-function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean}){
+function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean, soloLectura:boolean}){
     const dispatch = useDispatch();
     const forPk = props.forPk;
     const {respuestas} = useSelectorVivienda(forPk);
+    const [confirmaCerrar, setConfirmaCerrar] = useState<boolean|null>(false);
+    const [mensajeDescarga, setMensajeDescarga] = useState<string|null>(null);
+    const [descargaCompleta, setDescargaCompleta] = useState<boolean|null>(false);
+    const [descargando, setDescargando] = useState<boolean|null>(false);
     var botonesFormulario=[
         {formulario: null, abr:'HdR', label:'hoja de ruta'},
         {formulario: 'F:F1' as IdFormulario, abr:'Viv', label:'vivienda'  },
@@ -618,36 +626,140 @@ function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean}){
     if(props.modoDirecto){
         botonesFormulario.shift();
     }
-    return <ButtonGroup className="barra-navegacion">
-        {botonesFormulario.map(b=>
-            <Button color={b.formulario==forPk.formulario?"primary":"inherit"} variant="outlined"
-                disabled={b.formulario==forPk.formulario}
-                onClick={()=>
-                dispatch(
-                    b.formulario==null?dispatchers.VOLVER_HDR({}):
-                    dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:b.formulario}})
-                )
-            }>
-                <span className="abr">{b.abr}</span>
-                <span className="label">{b.label}</span>
-            </Button>
-        )}
+    return <>
+        <ButtonGroup className="barra-navegacion" solo-lectura={props.soloLectura?'si':'no'} >
+            {botonesFormulario.map(b=>
+                <Button color={b.formulario==forPk.formulario?"primary":"inherit"} variant="outlined"
+                    disabled={b.formulario==forPk.formulario}
+                    onClick={()=>
+                    dispatch(
+                        b.formulario==null?dispatchers.VOLVER_HDR({}):
+                        dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:forPk.vivienda, formulario:b.formulario}})
+                    )
+                }>
+                    <span className="abr">{b.abr}</span>
+                    <span className="label">{b.label}</span>
+                </Button>
+            )}
+        </ButtonGroup>
+        {props.soloLectura?<Typography component="span" style={{margin:'0 10px'}}> (Solo Lectura) </Typography>:null}
         {props.modoDirecto?
-            <Button
-                color="inherit"
-                onClick={async ()=>{
-                    goToTem();
-                }}
-            >
-                <ICON.ExitToApp/>
-            </Button>
-        :null}
-    </ButtonGroup>
+            <ButtonGroup style={{margin:'0 0 0 30px'}}>
+                <Button
+                    color="inherit"
+                    variant="outlined"
+                    onClick={async ()=>{
+                        if(props.soloLectura){
+                            close();
+                        }else{
+                            setConfirmaCerrar(true)
+                        }
+                    }}
+                >
+                    <ICON.ExitToApp/>
+                </Button>
+                <Dialog
+                    open={!!confirmaCerrar}
+                    //hace que no se cierre el mensaje
+                    onClose={()=>setConfirmaCerrar(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">Confirme cierre de encuesta</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Está por salir de la encuesta, se perderán los cambios no guardados.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button 
+                            onClick={()=>{
+                                close()
+                            }} 
+                            color="secondary" 
+                            variant="outlined"
+                        >
+                            descartar cambios y cerrar
+                        </Button>
+                        <Button 
+                            onClick={()=>{
+                                setConfirmaCerrar(false)
+                            }} 
+                            color="primary" 
+                            variant="contained"
+                        >
+                            continuar editando encuesta
+                        </Button>
+                        
+                    </DialogActions>
+                </Dialog>
+                {!props.soloLectura?
+                    <>
+                        <Button
+                            color="inherit"
+                            variant="outlined"
+                            onClick={async ()=>{
+                                setMensajeDescarga('descargando, por favor espere...');
+                                setDescargando(true);
+                                var message = await saveSurvey();
+                                setDescargando(false);
+                                if(message=='encuesta guardada'){
+                                    setDescargaCompleta(true);
+                                    message+=', cerrando pestaña...';
+                                    setTimeout(function(){
+                                        close()
+                                    }, 2000)
+                                }
+                                setMensajeDescarga(message)
+                            }}
+                        >
+                            <ICON.Save/>
+                        </Button>
+                        <Dialog
+                            open={!!mensajeDescarga}
+                            //hace que no se cierre el mensaje
+                            onClose={()=>setMensajeDescarga(mensajeDescarga)}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">Información de descarga</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    {mensajeDescarga}{descargando?<CircularProgress />:null}
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                {descargando?
+                                    null
+                                :
+                                    <Button 
+                                        onClick={()=>{
+                                            if(descargaCompleta){
+                                                close()
+                                            }else{
+                                                setMensajeDescarga(null)
+                                            }
+                                        }} 
+                                        color="primary" 
+                                        variant="contained"
+                                    >
+                                        Cerrar
+                                    </Button>
+                                }
+                            </DialogActions>
+                        </Dialog>
+                    </>
+                :null}
+            </ButtonGroup>
+        :null}        
+        
+    </>
 }
 
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
     var {formulario, modoDespliegue, modo, actual, completo, opciones} = useSelectorVivienda(props.forPk);
+    var {soloLectura} = useSelector((state:CasoState)=>({soloLectura:state.datos.soloLectura}));
     const dispatch = useDispatch();
     useEffect(() => {
         if(actual){
@@ -661,9 +773,9 @@ function FormularioDespliegue(props:{forPk:ForPk}){
     var listaModos:ModoDespliegue[]=['metadatos','relevamiento','PDF'];
     return (
         <>
-            <AppBar position="fixed">
+            <AppBar position="fixed" color={soloLectura?'secondary':'primary'}>
                 <Toolbar>
-                    <BarraDeNavegacion forPk={forPk} modoDirecto={opciones.modoDirecto}/>
+                    <BarraDeNavegacion forPk={forPk} modoDirecto={opciones.modoDirecto} soloLectura={soloLectura || false}/>
                 </Toolbar>
             </AppBar>
             <main>
@@ -886,7 +998,7 @@ export function AppEseco(){
     }
 }
 
-export async function desplegarFormularioActual(opts:{modoDemo:boolean}){
+export async function desplegarFormularioActual(opts:{modoDemo:boolean, useSessionStorage?:boolean}){
     // traer los metadatos en una "estructura"
     // traer los datos de localStorage
     // verificar el main Layout

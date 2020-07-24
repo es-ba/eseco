@@ -57,6 +57,36 @@ function createStructure(context:ProcedureContext, tableName:string){
 
 type AnyObject = {[k:string]:any}
 
+var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
+    return `
+        with viviendas as 
+            (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
+                jsonb_build_object(
+                    'nomcalle'      , nomcalle      ,
+                    'sector'        , sector        ,
+                    'edificio'      , edificio      ,
+                    'entrada'       , entrada       ,
+                    'nrocatastral'  , nrocatastral  ,
+                    'piso'          , piso          ,
+                    'departamento'  , departamento  ,
+                    'habitacion'    , habitacion    ,
+                    'casa'          , casa          ,
+                    'prioridad'     , reserva+1     ,
+                    'observaciones' , carga_observaciones ,
+                    'carga'         , area         
+                ) as tem, area
+                from tem
+                where ${quotedCondViv}
+            )
+            select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
+                ${json(`
+                    select area as carga, observaciones_hdr as observaciones, fecha
+                        from viviendas inner join areas using (area) 
+                        group by area, observaciones_hdr, fecha`, 
+                    'fecha')} as cargas
+    `
+}
+    
 export const ProceduresEseco : ProcedureDef[] = [
     {
         action:'generar_formularios',
@@ -370,68 +400,58 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
     {
-        action:'dm_cargar',
-        parameters:[],
-        coreFunction:async function(context: ProcedureContext, _parameters: CoreFunctionParameters){
-            var persona = null;
-            try{
-                persona = await context.client.query(
-                    `select *
-                        from personal
-                        where usuario = $1 and activo`
-                    ,
-                    [context.user.usuario]
-                ).fetchUniqueRow();
-            }catch(err){
-                throw new Error(err.message + '. Usuario no registrado o inactivo en tabla personal')
-            }
-            var casos = await context.client.query(
-                `update tem
-                    set estado=$3
-                    where operativo=$1 and cod_enc = $2
-                    returning enc, json_encuesta`
+        action:'dm_enc_cargar',
+        parameters:[
+            {name:'enc'         , typeName:'text'},
+        ],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var be=context.be;
+            var condviv= ` operativo= $1 and enc =$2 `;
+            var soloLectura = (await context.client.query(
+                `select * 
+                    from tem
+                    where ${condviv} and cargado_dm is null`
                 ,
-                [OPERATIVO, persona.row.persona, 'rel_cargado']
-            ).fetchAll();
-            return {estado:"ok", casos: casos.rows}
+                [OPERATIVO, parameters.enc]
+            ).fetchOneRowIfExists()).rowCount == 0;
+            var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,parameters.enc]).fetchUniqueRow();
+            return {
+                ...row,
+                soloLectura,
+                cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:carga.fecha?date.iso(carga.fecha).toDmy():null})), 'carga')
+            };
         }
     },
     {
         action:'dm_sincronizar',
         parameters:[
-            {name:'datos'       , typeName:'jsonb', defaultValue: null},
-            {name:'enc'         , typeName:'text', defaultValue: null},
+            {name:'datos'       , typeName:'jsonb'},
         ],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
-            var token:string|null=null;
             var num_sincro:number=0;
-            if(!parameters.enc){
-                token = parameters.datos?.token;
-                if(!token){
-                    token = (await be.procedure.token_get.coreFunction(context, {
-                        useragent: context.session.req.useragent, 
-                        username: context.username
-                    })).token;
-                }
-                var {value} = await context.client.query(`
-                    INSERT INTO sincronizaciones (token, usuario, datos)
-                        VALUES ($1,$2,$3) 
-                        RETURNING sincro
-                    `, [token, context.username, parameters.datos]
-                ).fetchUniqueValue();
-                num_sincro=value;
-                var condviv= `
-                            operativo= $1 
-                            and relevador = (select idper from usuarios where usuario=$2)
-                            and operacion='cargar' 
-                            and habilitada
-                            and (cargado_dm is null or cargado_dm = ${context.be.db.quoteLiteral(token)})
-                `
-            }else{
-                condviv= ` operativo= $1 and enc =$2 `
+            var token:string|null=parameters.datos?.token;
+            if(!token){
+                token = (await be.procedure.token_get.coreFunction(context, {
+                    useragent: context.session.req.useragent, 
+                    username: context.username
+                })).token;
             }
-            if(parameters.datos && !parameters.enc){
+            var {value} = await context.client.query(`
+                INSERT INTO sincronizaciones (token, usuario, datos)
+                    VALUES ($1,$2,$3) 
+                    RETURNING sincro
+                `, [token, context.username, parameters.datos]
+            ).fetchUniqueValue();
+            num_sincro=value;
+            var condviv= `
+                        operativo= $1 
+                        and relevador = (select idper from usuarios where usuario=$2)
+                        and operacion='cargar' 
+                        and habilitada
+                        and (cargado_dm is null or cargado_dm = ${context.be.db.quoteLiteral(token)})
+            `
+            if(parameters.datos){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
                     var result = await context.client.query(
                         `update tem
@@ -446,44 +466,14 @@ export const ProceduresEseco : ProcedureDef[] = [
                     }
                 }).array());
             }
-            var {row} = await context.client.query(`
-                with viviendas as (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
-                                jsonb_build_object(
-                                    'nomcalle'      , nomcalle      ,
-                                    'sector'        , sector        ,
-                                    'edificio'      , edificio      ,
-                                    'entrada'       , entrada       ,
-                                    'nrocatastral'  , nrocatastral  ,
-                                    'piso'          , piso          ,
-                                    'departamento'  , departamento  ,
-                                    'habitacion'    , habitacion    ,
-                                    'casa'          , casa          ,
-                                    'prioridad'     , reserva+1     ,
-                                    'observaciones' , carga_observaciones ,
-                                    'carga'         , area         
-                                ) as tem,
-                                area
-                            from tem
-                            where ${condviv}
-                    )
-                select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
-                        ${json(`
-                            select area as carga, observaciones_hdr as observaciones, fecha
-                                from viviendas inner join areas using (area) 
-                                group by area, observaciones_hdr, fecha`, 
-                            'fecha')} as cargas
-                `,
-                [OPERATIVO,parameters.enc?parameters.enc:context.username]
-            ).fetchUniqueRow();
-            if(!parameters.enc){
-                await context.client.query(
-                    `update tem
-                        set  cargado_dm=$3
-                        where ${condviv} `
-                    ,
-                    [OPERATIVO, parameters.enc?parameters.enc:context.username, token]
-                ).execute();
-            }
+            var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,context.username]).fetchUniqueRow();
+            await context.client.query(
+                `update tem
+                    set  cargado_dm=$3
+                    where ${condviv} `
+                ,
+                [OPERATIVO, parameters.enc?parameters.enc:context.username, token]
+            ).execute();
             return {
                 ...row,
                 token,
@@ -493,20 +483,23 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
     {
-        action:'dm_descargar',
+        action:'dm_enc_descargar',
         parameters:[
             {name:'datos'       , typeName:'jsonb'},
         ],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
-            var be=context.be;
-            await Promise.all(likeAr(parameters.datos.hdr).map(async (hdr,idCaso)=>{
-                return await context.client.query(
+            await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
+                var result = await context.client.query(
                     `update tem
-                        set json_encuesta = $3
-                        where operativo= $1 and enc = $2`
+                        set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
+                        where operativo= $1 and enc = $2 and cargado_dm is null
+                        returning 'ok'`
                     ,
-                    [OPERATIVO, idCaso, hdr.respuestas]
-                ).execute();
+                    [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
+                ).fetchOneRowIfExists();
+                if(result.rowCount==0){
+                    throw new Error('La encuesta que intenta guardar ha sido cargada por un encuestador.')
+                }
             }).array());
             return 'ok'
         }
