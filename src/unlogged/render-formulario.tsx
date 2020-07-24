@@ -627,7 +627,7 @@ function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean, soloLectura
         botonesFormulario.shift();
     }
     return <>
-        <ButtonGroup className="barra-navegacion">
+        <ButtonGroup className="barra-navegacion" solo-lectura={props.soloLectura?'si':'no'} >
             {botonesFormulario.map(b=>
                 <Button color={b.formulario==forPk.formulario?"primary":"inherit"} variant="outlined"
                     disabled={b.formulario==forPk.formulario}
