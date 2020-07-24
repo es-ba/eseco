@@ -644,113 +644,116 @@ function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean, soloLectura
         </ButtonGroup>
         {props.soloLectura?<Typography component="span" style={{margin:'0 10px'}}> (Solo Lectura) </Typography>:null}
         {props.modoDirecto?
-            <ButtonGroup style={{margin:'0 0 0 30px'}}>
-                <Button
-                    color="inherit"
-                    variant="outlined"
-                    onClick={async ()=>{
-                        if(props.soloLectura){
-                            close();
-                        }else{
-                            setConfirmaCerrar(true)
-                        }
-                    }}
-                >
-                    <ICON.ExitToApp/>
-                </Button>
-                <Dialog
-                    open={!!confirmaCerrar}
-                    //hace que no se cierre el mensaje
-                    onClose={()=>setConfirmaCerrar(false)}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">Confirme cierre de encuesta</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            Está por salir de la encuesta, se perderán los cambios no guardados.
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button 
-                            onClick={()=>{
-                                close()
-                            }} 
-                            color="secondary" 
-                            variant="outlined"
-                        >
-                            descartar cambios y cerrar
-                        </Button>
-                        <Button 
-                            onClick={()=>{
-                                setConfirmaCerrar(false)
-                            }} 
-                            color="primary" 
-                            variant="contained"
-                        >
-                            continuar editando encuesta
-                        </Button>
-                        
-                    </DialogActions>
-                </Dialog>
-                {!props.soloLectura?
-                    <>
-                        <Button
-                            color="inherit"
-                            variant="outlined"
-                            onClick={async ()=>{
-                                setMensajeDescarga('descargando, por favor espere...');
-                                setDescargando(true);
-                                var message = await saveSurvey();
-                                setDescargando(false);
-                                if(message=='encuesta guardada'){
-                                    setDescargaCompleta(true);
-                                    message+=', cerrando pestaña...';
-                                    setTimeout(function(){
-                                        close()
-                                    }, 2000)
-                                }
-                                setMensajeDescarga(message)
-                            }}
-                        >
-                            <ICON.Save/>
-                        </Button>
-                        <Dialog
-                            open={!!mensajeDescarga}
-                            //hace que no se cierre el mensaje
-                            onClose={()=>setMensajeDescarga(mensajeDescarga)}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                        >
-                            <DialogTitle id="alert-dialog-title">Información de descarga</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                    {mensajeDescarga}{descargando?<CircularProgress />:null}
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                {descargando?
-                                    null
-                                :
-                                    <Button 
-                                        onClick={()=>{
-                                            if(descargaCompleta){
-                                                close()
-                                            }else{
-                                                setMensajeDescarga(null)
-                                            }
-                                        }} 
-                                        color="primary" 
-                                        variant="contained"
-                                    >
-                                        Cerrar
-                                    </Button>
-                                }
-                            </DialogActions>
-                        </Dialog>
-                    </>
-                :null}
-            </ButtonGroup>
+            <>
+                <ButtonGroup style={{margin:'0 0 0 30px'}}>
+                    <Button
+                        color="inherit"
+                        variant="outlined"
+                        onClick={async ()=>{
+                            if(props.soloLectura){
+                                close();
+                            }else{
+                                setConfirmaCerrar(true)
+                            }
+                        }}
+                    >
+                        <ICON.ExitToApp/>
+                    </Button>
+                    <Dialog
+                        open={!!confirmaCerrar}
+                        //hace que no se cierre el mensaje
+                        onClose={()=>setConfirmaCerrar(false)}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">Confirme cierre de encuesta</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Está por salir de la encuesta, se perderán los cambios no guardados.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button 
+                                onClick={()=>{
+                                    close()
+                                }} 
+                                color="secondary" 
+                                variant="outlined"
+                            >
+                                descartar cambios y cerrar
+                            </Button>
+                            <Button 
+                                onClick={()=>{
+                                    setConfirmaCerrar(false)
+                                }} 
+                                color="primary" 
+                                variant="contained"
+                            >
+                                continuar editando encuesta
+                            </Button>
+                            
+                        </DialogActions>
+                    </Dialog>
+                    {!props.soloLectura?
+                        <>
+                            <Button
+                                color="inherit"
+                                variant="outlined"
+                                onClick={async ()=>{
+                                    setMensajeDescarga('descargando, por favor espere...');
+                                    setDescargando(true);
+                                    var message = await saveSurvey();
+                                    setDescargando(false);
+                                    if(message=='encuesta guardada'){
+                                        setDescargaCompleta(true);
+                                        message+=', cerrando pestaña...';
+                                        setTimeout(function(){
+                                            close()
+                                        }, 2000)
+                                    }
+                                    setMensajeDescarga(message)
+                                }}
+                            >
+                                <ICON.Save/>
+                            </Button>
+                            <Dialog
+                                open={!!mensajeDescarga}
+                                //hace que no se cierre el mensaje
+                                onClose={()=>setMensajeDescarga(mensajeDescarga)}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">Información de descarga</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id="alert-dialog-description">
+                                        {mensajeDescarga}{descargando?<CircularProgress />:null}
+                                    </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    {descargando?
+                                        null
+                                    :
+                                        <Button 
+                                            onClick={()=>{
+                                                if(descargaCompleta){
+                                                    close()
+                                                }else{
+                                                    setMensajeDescarga(null)
+                                                }
+                                            }} 
+                                            color="primary" 
+                                            variant="contained"
+                                        >
+                                            Cerrar
+                                        </Button>
+                                    }
+                                </DialogActions>
+                            </Dialog>
+                        </>
+                    :null}
+                </ButtonGroup>
+                <Typography component="span" style={{margin:'0 10px'}}> vivienda {props.forPk.vivienda} </Typography>
+            </>
         :null}        
         
     </>
