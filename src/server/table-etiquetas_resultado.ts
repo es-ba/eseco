@@ -19,6 +19,8 @@ export function etiquetas_resultado(context:TableContext):TableDefinition {
             {name:'rectificacion'           , typeName:'integer'   ,editable:false, defaultDbValue: 0},
             {name:'apellido'                , typeName:'text'      ,editable:false, inTable: false },
             {name:'nombre'                  , typeName:'text'      ,editable:false, inTable: false },
+            {name:'sexo'                    , typeName:'text'      ,editable:false, inTable: false },
+            {name:'edad'                    , typeName:'integer'   ,editable:false, inTable: false },
             {name:'tipo_documento'          , typeName:'text'      ,editable:false, inTable: false },
             {name:'pais_documento'          , typeName:'text'      ,editable:false, inTable: false },
             {name:'numero_documento'        , typeName:'text'      ,editable:false, inTable: false },
@@ -56,7 +58,9 @@ export function etiquetas_resultado(context:TableContext):TableDefinition {
                 (json_encuesta->>'c1')::text as celular,
                 (json_encuesta->>'c2')::text as email,
                 (json_encuesta->>'c3')::text as numero_linea_vivienda,
-                (json_encuesta->>'c4')::text as tel_alternativo
+                (json_encuesta->>'c4')::text as tel_alternativo,
+                case json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1)->>'p2'::text when '1' then 'Varón' when '2' then 'Mujer' else json_encuesta->'personas'->(json_encuesta->>'p11')->>'p2'::text end as sexo,
+                (json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1)->>'p3')::integer as edad
                 from etiquetas e
                 left join tem t using(etiqueta)
                 where (ingreso_lab is not null or resultado is not null or observaciones is not null)
