@@ -3,6 +3,8 @@ set search_path=encu;
 set role to eseco201_muleto_owner;
 set role to eseco201_produc_owner;
 
+begin transaction;
+
 alter table tem add column frel date;
 
 --tipo_domicilio
@@ -15,7 +17,11 @@ alter table tem disable trigger changes_trg;
 alter table tem disable trigger tem_estados_trg;
 
 update tem
-  set tipo_domicilio=3
+  set tipo_domicilio=3, json_encuesta='{"personas":[],"g1":3}'
+  where area >=900; --todavia no estan cargadas???
+
+update tem
+  set json_encuesta='{"personas":[],"g1":3}'
   where area >=900; --todavia no estan cargadas???
 
 --tipo_domicilio=2
@@ -51,3 +57,5 @@ insert into "casilleros" ("operativo", "id_casillero", "padre", "tipoc", "casill
 ('ESECO', 'UG6', 'UG', 'P', 'UG6', '250', 'Manzana', 'texto', '3', null, null, null, null, null, 'true', 'ocultar no_leer', null, null, null, 'ug6', null, 'g1=3', null, null),
 ('ESECO', 'UG7', 'UG', 'P', 'UG7', '260', 'Casa', 'texto', '3', null, null, null, null, null, 'true', 'ocultar no_leer', null, 'true', null, 'ug7', null, 'g1=3', null, null),
 ('ESECO', 'G9', 'UG', 'P', 'G9', '300', 'Otros datos domicilio', 'texto', null, null, null, null, null, null, 'true', 'ocultar no_leer', null, 'true', null, 'g9', null, 'g1=2 or g1=3', null, null);
+
+commit;
