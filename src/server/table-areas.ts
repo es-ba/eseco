@@ -38,6 +38,7 @@ export function areas(context:TableContext):TableDefinition {
             {name:'inhabilitadas'           , typeName:'integer' , editable:false  , aggregate:'sum'},
             {name:'verificado_rec'          , typeName:'text'                      , aggregate:'count'},
             {name:'obs_recepcionista'       , typeName:'text'                      },
+            {name:'comuna'                  , typeName:'bigint'  , title:'comuna'  },
             {name:'cargadas_bkp'            , typeName:'integer' , editable:false  },
             {name:'reas_bkp'                , typeName:'integer' , editable:false  },
             {name:'no_reas_bkp'             , typeName:'integer' , editable:false  },
@@ -64,7 +65,8 @@ export function areas(context:TableContext):TableDefinition {
             from:` 
             (select a.area, a.recepcionista, a.relevador, a.operacion_area, a.fecha, a.observaciones_hdr,  
                   t.cargado, t.cargadas, t.reas, t.no_reas, t.incompletas, t.vacias, t.inhabilitadas, a.verificado_rec, a.obs_recepcionista,
-                  a.cargadas_bkp, a.reas_bkp, a.no_reas_bkp, a.incompletas_bkp, a.vacias_bkp, a.inhabilitadas_bkp
+                  a.cargadas_bkp, a.reas_bkp, a.no_reas_bkp, a.incompletas_bkp, a.vacias_bkp, a.inhabilitadas_bkp,
+                  t.comuna
                 from areas a, lateral(
                     select bool_or( cargado_dm is not null )       as cargado , 
                         count( cargado_dm )                            as cargadas,
@@ -72,7 +74,8 @@ export function areas(context:TableContext):TableDefinition {
                         count(*) filter ( where etiqueta is null and resumen_estado='no rea')       as no_reas,
                         count(*) filter ( where resumen_estado in ('incompleto', 'con problemas') ) as incompletas, 
                         count(*) filter ( where etiqueta is null and resumen_estado in ('vacio' ) ) as vacias,
-                        count(*) filter ( where habilitada is not true )    as inhabilitadas
+                        count(*) filter ( where habilitada is not true )    as inhabilitadas,
+                        string_agg(distinct nrocomuna::text,'0' order by nrocomuna::text)::bigint as comuna
                         from tem
                         where area=a.area
                 ) t
