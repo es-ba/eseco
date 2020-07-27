@@ -25,6 +25,7 @@ import { parametros          } from "./table-parametros";
 import { roles_subordinados  } from "./table-roles_subordinados";
 
 import {tipos_estados        } from "./table-tipos_estados";
+import {no_rea               } from "./table-no_rea";
 import {estados              } from "./table-estados";
 import {tem                  } from "./table-tem";
 import {tem_recepcion        } from "./table-tem_recepcion";
@@ -321,6 +322,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , roles_subordinados
             , tipos_estados
             , estados
+            , no_rea
             , lotes
             , semanas
             , tem
