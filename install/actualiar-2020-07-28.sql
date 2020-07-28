@@ -1,4 +1,7 @@
+--set role eseco_owner;
+--set role to eseco201_muleto_owner;
 set role to eseco201_produc_owner;
+set search_path = encu;
 
 create table "no_rea" (
   "no_rea" text, 
