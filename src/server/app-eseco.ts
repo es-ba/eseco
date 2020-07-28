@@ -4,6 +4,7 @@ import * as procesamiento from "procesamiento";
 import {ProceduresEseco} from "./procedures-eseco";
 
 import * as pg from "pg-promise-strict";
+import {json} from "pg-promise-strict";
 import * as miniTools from "mini-tools";
 import {Context, MenuInfoBase, Request, Response} from "./types-eseco";
 import { changing } from "best-globals";
@@ -154,6 +155,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             console.dir(be.permisosSuperuser,{depth:9});
             console.dir(be.permisosParaNadie,{depth:9});
         });
+        await this.refreshCaches();
     }
     configStaticConfig(){
         super.configStaticConfig();
@@ -201,6 +203,23 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             ... menuedResources
         ]
         // .map(m=>({...m, file:m.fileDevelopment||m.file}));
+    }
+    async refreshCaches(){
+        this.caches.tableContent = this.caches.tableContent || {};
+        await this.inDbClient(null, async (client)=>{
+            this.caches.tableContent.no_rea = (await client.query(`select * from no_rea order by no_rea`).fetchAll()).rows;
+            this.caches.tableContent.no_rea_groups = (await client.query(`
+                select grupo, jsonb_agg(to_json(r.*)) from no_rea r group by grupo order by 1
+            `).fetchAll()).rows;
+            console.log('xxxxxxxxxxxxxx')
+            console.log(this.caches.tableContent)
+        })
+    }
+    sqlNoreaCase(campoNecesario:string){
+        var be=this;
+        return `CASE ${be.caches.tableContent.no_rea.map(x=>
+            ` WHEN json_encuesta ->> ${be.db.quoteLiteral(x.variable)} = ${be.db.quoteLiteral(x.valor)} THEN ${be.db.quoteLiteral(x[campoNecesario])}`
+        ).join('')} ELSE NULL END`
     }
     getContext(req:Request):Context{
         var be = this;

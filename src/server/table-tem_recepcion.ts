@@ -3,6 +3,7 @@
 import {TableDefinition, TableContext} from "./types-eseco";
 
 export function tem_recepcion(context:TableContext):TableDefinition {
+    var be = context.be;
     var isAdmin=context.user.rol==='admin';
     var isProcesamiento=context.user.rol==='procesamiento'
     var isCoordinador=context.user.rol==='direccion'
@@ -23,7 +24,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     editable: true,
     tableName:'tem',
     //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
-    "hiddenColumns":['carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado','lote','semana','carga' ],
+    "hiddenColumns":['gru_no_rea','carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado','lote','semana','carga' ],
     "fields": [
         {
             "name": "operativo",
@@ -65,6 +66,8 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "typeName": "boolean"
         },        
         { name:'rea_m'            , typeName:'integer'  },
+        {name:'cod_no_rea'    , typeName:'text'   ,editable:false    },
+        {name:'gru_no_rea'    , typeName:'text'   ,editable:false    },
         {
             "name": "resumen_estado",
             editable: false,
@@ -137,8 +140,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
-        {name:'rea'           , typeName:'bigint' ,editable:false    },
-        {name:'norea'         , typeName:'text'   ,editable:false    },
         {name:'rea_p'         , typeName:'bigint' ,editable:false      },
         {name:'norea_p'       , typeName:'text'   ,editable:false    },
         {name:'cant_p'        , typeName:'bigint' ,editable:false      },
@@ -379,16 +380,17 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         from:`
             (select *, cargado_dm is not null as cargado, 
                 null telefonos, null seleccionado
-               -- nullif((select string_agg(CASE when telefono_fijo is not null then 'h'||hogar || ' tel: '|| telefono_fijo else '' end || CASE when telefono_movil is not null then ',h'||hogar ||  ' cel: '|| telefono_movil else '' end, ' | ') from hogares where t.operativo= t.operativo and enc=t.enc group by operativo, enc),'') as telefonos,
-               -- nullif((select string_agg('h'||hogar || ' ' || ti2,', ') from personas where operativo= operativo and enc=t.enc group by operativo, enc),'')as seleccionado 
+                -- nullif((select string_agg(CASE when telefono_fijo is not null then 'h'||hogar || ' tel: '|| telefono_fijo else '' end || CASE when telefono_movil is not null then ',h'||hogar ||  ' cel: '|| telefono_movil else '' end, ' | ') from hogares where t.operativo= t.operativo and enc=t.enc group by operativo, enc),'') as telefonos,
+                -- nullif((select string_agg('h'||hogar || ' ' || ti2,', ') from personas where operativo= operativo and enc=t.enc group by operativo, enc),'')as seleccionado 
+                , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
+                , ${be.sqlNoreaCase('grupo')} as gru_no_rea
                 from tem t
-                
             )
         `, 
         postCreateSqls:`
             create index "carga 4 tem IDX" ON tem (carga);
             CREATE TRIGGER tem_cod_per_trg before UPDATE OF carga_rol, carga_persona  ON tem FOR EACH ROW  EXECUTE PROCEDURE tem_cod_per_trg();
         `
-    }
+    },
 };
 }

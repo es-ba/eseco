@@ -3,6 +3,7 @@
 import {TableDefinition, TableContext} from "./types-eseco";
 
 export function areas(context:TableContext):TableDefinition {
+    var be=context.be;
     var puedeEditar = context.forDump || context.puede.campo.administrar||context.user.rol==='recepcionista';
     return {
         name:'areas',
@@ -45,6 +46,9 @@ export function areas(context:TableContext):TableDefinition {
             {name:'incompletas_bkp'         , typeName:'integer' , editable:false  },
             {name:'vacias_bkp'              , typeName:'integer' , editable:false  },
             {name:'inhabilitadas_bkp'       , typeName:'integer' , editable:false  },
+            ...be.caches.tableContent.no_rea_groups.map(x=>(
+                {name:x.grupo.replace(/ /g,'_'), typeName:'integer', editable:false}
+            ))
         ],
         primaryKey:['area'],
         foreignKeys:[
@@ -64,9 +68,9 @@ export function areas(context:TableContext):TableDefinition {
             isTable:true,
             from:` 
             (select a.area, a.recepcionista, a.relevador, a.operacion_area, a.fecha, a.observaciones_hdr,  
-                  t.cargado, t.cargadas, t.reas, t.no_reas, t.incompletas, t.vacias, t.inhabilitadas, a.verificado_rec, a.obs_recepcionista,
+                  a.verificado_rec, a.obs_recepcionista,
                   a.cargadas_bkp, a.reas_bkp, a.no_reas_bkp, a.incompletas_bkp, a.vacias_bkp, a.inhabilitadas_bkp,
-                  t.comuna
+                  t.*
                 from areas a, lateral(
                     select bool_or( cargado_dm is not null )       as cargado , 
                         count( cargado_dm )                            as cargadas,
@@ -76,8 +80,10 @@ export function areas(context:TableContext):TableDefinition {
                         count(*) filter ( where etiqueta is null and resumen_estado in ('vacio' ) ) as vacias,
                         count(*) filter ( where habilitada is not true )    as inhabilitadas,
                         string_agg(distinct nrocomuna::text,'0' order by nrocomuna::text)::bigint as comuna
-                        from tem
-                        where area=a.area
+                        ${be.caches.tableContent.no_rea_groups.map(x=>
+                        	`, sum(CASE WHEN gru_no_rea=${be.db.quoteLiteral(x.grupo)} THEN 1 ELSE NULL END) as ${be.db.quoteIdent(x.grupo.replace(/ /g,'_'))}`
+                        ).join('')}
+                        from (select *, ${be.sqlNoreaCase('grupo')} as gru_no_rea from tem where area=a.area) tem
                 ) t
             )`
         }
