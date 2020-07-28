@@ -350,12 +350,14 @@ var reducers={
                 var p9 = 'p9' as IdVariable;
                 respuestas[p9] = null;
             }
+            var dirty = respuestasAModificar[payload.variable] != payload.respuesta
             respuestasAModificar[payload.variable] = payload.respuesta;
             ////////// FIN ESPECIALES
             var datosVivienda=variablesCalculadas({
                 ...datosViviendaRecibidos,
                 respuestas
             })
+            datosVivienda.dirty = dirty;
             return calcularFeedback({
                 ...state,
                 datos:{
@@ -363,6 +365,7 @@ var reducers={
                     hdr:{
                         ...state.datos.hdr,
                         [payload.forPk.vivienda]:datosVivienda
+                        
                     }
                 }
             }, payload.forPk)

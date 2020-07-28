@@ -530,12 +530,14 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
 function useSelectorVivienda(forPk:ForPk){
     return useSelector((state:CasoState)=>{
         var respuestas=state.datos.hdr[forPk.vivienda].respuestas;
+        var dirty=state.datos.hdr[forPk.vivienda].dirty;
         //TODO: generalizar
         if(forPk.persona){
             // @ts-ignore
             respuestas = respuestas.personas[forPk.persona-1]
         }
         return {
+            dirty,
             respuestas,
             feedbackRow: state.feedbackRowValidator[toPlainForPk(forPk)].feedback,
             actual: state.feedbackRowValidator[toPlainForPk(forPk)].actual,
@@ -602,7 +604,7 @@ const FormularioEncabezado = DespliegueEncabezado;
 function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean, soloLectura:boolean}){
     const dispatch = useDispatch();
     const forPk = props.forPk;
-    const {respuestas} = useSelectorVivienda(forPk);
+    const {respuestas, dirty} = useSelectorVivienda(forPk);
     const [confirmaCerrar, setConfirmaCerrar] = useState<boolean|null>(false);
     const [mensajeDescarga, setMensajeDescarga] = useState<string|null>(null);
     const [descargaCompleta, setDescargaCompleta] = useState<boolean|null>(false);
@@ -650,7 +652,7 @@ function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean, soloLectura
                         color="inherit"
                         variant="outlined"
                         onClick={async ()=>{
-                            if(props.soloLectura){
+                            if(props.soloLectura || !dirty){
                                 close();
                             }else{
                                 setConfirmaCerrar(true)

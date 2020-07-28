@@ -197,6 +197,7 @@ export type DatosVivienda= {
     respuestas: Respuestas
     tem: TEM
     resumenEstado: ResumenEstado
+    dirty?:boolean,
 }
 
 export type HojaDeRuta={
