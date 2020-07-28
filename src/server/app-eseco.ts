@@ -53,6 +53,9 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
   return class AppEseco extends Base{
     constructor(...args:any[]){ 
         super(args); 
+        this.caches.tableContent = this.caches.tableContent || {};
+        this.caches.tableContent.no_rea=[]
+        this.caches.tableContent.no_rea_groups=[]
     }
     async getProcedures(){
         var procedimientoAReemplazar=["caso_guardar","caso_traer"];
