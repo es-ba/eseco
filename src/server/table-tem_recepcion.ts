@@ -18,13 +18,14 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     var hasSubCoordinadorPermission=isSubCoordinador || hasCoordinadorPermission;
     var hasRecepcionistaPermission=isRecepcionista || hasSubCoordinadorPermission;
     // var hasSupervisorPermission=isSupervisor || hasRecepcionistaPermission;
+    var columnasAreasParaLaTem=['fecha','obs_recepcionista','verificado_rec','recepcionista'];
 
     return {
     "name": "tem_recepcion",
     editable: true,
     tableName:'tem',
     //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
-    "hiddenColumns":['gru_no_rea','carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado','lote','semana','carga' ],
+    "hiddenColumns":[...columnasAreasParaLaTem.map(x=>`areas__${x}`), 'gru_no_rea','carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado','lote','semana','carga' ],
     "fields": [
         {
             "name": "operativo",
@@ -362,7 +363,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         "enc"
     ],
     foreignKeys:[
-        {references:'areas' , fields:['area']},
+        {references:'areas' , fields:['area'], displayFields:columnasAreasParaLaTem},
         {references:'operaciones' , fields:['operacion']},
         {references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
         {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
