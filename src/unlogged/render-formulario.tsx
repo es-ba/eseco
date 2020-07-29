@@ -544,7 +544,7 @@ function useSelectorVivienda(forPk:ForPk){
             completo: !state.feedbackRowValidator[toPlainForPk(forPk)].feedbackResumen.pendiente,
             resumen: state.feedbackRowValidator[toPlainForPk(forPk)].resumen,
             formulario: state.estructura.formularios[forPk.formulario].casilleros,
-            modoDespliegue: state.modo?.demo?state.opciones.modoDespliegue:'relevamiento',
+            modoDespliegue: state.modo.demo?state.opciones.modoDespliegue:'relevamiento',
             modo: state.modo,
             opciones: state.opciones
         }
@@ -785,7 +785,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
             </AppBar>
             <main>
                 <Paper className="formulario" modo-despliegue={modoDespliegue}>
-                    {modo?.demo?<div>
+                    {modo.demo?<div>
                         <Typography component="span">Modo de despliegue:</Typography>
                         <ButtonGroup>
                         {listaModos.map(modo=>
@@ -931,7 +931,7 @@ export function HojaDeRutaDespliegue(){
                 </Toolbar>
             </AppBar>
             <div className="hoja-de-ruta">
-                {modo?.demo?<div>
+                {modo.demo?<div>
                     <Typography>Modo demo </Typography>
                     <Button variant="outlined" color="secondary"
                         onClick={()=>dispatch(dispatchers.REINICIAR_DEMO({}))}
@@ -960,7 +960,7 @@ export function ListaTextos(props:{textos:string[]}){
 export function BienvenidaDespliegue(props:{modo:CasoState["modo"]}){
     var dispatch=useDispatch();
     return <Paper className="bienvenida">
-        {props.modo?.demo?
+        {props.modo.demo?
             <>
                 <Typography>DEMO del sistema de relevamiento de ESECO</Typography>
                 <Typography>En esta demo:</Typography>

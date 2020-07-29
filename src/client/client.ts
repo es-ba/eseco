@@ -27,6 +27,15 @@ async function sincronizarDatos(state:CasoState|null){
     }
     state.datos=datos;
     state.estructura=estructura;
+    state.modo = {
+        demo: false
+    }
+    state.opciones = {
+        bienvenido: false,
+        forPk: null,
+        modoDespliegue: "relevamiento",
+        modoDirecto: false,
+    }
     state.feedbackRowValidator={};
     my.setLocalVar(LOCAL_STORAGE_STATE_NAME, state);
     return datos;
