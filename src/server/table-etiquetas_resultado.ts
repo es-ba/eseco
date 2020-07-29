@@ -1,11 +1,13 @@
 "use strict";
 
 import {TableDefinition, TableContext} from "./types-eseco";
+import { FieldDefinition } from "rel-enc";
 
-export function etiquetas_resultado(context:TableContext):TableDefinition {
+export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean, name:string}):TableDefinition {
+    var be=context.be;
     var admin = context.user.rol==='admin';
     return {
-        name:'etiquetas_resultado',
+        name:opts && opts.name || 'etiquetas_resultado',
         elementName:'etiqueta',
         editable:false,
         fields:[
@@ -28,6 +30,11 @@ export function etiquetas_resultado(context:TableContext):TableDefinition {
             {name:'email'                   , typeName:'text'      ,editable:false, inTable: false },
             {name:'numero_linea_vivienda'   , typeName:'text'      ,editable:false, inTable: false },
             {name:'tel_alternativo'         , typeName:'text'      ,editable:false, inTable: false },
+            ...(opts && opts.all ? [
+                {name:'rea', typeName:'integer', editable:false},
+                {name:'cod_no_rea', typeName:'text', editable:false},
+                {name:'area', typeName:'integer', editable:false},
+            ] as FieldDefinition[] : [])
         ],
         primaryKey:['etiqueta'],
         foreignKeys:[
@@ -60,7 +67,10 @@ export function etiquetas_resultado(context:TableContext):TableDefinition {
                 (json_encuesta->>'c3')::text as numero_linea_vivienda,
                 (json_encuesta->>'c4')::text as tel_alternativo,
                 case json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1)->>'p2'::text when '1' then 'Varón' when '2' then 'Mujer' else json_encuesta->'personas'->(json_encuesta->>'p11')->>'p2'::text end as sexo,
-                (json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1)->>'p3')::integer as edad
+                (json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1)->>'p3')::integer as edad,
+                    t.area,
+                    t.rea,
+                   ${be.sqlNoreaCase('no_rea')} as cod_no_rea
                 from etiquetas e
                 left join tem t using(etiqueta)
                 where (ingreso_lab is not null or resultado is not null or observaciones is not null)

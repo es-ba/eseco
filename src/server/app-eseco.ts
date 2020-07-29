@@ -40,6 +40,7 @@ import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
 import { etiquetas           } from './table-etiquetas';
 import { etiquetas_resultado } from './table-etiquetas_resultado';
+import { etiquetas_resultado_plus } from './table-etiquetas_resultado_plus';
 import { usuarios            } from './table-usuarios';
 import { operaciones         } from './table-operaciones';
 import { areas               } from './table-areas';
@@ -358,6 +359,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , planchas
             , etiquetas
             , etiquetas_resultado
+            , etiquetas_resultado_plus
             , operaciones
             , areas
             , sincronizaciones
