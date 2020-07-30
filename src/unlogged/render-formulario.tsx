@@ -325,7 +325,11 @@ function Campo(props:{disabled:boolean, pregunta:PreguntaSimple, valor:Valor, on
                 inputProps={inputProps}
                 value={valor?valor:''} 
                 type={pregunta.despliegue?.includes('telefono')?'tel':adaptarTipoVarCasillero(pregunta.tipovar)}
-                onChange={(event)=>setValor(event.target.value || null)}
+                onChange={(event)=>{
+                    let value = event.target.value || null;
+                    value = pregunta.despliegue?.includes('entero') && value?value.replace('.',''):value
+                    setValor(value)
+                }}
                 onFocus={(_event)=>setEditando(true)}
                 onBlur={(_event)=>{
                     props.onChange(valor)
