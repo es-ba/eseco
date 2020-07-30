@@ -213,10 +213,10 @@ export const ProceduresEseco : ProcedureDef[] = [
             datos_caso:AnyObject
         }){
             var client=context.client;
-            var struct_defgen = createStructure(context, 'defgen');
+            var struct_defgen = createStructure(context, 'viviendas');
             var sql = sqlTools.structuredData.sqlRead({operativo: parameters.operativo, id_caso:parameters.id_caso}, struct_defgen);
-            var sql_rec = {...sql, text:sql.text.replace(/from\s*\w+\b/g,'$&_rec')};
-            var sql_ing = {...sql, text:sql.text.replace(/from\s*\w+\b/g,'$&_ing')};
+            //var sql_rec = {...sql, text:sql.text.replace(/from\s*\w+\b/g,'$&_rec')};
+            //var sql_ing = {...sql, text:sql.text.replace(/from\s*\w+\b/g,'$&_ing')};
             var {value:datos_ori} = await client.query(sql_rec).fetchUniqueValue();
             var {value:datos_ing} = await client.query(sql_ing).fetchUniqueValue();
             parameters.datos_caso['operativo'] = parameters.operativo;

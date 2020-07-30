@@ -45,6 +45,9 @@ import { usuarios            } from './table-usuarios';
 import { operaciones         } from './table-operaciones';
 import { areas               } from './table-areas';
 import { sincronizaciones    } from './table-sincronizaciones';
+import { viviendas           } from './table-viviendas';
+import { personas            } from './table-personas';
+
 
 
 import {defConfig} from "./def-config"
@@ -186,13 +189,15 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             { type: 'js', module: 'memoize-one',  file:'memoize-one.js' },
             { type: 'js', module: 'qrcode', modPath: '../build', file: 'qrcode.js'},
             ...super.clientIncludes(req, opts).filter(m=>m.file!='formularios.css')
-                .filter(m=>logged || m.file!='operativos.js'
-                                  && m.file!='meta-enc.js'
-                                  && m.file!='datos-ext.js'
-                                  && m.file!='consistencias.js'
-                                  && m.file!='var-cal.js'
-                                  && m.file!='var-cal.js'
-                                  && m.file!='varcal.js'),
+                .filter(m=>logged || 
+                                //m.file!='operativos.js' &&
+                                m.file!='meta-enc.js'
+                                //&& m.file!='datos-ext.js'
+                                //&& m.file!='consistencias.js'
+                                && m.file!='var-cal.js'
+                                && m.file!='var-cal.js'
+                                //&& m.file!='varcal.js'
+                ),
             { type: 'js', module: 'redux-typed-reducer', modPath:'../dist', file:'redux-typed-reducer.js' },
             { type: 'js', src: 'adapt.js' },
             { type: 'js', src: 'tipos.js' },
@@ -363,6 +368,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , operaciones
             , areas
             , sincronizaciones
+            , viviendas
+            , personas
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
