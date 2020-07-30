@@ -23,6 +23,10 @@ export function viviendas(context:TableContext):TableDefinition {
         },
         {name:'resultado', typeName:'text'},
         {name:'observaciones', typeName:'text'},
+        {name:'area', typeName:'integer'},
+        {name:'nrocomuna', typeName:'integer'},
+        {name:'nrofraccion', typeName:'integer'},
+        {name:'nroradio', typeName:'integer'},
         {
             "name": "g1",
             "typeName": "bigint",
@@ -50,7 +54,7 @@ export function viviendas(context:TableContext):TableDefinition {
         },
         {
             "name": "ug2",
-            "typeName": "bigint",
+            "typeName": "text",
             "nullable": true
         },
         {
@@ -478,24 +482,7 @@ export function viviendas(context:TableContext):TableDefinition {
 //            "typeName": "text",
 //            "nullable": true
 //        },
-        {
-            "name": "personas",
-            "typeName": "jsonb",
-            "nullable": true
-        },
-        {
-            "name": "_edad_maxima",
-            "typeName": "integer",
-            "nullable": true,
-            editable  : false
-        },
-        {
-            "name": "_edad_minima",
-            "typeName": "integer",
-            "nullable": true,
-            editable  : false
-        },
-    ],
+    ].map(x=>({...x, typeName:'text'})),
     //"sql": {
     //    "isReferable": true
     //},
@@ -526,9 +513,11 @@ export function viviendas(context:TableContext):TableDefinition {
         isTable: false,
         isReferable:true,
         from:`
-            (select t.operativo, t.enc 
-                (json_encuesta->'personas'->(json_encuesta->'p11')::integer - 1->>'p2')::integer sexo_sel,
-                (json_encuesta->'personas'->(json_encuesta->'p11')::integer - 1->>'p3')::integer edad_sel,  
+            (select t.operativo, t.enc, t.area::text, t.nrocomuna::text, t.nrofraccion::text, t.nroradio::text
+                , resultado
+                , observaciones
+                , ((json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1))->>'p2')::text sexo_sel -- integer
+                , ((json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1))->>'p3')::text edad_sel -- integer
                 , x."g1"
                 ,x."g2"
                 ,x."g3"
@@ -621,6 +610,7 @@ export function viviendas(context:TableContext):TableDefinition {
                 ,x."_edad_minima"
               from tem t inner join etiquetas using(etiqueta) , jsonb_populate_record(null::viv_fields_json , json_encuesta) as x
               where rea_m=1
+                and resultado is not null
             )
         `, 
     }   
