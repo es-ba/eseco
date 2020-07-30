@@ -45,7 +45,7 @@ export function personas(context:TableContext):TableDefinition {
             "typeName": "bigint",
             "nullable": true
         },
-    ],
+    ].map(x=>({...x, typeName:x.typeName=='integer'?'integer':'text'})),
     "primaryKey": [
         "operativo",
         "enc",
@@ -71,6 +71,7 @@ export function personas(context:TableContext):TableDefinition {
             from tem t join etiquetas using(etiqueta), jsonb_populate_recordset(null::personas , json_encuesta->'personas') with ordinality as x
             where json_encuesta->'personas' not in  ('[{}]'::jsonb, '[]'::jsonb) 
                and rea_m=1
+               and resultado is not null
        )`
     },
 };
