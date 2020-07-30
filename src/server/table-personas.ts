@@ -68,10 +68,10 @@ export function personas(context:TableContext):TableDefinition {
             select t.operativo, t.enc
                 ,x.p1, x.p2, x.p3, x.p4
                 ,  ordinality persona
-            from tem t , jsonb_populate_recordset(null::personas , json_encuesta->'personas') with ordinality as x
+            from tem t join etiquetas using(etiqueta), jsonb_populate_recordset(null::personas , json_encuesta->'personas') with ordinality as x
             where json_encuesta->'personas' not in  ('[{}]'::jsonb, '[]'::jsonb) 
-        )`
+               and rea_m=1
+       )`
     },
-
 };
 }

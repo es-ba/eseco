@@ -10,7 +10,7 @@ no_rea|descripcion|grupo|variable|valor
 9|Otras causas|recuperable|dv2|9
 101|COVID positivo en la vivienda|irrecuperable|dv4|1
 91|No hay mayores presentes|recuperable|dv5|2
-81|No aceptó firmar el consentimiento|rechazo irrecuperable|s1|1
+81|No aceptó firmar el consentimiento|rechazo irrecuperable|s1|2
 82|No aceptó contestar el cuestionario|rechazo irrecuperable|s2|2
-83|No aceptó realizarse el test|rechazo irrecuperable|s3|3
+83|No aceptó realizarse el test|rechazo irrecuperable|s3|2
 102|COVID positivo del seleccionado|irrecuperable|d5c|1

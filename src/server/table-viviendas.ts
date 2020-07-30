@@ -21,6 +21,8 @@ export function viviendas(context:TableContext):TableDefinition {
             "typeName": "text",
             "nullable": false
         },
+        {name:'resultado', typeName:'text'},
+        {name:'observaciones', typeName:'text'},
         {
             "name": "g1",
             "typeName": "bigint",
@@ -122,6 +124,16 @@ export function viviendas(context:TableContext):TableDefinition {
         //    "nullable": true
         //},
         {
+            "name": "sexo_sel",
+            "typeName": "bigint",
+            "nullable": true
+        },
+        {
+            "name": "edad_sel",
+            "typeName": "bigint",
+            "nullable": true
+        },
+        {
             "name": "p9",
             "typeName": "bigint",
             "nullable": true
@@ -173,11 +185,6 @@ export function viviendas(context:TableContext):TableDefinition {
         },
         {
             "name": "d5",
-            "typeName": "bigint",
-            "nullable": true
-        },
-        {
-            "name": "d5c",
             "typeName": "bigint",
             "nullable": true
         },
@@ -488,12 +495,6 @@ export function viviendas(context:TableContext):TableDefinition {
             "nullable": true,
             editable  : false
         },
-        {
-            "name": "_personas_incompletas",
-            "typeName": "integer",
-            "nullable": true,
-            editable  : false
-        },
     ],
     //"sql": {
     //    "isReferable": true
@@ -526,8 +527,8 @@ export function viviendas(context:TableContext):TableDefinition {
         isReferable:true,
         from:`
             (select t.operativo, t.enc 
-                --(json_encuesta->'personas'->(json_encuesta->'p11')::integer - 1->>'p2')::integer sexo_sel,
-                --(json_encuesta->'personas'->(json_encuesta->'p11')::integer - 1->>'p3')::integer edad_sel,  
+                (json_encuesta->'personas'->(json_encuesta->'p11')::integer - 1->>'p2')::integer sexo_sel,
+                (json_encuesta->'personas'->(json_encuesta->'p11')::integer - 1->>'p3')::integer edad_sel,  
                 , x."g1"
                 ,x."g2"
                 ,x."g3"
@@ -557,8 +558,7 @@ export function viviendas(context:TableContext):TableDefinition {
                 ,x."d2"
                 ,x."d3"
                 ,x."d4"
-                ,x."d5"
-                ,x."d5c"
+                ,coalesce(x."d5",x."d5c") as "d5"
                 ,x."d6_1"
                 ,x."d6_2"
                 ,x."d6_3"
@@ -619,12 +619,10 @@ export function viviendas(context:TableContext):TableDefinition {
                 ,x."personas"
                 ,x."_edad_maxima"
                 ,x."_edad_minima"
-                ,x."_personas_incompletas"
-              from tem t , jsonb_populate_record(null::viv_fields_json , json_encuesta) as x
-              --where json_encuesta?'dv1' ;
+              from tem t inner join etiquetas using(etiqueta) , jsonb_populate_record(null::viv_fields_json , json_encuesta) as x
+              where rea_m=1
             )
         `, 
     }   
-
     };
 }
