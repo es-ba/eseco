@@ -1,4 +1,5 @@
 set role to eseco201_produc_owner;
+-- set role to eseco201_muleto_owner;
 set search_path = "encu";
 set client_encoding = 'UTF8';
 
@@ -12,85 +13,85 @@ drop table if exists viviendas;
 create table "viviendas" (
   "operativo" text, 
   "enc" text, 
-  "g1" bigint, 
+  "g1" text, 
   "g2" text, 
   "g3" text, 
   "g4" text, 
   "g5" text, 
-  "ug2" bigint, 
-  "ug3" bigint, 
-  "ug4" bigint, 
+  "ug2" text, 
+  "ug3" text, 
+  "ug4" text, 
   "ug5" text, 
   "ug6" text, 
   "ug7" text, 
   "g9" text, 
-  "dv1" bigint, 
-  "dv2" date, 
-  "dv3" bigint, 
+  "dv1" text, 
+  "dv2" text, 
+  "dv3" text, 
   "dv3otros" text, 
-  "dv4" bigint, 
-  "dv5" bigint, 
-  "cp" bigint, 
-  "p9" bigint, 
-  "p11" bigint, 
+  "dv4" text, 
+  "dv5" text, 
+  "cp" text, 
+  "p9" text, 
+  "p11" text, 
   "p12" text, 
-  "s1" bigint, 
-  "s2" bigint, 
-  "s3" bigint, 
-  "d1" bigint, 
-  "d2" bigint, 
-  "d3" bigint, 
-  "d4" bigint, 
-  "d5" bigint, 
-  "d5c" bigint, 
-  "d6_1" bigint, 
-  "d6_2" bigint, 
-  "d6_3" bigint, 
-  "d6_4" bigint, 
-  "d6_5" bigint, 
-  "d6_6" bigint, 
-  "d6_7" bigint, 
-  "d6_8" bigint, 
-  "d6_9" bigint, 
-  "d12" bigint, 
-  "a1_1" bigint, 
-  "a1_2" bigint, 
-  "a1_3" bigint, 
-  "a1_4" bigint, 
-  "a1_5" bigint, 
-  "a2" bigint, 
-  "a3" bigint, 
-  "a4" bigint, 
-  "a5" bigint, 
-  "cv1" bigint, 
-  "cv2_1" bigint, 
-  "cv2_2" bigint, 
-  "cv2_3" bigint, 
-  "cv2_4" bigint, 
-  "cv2_5" bigint, 
-  "cv2_6" bigint, 
-  "cv3" bigint, 
-  "cv4_1" bigint, 
-  "cv4_2" bigint, 
-  "cv4_3" bigint, 
-  "cv4_4" bigint, 
-  "cv4_5" bigint, 
-  "cv4_6" bigint, 
-  "t1" bigint, 
-  "t2_1" bigint, 
-  "t2_2" bigint, 
-  "t2_3" bigint, 
-  "t2_4" bigint, 
-  "t2_5" bigint, 
-  "t2_6" bigint, 
-  "t2_7" bigint, 
-  "t2_8" bigint, 
-  "t3" bigint, 
+  "s1" text, 
+  "s2" text, 
+  "s3" text, 
+  "d1" text, 
+  "d2" text, 
+  "d3" text, 
+  "d4" text, 
+  "d5" text, 
+  "d5c" text, 
+  "d6_1" text, 
+  "d6_2" text, 
+  "d6_3" text, 
+  "d6_4" text, 
+  "d6_5" text, 
+  "d6_6" text, 
+  "d6_7" text, 
+  "d6_8" text, 
+  "d6_9" text, 
+  "d12" text, 
+  "a1_1" text, 
+  "a1_2" text, 
+  "a1_3" text, 
+  "a1_4" text, 
+  "a1_5" text, 
+  "a2" text, 
+  "a3" text, 
+  "a4" text, 
+  "a5" text, 
+  "cv1" text, 
+  "cv2_1" text, 
+  "cv2_2" text, 
+  "cv2_3" text, 
+  "cv2_4" text, 
+  "cv2_5" text, 
+  "cv2_6" text, 
+  "cv3" text, 
+  "cv4_1" text, 
+  "cv4_2" text, 
+  "cv4_3" text, 
+  "cv4_4" text, 
+  "cv4_5" text, 
+  "cv4_6" text, 
+  "t1" text, 
+  "t2_1" text, 
+  "t2_2" text, 
+  "t2_3" text, 
+  "t2_4" text, 
+  "t2_5" text, 
+  "t2_6" text, 
+  "t2_7" text, 
+  "t2_8" text, 
+  "t3" text, 
   "e1" text, 
   "e2" text, 
-  "e3" bigint, 
+  "e3" text, 
   "e4" text, 
-  "e5" bigint, 
+  "e5" text, 
   "e6" text, 
   "e7" text, 
   "c1" text, 
@@ -98,12 +99,12 @@ create table "viviendas" (
   "c3" text, 
   "c4" text, 
   "c5" text, 
-  "c5ok" bigint, 
+  "c5ok" text, 
   "observaciones_viv" text,
   "personas" jsonb, 
-  "_edad_maxima" integer, 
-  "_edad_minima" integer, 
-  "_personas_incompletas" integer
+  "_edad_maxima" text, 
+  "_edad_minima" text, 
+  "_personas_incompletas" text
 , primary key ("operativo", "enc")
 );
 grant select, insert, update, delete, references on "viviendas" to eseco201_produc_admin;
@@ -115,46 +116,15 @@ create table "personas" (
   "enc" text, 
   "persona" integer, 
   "p1" text, 
-  "p2" bigint, 
-  "p3" bigint, 
-  "p4" bigint
+  "p2" text, 
+  "p3" text, 
+  "p4" text
 , primary key ("operativo", "enc", "persona")
 );
 grant select, references on "personas" to eseco201_produc_admin;
 grant all on "personas" to eseco201_produc_owner;
 
 -- conss
-alter table "viviendas" add constraint "operativo<>''" check ("operativo"<>'');
-alter table "viviendas" alter column "operativo" set not null;
-alter table "viviendas" add constraint "enc<>''" check ("enc"<>'');
-alter table "viviendas" alter column "enc" set not null;
-alter table "viviendas" add constraint "g2<>''" check ("g2"<>'');
-alter table "viviendas" add constraint "g3<>''" check ("g3"<>'');
-alter table "viviendas" add constraint "g4<>''" check ("g4"<>'');
-alter table "viviendas" add constraint "g5<>''" check ("g5"<>'');
-alter table "viviendas" add constraint "ug5<>''" check ("ug5"<>'');
-alter table "viviendas" add constraint "ug6<>''" check ("ug6"<>'');
-alter table "viviendas" add constraint "ug7<>''" check ("ug7"<>'');
-alter table "viviendas" add constraint "g9<>''" check ("g9"<>'');
-alter table "viviendas" add constraint "dv3otros<>''" check ("dv3otros"<>'');
-alter table "viviendas" add constraint "p12<>''" check ("p12"<>'');
-alter table "viviendas" add constraint "e1<>''" check ("e1"<>'');
-alter table "viviendas" add constraint "e2<>''" check ("e2"<>'');
-alter table "viviendas" add constraint "e4<>''" check ("e4"<>'');
-alter table "viviendas" add constraint "e6<>''" check ("e6"<>'');
-alter table "viviendas" add constraint "e7<>''" check ("e7"<>'');
-alter table "viviendas" add constraint "c1<>''" check ("c1"<>'');
-alter table "viviendas" add constraint "c2<>''" check ("c2"<>'');
-alter table "viviendas" add constraint "c3<>''" check ("c3"<>'');
-alter table "viviendas" add constraint "c4<>''" check ("c4"<>'');
-alter table "viviendas" add constraint "c5<>''" check ("c5"<>'');
-alter table "viviendas" add constraint "observaciones_viv<>''" check ("observaciones_viv"<>'');
-alter table "personas" add constraint "operativo<>''" check ("operativo"<>'');
-alter table "personas" alter column "operativo" set not null;
-alter table "personas" add constraint "enc<>''" check ("enc"<>'');
-alter table "personas" alter column "enc" set not null;
-alter table "personas" alter column "persona" set not null;
-alter table "personas" add constraint "p1<>''" check ("p1"<>'');
 
 -- FKs
 alter table "viviendas" add constraint "viviendas tem REL" foreign key ("operativo", "enc") references "tem" ("operativo", "enc")  on update cascade;
@@ -188,6 +158,7 @@ where v.variable=c.var_name and v.clase = 'interna';
 
 
 -- para ts on the fly
+drop table if exists viv_fields_json ;
 select * into viv_fields_json
   from viviendas
   where false;
