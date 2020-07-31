@@ -93,6 +93,7 @@ comunicacion|consistencias|editar|false
 comunicacion|encuestas|ingresar|false
 comunicacion|encuestas|justificar|false
 comunicacion|encuestas|procesar|false
+comunicacion|lab_resultado|editar|false
 comunicacion|lab_resultado|ver|true
 comunicacion|lab_resultado|avisar|true
 procesamiento|campo|editar|false

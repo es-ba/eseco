@@ -24,6 +24,7 @@ insert into "roles_permisos" ("rol", "permiso", "accion", "habilitado") values
 ('comunicacion', 'encuestas', 'justificar', 'false'),
 ('comunicacion', 'encuestas', 'procesar', 'false'),
 ('comunicacion', 'lab_resultado', 'ver', 'true'),
+('comunicacion', 'lab_resultado', 'editar', 'false'),
 ('comunicacion', 'lab_resultado', 'avisar', 'true'),
 ('procesamiento', 'lab_resultado', 'avisar', 'false'),
 ('recepcionista', 'lab_resultado', 'avisar', 'false'),
