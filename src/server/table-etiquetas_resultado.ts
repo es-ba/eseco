@@ -11,7 +11,11 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
         name:opts && opts.name || 'etiquetas_resultado',
         elementName:'etiqueta',
         tableName:'etiquetas',
-        editable:puedeAvisar,
+        allow:{
+            insert:false,
+            delete:false,
+            update:puedeAvisar,
+        },     
         fields:[
             {name:'operativo'               , typeName:'text'      ,editable:false , nullable:false, defaultValue:'ESECO201'  },
             {name:'etiqueta'                , typeName:'text'      ,editable:false , nullable:false  },
