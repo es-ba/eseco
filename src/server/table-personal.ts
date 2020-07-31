@@ -14,7 +14,7 @@ export function personal(context:TableContext, opts:{rol:string, name:string}|nu
         { name: "cuit"          , typeName: "text"    },
         { name: "usuario"       , typeName: "text"    },
         { name: "activo"        , typeName: "boolean" },
-        { name: "recepcionista" , typeName: "integer" },
+        { name: "recepcionista" , typeName: "text" },
         // { name: "jefe_equipo"   , typeName: "boolean" ,"defaultValue": false},
     ];
     var from = `select ${likeAr(fields).map(f=>f.originalName||f.name).join(', ')}
