@@ -38,3 +38,30 @@ select * from tem where cargado_dm='bc38adc4813b1c69d9d5bae33d009ac6'; -- no tie
 select * from tem where cargado_dm='ca6f8cab05d35a7ed6267cd921524616'; -- tiene 24
 
 update tem set cargado_dm=null where cargado_dm='ca6f8cab05d35a7ed6267cd921524616'; 
+
+select tem.enc, t.username, t.token
+  from tem inner join tokens t on tem.cargado_dm=t.token
+  where area=134;
+
+
+-- ver qué tokens tiene un usuario
+select token, date, username, useragent->>'source'
+  from tokens
+  where username='asalas'
+  order by username desc;
+
+
+select to_date(json_encuesta->>'dv2', 'dd/mm/yyyy'), 
+        sum(case when rea_m=1 then 1 else null end) as reas,
+        count(distinct relevador) as relevadores,
+        round(sum(case when rea_m=1 then 1 else null end)*1.0/count(distinct relevador),1) as efectividad,
+        array_agg(distinct nrocomuna order by nrocomuna) as comunas
+  from tem 
+  where json_encuesta->>'dv2' is not null
+  group by to_date(json_encuesta->>'dv2', 'dd/mm/yyyy')
+  order by 1;
+
+select etiqueta, count(*)
+  from tem
+  group by etiqueta
+  order by count(*) desc, etiqueta;
