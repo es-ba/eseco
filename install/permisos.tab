@@ -12,3 +12,4 @@ consistencias   |editar    |false
 casilleros_texto|editar    |false
 lab_resultado   |editar    |false
 lab_resultado   |ver       |false
+lab_resultado   |avisar    |false

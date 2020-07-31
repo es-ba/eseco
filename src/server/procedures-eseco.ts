@@ -573,6 +573,37 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
     {
+        action:'etiqueta_avisar',
+        parameters:[
+            {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
+            {name:'etiqueta'       , typeName: 'text' }
+        ],
+        roles:['lab','jefe_lab','comunicacion'],
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var persona = await context.client.query(
+                `select *
+                    from usuarios
+                    where usuario = $1 and activo`
+                ,
+                [context.user.usuario]
+            ).fetchOneRowIfExists();
+            if(persona.rowCount === 0){
+                throw new Error('No se encuentra el usuario en personal o el mismo se encuentra inactivo.');
+            }
+            var result = await context.client.query(
+                `update etiquetas 
+                    set avisado_fecha = current_date, avisado_quien = $3
+                    where operativo = $1 and etiqueta = $2
+                    returning *`,
+                [parameters.operativo, parameters.etiqueta, context.username]
+            ).fetchOneRowIfExists();
+            if (result.rowCount === 0){
+                throw new Error('No se encuentra la etiqueta ingresada.');
+            }
+            return 'ok';
+        }
+    },
+    {
         action:'datos_tem_traer',
         parameters:[
             {name:'etiqueta'       , typeName: 'text' }

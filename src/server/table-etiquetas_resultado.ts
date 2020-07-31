@@ -6,10 +6,12 @@ import { FieldDefinition } from "rel-enc";
 export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean, name:string}):TableDefinition {
     var be=context.be;
     var admin = context.user.rol==='admin';
+    var puedeAvisar = context.forDump || context.puede.lab_resultado.avisar && !admin;
     return {
         name:opts && opts.name || 'etiquetas_resultado',
         elementName:'etiqueta',
-        editable:false,
+        tableName:'etiquetas',
+        editable:puedeAvisar,
         fields:[
             {name:'operativo'               , typeName:'text'      ,editable:false , nullable:false, defaultValue:'ESECO201'  },
             {name:'etiqueta'                , typeName:'text'      ,editable:false , nullable:false  },
@@ -19,6 +21,10 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
             {name:'laboratorista'           , typeName:'text'      ,editable:false },
             {name:'observaciones'           , typeName:'text'      ,editable:false },
             {name:'rectificacion'           , typeName:'integer'   ,editable:false, defaultDbValue: 0},
+            {name:'avisar'                  , typeName:'text'      ,editable:false, inTable:false, clientSide:'avisar'},
+            {name:'avisado_fecha'           , typeName:'date'      ,editable:puedeAvisar },
+            {name:'avisado_quien'           , typeName:'text'      ,editable:puedeAvisar },
+            {name:'avisado_observaciones'   , typeName:'text'      ,editable:puedeAvisar },
             {name:'apellido'                , typeName:'text'      ,editable:false, inTable: false },
             {name:'nombre'                  , typeName:'text'      ,editable:false, inTable: false },
             {name:'sexo'                    , typeName:'text'      ,editable:false, inTable: false },
@@ -75,7 +81,7 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
                 left join tem t using(etiqueta)
                 where (ingreso_lab is not null or resultado is not null or observaciones is not null)
             )`,
-            isTable: true,
+            isTable: false,
         }
     };
 }

@@ -19,12 +19,16 @@ export function etiquetas(context:TableContext):TableDefinition {
             {name:'laboratorista'           , typeName:'text'      ,editable:false },
             {name:'observaciones'           , typeName:'text'      ,editable:false },
             {name:'ingreso_lab'             , typeName:'timestamp' ,editable:false, visible:false},
-            {name:'rectificacion'           , typeName:'integer'   ,editable:false, defaultDbValue: 0}
+            {name:'rectificacion'           , typeName:'integer'   ,editable:false, defaultDbValue: 0},
+            {name:'avisado_fecha'           , typeName:'date'      ,editable:false },
+            {name:'avisado_quien'           , typeName:'text'      ,editable:false },
+            {name:'avisado_observaciones'   , typeName:'text'      ,editable:false }
         ],
         primaryKey:['etiqueta'],
         foreignKeys:[
             {references:'planchas'     , fields:['plancha']},
             {references:'usuarios'     , fields:[{source:'laboratorista', target:'usuario'}]},
+            {references:'usuarios'     , fields:[{source:'avisado_quien', target:'usuario'}], alias:'avi'},
         ],
         sql:{
         }

@@ -183,6 +183,25 @@ var wScreenProcResultResultadoLaboratorio = function(atributo:string, mensajeNo)
         mostrarDatosPersona(result.hayDatos, result.datos, divResult);
     }
 }
+myOwn.clientSides.avisar={
+    prepare: (depot, fieldName)=>{
+        var avisarButton = html.button({class:'open-dm-button'},'avisar').create();
+        depot.rowControls[fieldName].appendChild(avisarButton);
+        avisarButton.onclick = async function(){
+            try{
+                avisarButton.disabled=true;
+                await my.ajax.etiqueta_avisar({operativo: depot.row['operativo'], etiqueta:depot.row['etiqueta']});        
+                var grid=depot.manager;
+                grid.retrieveRowAndRefresh(depot)
+            }catch(err){
+                alertPromise(err.message)
+            }finally{
+                avisarButton.disabled=false;
+            }
+        }
+    },
+    update: false,
+};
 
 myOwn.wScreens.proc.result.resultado_cargar = wScreenProcResultResultadoLaboratorio('resultado-rectificar', "No se cargó el resultado ya que fue cargado anteriormente. Vaya a rectificar si desea modificalo.");
 

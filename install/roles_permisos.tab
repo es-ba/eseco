@@ -10,6 +10,7 @@ admin|encuestas|justificar|true
 admin|encuestas|procesar|true
 admin|lab_resultado|editar|true
 admin|lab_resultado|ver|true
+admin|lab_resultado|avisar|false
 coor_campo|campo|editar|true
 coor_campo|campo|ver|true
 coor_campo|campo|administrar|true
@@ -22,6 +23,7 @@ coor_campo|encuestas|justificar|true
 coor_campo|encuestas|procesar|true
 coor_campo|lab_resultado|editar|false
 coor_campo|lab_resultado|ver|true
+coor_campo|lab_resultado|avisar|false
 direccion|campo|editar|true
 direccion|campo|ver|true
 direccion|casilleros_texto|editar|false
@@ -33,6 +35,7 @@ direccion|encuestas|justificar|true
 direccion|encuestas|procesar|true
 direccion|lab_resultado|editar|false
 direccion|lab_resultado|ver|true
+direccion|lab_resultado|avisar|false
 dis_conceptual|campo|editar|false
 dis_conceptual|campo|ver|true
 dis_conceptual|casilleros_texto|editar|true
@@ -44,6 +47,7 @@ dis_conceptual|encuestas|justificar|false
 dis_conceptual|encuestas|procesar|false
 dis_conceptual|lab_resultado|editar|false
 dis_conceptual|lab_resultado|ver|false
+dis_conceptual|lab_resultado|avisar|false
 jefe_equipo|campo|editar|true
 jefe_equipo|campo|ver|true
 jefe_equipo|casilleros_texto|editar|false
@@ -55,6 +59,7 @@ jefe_equipo|encuestas|justificar|true
 jefe_equipo|encuestas|procesar|true
 jefe_equipo|lab_resultado|editar|false
 jefe_equipo|lab_resultado|ver|false
+jefe_equipo|lab_resultado|avisar|false
 jefe_lab|campo|editar|false
 jefe_lab|campo|ver|false
 jefe_lab|casilleros_texto|editar|false
@@ -66,6 +71,7 @@ jefe_lab|encuestas|justificar|false
 jefe_lab|encuestas|procesar|false
 jefe_lab|lab_resultado|editar|true
 jefe_lab|lab_resultado|ver|true
+jefe_lab|lab_resultado|avisar|true
 lab|campo|editar|false
 lab|campo|ver|false
 lab|casilleros_texto|editar|false
@@ -77,6 +83,18 @@ lab|encuestas|justificar|false
 lab|encuestas|procesar|false
 lab|lab_resultado|editar|true
 lab|lab_resultado|ver|true
+lab|lab_resultado|avisar|true
+comunicacion|campo|editar|false
+comunicacion|campo|ver|false
+comunicacion|casilleros_texto|editar|false
+comunicacion|configurar|editar|false
+comunicacion|configurar|ver|false
+comunicacion|consistencias|editar|false
+comunicacion|encuestas|ingresar|false
+comunicacion|encuestas|justificar|false
+comunicacion|encuestas|procesar|false
+comunicacion|lab_resultado|ver|true
+comunicacion|lab_resultado|avisar|true
 procesamiento|campo|editar|false
 procesamiento|campo|ver|false
 procesamiento|casilleros_texto|editar|false
@@ -88,6 +106,7 @@ procesamiento|encuestas|justificar|true
 procesamiento|encuestas|procesar|true
 procesamiento|lab_resultado|editar|false
 procesamiento|lab_resultado|ver|false
+procesamiento|lab_resultado|avisar|false
 recepcionista|campo|editar|true
 recepcionista|campo|ver|true
 recepcionista|casilleros_texto|editar|false
@@ -99,6 +118,7 @@ recepcionista|encuestas|justificar|true
 recepcionista|encuestas|procesar|false
 recepcionista|lab_resultado|editar|false
 recepcionista|lab_resultado|ver|false
+recepcionista|lab_resultado|avisar|false
 relevador|campo|editar|false
 relevador|campo|ver|false
 relevador|casilleros_texto|editar|false
@@ -111,3 +131,4 @@ relevador|encuestas|procesar|false
 relevador|encuestas|relevar|true
 relevador|lab_resultado|editar|false
 relevador|lab_resultado|ver|false
+relevador|lab_resultado|avisar|false
