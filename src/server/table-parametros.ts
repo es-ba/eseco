@@ -6,9 +6,15 @@ export function parametros(context:TableContext):TableDefinition{
     var admin = context.user.rol==='admin';
     return {
         name:'parametros',
-        editable:admin,
+        allow:{
+            insert:false,
+            delete:false,
+            update:admin,
+        },     
         fields:[
-            {name:'unico_registro'                  , typeName:'boolean' , nullable:false, defaultValue:true, editable: false},
+            {name:'unico_registro'       , typeName:'boolean' , nullable:false, defaultValue:true, editable: false},
+            {name:'mail_aviso_texto'    , typeName:'text'    , editable: true},
+            {name:'mail_aviso_asunto'   , typeName:'text'    , editable: true},
         ],
         primaryKey:['unico_registro'],
         constraints:[
@@ -16,6 +22,6 @@ export function parametros(context:TableContext):TableDefinition{
         ],
         layout:{
             vertical:true
-        }
+        },
     };
 }

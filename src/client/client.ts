@@ -185,7 +185,7 @@ var wScreenProcResultResultadoLaboratorio = function(atributo:string, mensajeNo)
 }
 myOwn.clientSides.avisar={
     prepare: (depot, fieldName)=>{
-        var avisarButton = html.button({class:'open-dm-button'},'avisar').create();
+        var avisarButton = html.button({class:'avisar-button'},'avisar').create();
         depot.rowControls[fieldName].appendChild(avisarButton);
         avisarButton.onclick = async function(){
             try{
@@ -203,13 +203,47 @@ myOwn.clientSides.avisar={
     update: false,
 };
 
+export function replaceSpecialWords(text:string, nombre:string, apellido:string, resultado:string):string{
+    function capitalizeFirstLetter(text:string) {
+        return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+    var simplificatedChars={
+        "#nombre":capitalizeFirstLetter(nombre),
+        "#apellido":capitalizeFirstLetter(apellido),
+        "#resultado":resultado,
+    };
+    var re = new RegExp(Object.keys(simplificatedChars).join("|"),"gi");
+
+    return text.replace(re, function(matched){
+        return simplificatedChars[matched.toLowerCase()];
+    });
+}
+
+myOwn.clientSides.avisar_email={
+    prepare: (depot, fieldName)=>{
+        var {email, resultado, nombre, apellido, mail_aviso_texto, mail_aviso_asunto} = depot.row;
+        if(resultado && email){
+            var body = replaceSpecialWords(mail_aviso_texto || '', nombre || '', apellido || '', resultado || '');
+            var subject = replaceSpecialWords(mail_aviso_asunto || '', nombre || '', apellido || '', resultado || '');
+            console.log(body)
+            console.log(subject)
+            var avisarEmailButton = html.a({
+                class:'email-button',
+                href:`mailto:${email}?Subject=${subject}&body=${body}`
+            },'enviar mail').create();
+            depot.rowControls[fieldName].appendChild(avisarEmailButton);
+        }
+    },
+    update: false,
+};
+
 myOwn.wScreens.proc.result.resultado_cargar = wScreenProcResultResultadoLaboratorio('resultado-rectificar', "No se cargó el resultado ya que fue cargado anteriormente. Vaya a rectificar si desea modificalo.");
 
 myOwn.wScreens.proc.result.resultado_rectificar = wScreenProcResultResultadoLaboratorio('resultado-rectificar', "No se cargó la rectificación revise el número de rectificación.");
 
 myOwn.wScreens.proc.result.laboratorio_ingresar = wScreenProcResultResultadoLaboratorio('resultado-cargar', "Recepción de la muestra ya había sido registrada");
 
-myOwn.wScreens.resultados_ver = ()=>{
+myOwn.wScreens.resultados_ver = async ()=>{
     var mainLayout = document.getElementById('main_layout')!;
     mainLayout.appendChild(html.h1('ingrese fecha de busqueda').create());
     var fechaElement=html.td({style:'min-width:100px; border:solid 1px black', "typed-controls-direct-input":"true"}).create();
