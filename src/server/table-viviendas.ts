@@ -7,8 +7,8 @@ export function viviendas(context:TableContext):TableDefinition {
     return {
     "name": "viviendas",
     title: 'Viviendas',
-    editable: puedeEditar,
-    allow:{delete:context.superuser, insert:context.superuser},
+    editable: false,
+    //allow:{delete:context.superuser, insert:context.superuser},
     "fields": [
         {
             "name": "operativo",
@@ -21,6 +21,7 @@ export function viviendas(context:TableContext):TableDefinition {
             "typeName": "text",
             "nullable": false
         },
+        //{name:'rea_m', typeName:'integer'},
         {name:'resultado', typeName:'text'},
         {name:'observaciones', typeName:'text'},
         {name:'area', typeName:'integer'},
@@ -122,11 +123,6 @@ export function viviendas(context:TableContext):TableDefinition {
             "typeName": "bigint",
             "nullable": true
         },        
-        //{
-        //    "name": "p1!",
-        //    "typeName": "text",
-        //    "nullable": true
-        //},
         {
             "name": "sexo_sel",
             "typeName": "bigint",
@@ -477,15 +473,7 @@ export function viviendas(context:TableContext):TableDefinition {
             "typeName": "text",
             "nullable": true
         },
-//        {
-//            "name": "fin",
-//            "typeName": "text",
-//            "nullable": true
-//        },
-    ].map(x=>({...x, typeName:'text'})),
-    //"sql": {
-    //    "isReferable": true
-    //},
+    ], //.map(x=>({...x, typeName:'text'})),
     "primaryKey": [
         "operativo",
         "enc"
@@ -513,11 +501,24 @@ export function viviendas(context:TableContext):TableDefinition {
         isTable: false,
         isReferable:true,
         from:`
-            (select t.operativo, t.enc, t.area::text, t.nrocomuna::text, t.nrofraccion::text, t.nroradio::text
+        (select *, 
+            case when edad_sel >=18 and edad_sel<= 39 then 1
+                 when edad_sel >=40 and edad_sel<= 59 then 2
+                 when edad_sel >=60 and edad_sel<= 79 then 3
+                 when edad_sel >=80  then 4
+                 else null 
+            end edad_sel_rango     
+            from
+            (select t.operativo, t.enc, t.area, t.nrocomuna, t.nrofraccion, t.nroradio
+              --  , rea_m
                 , resultado
                 , observaciones
-                , ((json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1))->>'p2')::text sexo_sel -- integer
-                , ((json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1))->>'p3')::text edad_sel -- integer
+                , coalesce(tipo_domicilio,1) tipo_domicilio 
+                , areaup
+                , id_marco
+                , estrato_ing  
+                , case when tipodato_inconsist is null and json_encuesta->>'p11' is not null then ((json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1))->>'p2') else null end::bigint sexo_sel 
+                , case when tipodato_inconsist is null and json_encuesta->>'p11' is not null then ((json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1))->>'p3') else null end::bigint edad_sel 
                 , x."g1"
                 ,x."g2"
                 ,x."g3"
@@ -606,12 +607,15 @@ export function viviendas(context:TableContext):TableDefinition {
                 ,x."c5ok"
                 ,x."fin" as observaciones_viv
                 ,x."personas"
-                ,x."_edad_maxima"
-                ,x."_edad_minima"
-              from tem t inner join etiquetas using(etiqueta) , jsonb_populate_record(null::viv_fields_json , json_encuesta) as x
+              from (select *, validar_tipodato(enc, json_encuesta) tipodato_inconsist from tem) t 
+                left join etiquetas using(etiqueta) 
+                    , jsonb_populate_record(null::viv_fields_json , 
+                        case when tipodato_inconsist is null then json_encuesta else null::jsonb end
+                    ) as x
               where rea_m=1
-                and resultado is not null
-            )
+                and resultado in ('Negativo','Positivo') 
+            )viv
+        )    
         `, 
     }   
     };

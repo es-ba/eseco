@@ -46,6 +46,7 @@ import { operaciones         } from './table-operaciones';
 import { areas               } from './table-areas';
 import { sincronizaciones    } from './table-sincronizaciones';
 import { viviendas           } from './table-viviendas';
+import { viviendas_extendida } from './table-viviendas_extendida';
 import { personas            } from './table-personas';
 
 
@@ -369,6 +370,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , areas
             , sincronizaciones
             , viviendas
+            , viviendas_extendida
             , personas
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){

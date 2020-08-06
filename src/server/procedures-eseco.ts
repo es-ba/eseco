@@ -20,6 +20,7 @@ const  ResultadosLaboratorio = ['Positivo', 'Negativo', 'Indeterminado','Escasa 
 const OPERATIVO = 'ESECO';
 const OPERATIVO_ETIQUETAS = 'ESECO201';
 const formPrincipal = 'F:F1';
+const MAIN_TABLENAME ='viviendas';
 
 /*definición de estructura completa, cuando exista ing-enc hay que ponerlo ahí*/ 
 type EstructuraTabla={tableName:string, pkFields:{fieldName:string}[], childTables:EstructuraTabla[]};
@@ -213,21 +214,20 @@ export const ProceduresEseco : ProcedureDef[] = [
             datos_caso:AnyObject
         }){
             var client=context.client;
-            var struct_defgen = createStructure(context, 'viviendas');
-            var sql = sqlTools.structuredData.sqlRead({operativo: parameters.operativo, id_caso:parameters.id_caso}, struct_defgen);
-            //var sql_rec = {...sql, text:sql.text.replace(/from\s*\w+\b/g,'$&_rec')};
-            //var sql_ing = {...sql, text:sql.text.replace(/from\s*\w+\b/g,'$&_ing')};
-            var {value:datos_ori} = await client.query(sql_rec).fetchUniqueValue();
-            var {value:datos_ing} = await client.query(sql_ing).fetchUniqueValue();
-            parameters.datos_caso['operativo'] = parameters.operativo;
-            parameters.datos_caso['id_caso'] = parameters.id_caso;
-            var struct_defgen=createStructure(context, 'defgen_ing');
-            struct_defgen.childTables=[];
-            var datos_ingresados = likeAr(parameters.datos_caso).map((value, key)=>
-                datos_ing[key] || datos_ori[key]!=value?value:null
-            ).plain();
-            var queries = sqlTools.structuredData.sqlWrite(datos_ingresados, struct_defgen);
-            return await queries.reduce(function(promise, query){
+            var datos_json=parameters.datos_caso;
+            var struct_eseco = createStructure(context, MAIN_TABLENAME);
+            datos_json['operativo'] = parameters.operativo;
+            datos_json['enc'] = parameters.id_caso;
+            if (datos_json.personas && datos_json.personas.length>=1) {
+                var personas_con_pk =datos_json.personas.map(function(per: Object,i: number){
+                    return {...per,'persona': i +1}
+                });
+                datos_json.personas=personas_con_pk;
+            }
+            var queries = sqlTools.structuredData.sqlWrite(datos_json, struct_eseco);
+            //console.log("#############",queries);
+
+             return await queries.reduce(function(promise, query){
                 return promise.then(function() {
                     return client.query(query).execute().then(function(result){
                         return 'ok';
@@ -245,7 +245,7 @@ export const ProceduresEseco : ProcedureDef[] = [
     {
         action: 'caso_traer',
         parameters: [
-            {name:'formulario'    ,                          typeName:'text'},
+            //{name:'formulario'    ,                          typeName:'text'},
             {name:'operativo'     ,references:'operativos',  typeName:'text'},
             {name:'id_caso'       ,typeName:'text'},
         ],
@@ -253,16 +253,14 @@ export const ProceduresEseco : ProcedureDef[] = [
         definedIn: 'eseco',
         coreFunction:async function(context:ProcedureContext, parameters:CoreFunctionParameters){
             var client=context.client;
-            var struct_defgen = createStructure(context, 'defgen');
-            var sql = sqlTools.structuredData.sqlRead({operativo: parameters.operativo, id_caso:parameters.id_caso}, struct_defgen);
+             var struct_eseco = createStructure(context, MAIN_TABLENAME);
+            var sql = sqlTools.structuredData.sqlRead({operativo: parameters.operativo, enc:parameters.id_caso}, struct_eseco);
             var result = await client.query(sql).fetchUniqueValue();
-            var rows_prov = await context.be.procedure['traer_provincias'].coreFunction(context, parameters);
             var response = {
                 operativo: parameters.operativo,
                 id_caso: parameters.id_caso,
                 datos_caso: result.value,
-                formulario: parameters.formulario,
-                provincias: rows_prov
+                formulario: formPrincipal,
             };
             return response;
         }
@@ -318,15 +316,14 @@ export const ProceduresEseco : ProcedureDef[] = [
         coreFunction:async function(context:ProcedureContext, parameters:CoreFunctionParameters){
             /* GENERALIZAR: */
             var be=context.be;
-            let mainTable=be.db.quoteIdent('defgen');
             /* FIN-GENERALIZAR: */
-            let resultMain = await context.client.query(`SELECT * FROM ${mainTable} LIMIT 1`).fetchAll();
+            let resultMain = await context.client.query(`SELECT * FROM ${MAIN_TABLENAME} LIMIT 1`).fetchAll();
             if(resultMain.rowCount>0){
                 console.log('HAY DATOS',resultMain.rows)
                 throw new Error('HAY DATOS. NO SE PUEDE INICIAR EL PASAJE');
             }
             let resultJson = await context.client.query(
-                `SELECT operativo, id_caso, datos_caso FROM formularios_json WHERE operativo=$1`,
+                `SELECT operativo, enc id_caso, json_encuesta datos_caso FROM tem WHERE operativo=$1`,
                 [OPERATIVO]
             ).fetchAll();
             var procedureGuardar = be.procedure.caso_guardar;
@@ -338,7 +335,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                 if(!('r4_esp' in row.datos_caso)){
                     row.datos_caso.r4_esp = null;
                 }
-                var {datos_caso, id_caso, operativo} = await be.procedure.caso_traer.coreFunction(context, {operativo:row.operativo, id_caso:row.id_caso})
+                var {datos_caso, enc, operativo} = await be.procedure.caso_traer.coreFunction(context, {operativo:row.operativo, enc:row.id_caso})
                 var verQueGrabo = {datos_caso, id_caso, operativo}
                 try{
                     discrepances.showAndThrow(verQueGrabo,row)

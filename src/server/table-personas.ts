@@ -45,7 +45,7 @@ export function personas(context:TableContext):TableDefinition {
             "typeName": "bigint",
             "nullable": true
         },
-    ].map(x=>({...x, typeName:x.typeName=='integer'?'integer':'text'})),
+    ] ,//.map(x=>({...x, typeName:x.typeName=='integer'?'integer':'text'})),
     "primaryKey": [
         "operativo",
         "enc",
@@ -68,10 +68,12 @@ export function personas(context:TableContext):TableDefinition {
             select t.operativo, t.enc
                 ,x.p1, x.p2, x.p3, x.p4
                 ,  ordinality persona
-            from tem t join etiquetas using(etiqueta), jsonb_populate_recordset(null::personas , json_encuesta->'personas') with ordinality as x
+            from (select *, validar_tipodato(enc, json_encuesta) tipodato_inconsist from tem) t 
+                join etiquetas using(etiqueta)
+                , jsonb_populate_recordset(null::personas , case when tipodato_inconsist is null then json_encuesta->'personas'else null::jsonb end) with ordinality as x
             where json_encuesta->'personas' not in  ('[{}]'::jsonb, '[]'::jsonb) 
                and rea_m=1
-               and resultado is not null
+               and resultado in ('Negativo','Positivo')
        )`
     },
 };

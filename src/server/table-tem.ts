@@ -185,6 +185,12 @@ export function tem(context:TableContext):TableDefinition {
             "typeName":"text"
         },
         { name:'etiqueta'         , typeName:'text'     },
+        {
+            "name": "tipos_inconsist",
+            editable: false,
+            inTable: false,
+            "typeName":"text"
+        },        
         { name:'relevador'        , typeName:'text'     },
         { name:'rea_m'            , typeName:'integer'  },
         {name:'rea'           , typeName:'bigint' ,editable:false    },
@@ -223,13 +229,13 @@ export function tem(context:TableContext):TableDefinition {
             "name": "dominio",
             "editable": false,
             "typeName": "integer"
-            ,visible: false
+            ,visible: true
         },
         {
             "name": "zona",
             "editable": hasProcesamientoPermission,
             "typeName": "text"
-            ,visible: false
+            ,visible: true
         },
         {
             "name": "periodicidad",
@@ -247,7 +253,7 @@ export function tem(context:TableContext):TableDefinition {
             "name": "areaup",
             "editable": false,
             "typeName": "text"  //nullable por dominio 5
-            ,visible: false
+            ,visible: true
         },
         {
             "name": "rotacion_etoi",
@@ -283,7 +289,7 @@ export function tem(context:TableContext):TableDefinition {
             "name": "marco",
             "editable": false,
             "typeName": "integer"
-            ,visible: false
+            ,visible: true
         },
         {
             "name": "codpos",
@@ -294,7 +300,7 @@ export function tem(context:TableContext):TableDefinition {
             "name": "estrato_ing",
             "editable": false,
             "typeName": "integer"
-            ,visible: false
+            ,visible: true
         },
         {
             "name": "id_marco",
@@ -387,7 +393,7 @@ export function tem(context:TableContext):TableDefinition {
         isTable: true,
         isReferable:true,
         from:`
-            (select *, null telefonos, null seleccionado
+            (select * , encu.validar_tipodato(enc,json_encuesta) tipos_inconsist, null telefonos, null seleccionado
                -- nullif((select string_agg(CASE when telefono_fijo is not null then 'h'||hogar || ' tel: '|| telefono_fijo else '' end || CASE when telefono_movil is not null then ',h'||hogar ||  ' cel: '|| telefono_movil else '' end, ' | ') from hogares where t.operativo= t.operativo and enc=t.enc group by operativo, enc),'') as telefonos,
                -- nullif((select string_agg('h'||hogar || ' ' || ti2,', ') from personas where operativo= operativo and enc=t.enc group by operativo, enc),'')as seleccionado 
                 from tem t
