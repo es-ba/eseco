@@ -7,8 +7,7 @@ export function personas(context:TableContext):TableDefinition {
     return {
     "name": "personas",
     elementName:'persona',
-    editable: puedeEditar,
-    allow:{delete:context.superuser, insert:context.superuser},
+    editable: false,
     "fields": [
         {
             "name": "operativo",
