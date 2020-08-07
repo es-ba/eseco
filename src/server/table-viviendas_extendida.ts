@@ -8,7 +8,16 @@ export function viviendas_extendida(context:TableContext):TableDefinition {
     tableDef.name= 'viviendasExt';
     tableDef.title= 'ViviendasExtendida';
     tableDef.tableName='viviendas_extendida';
-    tableDef.detailTables=[];
+    tableDef.detailTables=[
+        {
+            "table": "personas_extendida",
+            "fields": [
+                "operativo",
+                "enc"
+            ],
+            "abr": "p"
+        }
+    ];
     tableDef.fields.splice(8,0,{name: "areaup", editable:false, typeName:'text', inTable:false}
         , {name: "id_marco", editable:false, typeName:'bigint', inTable:false}
         , {name: "estrato_ing", editable:false, typeName:"integer", inTable:false}

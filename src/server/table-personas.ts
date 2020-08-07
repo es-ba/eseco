@@ -66,7 +66,11 @@ export function personas(context:TableContext):TableDefinition {
         "isReferable": true,
         from: `(
             select t.operativo, t.enc
-                ,x.p1, x.p2, x.p3, x.p4
+                , coalesce(t.tipo_domicilio,1) tipo_domicilio
+                , t.area, t.areaup, t.id_marco, t.estrato_ing
+                , t.nrocomuna
+                , (t.json_encuesta->>'p11')::integer p11
+                , x.p1, x.p2, x.p3, x.p4
                 ,  ordinality persona
             from (select *, validar_tipodato(enc, json_encuesta) tipodato_inconsist from tem) t 
                 join etiquetas using(etiqueta)
