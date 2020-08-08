@@ -84,7 +84,7 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
                 , x.p1, x.p2, x.p3, x.p4
                 ,  ordinality persona
             from (select *, validar_tipodato(enc, json_encuesta) tipodato_inconsist from tem) t 
-                join etiquetas using(etiqueta)
+                ${opts.extendida?`left`:``} join etiquetas using(etiqueta)
                 , jsonb_populate_recordset(null::personas , case when tipodato_inconsist is null then json_encuesta->'personas'else null::jsonb end) with ordinality as x
             where json_encuesta->'personas' not in  ('[{}]'::jsonb, '[]'::jsonb) 
                 ${opts.extendida?``:`
