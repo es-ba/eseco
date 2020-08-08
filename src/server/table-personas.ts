@@ -2,10 +2,21 @@
                 
 import {TableDefinition, TableContext} from "./types-eseco";
 
-export function personas(context:TableContext):TableDefinition {
+export function personas(context:TableContext, opts:{extendida:boolean}):TableDefinition {
+    var be=context.be;
+    opts=opts||{};
     var puedeEditar = context.forDump || context.user.rol==='admin';
+    var fieldsExtendida=opts.extendida?[
+      {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
+    , {name: "area", editable:false, typeName:'integer', inTable:false}
+    , {name: "areaup", editable:false, typeName:'text', inTable:false}
+    , {name: "id_marco", editable:false, typeName:'bigint', inTable:false}
+    , {name: "estrato_ing", editable:false, typeName:"integer", inTable:false}
+    , {name: "nrocomuna", editable:false, typeName:"integer", inTable:false}
+    , {name: "p11", editable:false, typeName:"integer", inTable:false}
+    ]:[];
     return {
-    "name": "personas",
+    "name": opts.extendida?'personas_extendida':"personas",
     elementName:'persona',
     editable: false,
     "fields": [
@@ -19,6 +30,7 @@ export function personas(context:TableContext):TableDefinition {
             "typeName": "text",
             "nullable": false
         },
+        ...fieldsExtendida,
         {
             "name": "persona",
             "typeName": "integer",
@@ -75,8 +87,10 @@ export function personas(context:TableContext):TableDefinition {
                 join etiquetas using(etiqueta)
                 , jsonb_populate_recordset(null::personas , case when tipodato_inconsist is null then json_encuesta->'personas'else null::jsonb end) with ordinality as x
             where json_encuesta->'personas' not in  ('[{}]'::jsonb, '[]'::jsonb) 
-               and rea_m=1
-               and resultado in ('Negativo','Positivo')
+                ${opts.extendida?``:`
+                and rea_m=1
+                and resultado in ('Negativo','Positivo')
+                 `}
        )`
     },
 };
