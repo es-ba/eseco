@@ -185,7 +185,7 @@ var wScreenProcResultResultadoLaboratorio = function(atributo:string, mensajeNo)
 }
 myOwn.clientSides.avisar={
     prepare: (depot, fieldName)=>{
-        var avisarButton = html.button({class:'avisar-button'},'avisar').create();
+        var avisarButton = html.button({class:'avisar-button'},'aviso').create();
         depot.rowControls[fieldName].appendChild(avisarButton);
         avisarButton.onclick = async function(){
             try{
@@ -221,8 +221,9 @@ export function replaceSpecialWords(text:string, nombre:string, apellido:string,
 
 myOwn.clientSides.avisar_email={
     prepare: (depot, fieldName)=>{
-        var {email, resultado, nombre, apellido, mail_aviso_texto, mail_aviso_asunto} = depot.row;
-        if(resultado && email){
+        var {email, resultado, nombre, apellido, mail_aviso_texto, mail_aviso_asunto, tipo_informe} = depot.row;
+        if(resultado && email && resultado.toLowerCase()=='negativo' && tipo_informe!='5'){
+            // OJO QUE EL TEXTO CAMBIA MUCHO SI FUERA A POSITIVOS.
             var body = replaceSpecialWords(mail_aviso_texto || '', nombre || '', apellido || '', resultado || '');
             var subject = replaceSpecialWords(mail_aviso_asunto || '', nombre || '', apellido || '', resultado || '');
             console.log(body)
@@ -232,6 +233,10 @@ myOwn.clientSides.avisar_email={
                 href:`mailto:${email}?Subject=${subject}&body=${body}`
             },'enviar mail').create();
             depot.rowControls[fieldName].appendChild(avisarEmailButton);
+        }else if(tipo_informe==5){
+            depot.rowControls[fieldName].appendChild(html.span("geriatrico").create());
+        }else if(resultado && resultado.toLowerCase()!='negativo'){
+            depot.rowControls[fieldName].appendChild(html.span("avisa salud").create());
         }
     },
     update: false,

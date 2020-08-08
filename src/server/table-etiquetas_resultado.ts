@@ -42,6 +42,7 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
             {name:'celular'                 , typeName:'text'      ,editable:false, inTable: false },
             {name:'email'                   , typeName:'text'      ,editable:false, inTable: false },
             {name:'numero_linea_vivienda'   , typeName:'text'      ,editable:false, inTable: false },
+            {name:'tipo_informe'            , typeName:'bigint'    ,editable:false, inTable: false },
             {name:'tel_alternativo'         , typeName:'text'      ,editable:false, inTable: false },
             ...(opts && opts.all ? [
                 {name:'rea', typeName:'integer', editable:false},
@@ -55,7 +56,7 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
         ],
         sql:{
             from:`(
-                select e.*, 
+                select e.*, t.tipo_domicilio as tipo_informe,
                 (json_encuesta->>'e1')::text as apellido,
                 (json_encuesta->>'e2')::text as nombre,
                 case when ((json_encuesta->>'e3')) = '1' then 'DNI'
@@ -79,6 +80,7 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
                 (json_encuesta->>'c2')::text as email,
                 (json_encuesta->>'c3')::text as numero_linea_vivienda,
                 (json_encuesta->>'c4')::text as tel_alternativo,
+                (json_encuesta->>'c5')::text as etiqueta_c5,
                 case json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1)->>'p2'::text when '1' then 'Varón' when '2' then 'Mujer' else json_encuesta->'personas'->(json_encuesta->>'p11')->>'p2'::text end as sexo,
                 (json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1)->>'p3')::integer as edad,
                     t.area,
@@ -89,9 +91,12 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
                 from  parametros p, etiquetas e
                 left join tem t using(etiqueta)
                 where (ingreso_lab is not null or resultado is not null or observaciones is not null)
+                -- full outer join tem t using(etiqueta)
+                -- where etiqueta is not null
             )`,
             isTable: false,
-        }
+        },
+        hiddenColumns:['tipo_informe']
     };
 }
 
