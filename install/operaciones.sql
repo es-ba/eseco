@@ -1,4 +1,5 @@
 -- operaciones.sql
+set search_path = encu; set role to eseco201_muleto_owner;
 set search_path = encu; set role to eseco201_produc_owner;
 
 -- unión de tokens con changes

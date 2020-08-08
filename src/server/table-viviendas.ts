@@ -2,11 +2,20 @@
                 
 import {TableDefinition, TableContext} from "./types-eseco";
 
-export function viviendas(context:TableContext):TableDefinition {
+export function viviendas(context:TableContext, opts:{extendida:boolean}):TableDefinition {
+    opts=opts||{};
     var puedeEditar = context.forDump || context.user.rol==='admin';
+    var fieldsExtendidos=opts.extendida?[
+        {name: "areaup", editable:false, typeName:'text', inTable:false}
+        , {name: "id_marco", editable:false, typeName:'bigint', inTable:false}
+        , {name: "estrato_ing", editable:false, typeName:"integer", inTable:false}
+        , {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
+        , {name: "edad_sel_rango", editable:false, typeName:"integer", inTable:false}
+        , {name: "cod_no_rea", editable:false, typeName:"integer", inTable:false}
+    ]:[];
     return {
-    "name": "viviendas",
-    title: 'Viviendas',
+    "name": opts.extendida?'viviendas_extendida':"viviendas",
+    title:  opts.extendida?'Viviendas extendidas':'Viviendas',
     editable: false,
     //allow:{delete:context.superuser, insert:context.superuser},
     "fields": [
@@ -28,6 +37,7 @@ export function viviendas(context:TableContext):TableDefinition {
         {name:'nrocomuna', typeName:'integer'},
         {name:'nrofraccion', typeName:'integer'},
         {name:'nroradio', typeName:'integer'},
+        ...fieldsExtendidos,
         {
             "name": "g1",
             "typeName": "bigint",
@@ -478,7 +488,16 @@ export function viviendas(context:TableContext):TableDefinition {
         "operativo",
         "enc"
     ],
-    "detailTables": [
+    "detailTables": opts.extendida?[
+        {
+            "table": "personas_extendida",
+            "fields": [
+                "operativo",
+                "enc"
+            ],
+            "abr": "p"
+        }
+    ]:[
         {
             "table": "personas",
             "fields": [
@@ -519,6 +538,7 @@ export function viviendas(context:TableContext):TableDefinition {
                 , estrato_ing  
                 , case when tipodato_inconsist is null and json_encuesta->>'p11' is not null then ((json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1))->>'p2') else null end::bigint sexo_sel 
                 , case when tipodato_inconsist is null and json_encuesta->>'p11' is not null then ((json_encuesta->'personas'->((json_encuesta->>'p11')::integer - 1))->>'p3') else null end::bigint edad_sel 
+                , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
                 , x."g1"
                 ,x."g2"
                 ,x."g3"
@@ -612,8 +632,10 @@ export function viviendas(context:TableContext):TableDefinition {
                     , jsonb_populate_record(null::viv_fields_json , 
                         case when tipodato_inconsist is null then json_encuesta else null::jsonb end
                     ) as x
-              where rea_m=1
-                and resultado in ('Negativo','Positivo') 
+              where 
+                ${opts.extendida?`dv1 is not null or resultado is not null`
+                :`rea_m=1
+                and resultado in ('Negativo','Positivo')`}
             )viv
         )    
         `, 
