@@ -3,6 +3,7 @@
 import {TableDefinition, TableContext} from "./types-eseco";
 
 export function viviendas(context:TableContext, opts:{extendida:boolean}):TableDefinition {
+    var be=context.be;
     opts=opts||{};
     var puedeEditar = context.forDump || context.user.rol==='admin';
     var fieldsExtendidos=opts.extendida?[
@@ -11,7 +12,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
         , {name: "estrato_ing", editable:false, typeName:"integer", inTable:false}
         , {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
         , {name: "edad_sel_rango", editable:false, typeName:"integer", inTable:false}
-        , {name: "cod_no_rea", editable:false, typeName:"integer", inTable:false}
+        , {name: "cod_no_rea", editable:false, typeName:"text", inTable:false}
     ]:[];
     return {
     "name": opts.extendida?'viviendas_extendida':"viviendas",
@@ -30,7 +31,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
             "typeName": "text",
             "nullable": false
         },
-        //{name:'rea_m', typeName:'integer'},
+        {name:'rea_m', typeName:'integer'},
         {name:'resultado', typeName:'text'},
         {name:'observaciones', typeName:'text'},
         {name:'area', typeName:'integer'},
@@ -529,7 +530,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
             end edad_sel_rango     
             from
             (select t.operativo, t.enc, t.area, t.nrocomuna, t.nrofraccion, t.nroradio
-              --  , rea_m
+                , rea_m
                 , resultado
                 , observaciones
                 , coalesce(tipo_domicilio,1) tipo_domicilio 
