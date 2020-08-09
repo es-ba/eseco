@@ -996,6 +996,19 @@ export function BienvenidaDespliegue(props:{modo:CasoState["modo"]}){
     </Paper>
 }
 
+export function OpenedTabs(){
+    const [tabs, setTabs] = useState<{[x:string]:number}>(allOpenedTabs);
+    const updateTabsStatus = function(){
+        setTabs(allOpenedTabs);
+    }
+    
+    window.addEventListener('my-tabs',updateTabsStatus);
+    return (tabs && likeAr(tabs).array().length>1)?
+        <div>opened in many tabs</div>
+    :
+        <div>only my tab</div>
+}
+
 export function AppEseco(){
     var {forPk, bienvenido, modo} = useSelector((state:CasoState)=>({...state.opciones, ...state.modo, ...state}));
     if(!bienvenido){
@@ -1014,6 +1027,7 @@ export async function desplegarFormularioActual(opts:{modoDemo:boolean, useSessi
     const store = await dmTraerDatosFormulario(opts)
     ReactDOM.render(
         <RenderPrincipal store={store} dispatchers={dispatchers} mensajeRetorno="Volver a la hoja de ruta">
+            <OpenedTabs/>
             <AppEseco/>
         </RenderPrincipal>,
         document.getElementById('main_layout')
@@ -1025,3 +1039,41 @@ if(typeof window !== 'undefined'){
     window.desplegarFormularioActual = desplegarFormularioActual;
     // window.desplegarHojaDeRuta = desplegarHojaDeRuta;
 }
+
+//CONTROL DE PESTAÑAS
+var allOpenedTabs:{[x:string]:number}={};
+
+function loadInstance(){
+    var bc = new BroadcastChannel('contador');
+    var myId=String.fromCodePoint(100+Math.floor(Math.random()*1000))+Math.floor(Math.random()*100);
+    allOpenedTabs={[myId]:1};
+    var event = new Event('my-tabs');
+    bc.onmessage=function(ev){
+        if(ev.data.que=='soy'){
+            if(!allOpenedTabs[ev.data.id]){
+                allOpenedTabs[ev.data.id]=0;
+            }
+            allOpenedTabs[ev.data.id]++;
+        }
+        if(ev.data.que=='unload'){
+            delete allOpenedTabs[ev.data.id];
+        }
+        if(ev.data.que=='load'){
+            allOpenedTabs[ev.data.id]=1;
+            bc.postMessage({que:'soy',id:myId});
+        }
+        window.dispatchEvent(event);
+    };
+    bc.postMessage({que:'load',id:myId});
+    window.dispatchEvent(event);
+    window.addEventListener('unload',function(){
+        bc.postMessage({que:'unload',id:myId});
+        window.dispatchEvent(event);
+    })
+    //mostrarQuienesSomos();
+}
+
+window.addEventListener('load', function(){
+    loadInstance()
+})
+//FIN CONTROL PESTAÑAS
