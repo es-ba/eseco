@@ -65,7 +65,7 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
     "detailTables": [],
     "foreignKeys": [
         {
-            "references": "viviendas",
+            "references": opts.extendida?"viviendas_extendida":"viviendas",
             "fields": [
                 "operativo",
                 "enc"
