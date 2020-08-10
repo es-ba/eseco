@@ -114,7 +114,7 @@ function num(num:number|string|null):number{
 
 type Backups={
     idActual:number,
-    token:string|null,
+    token:string|undefined,
     casos:{idBackup:number, idCaso:IdCaso, vivienda:DatosVivienda}[]
 }
 

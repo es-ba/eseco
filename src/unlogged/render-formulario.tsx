@@ -997,14 +997,16 @@ export function BienvenidaDespliegue(props:{modo:CasoState["modo"]}){
 }
 
 export function OpenedTabs(){
-    const [tabs, setTabs] = useState<{[x:string]:number}>(allOpenedTabs);
+    const [tabs, setTabs] = useState(infoOpenedTabs.otherTabsNames);
     const updateTabsStatus = function(){
-        setTabs(allOpenedTabs);
+        setTabs(infoOpenedTabs.otherTabsNames);
     }
-    
-    window.addEventListener('my-tabs',updateTabsStatus);
-    return (tabs && likeAr(tabs).array().length>1)?
-        <div className="tab-counter tab-error">¡ATENCIÓN! Hay más de una ventana o solapa abierta con el programa. Se pueden perder datos.</div>
+    useEffect(()=>{
+        window.addEventListener('my-tabs',updateTabsStatus);
+        return () => window.removeEventListener('my-tabs',updateTabsStatus);
+    },[])
+    return (tabs)?
+        <div className="tab-counter tab-error">¡ATENCIÓN! Hay más de una ventana o solapa abierta con el programa. Se pueden perder datos: {tabs}</div>
     :
         <div className="tab-counter">✔</div>
 }
@@ -1042,11 +1044,17 @@ if(typeof window !== 'undefined'){
 
 //CONTROL DE PESTAÑAS
 var allOpenedTabs:{[x:string]:number}={};
+var infoOpenedTabs={
+    allOpenedTabs,
+    myId:'calculando...',
+    otherTabsNames:''
+}
 
 function loadInstance(){
     var bc = new BroadcastChannel('contador');
-    var myId=String.fromCodePoint(100+Math.floor(Math.random()*1000))+Math.floor(Math.random()*100);
-    allOpenedTabs={[myId]:1};
+    var myId=String.fromCodePoint(100+Math.floor(Math.random()*1000))+Math.floor(Math.random()*100)//+'-'+new Date().getTime();
+    allOpenedTabs[myId]=1;
+    infoOpenedTabs.myId=myId;
     var event = new Event('my-tabs');
     bc.onmessage=function(ev){
         if(ev.data.que=='soy'){
@@ -1062,6 +1070,7 @@ function loadInstance(){
             allOpenedTabs[ev.data.id]=1;
             bc.postMessage({que:'soy',id:myId});
         }
+        infoOpenedTabs.otherTabsNames=likeAr(allOpenedTabs).filter((_,id)=>id!=myId).join(',');
         window.dispatchEvent(event);
     };
     bc.postMessage({que:'load',id:myId});
