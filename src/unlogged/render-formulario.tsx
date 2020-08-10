@@ -1006,7 +1006,7 @@ export function OpenedTabs(){
         return () => window.removeEventListener('my-tabs',updateTabsStatus);
     },[])
     return (tabs)?
-        <div className="tab-counter tab-error">¡ATENCIÓN! Hay más de una ventana o solapa abierta con el programa. Se pueden perder datos: {tabs}</div>
+        <div className="tab-counter tab-error">¡ATENCIÓN! Hay más de una ventana abierta. Se pueden perder datos: {tabs}</div>
     :
         <div className="tab-counter">✔</div>
 }
