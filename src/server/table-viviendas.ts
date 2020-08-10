@@ -81,7 +81,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
         },
         {
             "name": "ug5",
-            "typeName": "text",
+            "typeName": "bigint",
             "nullable": true
         },
         {

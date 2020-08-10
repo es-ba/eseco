@@ -255,10 +255,52 @@ select enc,
 select tem.enc, etiqueta, 
     json_encuesta->>'e1' as apellido,
     json_encuesta->>'e2' as nombre,
-    json_encuesta->>'e3' as DNI
-    from tem 
+    json_encuesta->>'e3' as DNI,
+    tem.area,
+    tem.relevador, resultado
+    from tem left join etiquetas using(etiqueta)
     where etiqueta in (
         select etiqueta from tem where etiqueta is not null group by etiqueta having count(*)>1
-    );
+    )
+    order by etiqueta;
 
 
+select e.etiqueta, resultado, enc,
+    json_encuesta->>'e1' as apellido,
+    json_encuesta->>'e2' as nombre,
+    json_encuesta->>'e7' as documento,
+    fecha, plancha
+  from etiquetas e left join tem using(etiqueta)
+--  where plancha = (select plancha from etiquetas where etiqueta = '4708-21')
+  where plancha between '203' and '206'
+  order by etiqueta;
+
+select e.etiqueta, resultado, enc,
+    json_encuesta->>'e1' as apellido,
+    json_encuesta->>'e2' as nombre,
+    json_encuesta->>'e7' as documento,
+    fecha, plancha
+  from etiquetas e right join tem using(etiqueta)
+--  where plancha = (select plancha from etiquetas where etiqueta = '4708-21')
+  where enc in(
+    '22225'
+    ,'22226'
+    ,'32613'
+    ,'35601'
+    ,'35604'
+    ,'45821'
+  )
+  order by etiqueta, enc;
+
+
+
+select e.etiqueta, resultado, enc,
+    json_encuesta->>'e1' as apellido,
+    json_encuesta->>'e2' as nombre,
+    json_encuesta->>'e7' as documento,
+    e.fecha, plancha, a.relevador,
+    json_encuesta->>'dv2' as fecha_rea
+  from etiquetas e left join tem using(etiqueta) left join areas a using(area)
+  where plancha in (select plancha from etiquetas where etiqueta in ('4642-68','4644-22','4660-46'))
+  -- where plancha between '200' and '202'
+  order by enc, etiqueta;
