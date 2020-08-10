@@ -371,6 +371,7 @@ export function tem(context:TableContext):TableDefinition {
         },
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
+        { name: "json_backup"   , typeName:'jsonb', visible:false}
     ],
     "primaryKey": [
         "operativo",

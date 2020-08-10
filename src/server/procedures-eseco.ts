@@ -504,22 +504,37 @@ export const ProceduresEseco : ProcedureDef[] = [
     {
         action:'dm_backup',
         parameters:[
-            {name:'datos'       , typeName:'jsonb'},
+            {name:'token'         , typeName:'text'},
+            {name:'casos'         , typeName:'jsonb'},
         ],
         unlogged:true,
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
-            var be=context.be;
-            await Promise.all(likeAr(parameters.datos.hdr).map(async (hdr,idCaso)=>{
-                var etiqueta = (hdr.respuestas?.c5)?hdr.respuestas.c5:null;
-                return await context.client.query(
-                    `update tem
-                        set json_encuesta = $3, etiqueta = $4
-                        where operativo= $1 and enc = $2`
-                    ,
-                    [OPERATIVO, idCaso, hdr.respuestas, etiqueta]
-                ).execute();
-            }).array());
-            return 'ok'
+            var {be, client} =context;
+            var num_sincro:number=0;
+            var token:string|null=parameters.token;
+            if(token == null){
+                return {ok:'ok:N/T'};
+            }else{
+                var {rowCount} = await client.query(`select 1 from tokens where token = $1`,[token]).fetchOneRowIfExists();
+                if(!rowCount){
+                    return {ok:'ok:N/T'};
+                }
+            }
+            if(parameters.casos){
+                await Promise.all(parameters.casos.map(async ({vivienda,idCaso}:{vivienda:{respuestas:object},idCaso:string})=>{
+                    await context.client.query(
+                        `update tem
+                            set json_backup = $3
+                            where operativo= $1 and enc = $2 and json_backup is distinct from $4
+                            returning 'ok'`
+                        ,
+                        [OPERATIVO, idCaso, vivienda.respuestas, vivienda.respuestas]
+                    ).fetchOneRowIfExists();
+                }));
+            }
+            return {
+                ok:'ok'
+            };
         }
     },
     {

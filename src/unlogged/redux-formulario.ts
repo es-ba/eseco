@@ -90,7 +90,6 @@ export function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHa
             }else if(/^\s+$/.test(elToken)){
                 return elToken
             }
-            console.log('elToken',elToken,elToken.codePointAt(0))
             return 'helpers.null2zero(valores.'+elToken+')';
         });
         var internalFun =  new Function('valores', 'helpers', 'return '+cuerpo);
@@ -111,6 +110,42 @@ function num(num:number|string|null):number{
     if(isNaN(num-0)) return 0;
     //@ts-ignore la gracia es meter num cuando es string
     return num-0;
+}
+
+type Backups={
+    idActual:number,
+    token:string|null,
+    casos:{idBackup:number, idCaso:IdCaso, vivienda:DatosVivienda}[]
+}
+
+var backupPendiente = Promise.resolve();
+
+async function enviarBackup(){
+    var backups:Backups = my.getLocalVar('backups');
+    var {token, casos} = backups;
+    if(casos.length){
+        try{
+            await my.ajax.dm_backup({token, casos})
+            // tengo que levantarlo de nuevo porque acá hay una interrupción del flujo
+            var backupsALimpiar:Backups = my.getLocalVar('backups');
+            backupsALimpiar.casos=backupsALimpiar.casos.filter(caso=>caso.idBackup>backups.idActual)
+            my.setLocalVar('backups', backupsALimpiar);
+        }catch(err){
+            console.log('no se pudo hacer backup', err);
+        }
+    }
+}
+
+function encolarBackup(token:string|null, idCaso:IdCaso, vivienda:DatosVivienda){
+    var backups:Backups = my.existsLocalVar('backups')?my.getLocalVar('backups'):{
+        idActual:0,
+        casos:[]
+    };
+    backups.idActual+=1;
+    backups.token=token;
+    backups.casos.push({idBackup:backups.idActual, idCaso, vivienda});
+    my.setLocalVar('backups',backups);
+    backupPendiente = backupPendiente.then(enviarBackup)
 }
 
 function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
@@ -196,7 +231,6 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
     if(forPk == null){
         return state;
     }
-    console.log('forPk',forPk);
     var vivienda = forPk.vivienda;
     var respuestas = state.datos.hdr[vivienda].respuestas;
     if(respuestas){
@@ -291,7 +325,6 @@ function calcularResumenVivienda(
     //TODO GENERALIZAR
     var feedBackVivienda = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').array();
     var feedBackViviendaPlain = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').plain();
-    console.log('feedBackVivienda: ', feedBackViviendaPlain)
     var prioridades:{[key in ResumenEstado]: {prioridad:number, cantidad:number}} = {
         'no rea':{prioridad: 1, cantidad:0},
         'con problemas':{prioridad: 2, cantidad:0},
@@ -316,6 +349,7 @@ function calcularResumenVivienda(
 var reducers={
     REGISTRAR_RESPUESTA: (payload: {forPk:ForPk, variable:IdVariable, respuesta:any}) => 
         function(state: CasoState){
+            const c5ok = 'c5ok' as IdVariable;
             var datosViviendaRecibidos=state.datos.hdr[payload.forPk.vivienda];
             if(datosViviendaRecibidos==null){
                 return state;
@@ -357,7 +391,10 @@ var reducers={
                 ...datosViviendaRecibidos,
                 respuestas
             })
-            datosVivienda.dirty = dirty;
+            if(datosViviendaRecibidos.respuestas[c5ok]==null && datosVivienda.respuestas[c5ok]!=null){
+                encolarBackup(state.datos.token, payload.forPk.vivienda, datosVivienda);
+            }
+            datosVivienda.dirty = datosVivienda.dirty || dirty;
             return calcularFeedback({
                 ...state,
                 datos:{
@@ -578,7 +615,6 @@ export async function saveSurvey(){
 
 export async function traerEstructura(params:{operativo: string}){
     var casillerosOriginales:{} = await my.ajax.operativo_estructura(params);
-    console.log(casillerosOriginales)
     //TODO: GENERALIZAR
     //@ts-ignore
     casillerosOriginales['F:F2_personas']=casillerosOriginales['F:F2'].childs.find(casillero=>casillero.data.casillero=='LP');

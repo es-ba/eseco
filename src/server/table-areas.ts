@@ -23,7 +23,7 @@ export function areas(context:TableContext):TableDefinition {
                 name: 'area',
                 typeName: 'integer',
                 nullable: false,
-                editable: false
+                editable: true
             },
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
             {name:'relevador'               , typeName:'text', references:'mis_relevadores'},

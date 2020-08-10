@@ -222,8 +222,6 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             this.caches.tableContent.no_rea_groups = (await client.query(`
                 select grupo, jsonb_agg(to_json(r.*)) from no_rea r group by grupo order by 1
             `).fetchAll()).rows;
-            console.log('xxxxxxxxxxxxxx')
-            console.log(this.caches.tableContent)
         })
     }
     sqlNoreaCase(campoNecesario:string){

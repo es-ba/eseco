@@ -1,0 +1,1 @@
+alter table encu.tem add column json_backup jsonb;

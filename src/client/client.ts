@@ -226,8 +226,6 @@ myOwn.clientSides.avisar_email={
             // OJO QUE EL TEXTO CAMBIA MUCHO SI FUERA A POSITIVOS.
             var body = replaceSpecialWords(mail_aviso_texto || '', nombre || '', apellido || '', resultado || '');
             var subject = replaceSpecialWords(mail_aviso_asunto || '', nombre || '', apellido || '', resultado || '');
-            console.log(body)
-            console.log(subject)
             var avisarEmailButton = html.a({
                 class:'email-button',
                 href:`mailto:${email}?Subject=${subject}&body=${body}`
