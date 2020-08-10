@@ -998,6 +998,7 @@ export function BienvenidaDespliegue(props:{modo:CasoState["modo"]}){
 
 export function OpenedTabs(){
     const [tabs, setTabs] = useState(infoOpenedTabs.otherTabsNames);
+    var {modoDirecto} = useSelector((state:CasoState)=>({modoDirecto:state.opciones.modoDirecto}));
     const updateTabsStatus = function(){
         setTabs(infoOpenedTabs.otherTabsNames);
     }
@@ -1005,7 +1006,7 @@ export function OpenedTabs(){
         window.addEventListener('my-tabs',updateTabsStatus);
         return () => window.removeEventListener('my-tabs',updateTabsStatus);
     },[])
-    return (tabs)?
+    return modoDirecto?null:(tabs)?
         <div className="tab-counter tab-error">¡ATENCIÓN! Hay más de una ventana abierta. Se pueden perder datos: {tabs}</div>
     :
         <div className="tab-counter">✔</div>
