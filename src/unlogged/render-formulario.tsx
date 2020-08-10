@@ -1004,9 +1004,9 @@ export function OpenedTabs(){
     
     window.addEventListener('my-tabs',updateTabsStatus);
     return (tabs && likeAr(tabs).array().length>1)?
-        <div>opened in many tabs</div>
+        <div className="tab-counter tab-error">¡ATENCIÓN! Hay más de una ventana o solapa abierta con el programa. Se pueden perder datos.</div>
     :
-        <div>only my tab</div>
+        <div className="tab-counter">✔</div>
 }
 
 export function AppEseco(){

@@ -136,7 +136,7 @@ async function enviarBackup(){
     }
 }
 
-function encolarBackup(token:string|null, idCaso:IdCaso, vivienda:DatosVivienda){
+function encolarBackup(token:string|undefined, idCaso:IdCaso, vivienda:DatosVivienda){
     var backups:Backups = my.existsLocalVar('backups')?my.getLocalVar('backups'):{
         idActual:0,
         casos:[]
