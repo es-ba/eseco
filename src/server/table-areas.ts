@@ -25,6 +25,7 @@ export function areas(context:TableContext):TableDefinition {
                 nullable: false,
                 editable: true
             },
+            {name:'clusters'                , typeName:'text'},
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
             {name:'relevador'               , typeName:'text', references:'mis_relevadores'},
             {name:'operacion_area'          , typeName:'text'                      },
@@ -79,7 +80,8 @@ export function areas(context:TableContext):TableDefinition {
                         count(*) filter ( where resumen_estado in ('incompleto', 'con problemas') ) as incompletas, 
                         count(*) filter ( where etiqueta is null and resumen_estado in ('vacio' ) ) as vacias,
                         count(*) filter ( where habilitada is not true )    as inhabilitadas,
-                        string_agg(distinct nrocomuna::text,'0' order by nrocomuna::text)::bigint as comuna
+                        string_agg(distinct nrocomuna::text,'0' order by nrocomuna::text)::bigint as comuna,
+                        string_agg(distinct cluster::text,', ' order by cluster::text) as clusters
                         ${be.caches.tableContent.no_rea_groups.map(x=>
                         	`, sum(CASE WHEN gru_no_rea=${be.db.quoteLiteral(x.grupo)} THEN 1 ELSE NULL END) as ${be.db.quoteIdent(x.grupo.replace(/ /g,'_'))}`
                         ).join('')}

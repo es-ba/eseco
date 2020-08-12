@@ -41,6 +41,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "nullable": false
         },
         {name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrirRecepcion'},
+        {name: "cluster", typeName:'integer',editable:false, isName:true},
         {
             "name": "area",
             "editable": false,
