@@ -81,7 +81,7 @@ export function areas(context:TableContext):TableDefinition {
                         count(*) filter ( where etiqueta is null and resumen_estado in ('vacio' ) ) as vacias,
                         count(*) filter ( where habilitada is not true )    as inhabilitadas,
                         string_agg(distinct nrocomuna::text,'0' order by nrocomuna::text)::bigint as comuna,
-                        string_agg(distinct cluster::text,', ' order by cluster::text) as clusters
+                        string_agg(distinct cluster::text,', ' order by cluster::text desc) as clusters
                         ${be.caches.tableContent.no_rea_groups.map(x=>
                         	`, sum(CASE WHEN gru_no_rea=${be.db.quoteLiteral(x.grupo)} THEN 1 ELSE NULL END) as ${be.db.quoteIdent(x.grupo.replace(/ /g,'_'))}`
                         ).join('')}
