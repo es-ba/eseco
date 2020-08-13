@@ -11,9 +11,8 @@ ESECO|UG3|UG|P|pregunta|UG3|210|✔|Comuna|numero|2||||||true|ocultar no_leer|||
 ESECO|UG4|UG|P|pregunta|UG4|220|✔|Fracción|numero|3||||||true|ocultar no_leer||true|1;50;220|F:F1||ug4||g1=3||
 ESECO|UG5|UG|P|pregunta|UG5|230|✔|Radio|numero|3||||||true|ocultar no_leer||true|1;50;230|F:F1||ug5||g1=3||
 ESECO|UG6|UG|P|pregunta|UG6|250|✔|Manzana|texto|3||||||true|ocultar no_leer||true|1;50;250|F:F1||ug6||g1=3||
-ESECO|UG7|UG|P|pregunta|UG7|260|✔|Casa|texto|3||||||true|ocultar no_leer||true|1;50;260|F:F1||ug7||g1=3||
-ESECO|G7|UG|P|pregunta|G7|265|✔|Habitación|texto|3||||||true|ocultar no_leer||true|1;50;265|F:F1||ug7!|ug7!|g1=4||
-ESECO|G9|UG|P|pregunta|G9|300|✔|Otros datos domicilio|texto|||||||true|ocultar no_leer||true|1;50;300|F:F1||g9||g1=2 or g1=3 or g1=4||
+ESECO|UG7|UG|P|pregunta|UG7|260|✔|Casa/habitación|texto|3||||||true|ocultar no_leer||true|1;50;260|F:F1||ug7||g1=3 or g1=4||
+ESECO|G9|UG|P|pregunta|G9|300|✔|Otros datos domicilio|texto|||||||true|ocultar no_leer||true|1;50;300|F:F1||g9||g1=2 or g1=3||
 ESECO|DV|F:F1|B|bloque|DV|100|✔|Datos de la Visita||||||||true||||1;100|F:F1||||||
 ESECO|DV1|DV|P|pregunta|DV1|110|✔|¿Puede realizar la entrevista?|si_no|||||||true|no_leer|||1;100;110|F:F1||dv1||||
 ESECO|DV1/1|DV1|O|opción|1|1|✔|Sí||||||||||||1;100;110;1|F:F1||||||
@@ -53,7 +52,6 @@ ESECO|P3|LP|P|pregunta|P3|130|✔|¿Cuántos años cumplidos tiene en este momen
 ESECO|P4|LP|P|pregunta|P4|140|✔|¿Está la persona en este momento presente?|si_no|||||personas||true||||2;100;140|F:F2||p4||p3>=18 or p3<0||
 ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;100;140;1|F:F2||||||
 ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;100;140;2|F:F2||||||
-ESECO|C.CP|F:F2|CONS|consistencia|C.CP|115|⛔|En geriátricos se debe anotar solo la persona seleccionada||||||||true||||2;115|F:F2||||cp<>1 & g1=5||
 ESECO|C.P3A|F:F2|CONS|consistencia|C.P3A|120|⛔|Revisar la edad en años cumplidos||||||||true||||2;120|F:F2||||_edad_maxima>120||
 ESECO|C.P3B|F:F2|CONS|consistencia|C.P3B|130|⛔|Hay una edad con números negativos||||||||true||||2;130|F:F2||||_edad_minima<0 & _edad_minima !== null||
 ESECO|B9|F:F2|B|bloque|B9|330|✔|confirmación de la lista de personas||||||||true||||2;330|F:F2||||||
@@ -182,36 +180,36 @@ ESECO|CV4/5|CV4|OM|opción múltiple|5|1190|!O|Cliente profesional (o paciente e
 ESECO|CV4/6|CV4|OM|opción múltiple|6|1200|!O|Otro|si_no|||||||||||3;970;1140;1200|F:F3||cv4_6||||
 ESECO|C.CV4|CV|CONS|consistencia|C.CV4|1145|⛔|Si en CV3 dice que estuvo en contacto con alguna persona con síntomas gripales, en CV4 debería indicar al menos una respuesta positiva||||||||true||||3;970;1145|F:F3||||cv3=1 & cv4_1=2 & cv4_2=2 & cv4_3=2 & cv4_4=2 & cv4_5=2 & cv4_6=2||
 ESECO|T|F:F3|B|bloque|T|1200|✔|Exposición en el ámbito laboral||||||||true||||3;1200|F:F3||||||
-ESECO|T1|T|P|pregunta|T1|1205|✔|En los últimos dos meses, ¿trabajó en la modalidad presencial?|si_no|||||||true||||3;1200;1205|F:F3||t1||g1<>5||
+ESECO|T1|T|P|pregunta|T1|1205|✔|En los últimos dos meses, ¿trabajó en la modalidad presencial?|si_no|||||||true||||3;1200;1205|F:F3||t1||||
 ESECO|T1/1|T1|O|opción|1|1|✔|Sí||||||||||||3;1200;1205;1|F:F3||||||
 ESECO|T1/2|T1|O|opción|2|2|✔|No|||||E1|||||||3;1200;1205;2|F:F3||||||
 ESECO|T2|T|P|pregunta|T2|1210|✔|En los últimos dos meses, ¿trabajó en alguno de estos sectores?||||||||true||||3;1200;1210|F:F3||||||
-ESECO|T2/1|T2|OM|opción múltiple|1|1220|✔|En comercio|si_no|||||||||||3;1200;1210;1220|F:F3||t2_1||(t1>0 OR t10<>2) and g1<>5||
+ESECO|T2/1|T2|OM|opción múltiple|1|1220|✔|En comercio|si_no|||||||||||3;1200;1210;1220|F:F3||t2_1||(t1>0 OR t10<>2)||
 ESECO|T2/1/1|T2/1|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1220;1|F:F3||||||
 ESECO|T2/1/2|T2/1|O|opción|2|2|✔|No||||||||||||3;1200;1210;1220;2|F:F3||||||
-ESECO|T2/2|T2|OM|opción múltiple|2|1230|✔|En transporte|si_no|||||||||||3;1200;1210;1230|F:F3||t2_2||(t2>0 OR t10<>2) and g1<>5||
+ESECO|T2/2|T2|OM|opción múltiple|2|1230|✔|En transporte|si_no|||||||||||3;1200;1210;1230|F:F3||t2_2||(t2>0 OR t10<>2)||
 ESECO|T2/2/1|T2/2|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1230;1|F:F3||||||
 ESECO|T2/2/2|T2/2|O|opción|2|2|✔|No||||||||||||3;1200;1210;1230;2|F:F3||||||
-ESECO|T2/3|T2|OM|opción múltiple|3|1250|✔|En cuerpos y fuerzas de seguridad, bombero, protección civil|si_no|||||||||||3;1200;1210;1250|F:F3||t2_3||(t3>0 OR t10<>2) and g1<>5||
+ESECO|T2/3|T2|OM|opción múltiple|3|1250|✔|En cuerpos y fuerzas de seguridad, bombero, protección civil|si_no|||||||||||3;1200;1210;1250|F:F3||t2_3||(t3>0 OR t10<>2)||
 ESECO|T2/3/1|T2/3|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1250;1|F:F3||||||
 ESECO|T2/3/2|T2/3|O|opción|2|2|✔|No||||||||||||3;1200;1210;1250;2|F:F3||||||
-ESECO|T2/4|T2|OM|opción múltiple|4|1260|✔|En limpieza|si_no|||||||||||3;1200;1210;1260|F:F3||t2_4||(t4>0 OR t10<>2) and g1<>5||
+ESECO|T2/4|T2|OM|opción múltiple|4|1260|✔|En limpieza|si_no|||||||||||3;1200;1210;1260|F:F3||t2_4||(t4>0 OR t10<>2)||
 ESECO|T2/4/1|T2/4|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1260;1|F:F3||||||
 ESECO|T2/4/2|T2/4|O|opción|2|2|✔|No||||||||||||3;1200;1210;1260;2|F:F3||||||
-ESECO|T2/5|T2|OM|opción múltiple|5|1298|✔|En un centro sanitario con atención clínica a pacientes|si_no|||||||||||3;1200;1210;1298|F:F3||t2_5||(t5>0 OR t10<>2) and g1<>5||
+ESECO|T2/5|T2|OM|opción múltiple|5|1298|✔|En un centro sanitario con atención clínica a pacientes|si_no|||||||||||3;1200;1210;1298|F:F3||t2_5||(t5>0 OR t10<>2)||
 ESECO|T2/5/1|T2/5|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1298;1|F:F3||||||
 ESECO|T2/5/2|T2/5|O|opción|2|2|✔|No||||||||||||3;1200;1210;1298;2|F:F3||||||
-ESECO|T2/6|T2|OM|opción múltiple|6|1300|✔|En otro lugar, como personal de centros sanitarios o sociosanitarios|si_no|||||||||||3;1200;1210;1300|F:F3||t2_6||(t6>0 OR t10<>2) and g1<>5||
+ESECO|T2/6|T2|OM|opción múltiple|6|1300|✔|En otro lugar, como personal de centros sanitarios o sociosanitarios|si_no|||||||||||3;1200;1210;1300|F:F3||t2_6||(t6>0 OR t10<>2)||
 ESECO|T2/6/1|T2/6|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1300;1|F:F3||||||
 ESECO|T2/6/2|T2/6|O|opción|2|2|✔|No||||||||||||3;1200;1210;1300;2|F:F3||||||
-ESECO|T2/7|T2|OM|opción múltiple|7|1310|✔|Como cuidador de persona a domicilio|si_no|||||||||||3;1200;1210;1310|F:F3||t2_7||(t7>0 OR t10<>2) and g1<>5||
+ESECO|T2/7|T2|OM|opción múltiple|7|1310|✔|Como cuidador de persona a domicilio|si_no|||||||||||3;1200;1210;1310|F:F3||t2_7||(t7>0 OR t10<>2)||
 ESECO|T2/7/1|T2/7|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1310;1|F:F3||||||
 ESECO|T2/7/2|T2/7|O|opción|2|2|✔|No||||||||||||3;1200;1210;1310;2|F:F3||||||
-ESECO|T2/8|T2|OM|opción múltiple|8|1320|✔|En otros sectores|si_no|||||||||||3;1200;1210;1320|F:F3||t2_8||(t8>0 OR t10<>2) and g1<>5||
+ESECO|T2/8|T2|OM|opción múltiple|8|1320|✔|En otros sectores|si_no|||||||||||3;1200;1210;1320|F:F3||t2_8||(t8>0 OR t10<>2)||
 ESECO|T2/8/1|T2/8|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1320;1|F:F3||||||
 ESECO|T2/8/2|T2/8|O|opción|2|2|✔|No||||||||||||3;1200;1210;1320;2|F:F3||||||
 ESECO|C.T2|T|CONS|consistencia|C.T2|1405|⛔|Si en T1 dice que trabajó en la modalidad presencial, en T2 debería indicar al menos una respuesta positiva||||||||true||||3;1200;1405|F:F3||||t1=1 & t2_1=2 & t2_2=2 & t2_3=2 & t2_4=2 & t2_5=2 & t2_6=2 & t2_7=2 & t2_8=2||
-ESECO|T3|T|P|pregunta|T3|1410|✔|¿Cuántas horas semanales trabaja?|opciones|||||||true||||3;1200;1410|F:F3||t3||g1<>5||
+ESECO|T3|T|P|pregunta|T3|1410|✔|¿Cuántas horas semanales trabaja?|opciones|||||||true||||3;1200;1410|F:F3||t3||||
 ESECO|T3/1|T3|O|opción|1|1420|✔|Hasta 34 horas|||||||||no_leer|||3;1200;1410;1420|F:F3||||||
 ESECO|T3/2|T3|O|opción|2|1430|✔|Entre 35 y 45 horas|||||||||no_leer|||3;1200;1410;1430|F:F3||||||
 ESECO|T3/3|T3|O|opción|3|1440|✔|Más de 45 horas|||||||||no_leer|||3;1200;1410;1440|F:F3||||||
