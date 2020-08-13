@@ -298,6 +298,15 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 ]},            
             )
         }
+        if(context.puede.citas?.programar){
+            menu.push(
+                {menuType:'menu', name:'citas' ,menuContent:[
+                    //{menuType:'carga_recepcionista', name:'cargar'},
+                    {menuType:'table', name:'mis_areas', table:'areas', ff:{auxiliar:context.user.idper, clusters:'4'}},
+                    {menuType:'table', name:'areas', ff:{clusters:'4'}},
+                ]},            
+            )
+        }
         if(context.superuser){
             menu = [ ...menu,
                 {menuType:'menu', name:'configurar', menuContent:[
@@ -323,12 +332,12 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'parametros'},
                 ]},
                 {menuType:'menu', name:'usuarios', menuContent:[
-                    {menuType:'table', name:'usuarios'},
+                    {menuType:'table', name:'usuarios', selectedByDefault:true},
                     {menuType:'table', name:'roles'},
                     {menuType:'table', name:'permisos'},
                     {menuType:'table', name:'roles_permisos'},
                 ]},
-                {menuType:'proc', name:'generate_tabledef', proc:'tabledef_generate', label:'generar tablas'  },
+                // {menuType:'proc', name:'generate_tabledef', proc:'tabledef_generate', label:'generar tablas'  },
             ]
         }
         return {menu};

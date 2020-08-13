@@ -38,10 +38,11 @@ export function tem(context:TableContext):TableDefinition {
             "nullable": false
         },
         {name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrir'},
+        {name: "cluster", typeName:'integer',editable:false, isName:true},
         {
-            "name": "enc_vieja",
+            "name": "enc_original",
             "editable": false,
-            "typeName": "integer",
+            "typeName": "text",
         },
 //        { name: "ver", typeName: 'text'    , clientSide:'verCaso', editable:false },
         {

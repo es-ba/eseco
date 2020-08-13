@@ -41,6 +41,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "nullable": false
         },
         {name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrirRecepcion'},
+        {name: "cluster", typeName:'integer',editable:false, isName:true},
         {
             "name": "area",
             "editable": false,
@@ -53,9 +54,12 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         },
         {
             "name": "carga_observaciones",  //va??? , pareceria por carga
-            editable: hasRecepcionistaPermission,
+            editable: true,
             "typeName": "text"
         },
+        {name:'confirmada'  , typeName:'boolean'},
+        {name:'seleccionada_actual'  , typeName:'text', editable:false},
+        {name:'seleccionada_anterior', typeName:'text', editable:false},
         {
             "name": "cargado",
             editable: false,

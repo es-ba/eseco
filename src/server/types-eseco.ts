@@ -21,6 +21,9 @@ export interface Puedes{
             editar:boolean
             administrar:boolean
         }
+        citas:{
+            programar:boolean
+        }
     }
     superuser?:true
 }
