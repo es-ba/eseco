@@ -28,6 +28,7 @@ export function areas(context:TableContext):TableDefinition {
             {name:'clusters'                , typeName:'text'},
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
             {name:'relevador'               , typeName:'text', references:'mis_relevadores'},
+            {name:'auxiliar'                , typeName:'text', editable:context.forDump || context.puede.campo.administrar},
             {name:'operacion_area'          , typeName:'text'                      },
             {name:'fecha'                   , typeName:'date'                      },
             {name:'observaciones_hdr'       , typeName:'text'                      },
@@ -39,6 +40,8 @@ export function areas(context:TableContext):TableDefinition {
             {name:'vacias'                  , typeName:'integer' , editable:false  , aggregate:'sum'},
             {name:'inhabilitadas'           , typeName:'integer' , editable:false  , aggregate:'sum'},
             {name:'verificado_rec'          , typeName:'text'                      , aggregate:'count'},
+            {name:'confirmadas'             , typeName:'integer' , editable:false, aggregate:'sum'},
+            {name:'pend_conf'               , typeName:'integer' , editable:false, aggregate:'sum', description:'pendientes de confirmación'},
             {name:'obs_recepcionista'       , typeName:'text'                      },
             {name:'comuna'                  , typeName:'bigint'  , title:'comuna'  },
             {name:'cargadas_bkp'            , typeName:'integer' , editable:false  },
@@ -69,7 +72,7 @@ export function areas(context:TableContext):TableDefinition {
             isTable:true,
             from:` 
             (select a.area, a.recepcionista, a.relevador, a.operacion_area, a.fecha, a.observaciones_hdr,  
-                  a.verificado_rec, a.obs_recepcionista,
+                  a.verificado_rec, a.obs_recepcionista, a.auxiliar,
                   a.cargadas_bkp, a.reas_bkp, a.no_reas_bkp, a.incompletas_bkp, a.vacias_bkp, a.inhabilitadas_bkp,
                   t.*
                 from areas a, lateral(
@@ -80,6 +83,8 @@ export function areas(context:TableContext):TableDefinition {
                         count(*) filter ( where resumen_estado in ('incompleto', 'con problemas') ) as incompletas, 
                         count(*) filter ( where etiqueta is null and resumen_estado in ('vacio' ) ) as vacias,
                         count(*) filter ( where habilitada is not true )    as inhabilitadas,
+                        sum(case when cluster <>4 then null when confirmada is true then 1 else 0 end) as confirmadas,
+                        sum(case when cluster <>4 then null when confirmada is null then 1 else 0 end) as pend_conf,
                         string_agg(distinct nrocomuna::text,'0' order by nrocomuna::text)::bigint as comuna,
                         string_agg(distinct cluster::text,', ' order by cluster::text desc) as clusters
                         ${be.caches.tableContent.no_rea_groups.map(x=>
