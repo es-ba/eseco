@@ -74,6 +74,7 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                     'casa'          , casa          ,
                     'prioridad'     , reserva+1     ,
                     'observaciones' , carga_observaciones ,
+                    'seleccionada_actual', seleccionada_actual,
                     'carga'         , area         
                 ) as tem, area
                 from tem

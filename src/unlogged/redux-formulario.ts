@@ -28,7 +28,23 @@ var s2 = 's2' as IdVariable;
 var s3 = 's3' as IdVariable;
 var d4 = 'd4' as IdVariable;
 var d5c = 'd5c' as IdVariable;
+var g1 = 'g1' as IdVariable;
+var cp = 'cp' as IdVariable;
+var p1 = 'p1' as IdVariable;
+var p2 = 'p2' as IdVariable;
+var p3 = 'p3' as IdVariable;
+var p4 = 'p4' as IdVariable;
+var p9 = 'p9' as IdVariable;
 
+export var varEspeciales:{[idVariable in IdVariable]?:{cluster4:boolean}}={
+    [dv5] :{cluster4:true},
+    [cp]  :{cluster4:true},
+    [p1]  :{cluster4:true},
+    [p2]  :{cluster4:true},
+    [p3]  :{cluster4:true},
+    [p4]  :{cluster4:true},
+    [p9]  :{cluster4:true},
+}
 
 const MAIN_FORM:IdFormulario='F:F1' as IdFormulario;
 export const LOCAL_STORAGE_STATE_NAME ='hdr-campo-0.5';
@@ -173,6 +189,7 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
         _edad_minima:number, 
         d4:number|null, d5:number|null, d5c:number|null, 
         p9:number|null, p11:number|null, p12:string|null,
+        dv4:number|null, g1:number|null,
         c5:string|null,
         c5ok:number|null
     };
@@ -184,6 +201,9 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
             respuestas.c5=respuestas.c5.substr(0,4)+'-'+respuestas.c5.substr(4);
         }
         respuestas.c5ok=controlarCodigoDV2(respuestas.c5)?1:2;
+    }
+    if(respuestas.dv4==2 && respuestas.g1==6 && respuestas.p9==null){
+        respuestas.p9=1;
     }
     if(respuestas.d4==1){
         respuestas.d5c=respuestas.d5c||respuestas.d5;
@@ -255,10 +275,17 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
             }else{
                 respuestasUnidadAnalisis=respuestasVivienda;
             }
-            var row=rowValidator(
-                state.estructura.formularios[formulario].estructuraRowValidator, 
-                respuestasUnidadAnalisis
-            )
+            var estructura=state.estructura.formularios[formulario].estructuraRowValidator;
+            if(respuestas[g1]==6){
+                estructura={
+                    ...estructura,
+                    variables: likeAr(estructura.variables).map((v,name)=>({
+                        ...v, 
+                        calculada: varEspeciales?.[name]?.cluster4 || v.calculada
+                    })).plain()
+                }
+            }
+            var row=rowValidator(estructura, respuestasUnidadAnalisis)
             // TODO: GENERALIZAR
             if(post){
                 // @ts-ignore
@@ -311,6 +338,7 @@ function calcularResumenVivienda(
     feedbackRowValidator:{[formulario in PlainForPk]:FormStructureState<IdVariable,IdFin>}, 
     respuestas:Respuestas
 ){
+    // TODO: GENERALIZAR
     if(respuestas && (
         respuestas[dv1]==2 ||
         respuestas[dv4]==1 ||  
@@ -321,6 +349,12 @@ function calcularResumenVivienda(
         respuestas[d4]==1 && respuestas[d5c]==1
     )){
        return "no rea";
+    }
+    // TODO: GENERALIZAR
+    // @ts-ignore
+    var {cp, g1, p11, p12, personas, ...resto} = respuestas;
+    if(g1==6 && JSON.stringify(resto)=='{}'){
+        return "vacio";
     }
     //TODO GENERALIZAR
     var feedBackVivienda = likeAr(feedbackRowValidator).filter((_row, plainPk)=>JSON.parse(plainPk).vivienda==idCaso && JSON.parse(plainPk).formulario != 'F:F2_personas').array();
@@ -826,4 +860,5 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
     //HDR CON STORE CREADO
     return store;
 }
+
 

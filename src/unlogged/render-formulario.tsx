@@ -398,7 +398,8 @@ function PreguntaDespliegue(props:{
         estado=feedback.tieneActual?'actual':feedback.estaSalteada?'salteada':'todavia_no'
     }
     return <div 
-        className="pregunta" 
+        className="pregunta"
+        nuestro-casillero={pregunta.casillero}
         nuestro-tipovar={pregunta.tipovar||"multiple"} 
         nuestro-validator={estado}
         tiene-valor={tieneValor} 
@@ -533,13 +534,12 @@ function CasilleroDesconocido(props:{casillero:CasilleroBase}){
 
 function useSelectorVivienda(forPk:ForPk){
     return useSelector((state:CasoState)=>{
-        var respuestas=state.datos.hdr[forPk.vivienda].respuestas;
+        var respuestasVivienda=state.datos.hdr[forPk.vivienda].respuestas;
         var dirty=state.datos.hdr[forPk.vivienda].dirty;
         //TODO: generalizar
-        if(forPk.persona){
-            // @ts-ignore
-            respuestas = respuestas.personas[forPk.persona-1]
-        }
+        // @ts-ignore
+        var respuestas:typeof respuestasVivienda = forPk.persona?respuestasVivienda.personas[forPk.persona-1]:respuestasVivienda
+        var g1='g1' as IdVariable;
         return {
             dirty,
             respuestas,
@@ -550,7 +550,9 @@ function useSelectorVivienda(forPk:ForPk){
             formulario: state.estructura.formularios[forPk.formulario].casilleros,
             modoDespliegue: state.modo.demo?state.opciones.modoDespliegue:'relevamiento',
             modo: state.modo,
-            opciones: state.opciones
+            opciones: state.opciones,
+            // TODO: GENERALIZAR
+            g1: respuestasVivienda[g1]
         }
     })
 }
@@ -767,7 +769,7 @@ function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean, soloLectura
 
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var {formulario, modoDespliegue, modo, actual, completo, opciones} = useSelectorVivienda(props.forPk);
+    var {formulario, modoDespliegue, modo, actual, completo, opciones, g1} = useSelectorVivienda(props.forPk);
     var {soloLectura} = useSelector((state:CasoState)=>({soloLectura:state.datos.soloLectura}));
     const dispatch = useDispatch();
     useEffect(() => {
@@ -787,7 +789,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
                     <BarraDeNavegacion forPk={forPk} modoDirecto={opciones.modoDirecto} soloLectura={soloLectura || false}/>
                 </Toolbar>
             </AppBar>
-            <main>
+            <main nuestro-g1={g1}>
                 <Paper className="formulario" modo-despliegue={modoDespliegue}>
                     {modo.demo?<div>
                         <Typography component="span">Modo de despliegue:</Typography>
@@ -896,7 +898,7 @@ export function DesplegarTem(props:{tem:TEM}){
             <Atributo nombre="entrada" valor={tem.entrada}/>
             <Atributo nombre="habitacion" valor={tem.habitacion}/>
         </div>
-        <div className="tem-observaciones">{tem.observaciones}</div>
+        <div className="tem-observaciones">{tem.observaciones} <Atributo nombre="persona seleccionada" valor={tem.seleccionada_actual}/></div>
     </div>
 }
 

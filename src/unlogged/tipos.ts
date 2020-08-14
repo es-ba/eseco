@@ -188,6 +188,7 @@ export type TEM = {
     casa:string
     prioridad:1|2|3
     observaciones:string
+    seleccionada_actual:string
     carga:string
 }
 
