@@ -19,6 +19,7 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
         fields:[
             {name:'operativo'               , typeName:'text'      ,editable:false , nullable:false, defaultValue:'ESECO201'  },
             {name:'etiqueta'                , typeName:'text'      ,editable:false , nullable:false  },
+            {name: 'cluster'                , typeName:'integer'   ,editable:false },
             {name:'resultado'               , typeName:'text'      ,editable:false },
             {name:'fecha'                   , typeName:'date'      ,editable:false },
             {name:'hora'                    , typeName:'interval'  ,editable:false },
@@ -56,7 +57,7 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
         ],
         sql:{
             from:`(
-                select e.*, t.tipo_domicilio as tipo_informe,
+                select e.*, t.cluster, t.tipo_domicilio as tipo_informe,
                 (json_encuesta->>'e1')::text as apellido,
                 (json_encuesta->>'e2')::text as nombre,
                 case when ((json_encuesta->>'e3')) = '1' then 'DNI'
