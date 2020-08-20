@@ -6,7 +6,8 @@ import {
     ICON,
     focusToId,
     scrollToTop,
-    scrollToBottom
+    scrollToBottom,
+    InputTypes
 } from "./render-general";
 import {Bloque, BotonFormulario, 
     CasilleroBase, CasoState, Consistencia, DatosVivienda,
@@ -20,8 +21,11 @@ import {Bloque, BotonFormulario,
 import { dmTraerDatosFormulario, dispatchers, 
     getFuncionHabilitar, 
     gotoSincronizar,
+    gotoCampo,
     toPlainForPk,
-    saveSurvey
+    saveSurvey,
+    consultarEtiqueta,
+    gotoVer
 } from "./redux-formulario";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"; 
@@ -37,9 +41,10 @@ import {
     SvgIcon, Switch, 
     Table, TableBody, TableCell, TableHead, TableRow, TextField, Theme, Toolbar, Typography, Zoom,
     useScrollTrigger,
-    createStyles, makeStyles
+    createStyles, makeStyles, Icon
 } from "@material-ui/core";
 import { EstadoVariable, FormStructureState } from "row-validator";
+import { controlarCodigoDV2 } from "./digitov";
 
 // TODO: Generalizar
 var c5 = 'c5' as IdVariable;
@@ -925,14 +930,24 @@ export function HojaDeRutaDespliegue(){
                         <ICON.Settings/>
                     </IconButton>
                     {online?
-                        <IconButton
-                            color="inherit"
-                            onClick={()=>{
-                                gotoSincronizar()
-                            }}
-                        >
-                            <ICON.SyncAlt/>
-                        </IconButton>
+                        <>
+                            <IconButton
+                                color="inherit"
+                                onClick={()=>{
+                                    gotoSincronizar()
+                                }}
+                            >
+                                <ICON.SyncAlt/>
+                            </IconButton>
+                            <IconButton
+                                color="inherit"
+                                onClick={()=>{
+                                    gotoVer()
+                                }}
+                            >
+                                <ICON.Search/>
+                            </IconButton>
+                        </>
                     :null}
                 </Toolbar>
             </AppBar>
@@ -1025,6 +1040,119 @@ export function AppEseco(){
     }
 }
 
+function TypedField(props:{disabled:boolean, label:string, type: InputTypes, valor:string|null, onChange:(valor:string|null)=>void, hasError?:boolean}){
+    var { disabled, type, label, hasError} = props;
+    var [valor, setValor] = useState(props.valor);
+    var [editando, setEditando] = useState(false);
+    useEffect(() => {
+        setValor(props.valor)
+    }, [props.valor]);
+    const inputProps = {};
+    var nuestraLongitud = calcularNuestraLongitud('small')
+    return <div className="campo" nuestra-longitud={nuestraLongitud}>
+        <div className="input-campo">
+            <TextField 
+                error={hasError}
+                helperText={hasError?"Numero de etiqueta incorrecto":null}
+                disabled={disabled}
+                className="variable" 
+                fullWidth={true}
+                inputProps={inputProps}
+                value={valor?valor:''} 
+                label={label}
+                type={type}
+                onChange={(event)=>{
+                    let value = event.target.value || null;
+                    setValor(value)
+                }}
+                onFocus={(_event)=>setEditando(true)}
+                onBlur={(_event)=>{
+                    props.onChange(valor)
+                    setEditando(false)
+                }}
+            />
+        </div>
+        {disabled?null:
+            <div className="boton-confirmar-campo">
+                <Button variant={editando?"contained":'outlined'} size="small" color={editando?'primary':'default'}><ICON.Check/></Button>
+            </div>
+        }
+    </div>
+}
+
+export function ConsultaResultados(){
+    var [etiqueta, setEtiqueta] = useState<string|null>(null);
+    var [etiquetaValida, setEtiquetaValida] = useState<boolean>(false);
+    var [documento, setDocumento] = useState<string|null>(null);
+    var [resultadoConsulta, setResultadoConsulta] = useState<string|null>(null);
+    return <>
+        <AppBar position="fixed" color='primary'>
+            <Toolbar>
+                <Button
+                    color="inherit"
+                    variant='outlined'
+                    onClick={()=>{
+                        gotoCampo()
+                    }}
+                >
+                    <ICON.ArrowBack/> Volver a hoja de ruta
+                </Button>
+            </Toolbar>
+        </AppBar>
+        <main>
+            <Paper className="formulario-consulta-resultados">
+                <Typography variant="h6">
+                    Ingrese etiqueta y numero de documento
+                </Typography>
+                <div className="fields-container">
+                    <TypedField
+                        disabled={false}
+                        label="Etiqueta"
+                        type="text"
+                        hasError={!!etiqueta && !etiquetaValida}
+                        valor={etiqueta}
+                        onChange={(nuevoValor)=>{
+                            if(nuevoValor){
+                                nuevoValor = nuevoValor.replace(/[\+\*\.# _\/,]/g,'-');
+                                if(!/-/.test(nuevoValor) && nuevoValor.length>4){
+                                    nuevoValor=nuevoValor.substr(0,4)+'-'+nuevoValor.substr(4);
+                                }
+                            }
+                            setEtiquetaValida(controlarCodigoDV2(nuevoValor||''));
+                            setEtiqueta(nuevoValor)
+                        }}
+                    />
+                    <TypedField
+                        disabled={false}
+                        label="N° documento"
+                        type="tel"
+                        valor={documento}
+                        onChange={(nuevoValor)=>
+                            setDocumento(nuevoValor)
+                        }
+                    />
+                </div>
+                <Button 
+                    variant="contained"
+                    color="primary"
+                    disabled={!(etiqueta && documento && etiquetaValida)}
+                    onClick={async ()=>{
+                        //ts-ignore Si el botón está habilitado existen la etiqueta y el documento
+                        let result = await consultarEtiqueta(etiqueta, documento);
+                        setResultadoConsulta(result)
+                    }}
+                >
+                    Consultar
+                </Button>
+                <div className='espacio-final-formulario'>
+                    <p>{resultadoConsulta}</p>
+                </div>
+            </Paper>
+            
+        </main>
+    </>
+}
+
 export async function desplegarFormularioActual(opts:{modoDemo:boolean, useSessionStorage?:boolean}){
     // traer los metadatos en una "estructura"
     // traer los datos de localStorage
@@ -1039,9 +1167,17 @@ export async function desplegarFormularioActual(opts:{modoDemo:boolean, useSessi
     )
 }
 
+export async function desplegarFormularioConsultaResultados(){
+    ReactDOM.render(
+        <ConsultaResultados/>,
+        document.getElementById('main_layout')
+    )
+}
+
 if(typeof window !== 'undefined'){
     // @ts-ignore para hacerlo
     window.desplegarFormularioActual = desplegarFormularioActual;
+    window.desplegarFormularioConsultaResultados = desplegarFormularioConsultaResultados;
     // window.desplegarHojaDeRuta = desplegarHojaDeRuta;
 }
 

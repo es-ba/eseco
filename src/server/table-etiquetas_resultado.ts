@@ -27,8 +27,8 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
             {name:'observaciones'           , typeName:'text'      ,editable:false },
             {name:'rectificacion'           , typeName:'integer'   ,editable:false, defaultDbValue: 0},
             {name:'avisar_email'            , typeName:'text'      ,editable:false, inTable:false, clientSide:'avisar_email'},
-            {name:'mail_aviso_texto'         , typeName:'text'    , editable:false, inTable:false, visible: false},
-            {name:'mail_aviso_asunto'        , typeName:'text'    , editable:false, inTable:false, visible: false},
+            {name:'mail_aviso_texto'        , typeName:'text'    , editable:false, inTable:false, visible: false},
+            {name:'mail_aviso_asunto'       , typeName:'text'    , editable:false, inTable:false, visible: false},
             {name:'avisar'                  , typeName:'text'      ,editable:false, inTable:false, clientSide:'avisar'},
             {name:'avisado_fecha'           , typeName:'date'      ,editable:puedeAvisar },
             {name:'avisado_quien'           , typeName:'text'      ,editable:puedeAvisar },
@@ -87,9 +87,9 @@ export function etiquetas_resultado(context:TableContext, opts:null|{all:boolean
                     t.area,
                     t.rea,
                    ${be.sqlNoreaCase('no_rea')} as cod_no_rea,
-                p.mail_aviso_texto, 
-                p.mail_aviso_asunto
-                from  parametros p, etiquetas e
+                rt.email_texto as mail_aviso_texto, 
+                rt.email_asunto as mail_aviso_asunto
+                from  etiquetas e left join resultados_test rt using (resultado)
                 left join tem t using(etiqueta)
                 where (ingreso_lab is not null or resultado is not null or observaciones is not null)
                 -- full outer join tem t using(etiqueta)

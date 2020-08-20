@@ -38,6 +38,7 @@ import {tem_seleccionable    } from "./table-tem_seleccionable";
 import {lotes                } from "./table-lotes";
 import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
+import { resultados_test     } from './table-resultados-test';
 import { etiquetas           } from './table-etiquetas';
 import { etiquetas_resultado } from './table-etiquetas_resultado';
 import { etiquetas_resultado_plus } from './table-etiquetas_resultado_plus';
@@ -88,6 +89,18 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                miniTools.serveText(htmlMain,'html')(req,res);
             }else{
                 res.redirect(baseUrl+'/login#w=path&path=/campo')
+            }
+        });
+        mainApp.get(baseUrl+'/ver',async function(req,res,_next){
+            // @ts-ignore sé que voy a recibir useragent por los middlewares de Backend-plus
+            var {useragent, user} = req;
+            if(user){
+                var manifestPath = 'carga-dm/dm-manifest.manifest';
+                /** @type {{type:'js', src:string}[]} */
+                var htmlMain=be.mainPage({useragent, user}, false, {skipMenu:true}).toHtmlDoc();
+               miniTools.serveText(htmlMain,'html')(req,res);
+            }else{
+                res.redirect(baseUrl+'/login#w=path&path=/ver')
             }
         });
     }
@@ -313,6 +326,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'menu', name:'etiquetas', menuContent:[
                         {menuType:'table', name:'planchas'},
                         {menuType:'table', name:'etiquetas'},
+                        {menuType:'table', name:'resultados_test'},
                         {menuType:'proc', name:'imprimir', proc:'qrs_traer'},
                     ]},
                     {menuType:'menu', name:'muestra', label:'muestra', menuContent:[
@@ -371,6 +385,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , tem_seleccionable
             , parametros
             , planchas
+            , resultados_test
             , etiquetas
             , etiquetas_resultado
             , etiquetas_resultado_plus

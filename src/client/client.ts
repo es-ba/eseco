@@ -1,6 +1,6 @@
 import {html, HtmlTag} from "js-to-html";
 import * as myOwn from "myOwn";
-import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario, traerEstructura} from "../unlogged/redux-formulario";
+import {LOCAL_STORAGE_STATE_NAME, dmTraerDatosFormulario, traerEstructura, replaceSpecialWords} from "../unlogged/redux-formulario";
 import { CasoState, EtiquetaOpts, IdVariable, IdCaso } from "../unlogged/tipos";
 import { crearEtiqueta } from "../unlogged/generador-qr";
 import * as TypedControls from "typed-controls";
@@ -202,22 +202,6 @@ myOwn.clientSides.avisar={
     },
     update: false,
 };
-
-export function replaceSpecialWords(text:string, nombre:string, apellido:string, resultado:string):string{
-    function capitalizeFirstLetter(text:string) {
-        return text.charAt(0).toUpperCase() + text.slice(1);
-    }
-    var simplificatedChars={
-        "#nombre":capitalizeFirstLetter(nombre),
-        "#apellido":capitalizeFirstLetter(apellido),
-        "#resultado":resultado,
-    };
-    var re = new RegExp(Object.keys(simplificatedChars).join("|"),"gi");
-
-    return text.replace(re, function(matched){
-        return simplificatedChars[matched.toLowerCase()];
-    });
-}
 
 myOwn.clientSides.avisar_email={
     prepare: (depot, fieldName)=>{

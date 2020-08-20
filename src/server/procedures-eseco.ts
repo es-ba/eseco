@@ -15,7 +15,8 @@ var sqlTools = require('sql-tools');
 
 var discrepances = require('discrepances');
 
-const  ResultadosLaboratorio = ['Positivo', 'Negativo', 'Indeterminado','Escasa muestra'];
+//NO SE USA MAS, ahora en tabla resultados_test
+//const  ResultadosLaboratorio = ['Positivo', 'Negativo', 'Indeterminado','Escasa muestra']; 
 
 const OPERATIVO = 'ESECO';
 const OPERATIVO_ETIQUETAS = 'ESECO201';
@@ -686,7 +687,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
             {name:'etiqueta'       , typeName: 'text' },
-            {name:'resultado'      , typeName: 'text' , options:ResultadosLaboratorio},
+            {name:'resultado'      , typeName: 'text' , references:'resultados_test'},
             {name:'observaciones'  , typeName: 'text', defaultValue:null},
         ],
         resultOk:'resultado_cargar',
@@ -718,7 +719,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'operativo'             , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
             {name:'etiqueta'              , typeName: 'text'    },
-            {name:'resultado'             , typeName: 'text' , options:ResultadosLaboratorio   },
+            {name:'resultado'             , typeName: 'text' , references:'resultados_test'   },
             {name:'observaciones'         , typeName: 'text', defaultValue:null},
             {name:'numero_rectificacion'  , typeName: 'integer' },
         ],
@@ -747,6 +748,28 @@ export const ProceduresEseco : ProcedureDef[] = [
             }
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
             return {estado, hayDatos, datos}
+        }
+    },
+    {
+        action:'resultado_consultar',
+        parameters:[
+            {name:'etiqueta'          , typeName:'text'},
+            {name:'numero_documento'  , typeName:'text'},
+        ],
+        unlogged:true,
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var {be, client} =context;
+            var result = await client.query(`
+                select e.resultado,(json_encuesta->>'e1')::text as apellido,
+                (json_encuesta->>'e2')::text as nombre, pagina_texto
+                    from  etiquetas e
+                    left join resultados_test rt using (resultado)
+                    left join tem t using(etiqueta)
+                    where e.etiqueta =$1 and (t.json_encuesta->>'e7')::text = $2 and resultado is not null
+            `,
+                [parameters.etiqueta, parameters.numero_documento]).fetchOneRowIfExists();
+            
+            return result.rowCount?result.row:null
         }
     },
 ];

@@ -620,9 +620,54 @@ export function toPlainForPk(forPk:ForPk):PlainForPk{
     return JSON.stringify(forPk);
 }
 
+export function replaceSpecialWords(text:string, nombre:string, apellido:string, resultado:string):string{
+    function capitalizeFirstLetter(text:string) {
+        return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+    var simplificatedChars={
+        "#nombre":capitalizeFirstLetter(nombre),
+        "#apellido":capitalizeFirstLetter(apellido),
+        "#resultado":resultado,
+    };
+    var re = new RegExp(Object.keys(simplificatedChars).join("|"),"gi");
+
+    return text.replace(re, function(matched){
+        return simplificatedChars[matched.toLowerCase()];
+    });
+}
+
 export function gotoSincronizar(){
     history.replaceState(null, '', `${location.origin+location.pathname}/../menu#i=sincronizar`);
     location.reload();   
+}
+
+export function gotoCampo(){
+    history.replaceState(null, '', `${location.origin+location.pathname}/../campo`);
+    location.reload();   
+}
+
+export function gotoVer(){
+    history.replaceState(null, '', `${location.origin+location.pathname}/../ver`);
+    location.reload();   
+}
+
+export async function consultarEtiqueta(etiqueta:string, numero_documento:string){
+    try{
+        var result = await my.ajax.resultado_consultar({
+            etiqueta,
+            numero_documento
+        });
+        if(result){
+            let {pagina_texto, nombre, apellido, resultado } = result;
+            return replaceSpecialWords(pagina_texto || '', nombre || '', apellido || '', resultado || '')
+        }else{
+            return 'Sin resultado aún. '
+        }
+        
+    }catch(err){
+        redirectIfNotLogged(err);
+        return err.message;
+    }
 }
 
 var redirectIfNotLogged = function redirectIfNotLogged(err:Error){

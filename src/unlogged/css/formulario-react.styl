@@ -560,3 +560,40 @@ app-cache-version, #app-dm-version
     display none
   [nuestro-casillero=P9]
     display none
+
+.formulario-consulta-resultados
+  margin-top 75px //ajustado para /VER
+  .fields-container
+    margin-top 15px
+    max-width 600px
+    > .campo
+      display flex
+      flex-direction row
+      margin-bottom margenPregunta
+      .MuiButton-root
+        margin-left 5px
+      .input-campo
+        max-width calc(100% - 40px)
+      &[nuestra-longitud=full]
+        .input-campo
+          width 88%
+        .boton-confirmar-campo
+          width 20%
+          display flex
+      &[nuestra-longitud=medium]
+        .input-campo
+          width 60%
+        .boton-confirmar-campo
+          width 40%
+      &[nuestra-longitud=small]
+        .input-campo
+          width 30%
+        .boton-confirmar-campo
+          width 70%
+      &[nuestra-longitud="3"]
+        .input-campo
+          width 40px
+      &[nuestra-longitud="2"]
+        .input-campo
+          width 28px
+

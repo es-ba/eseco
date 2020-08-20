@@ -2,7 +2,7 @@
 import {html}  from 'js-to-html';
 import * as AjaxBestPromise from "ajax-best-promise";
 import {LOCAL_STORAGE_STATE_NAME} from "../unlogged/redux-formulario";
-import { desplegarFormularioActual } from './render-formulario';
+import { desplegarFormularioActual, desplegarFormularioConsultaResultados } from './render-formulario';
 
 function siExisteId(id: string, hacer: (arg0: HTMLElement) => void){
     var elemento = document.getElementById(id);
@@ -51,6 +51,8 @@ window.addEventListener('load', async function(){
                 desplegarFormularioActual({modoDemo:false});
             }
         }
+    }else if(location.pathname.endsWith('/ver')){
+        desplegarFormularioConsultaResultados();
     }
 })
 
