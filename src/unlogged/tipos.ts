@@ -22,6 +22,8 @@ export type Valor = string|number|Date|null;
 export type TipocDestinos = 'P'|'CP'|'B'|'FILTRO'|'BF'
 export type Tipoc = TipocDestinos | 'F'|'O'|'OM'|'CONS'
 
+export type IdTarea = 'rel'|'sen'|'sup';
+
 export type FeedbackVariable = Feedback<IdVariable, IdFin>
 
 export type TipoVariables = 'texto'|'numero'|'fecha'
@@ -194,8 +196,19 @@ export type TEM = {
 
 export type ResumenEstado = 'vacio' | 'con problemas' | 'incompleto' | 'ok' | 'no rea';
 
+export type InfoTarea= {
+    notas:string
+    fecha:Date
+    persona:string
+}
+
+export type Tareas = {
+    [tarea in IdTarea]:InfoTarea
+}
+
 export type DatosVivienda= {
     respuestas: Respuestas
+    tareas: Tareas
     tem: TEM
     resumenEstado: ResumenEstado
     dirty?:boolean,
@@ -234,11 +247,22 @@ export type CasoState={
         formularios:{ 
             [nombreFormulario in IdFormulario]:InfoFormulario
         }
+        tareas:{
+            [idTarea in IdTarea]:{
+                resultados:{
+                    [idResultado in IdResultado]:{
+                        descripcion:string
+                    }
+                }
+            }
+        }
         mainForm:IdFormulario
     }
     datos:{
         hdr:HojaDeRuta
         token?:string
+        persona:string
+        tarea:IdTarea
         num_sincro?:number
         cargas: Cargas
         soloLectura?: boolean
