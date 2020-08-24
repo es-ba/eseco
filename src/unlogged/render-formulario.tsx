@@ -939,14 +939,6 @@ export function HojaDeRutaDespliegue(){
                             >
                                 <ICON.SyncAlt/>
                             </IconButton>
-                            <IconButton
-                                color="inherit"
-                                onClick={()=>{
-                                    gotoVer()
-                                }}
-                            >
-                                <ICON.Search/>
-                            </IconButton>
                         </>
                     :null}
                 </Toolbar>
@@ -1043,7 +1035,6 @@ export function AppEseco(){
 function TypedField(props:{disabled:boolean, label:string, type: InputTypes, valor:string|null, onChange:(valor:string|null)=>void, hasError?:boolean}){
     var { disabled, type, label, hasError} = props;
     var [valor, setValor] = useState(props.valor);
-    var [editando, setEditando] = useState(false);
     useEffect(() => {
         setValor(props.valor)
     }, [props.valor]);
@@ -1065,18 +1056,11 @@ function TypedField(props:{disabled:boolean, label:string, type: InputTypes, val
                     let value = event.target.value || null;
                     setValor(value)
                 }}
-                onFocus={(_event)=>setEditando(true)}
                 onBlur={(_event)=>{
                     props.onChange(valor)
-                    setEditando(false)
                 }}
             />
         </div>
-        {disabled?null:
-            <div className="boton-confirmar-campo">
-                <Button variant={editando?"contained":'outlined'} size="small" color={editando?'primary':'default'}><ICON.Check/></Button>
-            </div>
-        }
     </div>
 }
 
@@ -1088,15 +1072,9 @@ export function ConsultaResultados(){
     return <>
         <AppBar position="fixed" color='primary'>
             <Toolbar>
-                <Button
-                    color="inherit"
-                    variant='outlined'
-                    onClick={()=>{
-                        gotoCampo()
-                    }}
-                >
-                    <ICON.ArrowBack/> Volver a hoja de ruta
-                </Button>
+                <Typography variant="h6">
+                    Consultar resultado
+                </Typography>
             </Toolbar>
         </AppBar>
         <main>

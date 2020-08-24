@@ -665,7 +665,6 @@ export async function consultarEtiqueta(etiqueta:string, numero_documento:string
         }
         
     }catch(err){
-        redirectIfNotLogged(err);
         return err.message;
     }
 }

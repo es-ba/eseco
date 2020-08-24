@@ -94,14 +94,14 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         mainApp.get(baseUrl+'/ver',async function(req,res,_next){
             // @ts-ignore sé que voy a recibir useragent por los middlewares de Backend-plus
             var {useragent, user} = req;
-            if(user){
+            //if(user){
                 var manifestPath = 'carga-dm/dm-manifest.manifest';
                 /** @type {{type:'js', src:string}[]} */
                 var htmlMain=be.mainPage({useragent, user}, false, {skipMenu:true}).toHtmlDoc();
                miniTools.serveText(htmlMain,'html')(req,res);
-            }else{
-                res.redirect(baseUrl+'/login#w=path&path=/ver')
-            }
+            //}else{
+            //    res.redirect(baseUrl+'/login#w=path&path=/ver')
+            //}
         });
     }
     addLoggedServices(){
