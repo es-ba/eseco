@@ -2,7 +2,10 @@
     "compilerOptions": {
         "outDir": "../../dist",
         "typeRoots" : ["node_modules/@types", "../../node_modules/types.d.ts/modules"],
-        "lib": ["es5", "dom", "es2015.promise"]
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "lib": ["es5", "dom", "es2015.promise"],
+        "jsx": "react"
     },
     "include":[
         "."
