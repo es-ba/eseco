@@ -50,8 +50,10 @@ import { viviendas           } from './table-viviendas';
 import { viviendas_extendida } from './table-viviendas_extendida';
 import { personas            } from './table-personas';
 import { personas_extendida  } from './table-personas_extendida';
-
-
+import { tareas              } from './table-tareas';
+import { tareas_tem          } from './table-tareas_tem';
+import { tareas_areas        } from './table-tareas_areas';
+import { resultados_tarea    } from './table-resultados_tarea';
 
 import {defConfig} from "./def-config"
 
@@ -331,9 +333,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     ]},
                     {menuType:'menu', name:'muestra', label:'muestra', menuContent:[
                         {menuType:'table', name:'tem', label: 'TEM'} ,
-                        {menuType:'table', name:'lotes'} ,
-                        {menuType:'table', name:'semanas'} ,
-                        {menuType:'table', name:'personal'},
+                        {menuType:'table', name:'tareas'},
+                        {menuType:'table', name:'resultados_tarea'},
                     // {menuType:'table', name:'personal_rol'},
                         ]},
                     {menuType:'menu', name:'metadatos', menuContent:[
@@ -396,6 +397,11 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , viviendas_extendida
             , personas
             , personas_extendida
+            , tareas
+            , resultados_tarea
+            , tareas_tem
+            , tareas_areas
+            
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){

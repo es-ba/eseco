@@ -66,7 +66,7 @@ export function areas(context:TableContext):TableDefinition {
             {references:'relevadores', fields:[{source:'relevador', target:'persona'}]},
         ],
         detailTables:[
-            {table:'tem_recepcion'     , fields:['area'], abr:'E', refreshParent:true},
+            {table:'tareas_areas'     , fields:['area'], abr:'TA', refreshParent:true},
         ],
         sql:{
             isTable:true,

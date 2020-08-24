@@ -21,14 +21,13 @@ export function tareas_tem(context:TableContext):TableDefinition {
         ],
         primaryKey:['tarea','operativo','enc'],
         foreignKeys:[
-            // tem
-            // tareas
-            // usuarios/personas
-            // tareas_resultados  : campos pk tarea, resultado  campo: descripcion -> hdr estrcutra
+            {references:'tem' , fields:['operativo','enc']},
+            {references:'tareas' , fields:['tarea']},
+            {references:'usuarios', fields:[{source:'persona', target:'idper'}]},
+            {references:'resultados_tarea', fields:['resultado']},
         ],
         detailTables:[
-            {table:'tareas_areas'     , fields:['tarea'], abr:'A', refreshParent:true},
-            {table:'tareas_tem'       , fields:['tarea'], abr:'T', refreshParent:true},
+            {table:'tem_recepcion'    , fields:['operativo','enc'], abr:'A', refreshParent:true},
         ],
     };
 }
