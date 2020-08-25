@@ -2,11 +2,13 @@
 
 import {TableDefinition, TableContext} from "./types-eseco";
 
-export function tareas(context:TableContext):TableDefinition {
+export function tareas(context:TableContext, opts:any):TableDefinition {
+    var opts=opts||{};
+    var mis=opts.mis?'mis_':'';
     var be=context.be;
     var puedeEditar = context.forDump || context.puede.campo.administrar||context.user.rol==='recepcionista';
     return {
-        name:'tareas',
+        name:`${mis}tareas`,
         elementName:'tarea',
         editable:puedeEditar,
         fields:[
@@ -15,9 +17,10 @@ export function tareas(context:TableContext):TableDefinition {
         ],
         primaryKey:['tarea'],
         detailTables:[
-            {table:'tareas_areas'     , fields:['tarea'], abr:'A', refreshParent:true},
-            {table:'tareas_tem'       , fields:['tarea'], abr:'T', refreshParent:true},
-        ],
+            {table:`${mis}tareas_areas`     , fields:['tarea'], abr:'A', refreshParent:true},
+            {table:`${mis}tareas_tem`       , fields:['tarea'], abr:'T', refreshParent:true},
+            // tareas_resultados
+        ]
     };
 }
 
