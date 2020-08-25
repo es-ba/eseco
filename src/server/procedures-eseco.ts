@@ -694,6 +694,9 @@ export const ProceduresEseco : ProcedureDef[] = [
         roles:['lab','jefe_lab'],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be = context.be;
+            if(!parameters.resultado){
+                throw new Error('Por favor ingrese resultado.');
+            }
             var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
             var estado;
             if(etiqueta.resultado){
@@ -727,6 +730,9 @@ export const ProceduresEseco : ProcedureDef[] = [
         roles:['lab','jefe_lab'],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be = context.be;
+            if(!parameters.resultado){
+                throw new Error('Por favor ingrese resultado.');
+            }
             var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
             var estado;
             estado = 'ok';
