@@ -18,7 +18,7 @@ create table "tareas_tem" (
   "fecha_asignacion" date, 
   "resultado" text, 
   "fecha_resultado" date, 
-  "notas" date
+  "notas" text
 , primary key ("tarea", "operativo", "enc")
 );
 grant select, insert, update, delete on "tareas_tem" to eseco201_produc_admin;
