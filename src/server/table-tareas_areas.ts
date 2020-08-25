@@ -9,8 +9,11 @@ export function tareas_areas(context:TableContext):TableDefinition {
         name:'tareas_areas',
         editable:puedeEditar,
         fields:[
-            {name:'tarea'    , typeName:'text'},
-            {name:'area'     , typeName:'integer'},
+            {name:'tarea'            , typeName:'text'},
+            {name:'area'             , typeName:'integer'},
+            {name:'persona'          , typeName:'text'},
+            {name:'accion'           , typeName:'text'},
+            {name:'fecha_asignacion' , typeName:'date'},
         ],
         primaryKey:['tarea','area'],
         foreignKeys:[
@@ -20,6 +23,13 @@ export function tareas_areas(context:TableContext):TableDefinition {
         detailTables:[
             {table:'tareas_tem'       , fields:['tarea'], abr:'T', refreshParent:true},
         ],
+        sql:{
+            insertIfNotUpdate:true,
+            from:`(
+                select t.tarea, a.area
+                    from tareas t, areas a
+            )`
+        }
     };
 }
 
