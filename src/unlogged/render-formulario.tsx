@@ -1032,48 +1032,23 @@ export function AppEseco(){
     }
 }
 
-function TypedField(props:{disabled:boolean, label:string, type: InputTypes, valor:string|null, onChange:(valor:string|null)=>void, hasError?:boolean}){
-    var { disabled, type, label, hasError} = props;
-    var [valor, setValor] = useState(props.valor);
-    useEffect(() => {
-        setValor(props.valor)
-    }, [props.valor]);
-    const inputProps = {};
-    var nuestraLongitud = calcularNuestraLongitud('small')
-    return <div className="campo" nuestra-longitud={nuestraLongitud}>
-        <div className="input-campo">
-            <TextField 
-                error={hasError}
-                helperText={hasError?"Numero de etiqueta incorrecto":null}
-                disabled={disabled}
-                className="variable" 
-                fullWidth={true}
-                inputProps={inputProps}
-                value={valor?valor:''} 
-                label={label}
-                type={type}
-                onChange={(event)=>{
-                    let value = event.target.value || null;
-                    setValor(value)
-                }}
-                onBlur={(_event)=>{
-                    props.onChange(valor)
-                }}
-            />
-        </div>
-    </div>
-}
-
 export function ConsultaResultados(){
     var [etiqueta, setEtiqueta] = useState<string|null>(null);
     var [etiquetaValida, setEtiquetaValida] = useState<boolean>(false);
     var [documento, setDocumento] = useState<string|null>(null);
     var [resultadoConsulta, setResultadoConsulta] = useState<string|null>(null);
+    var imageStyles = {
+        height: '32px',
+        verticalAlign: 'bottom',
+        marginRight: '10px'
+    }
     return <>
         <AppBar position="fixed" color='primary'>
             <Toolbar>
+                <img style={imageStyles}src="./img/logos-gcbs-blanco-150x57.png"/>
+                <img style={imageStyles}src="./img/img-logo-dgeyc_blanco.png"/>
                 <Typography variant="h6">
-                    Consultar resultado
+                    Ver resultado
                 </Typography>
             </Toolbar>
         </AppBar>
@@ -1082,34 +1057,42 @@ export function ConsultaResultados(){
                 <Typography variant="h6">
                     Ingrese etiqueta y numero de documento
                 </Typography>
-                <div className="fields-container">
-                    <TypedField
-                        disabled={false}
+                <Grid container className="fields-container">
+                    <TextField 
+                        autoFocus={true}
+                        error={!!etiqueta && !etiquetaValida}
+                        helperText={!!etiqueta && !etiquetaValida?"Numero de etiqueta incorrecto":null}
+                        fullWidth={true}
+                        value={etiqueta || ''} 
                         label="Etiqueta"
                         type="text"
-                        hasError={!!etiqueta && !etiquetaValida}
-                        valor={etiqueta}
-                        onChange={(nuevoValor)=>{
-                            if(nuevoValor){
-                                nuevoValor = nuevoValor.replace(/[\+\*\.# _\/,]/g,'-');
-                                if(!/-/.test(nuevoValor) && nuevoValor.length>4){
-                                    nuevoValor=nuevoValor.substr(0,4)+'-'+nuevoValor.substr(4);
+                        onChange={(event)=>{
+                            setEtiquetaValida(true);
+                            let value = event.target.value || null;
+                            if(value){
+                                value = value.replace(/[\+\*\.# _\/,]/g,'-');
+                                if(!/-/.test(value) && value.length>4){
+                                    value=value.substr(0,4)+'-'+value.substr(4);
                                 }
                             }
-                            setEtiquetaValida(controlarCodigoDV2(nuevoValor||''));
-                            setEtiqueta(nuevoValor)
+                            setEtiqueta(value)
+                        }}
+                        onBlur={(_event)=>{
+                            setEtiquetaValida(controlarCodigoDV2(etiqueta||''));
                         }}
                     />
-                    <TypedField
-                        disabled={false}
+                    <TextField 
+                        fullWidth={true}
                         label="N° documento"
                         type="tel"
-                        valor={documento}
-                        onChange={(nuevoValor)=>
-                            setDocumento(nuevoValor)
-                        }
+                        value={documento || null}
+                        onChange={(event)=>{
+                            let value = event.target.value || null;
+                            setDocumento(value)
+                            
+                        }}
                     />
-                </div>
+                 </Grid>
                 <Button 
                     variant="contained"
                     color="primary"
