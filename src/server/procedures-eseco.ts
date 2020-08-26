@@ -454,7 +454,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             if(parameters.datos){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
                     var result = await context.client.query(
-                        `update tem
+                        `update tareas_tem
                             set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
                             where operativo= $1 and enc = $2 and cargado_dm = ${context.be.db.quoteLiteral(token)}
                             returning 'ok'`
@@ -490,7 +490,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
                 var result = await context.client.query(
-                    `update tem
+                    `update tareas_tem
                         set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
                         where operativo= $1 and enc = $2 and cargado_dm is null
                         returning 'ok'`
