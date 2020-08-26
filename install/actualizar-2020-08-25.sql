@@ -5,3 +5,6 @@ alter table tareas_tem alter column notas type text;
 --alter table tareas_areas add column persona type text;
 --alter table tareas_areas add column accion type text;
 --alter table tareas_areas add column fecha_asignacion type date;
+
+alter table tareas_areas rename column persona to asignado;
+alter table tareas_areas add column asignante text;

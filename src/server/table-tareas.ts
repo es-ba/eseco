@@ -9,6 +9,7 @@ export function tareas(context:TableContext, opts:any):TableDefinition {
     var puedeEditar = context.forDump || context.puede.campo.administrar||context.user.rol==='recepcionista';
     return {
         name:`${mis}tareas`,
+        tableName:`tareas`,
         elementName:'tarea',
         editable:puedeEditar,
         fields:[

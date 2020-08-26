@@ -53,6 +53,9 @@ import { personas_extendida  } from './table-personas_extendida';
 import { tareas              } from './table-tareas';
 import { tareas_tem          } from './table-tareas_tem';
 import { tareas_areas        } from './table-tareas_areas';
+import { mis_tareas          } from './table-mis_tareas';
+import { mis_tareas_tem      } from './table-mis_tareas_tem';
+import { mis_tareas_areas    } from './table-mis_tareas_areas';
 import { resultados_tarea    } from './table-resultados_tarea';
 
 import {defConfig} from "./def-config"
@@ -401,7 +404,9 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , resultados_tarea
             , tareas_tem
             , tareas_areas
-            
+            , mis_tareas
+            , mis_tareas_tem
+            , mis_tareas_areas
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
