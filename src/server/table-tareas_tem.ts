@@ -13,8 +13,9 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         {name:'tarea'    , typeName:'text', isPk:1},
         {name:'operativo', typeName:'text', isPk:2},
         {name:'enc'      , typeName:'text', isPk:3},
-        {name:'persona'  , typeName:'text'}, // va a la hoja de ruta
-        {name:'accion'   , typeName:'text'}, // cargar/descargar
+        {name:'asignado' , typeName:'text'}, // va a la hoja de ruta
+        {name:'asignante' , typeName:'text'}, // va a la hoja de ruta
+        {name:'operacion' , typeName:'text'}, // cargar/descargar
         {name:'fecha_asignacion', typeName:'date'}, // cargar/descargar
         {name:'resultado'       , typeName:'text'}, // fk tareas_resultados 
         {name:'fecha_resultado' , typeName:'date'}, // fk tareas_resultados 
@@ -29,7 +30,8 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         foreignKeys:[
             {references:'tem' , fields:['operativo','enc'], displayFields:[], alias:'te'},
             {references:'tareas' , fields:['tarea']},
-            {references:'usuarios', fields:[{source:'persona', target:'idper'}]},
+            {references:'usuarios', fields:[{source:'asignante', target:'idper'}], alias:'at'},
+            {references:'usuarios', fields:[{source:'asignado' , target:'idper'}], alias:'ad'},
             {references:'resultados_tarea', fields:['resultado']},
         ],
         softForeignKeys:[
@@ -39,7 +41,7 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
             insertIfNotUpdate:true,
             from:`(
                 select tareas.tarea, t.operativo, t.enc
-                    ${fields.filter(x=>!x.isPk).map(x=>`, ${db.quoteIdent(x.name)}`).join('')}
+                    ${fields.filter(x=>!x.isPk).map(x=>`, tt.${db.quoteIdent(x.name)}`).join('')}
                     from tareas, tem t
                         left join lateral (select * from tareas_tem where tarea=tareas.tarea and operativo=t.operativo and enc=t.enc) tt on true
                     ${opt.mis?`where (asignante = ${db.quoteNullable(context.user.idper)} or asignado = ${db.quoteNullable(context.user.idper)})`:''}

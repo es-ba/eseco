@@ -198,8 +198,8 @@ export type ResumenEstado = 'vacio' | 'con problemas' | 'incompleto' | 'ok' | 'n
 
 export type InfoTarea= {
     notas:string
-    fecha:Date
-    persona:string
+    fecha_asignacion:Date
+    asignado:string
 }
 
 export type Tareas = {

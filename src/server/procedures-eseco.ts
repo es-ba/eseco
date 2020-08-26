@@ -75,10 +75,10 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                     'casa'          , casa          ,
                     'prioridad'     , reserva+1     ,
                     'observaciones' , carga_observaciones ,
-                    'seleccionada_actual', seleccionada_actual,
+                    'notas'		    , notas,
                     'carga'         , area         
                 ) as tem, area
-                from tem
+                from tareas_tem tt join tem on (operativo, enc)
                 where ${quotedCondViv}
             )
             select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
@@ -402,16 +402,17 @@ export const ProceduresEseco : ProcedureDef[] = [
         action:'dm_enc_cargar',
         parameters:[
             {name:'enc'         , typeName:'text'},
+            {name:'tarea'       , typeName:'text'},
         ],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
-            var condviv= ` operativo= $1 and enc =$2 `;
+            var condviv= ` operativo= $1 and enc =$2 and tarea $3`;
             var soloLectura = (await context.client.query(
                 `select * 
-                    from tem
+                    from tareas_tem
                     where ${condviv} and cargado_dm is null`
                 ,
-                [OPERATIVO, parameters.enc]
+                [OPERATIVO, parameters.enc, parameters.tarea]
             ).fetchOneRowIfExists()).rowCount == 0;
             var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,parameters.enc]).fetchUniqueRow();
             return {
@@ -445,8 +446,8 @@ export const ProceduresEseco : ProcedureDef[] = [
             num_sincro=value;
             var condviv= `
                         operativo= $1 
-                        and relevador = (select idper from usuarios where usuario=$2)
-                        and operacion='cargar' 
+                        and asignado = (select idper from usuarios where idper=$2)
+                        and tt.operacion='cargar' 
                         and habilitada
                         and (cargado_dm is null or cargado_dm = ${context.be.db.quoteLiteral(token)})
             `
@@ -465,9 +466,9 @@ export const ProceduresEseco : ProcedureDef[] = [
                     }
                 }).array());
             }
-            var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,context.username]).fetchUniqueRow();
+            var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,context.user.idper]).fetchUniqueRow();
             await context.client.query(
-                `update tem
+                `update tareas_tem
                     set  cargado_dm=$3
                     where ${condviv} `
                 ,

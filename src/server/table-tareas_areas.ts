@@ -13,7 +13,7 @@ export function tareas_areas(context:TableContext, opt:any):TableDefinition {
         {name:'area'             , typeName:'integer',isPk:2},
         {name:'asignante'        , typeName:'text'},
         {name:'asignado'         , typeName:'text'},
-        {name:'accion'           , typeName:'text'},
+        {name:'operacion'        , typeName:'text'},
         {name:'fecha_asignacion' , typeName:'date'},
     ];
     return {
