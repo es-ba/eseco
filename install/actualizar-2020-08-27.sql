@@ -89,7 +89,7 @@ update tareas_tem tt
   set (operacion,carga_observaciones,cargado_dm, habilitada, json_encuesta, resumen_estado, rea
     ,norea,rea_m, sexo_sel, edad_sel, json_backup, etiqueta, fecha_asignacion, asignado)=
     (t.operacion,t.carga_observaciones,t.cargado_dm,t.habilitada,t.json_encuesta,t.resumen_estado,t.rea
-    ,t.norea,t.rea_m,t.sexo_sel,t.edad_sel,t.json_backup, t.etiqueta, t.carga, t.relevador)
+    ,t.norea,t.rea_m,t.sexo_sel::bigint,t.edad_sel,t.json_backup, t.etiqueta, t.carga, t.relevador)
     from tem t 
     where t.operativo=tt.operativo and t.enc= tt.enc;
 

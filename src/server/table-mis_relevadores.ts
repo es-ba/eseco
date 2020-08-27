@@ -30,16 +30,17 @@ export function mis_relevadores(context:TableContext):TableDefinition {
             {name:'incompletas'             , typeName:'integer' , editable:false  , aggregate:'sum'},
             {name:'vacias'                  , typeName:'integer' , editable:false  , aggregate:'sum'},
             {name:'reas_dia'                , typeName:'decimal' , editable:false  , title:'reas/día' , aggregate:'avg'},
+            {name:'tarea'                   , typeName:'text'    , editable:false  },
         ],
         primaryKey:['relevador'],
         detailTables:[
-            {table:'areas'           , fields:['relevador'], abr:'A'},
-            {table:'tem_recepcion'   , fields:['relevador'], abr:'E'},
+            {table:'tareas_areas'    , fields:[{source:'relevador', target:'asignado'},'tarea'], abr:'TA'},
+            {table:'tareas_tem'      , fields:[{source:'relevador', target:'asignado'},'tarea'], abr:'E'},
         ],
         sql:{
             isTable:false,
             from:`(
-                select u.idper as relevador, u.*, t.*, s.*
+                select u.idper as relevador, u.*, t.*, s.*, 'rel' as tarea
                     from usuarios u, lateral (
                         select sum(case when a.fecha = current_date then 1 else null end) as carga_hoy,
                                 sum(case when a.fecha = current_date + interval '1 day' then 1 else null end) as carga_1,
