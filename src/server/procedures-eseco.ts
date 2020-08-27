@@ -352,6 +352,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             })
         }
     },
+    /*
     {
         action:'des_asignar_estado',
         parameters:[
@@ -398,6 +399,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             return res.rows;
         }
     },
+    */
     {
         action:'dm_enc_cargar',
         parameters:[
@@ -780,7 +782,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
 ];
-
+/*
 //TODO: HACER MAQUINA DE ESTADOS
 function tipoEstadoAnteriorAVerificado(rol: string) {
     let tipoEstado = 'descargado';
@@ -806,10 +808,11 @@ async function setEstadoViaTipoYRol(client:Client, op:string, enc:string, tipo_e
                   WHERE rol = $1 AND tipo_estado = $2`, [rol, tipo_estado]).fetchUniqueValue();
     await setEstado(client, op, enc, result.value);
 }
-
+*/
 /**
  * Setea un tipo de estado via tipo dentro del mismo rol del estado anterior
  */
+/*
 async function cambiarATipoEstadoDentroDelMismoRol(client: Client, op:string, enc:string, tipoEstadoDesde: string, tipoEstadoHacia: string) {
     // tomamos el rol del estado actual
     let temConEstado = await client.query(`SELECT tem.*, estados.tipo_estado, estados.rol 
@@ -826,3 +829,4 @@ async function cambiarATipoEstadoDentroDelMismoRol(client: Client, op:string, en
 async function blanquearEstado(client:Client, params: CoreFunctionParameters) {
     await setEstado(client, params.operativo,params.enc, null);
 }
+*/

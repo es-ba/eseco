@@ -40,13 +40,14 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "typeName": "text",
             "nullable": false
         },
-        {name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrirRecepcion'},
+        //{name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrirRecepcion'},
         {name: "cluster", typeName:'integer',editable:false, isName:true},
         {
             "name": "area",
             "editable": false,
             "typeName": "integer"
         },
+        /*
         {
             "name": "operacion",
             editable: hasRecepcionistaPermission,
@@ -85,7 +86,8 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             editable: false,
             inTable: false,
             "typeName":"text"
-        },          
+        },
+        */
         {
             "name": "codcalle",
             editable: false,
@@ -151,6 +153,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
+        /*
         {name:'rea_p'         , typeName:'bigint' ,editable:false      },
         {name:'norea_p'       , typeName:'text'   ,editable:false    },
         {name:'cant_p'        , typeName:'bigint' ,editable:false      },
@@ -164,6 +167,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         editable: false,
         "typeName": "date"
         },
+        */
         {
             "name": "tipo_domicilio",
             "editable": false,
@@ -251,6 +255,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
+        /*
         {name:'result_sup', typeName:'text' ,editable: hasRecepcionistaPermission  },
         {name:'obs_sup'   , typeName:'text' ,editable: isSupervisor     },
         {name:'obs_coor'  , typeName:'text' ,editable: isCoordinador || isSubCoordinador },
@@ -268,6 +273,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             visible: false,
             inTable: false
         },
+        */
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
         {
@@ -315,6 +321,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             editable: false,
             "typeName": "integer"
         },
+        /*
         {
             "name": "carga_rol",
             editable: hasRecepcionistaPermission,
@@ -331,11 +338,13 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             editable: hasSubCoordinadorPermission,
             //"nullable":false
         },
+        */
         {
             "name": "semana", //nullable false
             editable: hasSubCoordinadorPermission,
             "typeName": "integer"
         },
+        /*
         {
             "name": "carga",
             editable: hasRecepcionistaPermission,
@@ -355,6 +364,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
         {name:'cod_recu'      , typeName:'text'   ,editable:false    },
         {name:'cod_sup'       , typeName:'text'   ,editable:false    },
+        */
         {
             "name": "periodicidad",
             "editable": false,
@@ -374,13 +384,13 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     ],
     foreignKeys:[
         {references:'areas' , fields:['area'], displayFields:columnasAreasParaLaTem},
-        {references:'operaciones' , fields:['operacion']},
-        {references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
-        {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
-        {references:'usuarios', fields:[{source:'carga_persona', target:'idper'},{source:'carga_rol', target:'rol'}], alias:'pertem', displayFields:[]},
-        {references:'usuarios', fields:[{source:'cod_enc', target:'idper'}], alias:'per_enc', displayFields:[]},
-        {references:'usuarios', fields:[{source:'cod_recu', target:'idper'}], alias:'per_recu', displayFields:[]},
-        {references:'usuarios', fields:[{source:'cod_sup', target:'idper'}], alias:'per_sup', displayFields:[]},
+        //{references:'operaciones' , fields:['operacion']},
+        //{references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
+        //{references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
+        //{references:'usuarios', fields:[{source:'carga_persona', target:'idper'},{source:'carga_rol', target:'rol'}], alias:'pertem', displayFields:[]},
+        //{references:'usuarios', fields:[{source:'cod_enc', target:'idper'}], alias:'per_enc', displayFields:[]},
+        //{references:'usuarios', fields:[{source:'cod_recu', target:'idper'}], alias:'per_recu', displayFields:[]},
+        //{references:'usuarios', fields:[{source:'cod_sup', target:'idper'}], alias:'per_sup', displayFields:[]},
     ], 
     "detailTables": [
         {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
@@ -389,19 +399,23 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         isTable: false,
         isReferable:true,
         from:`
-            (select *, cargado_dm is not null as cargado,
-                encu.validar_tipodato(enc,json_encuesta) tipos_inconsist, 
-                null telefonos, null seleccionado
-                -- nullif((select string_agg(CASE when telefono_fijo is not null then 'h'||hogar || ' tel: '|| telefono_fijo else '' end || CASE when telefono_movil is not null then ',h'||hogar ||  ' cel: '|| telefono_movil else '' end, ' | ') from hogares where t.operativo= t.operativo and enc=t.enc group by operativo, enc),'') as telefonos,
-                -- nullif((select string_agg('h'||hogar || ' ' || ti2,', ') from personas where operativo= operativo and enc=t.enc group by operativo, enc),'')as seleccionado 
-                , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
-                , ${be.sqlNoreaCase('grupo')} as gru_no_rea
+            (select operativo, enc, enc_vieja, lote, semana, nrocomuna, nrofraccion, 
+                nroradio, nromanzana, nrolado, codviviendaparticular, codcalle, nomcalle,
+                sector, edificio, entrada, casa, obsdatosdomicilio, obsconjunto, usodomicilio,
+                orden_relevamiento, mapa,zona, periodicidad, participacion, reserva, areaup,
+                rotacion_etoi, rotacion_eah,trimestre, procedencia, sel_etoi_villa, marco, codpos,
+                area, dominio, estrato_ing, id_marco, nrocatastral, piso, departamento, habitacion,
+                barrio, obs,  consistido, tipo_domicilio, cluster, enc_original,observaciones_carga  
+                --, cargado_dm is not null as cargado
+                --,encu.validar_tipodato(enc,json_encuesta) tipos_inconsist 
+                --, ${be.sqlNoreaCase('no_rea')} as cod_no_rea
+                --, ${be.sqlNoreaCase('grupo')} as gru_no_rea
                 from tem t
             )
         `, 
         postCreateSqls:`
-            create index "carga 4 tem IDX" ON tem (carga);
-            CREATE TRIGGER tem_cod_per_trg before UPDATE OF carga_rol, carga_persona  ON tem FOR EACH ROW  EXECUTE PROCEDURE tem_cod_per_trg();
+            --create index "carga 4 tem IDX" ON tem (carga);
+            --CREATE TRIGGER tem_cod_per_trg before UPDATE OF carga_rol, carga_persona  ON tem FOR EACH ROW  EXECUTE PROCEDURE tem_cod_per_trg();
         `
     },
 };

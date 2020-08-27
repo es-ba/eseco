@@ -45,11 +45,9 @@ install:
       - varcal_manual/funcion_update.sql
       - desintegrarpk.sql
       - agregar_adjunto_carto_trg
-      - estados_permisos_trg.sql
-      - tem_estados_trg.sql
       - tem_area_sincro_trg.sql
       - upd_operacion_area_tem_trg.sql
-      - sincronizacion_tem.sql
+      - sincronizacion_tareas_tem.sql
 login:
   infoFieldList: [usuario, idper, rol]
   plus:
