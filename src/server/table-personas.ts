@@ -6,8 +6,9 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
     var be=context.be;
     opts=opts||{};
     var puedeEditar = context.forDump || context.user.rol==='admin';
-    var fieldsExtendida=opts.extendida?[
-      {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
+    var fieldsExtendida=opts.extendida?[        
+     {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
+    , {name: "cluster", editable:false, typeName:"integer" }
     , {name: "area", editable:false, typeName:'integer', inTable:false}
     , {name: "areaup", editable:false, typeName:'text', inTable:false}
     , {name: "id_marco", editable:false, typeName:'bigint', inTable:false}
@@ -78,6 +79,7 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
         from: `(
             select t.operativo, t.enc
                 , coalesce(t.tipo_domicilio,1) tipo_domicilio
+                , t.cluster
                 , t.area, t.areaup, t.id_marco, t.estrato_ing
                 , t.nrocomuna
                 , (t.json_encuesta->>'p11')::integer p11
