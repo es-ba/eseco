@@ -405,7 +405,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
                 orden_relevamiento, mapa,zona, periodicidad, participacion, reserva, areaup,
                 rotacion_etoi, rotacion_eah,trimestre, procedencia, sel_etoi_villa, marco, codpos,
                 area, dominio, estrato_ing, id_marco, nrocatastral, piso, departamento, habitacion,
-                barrio, obs,  consistido, tipo_domicilio, cluster, enc_original,observaciones_carga  
+                barrio, obs,  consistido, tipo_domicilio, cluster, enc_original--,observaciones_carga  
                 --, cargado_dm is not null as cargado
                 --,encu.validar_tipodato(enc,json_encuesta) tipos_inconsist 
                 --, ${be.sqlNoreaCase('no_rea')} as cod_no_rea

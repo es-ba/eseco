@@ -5,6 +5,7 @@ select *  into tem_bkp
   from tem;
 
 alter table tareas_tem
+	add column area integer not null,
     add column carga_observaciones text,
     add column cargado_dm text,
     add column habilitada boolean,
@@ -20,7 +21,7 @@ alter table tareas_tem
     add column fecha_rel date,
     add column tipos_inconsist text,
     add column cant_p bigint, 
-    add column seleccionado bigint
+    add column seleccionado bigint,
     add column cargado boolean;
 
 
@@ -38,13 +39,15 @@ alter table "tareas_tem" add constraint "etiqueta<>''" check ("etiqueta"<>'');
 alter table "tareas_tem" add constraint "tipos_inconsist<>''" check ("tipos_inconsist"<>'');
 
 alter table "tareas_tem" add constraint "tareas_tem at REL" foreign key ("asignante") references "usuarios" ("idper")  on update cascade;
+alter table "tareas_tem" add constraint "tareas_tem areas REL" foreign key ("area") references "areas" ("area")  on update cascade;
 alter table "tareas_tem" add constraint "tareas_tem ad REL" foreign key ("asignado") references "usuarios" ("idper")  on update cascade;
 DROP INDEX "persona 4 tareas_tem IDX";
 create index "asignante 4 tareas_tem IDX" ON "tareas_tem" ("asignante");
 create index "asignado 4 tareas_tem IDX" ON "tareas_tem" ("asignado");
+create index "areas 4 tareas_tem IDX" ON "tareas_tem" ("area");
 
-insert into tareas_tem(tarea, operativo, enc)
-  select 'rel' tarea, operativo ,enc
+insert into tareas_tem(tarea, operativo, enc, area)
+  select 'rel' tarea, operativo ,enc, area
   from tem where json_encuesta->>'dv1' is not null;
 
 DROP TRIGGER tem_cod_per_trg ON encu.tem;
@@ -92,6 +95,8 @@ update tareas_tem tt
 
 alter table tareas_areas
   drop column accion;
+  
+alter table tareas_tem alter column sexo_sel type bigint USING sexo_sel::bigint;
 -- DROP TRIGGER sincronizacion_tem_trg ON encu.tem;
 --DROP FUNCTION encu.sincronizacion_tem_trg();
 /*

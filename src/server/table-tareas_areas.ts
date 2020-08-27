@@ -29,7 +29,7 @@ export function tareas_areas(context:TableContext, opt:any):TableDefinition {
             {references:'usuarios', fields:[{source:'asignado' , target:'idper'}], alias:'ad'},
         ],
         detailTables:[
-            {table:`${mis}tareas_tem`       , fields:['tarea'], abr:'T', refreshParent:true},
+            {table:`${mis}tareas_tem`       , fields:['tarea', 'area'], abr:'T', refreshParent:true},
         ],
         sql:{
             insertIfNotUpdate:true,
