@@ -10,6 +10,7 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
     var db=be.db;
     var puedeEditar = context.forDump || context.puede.campo.administrar||context.user.rol==='recepcionista';
     var fields:FieldDefinition[]=[
+        {name:'abrir'    , typeName:'text'    , editable:false, inTable:false, clientSide:'abrirRecepcion'},
         {name:'tarea'    , typeName:'text', isPk:1},
         {name:'operativo', typeName:'text', isPk:2},
         {name:'enc'      , typeName:'text', isPk:3},

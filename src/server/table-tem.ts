@@ -37,7 +37,7 @@ export function tem(context:TableContext):TableDefinition {
             "typeName": "text",
             "nullable": false
         },
-        //{name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrir'},
+        {name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrir'},
         {name: "cluster", typeName:'integer',editable:false, isName:true},
         {
             "name": "enc_original",
@@ -155,6 +155,17 @@ export function tem(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
+        {
+            "name": "json_encuesta",
+            editable: false,
+            "typeName":"jsonb"
+        },
+        {
+            "name": "resumen_estado",
+            editable: false,
+            "typeName":"text"
+        },
+        { name:'etiqueta'         , typeName:'text'     },
         /*
         {
             "name": "operacion",
@@ -176,17 +187,7 @@ export function tem(context:TableContext):TableDefinition {
             editable: hasRecepcionistaPermission,
             "typeName": "boolean"
         },        
-        {
-            "name": "json_encuesta",
-            editable: false,
-            "typeName":"jsonb"
-        },
-        {
-            "name": "resumen_estado",
-            editable: false,
-            "typeName":"text"
-        },
-        { name:'etiqueta'         , typeName:'text'     },
+        
         {
             "name": "tipos_inconsist",
             editable: false,

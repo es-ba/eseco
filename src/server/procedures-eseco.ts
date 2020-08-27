@@ -62,7 +62,7 @@ type AnyObject = {[k:string]:any}
 var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
     return `
         with viviendas as 
-            (select enc, json_encuesta as respuestas, resumen_estado as "resumenEstado", 
+            (select enc, t.json_encuesta as respuestas, t.resumen_estado as "resumenEstado", 
                 jsonb_build_object(
                     'nomcalle'      , nomcalle      ,
                     'sector'        , sector        ,
@@ -74,11 +74,11 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                     'habitacion'    , habitacion    ,
                     'casa'          , casa          ,
                     'prioridad'     , reserva+1     ,
-                    'observaciones' , carga_observaciones ,
+                    'observaciones' , tt.carga_observaciones ,
                     'notas'		    , notas,
-                    'carga'         , area         
-                ) as tem, area
-                from tareas_tem tt join tem on (operativo, enc)
+                    'carga'         , t.area         
+                ) as tem, tt.area
+                from tareas_tem tt join tem t using (operativo, enc)
                 where ${quotedCondViv}
             )
             select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
@@ -325,7 +325,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                 throw new Error('HAY DATOS. NO SE PUEDE INICIAR EL PASAJE');
             }
             let resultJson = await context.client.query(
-                `SELECT operativo, enc id_caso, json_encuesta datos_caso FROM tem WHERE operativo=$1`,
+                `SELECT operativo, enc id_caso, json_encuesta datos_caso from tem WHERE operativo=$1`,
                 [OPERATIVO]
             ).fetchAll();
             var procedureGuardar = be.procedure.caso_guardar;
@@ -352,69 +352,20 @@ export const ProceduresEseco : ProcedureDef[] = [
             })
         }
     },
-    /*
-    {
-        action:'des_asignar_estado',
-        parameters:[
-            {name:'operativo'   ,references:'operativos',  typeName:'text'},
-            {name:'enc'                                 ,  typeName:'text'},
-        ],
-        progress:true,
-        coreFunction:async function(context:ProcedureContext, params: CoreFunctionParameters){
-            await cambiarATipoEstadoDentroDelMismoRol(context.client, params.operativo, params.enc, 'asignado', 'disponible');
-            return 'estado_cambiado';
-        }
-    },
-    {
-        action:'asignar_caso',
-        parameters:[
-            {name:'operativo'   ,references:'operativos',  typeName:'text'},
-            {name:'enc'                                 ,  typeName:'text'},
-            {name:'nuevo_rol'                           ,  typeName:'text'}
-        ],
-        progress:true,
-        coreFunction:async function(context:ProcedureContext, params: CoreFunctionParameters){
-            //acá no cambia de tipo de estado en el mismo rol porque puede cambiar de enc_descargado -> rec_asignado
-            await setEstadoViaTipoYRol(context.client, params.operativo, params.enc, 'asignado', params.nuevo_rol);
-            return 'estado_cambiado';
-        }
-    },
-    {
-        action:'asignacion_recepcion',
-        parameters:[
-            {name:'operativo'        ,references:'operativos',  typeName:'text'   , defaultValue:OPERATIVO },
-            {name:'semana'            ,references:'tem'       ,  typeName:'integer' },
-            {name:'lote'              ,references:'tem'       ,  typeName:'integer' },
-        ],
-        progress:true,
-        // bitacora:{always:true},
-        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
-            let res = await context.client.query(`
-                select *
-                  from tem
-                  where operativo=$1 and semana=$2 and lote=$3
-                  order by reserva, enc `,
-                [parameters.operativo, parameters.semana, parameters.lote]
-            ).fetchAll();
-            return res.rows;
-        }
-    },
-    */
     {
         action:'dm_enc_cargar',
         parameters:[
             {name:'enc'         , typeName:'text'},
-            {name:'tarea'       , typeName:'text'},
         ],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
-            var condviv= ` operativo= $1 and enc =$2 and tarea $3`;
+            var condviv= ` t.operativo= $1 and t.enc =$2`;
             var soloLectura = (await context.client.query(
                 `select * 
-                    from tareas_tem
-                    where ${condviv} and cargado_dm is null`
+                    from tem t left join tareas_tem tt on t.operativo = tt.operativo and t.enc = tt.enc and tt.cargado_dm is null and tt.tarea = 'rel'
+                    where ${condviv}`
                 ,
-                [OPERATIVO, parameters.enc, parameters.tarea]
+                [OPERATIVO, parameters.enc]
             ).fetchOneRowIfExists()).rowCount == 0;
             var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,parameters.enc]).fetchUniqueRow();
             return {
@@ -455,6 +406,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             `
             if(parameters.datos){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
+                    //TODO REVISAR GUARDADO en TEM y TAREAS TEM
                     var result = await context.client.query(
                         `update tareas_tem
                             set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
@@ -782,51 +734,3 @@ export const ProceduresEseco : ProcedureDef[] = [
         }
     },
 ];
-/*
-//TODO: HACER MAQUINA DE ESTADOS
-function tipoEstadoAnteriorAVerificado(rol: string) {
-    let tipoEstado = 'descargado';
-    if (rol == 'supervisor') {
-        tipoEstado = 'asignado';
-    }
-    return tipoEstado;
-}
-
-async function setEstado(client: Client, op:string, enc:string, nuevoEstado:string|null) {
-    // TODO: HACER aca LAS VALIDACIONES QUE CORRESPONDAN
-    await client.query(`
-        UPDATE tem
-            set estado = $1
-            WHERE operativo=$2 and enc=$3 
-    `, [nuevoEstado, op, enc]).execute();
-}
-
-async function setEstadoViaTipoYRol(client:Client, op:string, enc:string, tipo_estado:string, rol:string) {
-    const result = await client.query(`
-                SELECT estado
-                  FROM estados
-                  WHERE rol = $1 AND tipo_estado = $2`, [rol, tipo_estado]).fetchUniqueValue();
-    await setEstado(client, op, enc, result.value);
-}
-*/
-/**
- * Setea un tipo de estado via tipo dentro del mismo rol del estado anterior
- */
-/*
-async function cambiarATipoEstadoDentroDelMismoRol(client: Client, op:string, enc:string, tipoEstadoDesde: string, tipoEstadoHacia: string) {
-    // tomamos el rol del estado actual
-    let temConEstado = await client.query(`SELECT tem.*, estados.tipo_estado, estados.rol 
-                  FROM tem JOIN estados ON tem.estado = estados.estado
-                  WHERE operativo=$1 and enc=$2
-                `, [op, enc]).fetchUniqueRow();
-    //para los estados que no tienen tipo_estado usamos el parametro tipoEstadoDesde como el "estado desde"
-    if (temConEstado.row.tipo_estado != tipoEstadoDesde && temConEstado.row.estado != tipoEstadoDesde) {
-        throw new Error(`Para poner en estado ${tipoEstadoHacia} debe estar en estado ${tipoEstadoDesde}.`);
-    }
-    setEstadoViaTipoYRol(client, op, enc, tipoEstadoHacia, temConEstado.row.rol)
-    return 'listo';
-}
-async function blanquearEstado(client:Client, params: CoreFunctionParameters) {
-    await setEstado(client, params.operativo,params.enc, null);
-}
-*/
