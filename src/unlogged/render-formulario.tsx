@@ -16,7 +16,7 @@ import {Bloque, BotonFormulario,
     ModoDespliegue,
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor, TEM, IdCarga, Carga, HojaDeRuta, PlainForPk, IdFin,
+    Respuestas, Valor, TEM, IdCarga, Carga, HojaDeRuta, PlainForPk, IdFin, InfoTarea, Tareas
 } from "./tipos";
 import { dmTraerDatosFormulario, dispatchers, 
     getFuncionHabilitar, 
@@ -853,42 +853,28 @@ export function DesplegarCarga(props:{
         {carga.estado_carga==null && !props.posicion || carga.estado_carga=='abierta'?
         <Table className="tabla-carga-hoja-de-ruta">
             <colgroup>
-                <col style={{width:"10%"}}/>
-                <col style={{width:"50%"}}/>
+                <col style={{width:"70%"}}/>
                 <col style={{width:"15%"}}/>
-                <col style={{width:"25%"}}/>
+                <col style={{width:"15%"}}/>
             </colgroup>
             <TableHead style={{fontSize: "1.2rem"}}>
                 <TableRow className="tr-carga">
-                    <TableCell>vivienda</TableCell>
                     <TableCell>domicilio</TableCell>
                     <TableCell>etiqueta</TableCell>
-                    <TableCell></TableCell>
+                    <TableCell>vivienda</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {likeAr(hdr).filter((datosVivienda:DatosVivienda)=>datosVivienda.tem.carga==idCarga).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
                     <TableRow key={idCaso}>
                         <TableCell>
-                            {idCaso}
-                        </TableCell>
-                        <TableCell>
                             <DesplegarTem tem={datosVivienda.tem}/>
+                            <DesplegarNotas tareas={datosVivienda.tareas} idCaso={idCaso}/>
                         </TableCell>
                         <TableCell>
                             {datosVivienda.respuestas[c5]}
                         </TableCell>
                         <TableCell>
-                            <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={()=>{
-                                    return
-                                    //dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
-                                }}
-                            >
-                                <ICON.Create/>
-                            </Button>
                             <Button
                                 size="small"
                                 resumen-vivienda={datosVivienda.resumenEstado}
@@ -897,7 +883,7 @@ export function DesplegarCarga(props:{
                                     dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
                                 }}
                             >
-                                <ICON.Send/>
+                                {idCaso}
                             </Button>
                         </TableCell>
                     </TableRow>
@@ -920,6 +906,82 @@ export function DesplegarTem(props:{tem:TEM}){
             <Atributo nombre="habitacion" valor={tem.habitacion}/>
         </div>
         <div className="tem-observaciones">{tem.observaciones} <Atributo nombre="persona seleccionada" valor={tem.seleccionada_actual}/></div>
+    </div>
+}
+
+export function DesplegarNotas(props:{tareas:Tareas, idCaso:IdCaso}){
+    const {tareas, idCaso} = props;
+    const [dialogoNotas, setDialogoNotas] = useState<boolean>(false);
+    const [nota, setNota] = useState<string|null>(null);
+    const [miTarea, setMiTarea] = useState<string|null>(null);
+    const [titulo, setTitulo] = useState<string|null>(null);
+    var dispatch = useDispatch();
+    return <div className="tareas-notas">
+        <div className="notas">Notas:</div>
+        {likeAr(tareas).map((tarea)=>
+            <div className="nota">
+                <span>{tarea.tarea + ":"}</span><span>{tarea.notas?tarea.notas:'-'}</span>
+                <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={()=>{
+                        setNota(tarea.notas)
+                        setMiTarea(tarea.tarea)
+                        setDialogoNotas(true)
+                        setTitulo(`Notas  ${tarea.tarea} vivienda  ${idCaso}`)
+                    }}
+                >
+                    <ICON.Create/>
+                </Button>
+                <Dialog
+                    open={dialogoNotas}
+                    onClose={()=>{
+                        setDialogoNotas(false)
+                    }}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title-obs">{titulo}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description-obs">
+                            <TextField 
+                                autoFocus={true}
+                                fullWidth={true}
+                                value={nota || ''} 
+                                label="Notas"
+                                type="text"
+                                onChange={(event)=>{
+                                    let value = event.target.value || null;
+                                    setNota(value)
+                                }}
+                            />
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>{
+                            setDialogoNotas(false)
+                        }} color="secondary" variant="outlined">
+                            Descartar nota
+                        </Button>
+                        <Button onClick={()=>{
+                            dispatch(dispatchers.REGISTRAR_NOTA({
+                                vivienda:idCaso,
+                                tarea: miTarea,
+                                nota: nota
+                            }));
+                            setDialogoNotas(false)
+                        }} color="primary" variant="contained">
+                            Guardar
+                        </Button>
+                        
+                    </DialogActions>
+                </Dialog>
+            </div>
+        ).array()}
+        
+        
+
+        
     </div>
 }
 

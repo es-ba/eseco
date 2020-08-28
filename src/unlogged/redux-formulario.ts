@@ -5,7 +5,8 @@ import { CasilleroBase, CasillerosImplementados, CasoState,
     IdCarga, IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdVariable, 
     ModoDespliegue, 
     Opcion, PlainForPk, Respuestas, ResumenEstado,
-    TEM
+    TEM,
+    IdTarea
 } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
@@ -440,6 +441,29 @@ var reducers={
                     }
                 }
             }, payload.forPk)
+        },
+    REGISTRAR_NOTA: (payload: {vivienda:IdCaso, tarea:IdTarea, nota:string|null}) => 
+        function(state: CasoState){
+            return calcularFeedback({
+                ...state,
+                datos:{
+                    ...state.datos,
+                    hdr:{
+                        ...state.datos.hdr,
+                        [payload.vivienda]:{
+                            ...state.datos.hdr[payload.vivienda],
+                            tareas:{
+                                ...state.datos.hdr[payload.vivienda].tareas,
+                                [payload.tarea]:{
+                                    ...state.datos.hdr[payload.vivienda].tareas[payload.tarea],
+                                    notas: payload.nota
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            })
         },
     MODO_DESPLIEGUE: (payload: {modoDespliegue:ModoDespliegue}) => 
         function(state: CasoState){
