@@ -367,13 +367,14 @@ export const ProceduresEseco : ProcedureDef[] = [
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be=context.be;
             var condviv= ` t.operativo= $1 and t.enc =$2`;
-            var soloLectura = (await context.client.query(
-                `select * 
-                    from tem t left join tareas_tem tt on t.operativo = tt.operativo and t.enc = tt.enc and tt.cargado_dm is null and tt.tarea = 'rel'
-                    where ${condviv}`
+            //GENERALIZAR
+            var soloLectura = !!(await context.client.query(
+                `select *
+                    from tareas_tem
+                    where operativo= $1 and enc = $2 and tarea = $3 and cargado_dm is not null`
                 ,
-                [OPERATIVO, parameters.enc]
-            ).fetchOneRowIfExists()).rowCount == 0;
+                [OPERATIVO, parameters.enc, "rel"]
+            ).fetchOneRowIfExists()).rowCount;
             var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,parameters.enc]).fetchUniqueRow();
             return {
                 ...row,
@@ -411,22 +412,39 @@ export const ProceduresEseco : ProcedureDef[] = [
                         and tt.habilitada
                         and (tt.cargado_dm is null or tt.cargado_dm = ${context.be.db.quoteLiteral(token)})
             `
-            /*if(parameters.datos){
+            if(parameters.datos){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
-                    //TODO REVISAR GUARDADO en TEM y TAREAS TEM
-                    var result = await context.client.query(
-                        `update tareas_tem
-                            set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
-                            where operativo= $1 and enc = $2 and cargado_dm = ${context.be.db.quoteLiteral(token)}
-                            returning 'ok'`
-                        ,
-                        [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
-                    ).fetchOneRowIfExists();
-                    if(result.rowCount==0){
-                        await fs.appendFile('local-recibido-sin-token.txt', JSON.stringify({now:new Date(),user:context.username,idCaso,vivienda})+'\n\n', 'utf8');
-                    }
+                    await Promise.all(likeAr(vivienda.tareas).map(async(tarea, idTarea)=>{
+                        var puedoGuardarEnTEM=true;
+                        var queryTareasTem = await context.client.query(
+                            `update tareas_tem
+                                set cargado_dm=null, notas = $4
+                                where operativo= $1 and enc = $2 and tarea = $3 and cargado_dm = ${context.be.db.quoteLiteral(token!)}
+                                returning 'ok'`
+                            ,
+                            [OPERATIVO, idCaso, tarea, tarea.notas]
+                        ).fetchOneRowIfExists();
+                        if(queryTareasTem.rowCount==0){
+                            var puedoGuardarEnTEM=false;
+                            await fs.appendFile('local-recibido-sin-token.txt', JSON.stringify({now:new Date(),user:context.username,idCaso,vivienda, idTarea, tarea})+'\n\n', 'utf8');
+                        }
+                        //GENERALIZAR
+                        if(idTarea == 'rel' && puedoGuardarEnTEM){
+                            await context.client.query(
+                                `update tem
+                                    set json_encuesta = $3, resumen_estado=$4
+                                    where operativo= $1 and enc = $2
+                                    returning 'ok'`
+                                ,
+                                [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
+                            ).fetchUniqueRow();
+                        }
+                        if(!puedoGuardarEnTEM){
+                            await fs.appendFile('local-recibido-sin-token.txt', JSON.stringify({now:new Date(),user:context.username,idCaso,vivienda})+'\n\n', 'utf8');
+                        }
+                    }).array());
                 }).array());
-            }*/
+            }
             var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,context.user.idper]).fetchUniqueRow();
             await context.client.query(
                 `update tareas_tem tt
@@ -450,17 +468,25 @@ export const ProceduresEseco : ProcedureDef[] = [
         ],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
+                //GENERALIZAR
                 var result = await context.client.query(
-                    `update tareas_tem
-                        set json_encuesta = $3, resumen_estado=$4, cargado_dm=null
-                        where operativo= $1 and enc = $2 and cargado_dm is null
+                    `select *
+                        from tareas_tem
+                        where operativo= $1 and enc = $2 and tarea = $3 and cargado_dm is not null`
+                    ,
+                    [OPERATIVO, idCaso, "rel"]
+                ).fetchOneRowIfExists();
+                if(result.rowCount){
+                    throw new Error('La encuesta que intenta guardar ha sido cargada por un encuestador.')
+                }
+                await context.client.query(
+                    `update tem
+                        set json_encuesta = $3, resumen_estado=$4
+                        where operativo= $1 and enc = $2
                         returning 'ok'`
                     ,
                     [OPERATIVO, idCaso, vivienda.respuestas, vivienda.resumenEstado]
-                ).fetchOneRowIfExists();
-                if(result.rowCount==0){
-                    throw new Error('La encuesta que intenta guardar ha sido cargada por un encuestador.')
-                }
+                ).fetchUniqueRow();
             }).array());
             return 'ok'
         }
