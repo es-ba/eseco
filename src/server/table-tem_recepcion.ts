@@ -40,7 +40,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "typeName": "text",
             "nullable": false
         },
-        //{name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrirRecepcion'},
+        {name: "abrir", typeName:'text',editable:false, inTable:false, clientSide:'abrirRecepcion'},
         {name: "cluster", typeName:'integer',editable:false, isName:true},
         {
             "name": "area",

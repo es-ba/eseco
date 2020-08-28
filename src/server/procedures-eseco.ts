@@ -78,7 +78,7 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                     'notas'		    , notas,
                     'carga'         , t.area         
                 ) as tem, tt.area
-                from tareas_tem tt join tem t using (operativo, enc)
+                from tem t left join tareas_tem tt using (operativo, enc)
                 where ${quotedCondViv}
             )
             select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
