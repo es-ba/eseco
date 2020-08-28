@@ -753,6 +753,16 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
                 },
                 hdr:{
                     '10901':{
+                        tareas:{
+                            'rel':{
+                                tarea:'rel',
+                                notas: 'una nota'
+                            },
+                            'sup':{
+                                tarea:'sup',
+                                notas: 'otra nota'
+                            },
+                        },
                         tem:{
                             observaciones:'Ejemplo de relevamiento vacío', carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'541', piso:'6', departamento:'C'
@@ -761,6 +771,12 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
                         respuestas:{personas:[]}
                     },
                     '10902':{
+                        tareas:{
+                            'rel':{
+                                tarea:'rel',
+                                notas: 'una nota'
+                            },
+                        },
                         tem:{
                             observaciones:'Otro ejemplo vacío', carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'
@@ -769,6 +785,16 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
                         respuestas:{personas:[]}
                     },
                     '10904':{
+                        tareas:{
+                            'sen':{
+                                tarea:'sen',
+                                notas: 'una nota'
+                            },
+                            'sup':{
+                                tarea:'sup',
+                                notas: 'otra nota'
+                            },
+                        },
                         respuestas:{
                             "dv1":"1","dv2":"1/7/2020","dv4":"2"
                             ,personas:[{}],
@@ -776,6 +802,12 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
                         tem:{observaciones:'Ejemplo incompleto listo para cargar personas',carga:"2020-07-08", nomcalle:'Bolivar', nrocatastral:'531' } as TEM
                     },
                     '13303':{
+                        tareas:{
+                            'rel':{
+                                tarea:'rel',
+                                notas: 'una nota'
+                            },
+                        },
                         tem:{
                             observaciones:'Ejemplo incompleto con 3 miembros cargados',carga:"2020-07-08",
                             nomcalle:'Bolivar', nrocatastral:'593', piso:'3', departamento:'B',
@@ -787,6 +819,12 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
                         }
                     },
                     '13308':{
+                        tareas:{
+                            'sen':{
+                                tarea:'sen',
+                                notas: 'otra nota'
+                            },
+                        },
                         tem:{
                             observaciones:'Ejemplo de relevamiento terminado',carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'541', piso:'PB', departamento:'A',
@@ -797,6 +835,16 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
                         }
                     },
                     '13309':{
+                        tareas:{
+                            'rel':{
+                                tarea:'rel',
+                                notas: 'una nota'
+                            },
+                            'sup':{
+                                tarea:'sup',
+                                notas: 'otra nota'
+                            },
+                        },
                         tem:{
                             observaciones:'Ejemplo incompleto y avanzado',carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'609',
@@ -808,6 +856,12 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
                         }
                     },
                     '13399':{
+                        tareas:{
+                            'rel':{
+                                tarea:'rel',
+                                notas: 'una nota'
+                            },
+                        },
                         tem:{
                             observaciones:'Ejemplo con error',carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'633',

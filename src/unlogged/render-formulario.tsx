@@ -875,16 +875,18 @@ export function DesplegarCarga(props:{
                             {datosVivienda.respuestas[c5]}
                         </TableCell>
                         <TableCell>
-                            <Button
-                                size="small"
-                                resumen-vivienda={datosVivienda.resumenEstado}
-                                variant="outlined"
-                                onClick={()=>{
-                                    dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
-                                }}
-                            >
-                                {idCaso}
-                            </Button>
+                            {datosVivienda.tareas.rel?
+                                <Button
+                                    size="small"
+                                    resumen-vivienda={datosVivienda.resumenEstado}
+                                    variant="outlined"
+                                    onClick={()=>{
+                                        dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
+                                    }}
+                                >
+                                    {idCaso}
+                                </Button>
+                            :idCaso}
                         </TableCell>
                     </TableRow>
                 ).array()}
