@@ -197,6 +197,7 @@ export type TEM = {
 export type ResumenEstado = 'vacio' | 'con problemas' | 'incompleto' | 'ok' | 'no rea';
 
 export type InfoTarea= {
+    tarea: IdTarea
     notas:string
     fecha_asignacion:Date
     asignado:string

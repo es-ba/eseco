@@ -75,13 +75,20 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                     'casa'          , casa          ,
                     'prioridad'     , reserva+1     ,
                     'observaciones' , tt.carga_observaciones ,
-                    'notas'		    , notas,
                     'carga'         , t.area         
-                ) as tem, tt.area
+                ) as tem, tt.area,
+                --TODO: GENERALIZAR
+                jsonb_object_agg(coalesce(tarea,'rel'),jsonb_build_object(
+					'tarea', tarea,
+					'notas', notas,
+					'fecha_asignacion', fecha_asignacion,
+					'asignado', asignado
+				)) as tareas
                 from tem t left join tareas_tem tt using (operativo, enc)
                 where ${quotedCondViv}
+                group by t.enc, t.json_encuesta, t.resumen_estado, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones,t.area,tt.area
             )
-            select ${jsono(`select enc, respuestas, "resumenEstado", tem from viviendas`, 'enc')} as hdr,
+            select ${jsono(`select enc, respuestas, "resumenEstado", tem, tareas from viviendas`, 'enc')} as hdr,
                 ${json(`
                     select area as carga, observaciones_hdr as observaciones, fecha
                         from viviendas inner join areas using (area) 
@@ -401,10 +408,10 @@ export const ProceduresEseco : ProcedureDef[] = [
                         operativo= $1 
                         and asignado = (select idper from usuarios where idper=$2)
                         and tt.operacion='cargar' 
-                        and habilitada
-                        and (cargado_dm is null or cargado_dm = ${context.be.db.quoteLiteral(token)})
+                        and tt.habilitada
+                        and (tt.cargado_dm is null or tt.cargado_dm = ${context.be.db.quoteLiteral(token)})
             `
-            if(parameters.datos){
+            /*if(parameters.datos){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
                     //TODO REVISAR GUARDADO en TEM y TAREAS TEM
                     var result = await context.client.query(
@@ -419,14 +426,14 @@ export const ProceduresEseco : ProcedureDef[] = [
                         await fs.appendFile('local-recibido-sin-token.txt', JSON.stringify({now:new Date(),user:context.username,idCaso,vivienda})+'\n\n', 'utf8');
                     }
                 }).array());
-            }
+            }*/
             var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,context.user.idper]).fetchUniqueRow();
             await context.client.query(
-                `update tareas_tem
+                `update tareas_tem tt
                     set  cargado_dm=$3
                     where ${condviv} `
                 ,
-                [OPERATIVO, parameters.enc?parameters.enc:context.username, token]
+                [OPERATIVO, parameters.enc?parameters.enc:context.user.idper, token]
             ).execute();
             return {
                 ...row,

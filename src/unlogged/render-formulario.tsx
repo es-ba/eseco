@@ -853,20 +853,25 @@ export function DesplegarCarga(props:{
         {carga.estado_carga==null && !props.posicion || carga.estado_carga=='abierta'?
         <Table className="tabla-carga-hoja-de-ruta">
             <colgroup>
-                <col style={{width:"70%"}}/>
+                <col style={{width:"10%"}}/>
+                <col style={{width:"50%"}}/>
                 <col style={{width:"15%"}}/>
-                <col style={{width:"15%"}}/>
+                <col style={{width:"25%"}}/>
             </colgroup>
             <TableHead style={{fontSize: "1.2rem"}}>
                 <TableRow className="tr-carga">
+                    <TableCell>vivienda</TableCell>
                     <TableCell>domicilio</TableCell>
                     <TableCell>etiqueta</TableCell>
-                    <TableCell>vivienda</TableCell>
+                    <TableCell></TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {likeAr(hdr).filter((datosVivienda:DatosVivienda)=>datosVivienda.tem.carga==idCarga).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
                     <TableRow key={idCaso}>
+                        <TableCell>
+                            {idCaso}
+                        </TableCell>
                         <TableCell>
                             <DesplegarTem tem={datosVivienda.tem}/>
                         </TableCell>
@@ -875,13 +880,24 @@ export function DesplegarCarga(props:{
                         </TableCell>
                         <TableCell>
                             <Button
+                                size="small"
+                                variant="outlined"
+                                onClick={()=>{
+                                    return
+                                    //dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
+                                }}
+                            >
+                                <ICON.Create/>
+                            </Button>
+                            <Button
+                                size="small"
                                 resumen-vivienda={datosVivienda.resumenEstado}
                                 variant="outlined"
                                 onClick={()=>{
                                     dispatch(dispatchers.CAMBIAR_FORMULARIO({forPk:{vivienda:idCaso, formulario:mainForm}}))
                                 }}
                             >
-                                {idCaso}
+                                <ICON.Send/>
                             </Button>
                         </TableCell>
                     </TableRow>
