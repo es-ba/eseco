@@ -414,7 +414,8 @@ export const ProceduresEseco : ProcedureDef[] = [
             `
             if(parameters.datos){
                 await Promise.all(likeAr(parameters.datos.hdr).map(async (vivienda,idCaso)=>{
-                    await Promise.all(likeAr(vivienda.tareas).map(async(tarea, idTarea)=>{
+                    var tareas = vivienda.tareas;
+                    for(let tarea in tareas){
                         var puedoGuardarEnTEM=true;
                         var queryTareasTem = await context.client.query(
                             `update tareas_tem
@@ -422,14 +423,14 @@ export const ProceduresEseco : ProcedureDef[] = [
                                 where operativo= $1 and enc = $2 and tarea = $3 and cargado_dm = ${context.be.db.quoteLiteral(token!)}
                                 returning 'ok'`
                             ,
-                            [OPERATIVO, idCaso, tarea, tarea.notas]
+                            [OPERATIVO, idCaso, tarea, tareas[tarea].notas]
                         ).fetchOneRowIfExists();
                         if(queryTareasTem.rowCount==0){
                             var puedoGuardarEnTEM=false;
-                            await fs.appendFile('local-recibido-sin-token.txt', JSON.stringify({now:new Date(),user:context.username,idCaso,vivienda, idTarea, tarea})+'\n\n', 'utf8');
+                            await fs.appendFile('local-recibido-sin-token.txt', JSON.stringify({now:new Date(),user:context.username,idCaso,vivienda, tarea, tareas})+'\n\n', 'utf8');
                         }
                         //GENERALIZAR
-                        if(idTarea == 'rel' && puedoGuardarEnTEM){
+                        if(tarea == 'rel' && puedoGuardarEnTEM){
                             await context.client.query(
                                 `update tem
                                     set json_encuesta = $3, resumen_estado=$4
@@ -442,7 +443,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                         if(!puedoGuardarEnTEM){
                             await fs.appendFile('local-recibido-sin-token.txt', JSON.stringify({now:new Date(),user:context.username,idCaso,vivienda})+'\n\n', 'utf8');
                         }
-                    }).array());
+                    }
                 }).array());
             }
             var {row} = await context.client.query(getHdrQuery(condviv),[OPERATIVO,context.user.idper]).fetchUniqueRow();
