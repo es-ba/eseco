@@ -22,20 +22,9 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         {name:'resultado'       , typeName:'text'}, // fk tareas_resultados 
         {name:'fecha_resultado' , typeName:'date'}, // fk tareas_resultados 
         {name:'notas'           , typeName:'text'}, // viene de la hoja de ruta
-        {name:"carga_observaciones", typeName: "text", editable: true},
+        {name:"carga_observaciones", typeName: "text", editable: true},        
         {name:"cargado"         , typeName: "boolean", editable: false},
         {name:"habilitada"      , typeName: "boolean", editable: puedeEditar},
-        {name:'rea_m'           , typeName:'integer' , editable: false   },
-    //    {name:'cod_no_rea'      , typeName:'text'    , editable:false , inTable: false   },
-    //    {name:'gru_no_rea'      , typeName:'text'    , editable:false , inTable: false   },
-        {name:"resumen_estado"  , typeName:'text'    , editable:false    },
-        {name:'etiqueta'        , typeName:'text'    , editable:false    },
-        {name:'fecha_rel'       , typeName:'date'    , editable:false    },
-        {name:'tipos_inconsist' , typeName:'text'    , editable:false    },
-        {name:'cant_p'          , typeName:'bigint'  , editable:false    },
-        {name:'sexo_sel'        , typeName:'bigint'  , editable:false    },
-        {name:'edad_sel'        , typeName:'bigint'  , editable:false    },        
-        {name:'seleccionado'    , typeName:'bigint'  , editable:false    },
     ];
     return {
         name:`${mis}tareas_tem`,
@@ -57,10 +46,10 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         sql:{
             insertIfNotUpdate:true,
             from:`(
-                select tareas.tarea, t.operativo, t.enc
-                    ${fields.filter(x=>!(x.isPk || x.inTable===false)).map(x=>`, tt.${db.quoteIdent(x.name)}`).join('')}
-                   -- , ${be.sqlNoreaCase('no_rea').replace('json_encuesta', 'tt.json_encuesta','g')} as cod_no_rea
-                   -- , ${be.sqlNoreaCase('grupo').replace('json_encuesta', 'tt.json_encuesta','g')} as gru_no_rea
+                select tareas.tarea, t.operativo, t.enc, t.area
+                    ${fields.filter(x=>!(x.isPk || x.inTable===false||x.name=='area')).map(x=>`, tt.${db.quoteIdent(x.name)}`).join('')}
+                    , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
+                    , ${be.sqlNoreaCase('grupo')} as gru_no_rea
                     from tareas, tem t
                         left join lateral (select * from tareas_tem where tarea=tareas.tarea and operativo=t.operativo and enc=t.enc) tt on true
                     ${opt.mis?`where (asignante = ${db.quoteNullable(context.user.idper)} or asignado = ${db.quoteNullable(context.user.idper)})`:''}

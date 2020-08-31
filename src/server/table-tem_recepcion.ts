@@ -70,7 +70,8 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "name": "habilitada",
             editable: hasRecepcionistaPermission,
             "typeName": "boolean"
-        },        
+        },  
+        */      
         { name:'rea_m'            , typeName:'integer'  },
         {name:'cod_no_rea'    , typeName:'text'   ,editable:false    },
         {name:'gru_no_rea'    , typeName:'text'   ,editable:false    },
@@ -84,10 +85,9 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         {
             "name": "tipos_inconsist",
             editable: false,
-            inTable: false,
+            //inTable: false,
             "typeName":"text"
-        },
-        */
+        },       
         {
             "name": "codcalle",
             editable: false,
@@ -162,12 +162,12 @@ export function tem_recepcion(context:TableContext):TableDefinition {
 //        {name: "verificar"    , typeName:'boolean',editable:true, inTable:false, clientSide:'verificarCaso'},
 //        {name: "finalizar_campo", typeName:'boolean',editable:true, inTable:false, clientSide:'finalizarCampo'}, //fin_de_campo
 //        {name: "procesamiento", typeName:'boolean',editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
+        */  
         {
-        "name": "frel",
+        "name": "fecha_rel",
         editable: false,
         "typeName": "date"
         },
-        */
         {
             "name": "tipo_domicilio",
             "editable": false,
@@ -266,14 +266,13 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             visible: false,
             inTable: false
         },
+        */
         {
             "name": "seleccionado",
             "editable": false,
             "typeName": "text",
             visible: false,
-            inTable: false
         },
-        */
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
         {
@@ -387,10 +386,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         //{references:'operaciones' , fields:['operacion']},
         //{references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
         //{references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
-        //{references:'usuarios', fields:[{source:'carga_persona', target:'idper'},{source:'carga_rol', target:'rol'}], alias:'pertem', displayFields:[]},
-        //{references:'usuarios', fields:[{source:'cod_enc', target:'idper'}], alias:'per_enc', displayFields:[]},
-        //{references:'usuarios', fields:[{source:'cod_recu', target:'idper'}], alias:'per_recu', displayFields:[]},
-        //{references:'usuarios', fields:[{source:'cod_sup', target:'idper'}], alias:'per_sup', displayFields:[]},
     ], 
     "detailTables": [
         {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
@@ -399,17 +394,22 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         isTable: false,
         isReferable:true,
         from:`
-            (select operativo, enc, enc_vieja, lote, semana, nrocomuna, nrofraccion, 
-                nroradio, nromanzana, nrolado, codviviendaparticular, codcalle, nomcalle,
-                sector, edificio, entrada, casa, obsdatosdomicilio, obsconjunto, usodomicilio,
-                orden_relevamiento, mapa,zona, periodicidad, participacion, reserva, areaup,
-                rotacion_etoi, rotacion_eah,trimestre, procedencia, sel_etoi_villa, marco, codpos,
-                area, dominio, estrato_ing, id_marco, nrocatastral, piso, departamento, habitacion,
-                barrio, obs,  consistido, tipo_domicilio, cluster, enc_original--,observaciones_carga  
+            (select 
+                operativo, enc, enc_vieja, semana, nrocomuna, nrofraccion, nroradio, nromanzana, nrolado, codviviendaparticular, codcalle, nomcalle
+                , sector, edificio, entrada, casa, obsdatosdomicilio, obsconjunto, usodomicilio, orden_relevamiento, mapa
+                , json_encuesta, resumen_estado, rea, norea, cant_p, sexo_sel, edad_sel, zona, periodicidad, participacion
+                , reserva, areaup, rotacion_etoi, rotacion_eah, trimestre, procedencia, sel_etoi_villa, marco, codpos
+                , area, dominio, estrato_ing, id_marco, nrocatastral, piso, departamento, habitacion, barrio, obs
+                , etiqueta, relevador, rea_m, fecha_rel, tipo_domicilio, json_backup, cluster, enc_original
+                , tipos_inconsist, obs_coor, consistido
+                --, result_sup, obs_sup
+                --, lote, carga_rol, carga_persona, carga, operacion, carga_observaciones, cargado_dm, habilitada
+                --, dispositivo, estado, cod_enc, cod_recu, cod_sup, rea_p, norea_p
+                --, seleccionada_actual, seleccionada_anterior, confirmada, observaciones_carga
                 --, cargado_dm is not null as cargado
                 --,encu.validar_tipodato(enc,json_encuesta) tipos_inconsist 
-                --, ${be.sqlNoreaCase('no_rea')} as cod_no_rea
-                --, ${be.sqlNoreaCase('grupo')} as gru_no_rea
+                , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
+                , ${be.sqlNoreaCase('grupo')} as gru_no_rea
                 from tem t
             )
         `, 

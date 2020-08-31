@@ -320,6 +320,7 @@ myOwn.clientSides.mios={
     }
 }
 
+/*
 var grid2:any;
 myOwn.wScreens.asignacion_recepcion={
     parameters:[
@@ -453,3 +454,4 @@ myOwn.clientSides.seleccionarCaso={
         depot.rowControls[fieldName].setTypedValue(value);
     }
 }
+*/

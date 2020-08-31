@@ -29,7 +29,6 @@ install:
       - ../node_modules/meta-enc/install/prepare.sql
       - ../node_modules/varcal/install/wrappers.sql
       - ../node_modules/operativos/install/sql2tabla_datos.sql
-      - tem_cod_per_trg.sql
       post-adapt: 
       - para-install.sql
       - ../node_modules/pg-triggers/lib/recreate-his.sql

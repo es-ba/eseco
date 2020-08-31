@@ -25,17 +25,9 @@ import { roles_permisos      } from "./table-roles_permisos";
 import { parametros          } from "./table-parametros";
 import { roles_subordinados  } from "./table-roles_subordinados";
 
-//import {tipos_estados        } from "./table-tipos_estados";
 import {no_rea               } from "./table-no_rea";
-//import {estados              } from "./table-estados";
 import {tem                  } from "./table-tem";
 import {tem_recepcion        } from "./table-tem_recepcion";
-//import {carga_tem            } from "./table-carga_tem";
-//import {cargas               } from "./table-cargas";
-//import {carga_fechas         } from "./table-carga_fechas";
-//import {tem_estados          } from "./table-tem_estados";
-//import {tem_seleccionable    } from "./table-tem_seleccionable";
-//import {lotes                } from "./table-lotes";
 import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
 import { resultados_test     } from './table-resultados-test';
@@ -375,18 +367,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , permisos
             , roles_permisos
             , roles_subordinados
-            //, tipos_estados
-            //, estados
             , no_rea
-            //, lotes
             , semanas
             , tem
             , tem_recepcion
-            //, tem_estados
-            //, carga_tem
-            //, cargas
-            //, carga_fechas
-            //, tem_seleccionable
             , parametros
             , planchas
             , resultados_test

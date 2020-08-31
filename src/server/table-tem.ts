@@ -187,11 +187,11 @@ export function tem(context:TableContext):TableDefinition {
             editable: hasRecepcionistaPermission,
             "typeName": "boolean"
         },        
-        
+        */
         {
             "name": "tipos_inconsist",
             editable: false,
-            inTable: false,
+            //inTable: false,
             "typeName":"text"
         },        
         { name:'relevador'        , typeName:'text'     },
@@ -207,11 +207,10 @@ export function tem(context:TableContext):TableDefinition {
 //        {name: "finalizar_campo", typeName:'boolean',editable:true, inTable:false, clientSide:'finalizarCampo'}, //fin_de_campo
 //        {name: "procesamiento", typeName:'boolean',editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
         {
-        "name": "frel",
+        "name": "fecha_rel",
         editable: false,
         "typeName": "date"
         },
-        */
         {
             "name": "tipo_domicilio",
             "editable": false,
@@ -316,60 +315,6 @@ export function tem(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
-        /*
-        {name:'result_sup', typeName:'text' ,editable: hasRecepcionistaPermission  },
-        {name:'obs_sup'   , typeName:'text' ,editable: isSupervisor     },
-        {name:'obs_coor'  , typeName:'text' ,editable: isCoordinador || isSubCoordinador },
-        {
-            "name": "telefonos",
-            "editable": false,
-            "typeName": "text",
-            visible: false,
-            inTable: false
-        },
-        {
-            "name": "seleccionado",
-            "editable": false,
-            "typeName": "text",
-            visible: false,
-            inTable: false
-        },
-        {
-            "name": "dispositivo",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
-            "name": "estado",
-            "editable": false,
-            "typeName": "text",
-            //"nullable": false
-        },
-        {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
-        {name:'cod_recu'      , typeName:'text'   ,editable:false    },
-        {name:'cod_sup'       , typeName:'text'   ,editable:false    },
-        {
-            "name": "carga_rol",
-            editable: hasRecepcionistaPermission,
-            "typeName": "text"
-        },
-        {
-            "name": "carga_persona",
-            editable: hasRecepcionistaPermission,
-            "typeName": "text"
-        },
-        {
-            "name": "carga",
-            editable: hasRecepcionistaPermission,
-            "typeName": "date"
-        },
-        {
-            "name": "lote",
-            "typeName": "integer",
-            editable: hasSubCoordinadorPermission,
-            //"nullable":false
-        },
-        */
         {
             "name": "semana", //nullable false
             editable: hasSubCoordinadorPermission,
@@ -377,7 +322,7 @@ export function tem(context:TableContext):TableDefinition {
         },
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
-        //{ name: "json_backup"   , typeName:'jsonb', visible:false}
+        { name: "json_backup"   , typeName:'jsonb', visible:false}
     ],
     "primaryKey": [
         "operativo",
@@ -388,10 +333,6 @@ export function tem(context:TableContext):TableDefinition {
     //    {references:'operaciones' , fields:['operacion']},
     //    {references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
     //    {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
-    //    {references:'usuarios', fields:[{source:'carga_persona', target:'idper'},{source:'carga_rol', target:'rol'}], alias:'pertem', displayFields:[]},
-    //    {references:'usuarios', fields:[{source:'cod_enc', target:'idper'}], alias:'per_enc', displayFields:[]},
-    //    {references:'usuarios', fields:[{source:'cod_recu', target:'idper'}], alias:'per_recu', displayFields:[]},
-    //    {references:'usuarios', fields:[{source:'cod_sup', target:'idper'}], alias:'per_sup', displayFields:[]},
     ], 
     "detailTables": [
         {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
@@ -400,7 +341,7 @@ export function tem(context:TableContext):TableDefinition {
         isTable: true,
         isReferable:true,
         from:`
-            (select * , encu.validar_tipodato(enc,json_encuesta) tipos_inconsist, null telefonos, null seleccionado
+            (select * --, encu.validar_tipodato(enc,json_encuesta) tipos_inconsist, null telefonos, null seleccionado
                 from tem t                
             )
         `, 
