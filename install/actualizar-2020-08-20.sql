@@ -22,5 +22,9 @@ insert into "resultados_test" ("resultado","email_asunto","email_texto","pagina_
 	('Negativo', 'Resultado del test de Seroprevalencia COVID-19 de #nombre #apellido.','texto negativo #nombre #apellido #resultado' , 'texto pagina negativo #nombre #apellido #resultado'),
 	('Indeterminado', 'Resultado del test de Seroprevalencia COVID-19 de #nombre #apellido.','texto indeterminado #nombre #apellido #resultado' , 'texto pagina indeterminado'),
 	('Escasa muestra', 'Resultado del test de Seroprevalencia COVID-19 de #nombre #apellido.','texto escasa muestra #nombre #apellido #resultado' , 'texto pagina escasa muestra#nombre #apellido #resultado');
-	
+
+update etiquetas set resultado='Negativo' where resultado='negativo';
+update etiquetas set resultado='Positivo' where resultado='positivo';
+
+
 alter table "etiquetas" add constraint "etiquetas resultados_test REL" foreign key ("resultado") references "resultados_test" ("resultado")  on update cascade;
