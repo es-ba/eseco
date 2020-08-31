@@ -182,12 +182,12 @@ export function tem(context:TableContext):TableDefinition {
             editable: false,
             "typeName": "text"
         },
+        */
         {
             "name": "habilitada",
             editable: hasRecepcionistaPermission,
             "typeName": "boolean"
         },        
-        */
         {
             "name": "tipos_inconsist",
             editable: false,
@@ -198,10 +198,9 @@ export function tem(context:TableContext):TableDefinition {
         { name:'rea_m'            , typeName:'integer'  },
         {name:'rea'           , typeName:'bigint' ,editable:false    },
         {name:'norea'         , typeName:'text'   ,editable:false    },
-        {name:'rea_p'         , typeName:'bigint' ,editable:false      },
-        {name:'norea_p'       , typeName:'text'   ,editable:false    },
         {name:'cant_p'        , typeName:'bigint' ,editable:false      },
-        {name:'sexo_sel'      , typeName:'text'   ,editable:false    },
+        {name:'seleccionado'  , typeName:'bigint' ,editable:false    },
+        {name:'sexo_sel'      , typeName:'bigint' ,editable:false    },
         {name:'edad_sel'      , typeName:'bigint' ,editable:false    },        
 //        {name: "verificar"    , typeName:'boolean',editable:true, inTable:false, clientSide:'verificarCaso'},
 //        {name: "finalizar_campo", typeName:'boolean',editable:true, inTable:false, clientSide:'finalizarCampo'}, //fin_de_campo

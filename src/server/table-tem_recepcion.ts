@@ -153,16 +153,12 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
-        /*
-        {name:'rea_p'         , typeName:'bigint' ,editable:false      },
-        {name:'norea_p'       , typeName:'text'   ,editable:false    },
         {name:'cant_p'        , typeName:'bigint' ,editable:false      },
-        {name:'sexo_sel'      , typeName:'text'   ,editable:false    },
+        {name:'sexo_sel'      , typeName:'bigint' ,editable:false    },
         {name:'edad_sel'      , typeName:'bigint' ,editable:false    },        
 //        {name: "verificar"    , typeName:'boolean',editable:true, inTable:false, clientSide:'verificarCaso'},
 //        {name: "finalizar_campo", typeName:'boolean',editable:true, inTable:false, clientSide:'finalizarCampo'}, //fin_de_campo
 //        {name: "procesamiento", typeName:'boolean',editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
-        */  
         {
         "name": "fecha_rel",
         editable: false,

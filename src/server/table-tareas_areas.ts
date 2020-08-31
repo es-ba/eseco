@@ -9,12 +9,14 @@ export function tareas_areas(context:TableContext, opt:any):TableDefinition {
     var db=be.db;
     var puedeEditar = context.forDump || context.puede.campo.administrar||context.user.rol==='recepcionista';
     var fields:FieldDefinition[] = [
-        {name:'tarea'            , typeName:'text'   ,isPk:1},
-        {name:'area'             , typeName:'integer',isPk:2},
-        {name:'asignante'        , typeName:'text'},
-        {name:'asignado'         , typeName:'text'},
-        {name:'operacion'        , typeName:'text'},
-        {name:'fecha_asignacion' , typeName:'date'},
+        {name:'tarea'                   , typeName:'text'   ,isPk:1},
+        {name:'area'                    , typeName:'integer',isPk:2},
+        {name:'asignante'               , typeName:'text'},
+        {name:'asignado'                , typeName:'text'},
+        {name:'operacion'               , typeName:'text'},
+        {name:'fecha_asignacion'        , typeName:'date'},
+        {name:'cargadas'                , typeName:'integer'},
+        {name:'obs_asignante'           , typeName:'text'}
     ];
     return {
         name:`${mis}tareas_areas`,
@@ -27,6 +29,7 @@ export function tareas_areas(context:TableContext, opt:any):TableDefinition {
             {references:'areas',  fields:['area'], displayAllFields:true},
             {references:'usuarios', fields:[{source:'asignante', target:'idper'}], alias:'at'},
             {references:'usuarios', fields:[{source:'asignado' , target:'idper'}], alias:'ad'},
+            {references:'operaciones' , fields:['operacion']},
         ],
         detailTables:[
             {table:`${mis}tareas_tem`       , fields:['tarea', 'area'], abr:'T', refreshParent:true},

@@ -39,6 +39,7 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
             {references:'usuarios', fields:[{source:'asignante', target:'idper'}], alias:'at'},
             {references:'usuarios', fields:[{source:'asignado' , target:'idper'}], alias:'ad'},
             {references:'resultados_tarea', fields:['resultado']},
+            {references:'operaciones' , fields:['operacion']},
         ],
         softForeignKeys:[
             {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true},
