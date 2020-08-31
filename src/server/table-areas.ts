@@ -77,7 +77,7 @@ export function areas(context:TableContext):TableDefinition {
                   t.*
                 from areas a, lateral(
                     select bool_or( cargado_dm is not null )       as cargado , 
-                        count( cargado_dm )                            as cargadas,
+                        --count( cargado_dm )                            as cargadas,
                         sum ( rea_m )                                  as reas,
                         count(*) filter ( where etiqueta is null and resumen_estado='no rea')       as no_reas,
                         count(*) filter ( where resumen_estado in ('incompleto', 'con problemas') ) as incompletas, 

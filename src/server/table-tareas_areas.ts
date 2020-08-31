@@ -38,7 +38,7 @@ export function tareas_areas(context:TableContext, opt:any):TableDefinition {
             insertIfNotUpdate:true,
             from:`(
                 select t.tarea, a.area
-                    ${fields.filter(x=>!x.isPk).map(x=>`, ${db.quoteIdent(x.name)}`).join('')}
+                    ${fields.filter(x=>!x.isPk).map(x=>`, ta.${db.quoteIdent(x.name)}`).join('')}
                     from tareas t, areas a
                         left join lateral (select * from tareas_areas where area=a.area and tarea=t.tarea ) ta on true
                     ${opt.mis?`where (asignante = ${db.quoteNullable(context.user.idper)} or asignado = ${db.quoteNullable(context.user.idper)})`:''}

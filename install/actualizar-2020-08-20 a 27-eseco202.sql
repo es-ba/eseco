@@ -249,3 +249,6 @@ alter table tem
    ;   
 
 
+insert into tareas_areas(tarea, area, asignado, asignante, fecha_asignacion, obs_asignante)
+  select 'rel', area, relevador, recepcionista, fecha, obs_recepcionista
+  from areas;
