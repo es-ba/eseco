@@ -252,6 +252,8 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
     if(forPk == null){
         return state;
     }
+    var tipo_seleccion = 'tipo_seleccion' as IdVariable;
+    var tipo_relevamiento = 'tipo_relevamiento' as IdVariable;
     var vivienda = forPk.vivienda;
     var respuestas = state.datos.hdr[vivienda].respuestas;
     if(respuestas){
@@ -272,7 +274,13 @@ function calcularFeedback(state: CasoState, forPk?:ForPk|null):CasoState{
             // TODO: GENERALIZAR:
             if('persona' in forPk && forPk.persona!=null){
                 // @ts-ignore exite
-                respuestasUnidadAnalisis=respuestasVivienda.personas[forPk.persona-1];
+                respuestasUnidadAnalisis={...respuestasVivienda.personas[forPk.persona-1]};
+                try{
+                    Object.defineProperties(respuestasUnidadAnalisis,{
+                        tipo_seleccion   :{ get:function(){ return respuestasVivienda[tipo_seleccion]   }, enumerable:false},
+                        tipo_relevamiento:{ get:function(){ return respuestasVivienda[tipo_relevamiento]}, enumerable:false},
+                    });
+                }finally{}
             }else{
                 respuestasUnidadAnalisis=respuestasVivienda;
             }

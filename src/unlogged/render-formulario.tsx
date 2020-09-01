@@ -545,6 +545,8 @@ function useSelectorVivienda(forPk:ForPk){
         // @ts-ignore
         var respuestas:typeof respuestasVivienda = forPk.persona?respuestasVivienda.personas[forPk.persona-1]:respuestasVivienda
         var g1='g1' as IdVariable;
+        var tipo_relevamiento='tipo_relevamiento' as IdVariable;
+        var tipo_seleccion='tipo_seleccion' as IdVariable;
         return {
             dirty,
             respuestas,
@@ -557,7 +559,9 @@ function useSelectorVivienda(forPk:ForPk){
             modo: state.modo,
             opciones: state.opciones,
             // TODO: GENERALIZAR
-            g1: respuestasVivienda[g1]
+            g1: respuestasVivienda[g1],
+            tipo_relevamiento: respuestasVivienda[tipo_relevamiento],
+            tipo_seleccion: respuestasVivienda[tipo_seleccion]
         }
     })
 }
@@ -594,20 +598,22 @@ function BloqueDespliegue(props:{bloque:Bloque, forPk:ForPk}){
     var activeStep=0;
     var multiple = !!bloque.unidad_analisis;
     var lista = [{forPk, key:0, multiple:false}];
+    var habilitador = bloque.expresion_habilitar?getFuncionHabilitar(bloque.expresion_habilitar):()=>true;
+    var {respuestas, modoDespliegue} = useSelectorVivienda(forPk);
     if(multiple){
-        var {respuestas} = useSelectorVivienda(forPk);
         // TODO: GENERALIZAR
         // @ts-ignore 
         lista=respuestas.personas.map((_persona, i)=>(
             {forPk:{...forPk, persona:i+1}, key:i+1, multiple:true}
         ))
     }
-    return <div className="bloque" nuestro-bloque={bloque.casillero} es-multiple={multiple?'SI':'NO'}>
+    var habilitado = habilitador(respuestas);
+    return habilitado || modoDespliegue=='metadatos'?<div className="bloque" nuestro-bloque={bloque.casillero} es-multiple={multiple?'SI':'NO'}>
         <EncabezadoDespliegue casillero={bloque} forPk={forPk}/>
         {lista.map(({key, forPk, multiple})=>
             <DesplegarContenidoInternoBloqueOFormulario key={key} bloqueOFormulario={bloque} forPk={forPk} multiple={multiple}/>
         )}
-    </div>
+    </div>:null;
 }
 
 const FormularioEncabezado = DespliegueEncabezado;
@@ -774,7 +780,8 @@ function BarraDeNavegacion(props:{forPk:ForPk, modoDirecto: boolean, soloLectura
 
 function FormularioDespliegue(props:{forPk:ForPk}){
     var forPk = props.forPk;
-    var {formulario, modoDespliegue, modo, actual, completo, opciones, g1} = useSelectorVivienda(props.forPk);
+    var {formulario, modoDespliegue, modo, actual, completo, opciones, g1, tipo_seleccion, tipo_relevamiento} 
+        = useSelectorVivienda(props.forPk);
     var {soloLectura} = useSelector((state:CasoState)=>({soloLectura:state.datos.soloLectura}));
     const dispatch = useDispatch();
     useEffect(() => {
@@ -794,7 +801,7 @@ function FormularioDespliegue(props:{forPk:ForPk}){
                     <BarraDeNavegacion forPk={forPk} modoDirecto={opciones.modoDirecto} soloLectura={soloLectura || false}/>
                 </Toolbar>
             </AppBar>
-            <main nuestro-g1={g1}>
+            <main nuestro-g1={g1} nuestro-seleccion={tipo_seleccion} nuestro-relevamiento={tipo_relevamiento}>
                 <Paper className="formulario" modo-despliegue={modoDespliegue}>
                     {modo.demo?<div>
                         <Typography component="span">Modo de despliegue:</Typography>

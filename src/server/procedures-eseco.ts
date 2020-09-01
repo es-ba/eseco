@@ -76,7 +76,7 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                     'prioridad'     , reserva+1     ,
                     'observaciones' , tt.carga_observaciones ,
                     'carga'         , t.area         
-                ) as tem, tt.area,
+                ) as tem, t.area,
                 --TODO: GENERALIZAR
                 jsonb_object_agg(coalesce(tarea,'rel'),jsonb_build_object(
 					'tarea', tarea,
@@ -86,7 +86,7 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
 				)) as tareas
                 from tem t left join tareas_tem tt using (operativo, enc)
                 where ${quotedCondViv}
-                group by t.enc, t.json_encuesta, t.resumen_estado, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones,t.area,tt.area
+                group by t.enc, t.json_encuesta, t.resumen_estado, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones,t.area
             )
             select ${jsono(`select enc, respuestas, "resumenEstado", tem, tareas from viviendas`, 'enc')} as hdr,
                 ${json(`
