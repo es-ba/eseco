@@ -218,6 +218,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             { type: 'js', src: 'redux-formulario.js' },
             { type: 'js', src: 'render-general.js' },
             { type: 'js', src: 'render-formulario.js' },
+            { type: 'js', src: 'client/service-worker.js' },
             { type: 'css', file: 'menu.css' },
             { type: 'css', file: 'formulario-react.css' },
             { type: 'css', file: 'etiquetas-qr.css' },
