@@ -1,4 +1,4 @@
-var CACHE_NAME = 'static-cache';
+var CACHE_NAME = '#2020-09-01';
 var urlsToCache = [
     "campo",
     "lib/react.production.min.js",
