@@ -258,7 +258,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
     }
     getMenu(context:Context){
         let menu:MenuInfoBase[] = [];
-        if(context.puede.encuestas.relevar && !this.config['client-setup'].gabinete){
+        if(context.puede.encuestas.relevar && this.config['client-setup'].para_dm){
             if(this.config['client-setup'].ambiente=='demo' || this.config['client-setup'].ambiente=='test' || this.config['client-setup'].ambiente=='capa'){
                 menu.push({menuType:'demo', name:'demo', selectedByDefault:true})
             }else{

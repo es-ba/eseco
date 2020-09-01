@@ -26,7 +26,7 @@ export function tareas_areas(context:TableContext, opt:any):TableDefinition {
         primaryKey:['tarea','area'],
         foreignKeys:[
             {references:'tareas', fields:['tarea']},
-            {references:'areas',  fields:['area'], displayAllFields:true},
+            {references:'areas',  fields:['area'], displayAllFields:true, displayAfterFieldName:'obs_asignante'},
             {references:'usuarios', fields:[{source:'asignante', target:'idper'}], alias:'at'},
             {references:'usuarios', fields:[{source:'asignado' , target:'idper'}], alias:'ad'},
             {references:'operaciones' , fields:['operacion']},
