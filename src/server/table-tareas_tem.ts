@@ -10,10 +10,10 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
     var db=be.db;
     var puedeEditar = context.forDump || context.puede.campo.administrar||context.user.rol==='recepcionista';
     var fields:FieldDefinition[]=[
-        {name:'abrir'    , typeName:'text'    , editable:false, inTable:false, clientSide:'abrirRecepcion'},
         {name:'tarea'    , typeName:'text', isPk:1},
         {name:'operativo', typeName:'text', isPk:2},
         {name:'enc'      , typeName:'text', isPk:3},
+        {name:'abrir'    , typeName:'text'    , editable:false, inTable:false, clientSide:'abrirRecepcion'},
         {name:'area'     , typeName: 'integer', editable: false },
         {name:'asignado' , typeName:'text'}, // va a la hoja de ruta
         {name:'asignante' , typeName:'text'}, // va a la hoja de ruta
@@ -33,7 +33,6 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         fields,
         primaryKey:['tarea','operativo','enc'],
         foreignKeys:[
-            {references:'areas' , fields:['area']},
             {references:'tem' , fields:['operativo','enc'], displayFields:[], alias:'te'},
             {references:'tareas' , fields:['tarea']},
             {references:'usuarios', fields:[{source:'asignante', target:'idper'}], alias:'at'},
@@ -42,9 +41,11 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
             {references:'operaciones' , fields:['operacion']},
         ],
         softForeignKeys:[
-            {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true},
+            {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true, displayAfterFieldName:'habilitada'},
+            {references:'areas' , fields:['area']},
         ],
         sql:{
+            isTable:true,
             insertIfNotUpdate:true,
             from:`(
                 select tareas.tarea, t.operativo, t.enc, t.area
