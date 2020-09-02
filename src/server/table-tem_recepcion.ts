@@ -18,7 +18,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     var hasSubCoordinadorPermission=isSubCoordinador || hasCoordinadorPermission;
     var hasRecepcionistaPermission=isRecepcionista || hasSubCoordinadorPermission;
     // var hasSupervisorPermission=isSupervisor || hasRecepcionistaPermission;
-    var columnasAreasParaLaTem=['fecha','obs_recepcionista','verificado_rec','recepcionista'];
+    var columnasAreasParaLaTem=['obs_recepcionista','verificado_rec','recepcionista'];
 
     return {
     "name": "tem_recepcion",
@@ -128,7 +128,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
-        {name:'cant_p'        , typeName:'bigint' ,editable:false      },
+        {name:'cant_p'        , typeName:'bigint' ,editable:false    },
         {name:'sexo_sel'      , typeName:'bigint' ,editable:false    },
         {name:'edad_sel'      , typeName:'bigint' ,editable:false    },        
 //        {name: "verificar"    , typeName:'boolean',editable:true, inTable:false, clientSide:'verificarCaso'},
@@ -234,7 +234,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "name": "seleccionado",
             "editable": false,
             "typeName": "text",
-            visible: false,
+            visible: false
         },
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
@@ -299,16 +299,16 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "integer"
             ,visible: false
-        },
+        }
     ],
     "primaryKey": [
         "operativo",
         "enc"
     ],
     foreignKeys:[
-        {references:'areas' , fields:['area'], displayFields:columnasAreasParaLaTem},
+        {references:'areas' , fields:['area'], displayFields:columnasAreasParaLaTem}
         //{references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
-    ], 
+    ],
     "detailTables": [
         {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
     ],
@@ -323,7 +323,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
                 , reserva, areaup, rotacion_etoi, rotacion_eah, trimestre, procedencia, sel_etoi_villa, marco, codpos
                 , area, dominio, estrato_ing, id_marco, nrocatastral, piso, departamento, habitacion, barrio, obs
                 , etiqueta, relevador, rea_m, fecha_rel, tipo_domicilio, json_backup, cluster, enc_original
-                , tipos_inconsist, obs_coor, consistido
+                , tipos_inconsist, obs_coor, consistido, seleccionado
                 , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
                 , ${be.sqlNoreaCase('grupo')} as gru_no_rea
                 from tem t
@@ -333,6 +333,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             --create index "carga 4 tem IDX" ON tem (carga);
             --CREATE TRIGGER tem_cod_per_trg before UPDATE OF carga_rol, carga_persona  ON tem FOR EACH ROW  EXECUTE PROCEDURE tem_cod_per_trg();
         `
-    },
+    }
 };
 }

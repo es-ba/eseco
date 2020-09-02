@@ -35,6 +35,7 @@ export function tareas_areas(context:TableContext, opt:any):TableDefinition {
             {table:`${mis}tareas_tem`       , fields:['tarea', 'area'], abr:'T', refreshParent:true},
         ],
         sql:{
+            isTable: true,
             insertIfNotUpdate:true,
             from:`(
                 select t.tarea, a.area

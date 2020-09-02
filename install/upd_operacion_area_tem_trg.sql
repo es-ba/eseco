@@ -20,7 +20,7 @@ begin
 end;
 $BODY$;
 
-DROP TRIGGER upd_operacion_tareas_areas_tem_trg ON tareas_areas;
+DROP TRIGGER IF EXISTS upd_operacion_tareas_areas_tem_trg ON tareas_areas;
 CREATE TRIGGER upd_operacion_tareas_areas_tem_trg
    AFTER UPDATE OF operacion, asignado,fecha_asignacion,asignante 
    ON encu.tareas_areas
