@@ -8,7 +8,6 @@ export * from "./types-eseco";
 import {json, jsono} from "pg-promise-strict";
 
 import {changing, datetime, date } from 'best-globals';
-import { carga_fechas } from "./table-carga_fechas";
 import {promises as  fs} from "fs";
 var path = require('path');
 var sqlTools = require('sql-tools');

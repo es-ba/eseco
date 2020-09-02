@@ -14,17 +14,18 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         {name:'operativo', typeName:'text', isPk:2},
         {name:'enc'      , typeName:'text', isPk:3},
         {name:'abrir'    , typeName:'text'    , editable:false, inTable:false, clientSide:'abrirRecepcion'},
-        {name:'area'     , typeName: 'integer', editable: false },
-        {name:'asignado' , typeName:'text'}, // va a la hoja de ruta
+        {name:'area'     , typeName: 'integer', editable: false, inTable:false },
+        {name:"habilitada"      , typeName: "boolean", editable: puedeEditar},
         {name:'asignante' , typeName:'text'}, // va a la hoja de ruta
+        {name:'asignado' , typeName:'text'}, // va a la hoja de ruta
         {name:'operacion' , typeName:'text'}, // cargar/descargar
         {name:'fecha_asignacion', typeName:'date'}, // cargar/descargar
+        {name:"carga_observaciones", typeName: "text", editable: true},        
+        {name:'cargado_dm'      , typeName:'text', editable: false}, //cargar/descargar 
+        {name:"cargado"         , typeName: "boolean", editable: false},
+        {name:'notas'           , typeName:'text'}, // viene de la hoja de ruta
         {name:'resultado'       , typeName:'text'}, // fk tareas_resultados 
         {name:'fecha_resultado' , typeName:'date'}, // fk tareas_resultados 
-        {name:'notas'           , typeName:'text'}, // viene de la hoja de ruta
-        {name:"carga_observaciones", typeName: "text", editable: true},        
-        {name:"cargado"         , typeName: "boolean", editable: false},
-        {name:"habilitada"      , typeName: "boolean", editable: puedeEditar},
     ];
     return {
         name:`${mis}tareas_tem`,
@@ -41,8 +42,7 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
             {references:'operaciones' , fields:['operacion']},
         ],
         softForeignKeys:[
-            {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true, displayAfterFieldName:'habilitada'},
-            {references:'areas' , fields:['area']},
+            {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true, displayAfterFieldName:'fecha_resultado'},
         ],
         sql:{
             isTable:true,

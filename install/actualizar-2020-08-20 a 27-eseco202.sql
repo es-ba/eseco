@@ -232,7 +232,7 @@ alter table tem
 
 --agregar cargado al from de tareas_areas
 alter table tareas_areas
-    add column cargadas integer,
+    --add column cargadas integer,
     add column obs_asignante text;
 	
 -- no se usaron , estaban en otros proyectos
@@ -253,5 +253,68 @@ insert into tareas_areas(tarea, area, asignado, asignante, fecha_asignacion, obs
   select 'rel', area, relevador, recepcionista, fecha, obs_recepcionista
   from areas;
 
+-- 2020-09-01
 alter table tareas_tem
-  drop column area;
+  drop column if exists area,
+  drop column if exists accion;
+
+alter table tareas_areas
+  drop column if exists cargadas;
+
+alter table tem
+  --sin uso
+    drop column if exists rea_p,
+    drop column if exists norea_p,
+  --solo eseco201 
+    drop column if exists seleccionada_anterior,
+    drop column if exists seleccionada_actual,
+  -- pasan a tareas_tem   
+   drop column if exists cargado,
+   drop column if exists cargado_dm,
+   drop column if exists operacion,
+   drop column if exists carga_observaciones
+   ;
+
+-- DROP FUNCTION encu.upd_operacion_tareas_area_tem_trg();
+CREATE OR REPLACE FUNCTION encu.upd_operacion_tareas_area_tem_trg()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+begin
+    if new.asignado is not null then
+        update tareas_tem tt
+            set operacion=new.operacion,
+                asignado=new.asignado,
+                asignante=new.asignante,
+                fecha_asignacion=new.fecha_asignacion
+            from tem t   
+            where t.operativo=tt.operativo and t.enc=tt.enc 
+              and area=t.area and tt.habilitada;            
+    end if;
+    return new;
+end;
+$BODY$;
+DROP TRIGGER upd_operacion_tareas_areas_tem_trg ON tareas_areas;
+CREATE TRIGGER upd_operacion_tareas_areas_tem_trg
+   AFTER UPDATE OF operacion, asignado,fecha_asignacion,asignante 
+   ON encu.tareas_areas
+   FOR EACH ROW
+   EXECUTE PROCEDURE encu.upd_operacion_tareas_area_tem_trg();   
+
+DROP TRIGGER upd_operacion_area_tem_trg ON encu.areas;
+DROP FUNCTION encu.upd_operacion_area_tem_trg();
+
+alter table "tareas_tem" add constraint "cargado_dm<>''" check ("cargado_dm"<>'');
+
+--PENDIENTES DE ANALIZAR
+  --tareas_areas
+     --add column verificado text
+     --
+  --tem 
+    --drop column if exists enc_original, 8 aparaciones
+    --drop column if exists cluster,  54 apariciones
+  --areas   
+     -- observaciones_hdr???
+     --drop recepcionista, relevador
+     --drop fecha , cargadas....
+     --drop auxiliar, verificado_rec
