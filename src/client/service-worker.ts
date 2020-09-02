@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_NAME = '#20902';
+const CACHE_NAME = '#20-09-02';
 var urlsToCache = [
     "campo",
     "lib/react.production.min.js",
@@ -86,6 +86,13 @@ self.addEventListener('fetch', function(event) {
     let myUrl = urlParts[urlParts.length-1]
     return myUrl==source
   });
+  console.log("source",source)
+  if(source=='@version'){
+    var miBlob = new Blob();
+    var opciones = { "status" : 200 , "statusText" : CACHE_NAME, ok:true };
+    var miRespuesta = new Response(miBlob,opciones);
+    event.respondWith(miRespuesta);
+  }
   if(sourceIsCached){
     event.respondWith(
       caches.match(event.request)

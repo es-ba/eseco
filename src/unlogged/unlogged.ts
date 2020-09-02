@@ -27,9 +27,7 @@ window.addEventListener('load', async function(){
     layout.innerHTML='<div id=main_layout></div><span id="mini-console"></span>';
     var url = new URL(window.location.href);
     if(location.pathname.endsWith('/campo')){
-        if(myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
-            desplegarFormularioActual({modoDemo:false});
-        }else{
+        if(!myOwn.existsLocalVar(LOCAL_STORAGE_STATE_NAME)){
             var avisoInicial=html.div({class:'aviso-inicial'},[
                 html.div({id:'dm-cargando', style:'display:none'},[
                     html.p('Cargando el formulario'), 
@@ -45,7 +43,6 @@ window.addEventListener('load', async function(){
                 ])
             ]).create()
             layout.appendChild(avisoInicial);        
-            desplegarFormularioActual({modoDemo:false});
         }
         if('serviceWorker' in navigator){
             navigator.serviceWorker.register('service-worker.js').then(function(reg) {
@@ -56,7 +53,7 @@ window.addEventListener('load', async function(){
                     // https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
                     var installingWorker = reg.installing;
                     setMessage('Instalando una nueva version, por favor espere...','warning');
-                    installingWorker.onstatechange = function() {
+                    installingWorker.onstatechange = async function() {
                         console.log("estado: ", installingWorker.state);
                         switch (installingWorker.state) {
                             case 'installed':
@@ -74,8 +71,10 @@ window.addEventListener('load', async function(){
                                 }
                                 break;
                             case 'activated':
-                                //my.setLocalVar('app-version', CACHE_NAME);
-                                setMessage(`Aplicación actualizada`,'all-ok');
+                                setMessage(`Aplicación actualizada, espere a que se refresque la pantalla`,'all-ok');
+                                setTimeout(async function(){
+                                    location.reload(true);
+                                },3000)
                                 break;
                             case 'redundant':
                                 console.error('The installing service worker became redundant.');
@@ -87,9 +86,20 @@ window.addEventListener('load', async function(){
             }).catch(function(e) {
                 console.error('Error during service worker registration:', e);
             });
+            try{
+                var response = await fetch("@version");
+                console.log('v', response.statusText)
+                var version = response.statusText;
+                my.setLocalVar('app-version', version);
+            }catch(err){
+                console.log("error al buscar version.", err)
+            }finally{
+                desplegarFormularioActual({modoDemo:false});
+            }
         }else{
             console.log('serviceWorkers no soportados')
-            setMessage('Service workers no soportados por el navegador. ','danger')
+            setMessage('Service workers no soportados por el navegador. La aplicación no funcionará sin conexión a internet. ','danger')
+            desplegarFormularioActual({modoDemo:false});    
         }
     }else if(location.pathname.endsWith('/ver')){
         desplegarFormularioConsultaResultados();
