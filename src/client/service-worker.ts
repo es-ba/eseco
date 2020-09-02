@@ -93,7 +93,7 @@ self.addEventListener('fetch', function(event) {
     var miRespuesta = new Response(miBlob,opciones);
     event.respondWith(miRespuesta);
   }
-  if(sourceIsCached){
+  if(sourceIsCached && !event.request.url.includes('login#')){
     event.respondWith(
       caches.match(event.request)
       .then(function(response) {
