@@ -2,6 +2,7 @@
 import {html}  from 'js-to-html';
 import * as AjaxBestPromise from "ajax-best-promise";
 import {LOCAL_STORAGE_STATE_NAME} from "../unlogged/redux-formulario";
+//import {CACHE_NAME} from "service-worker";
 import { desplegarFormularioActual, desplegarFormularioConsultaResultados } from './render-formulario';
 
 function siExisteId(id: string, hacer: (arg0: HTMLElement) => void){
@@ -47,28 +48,64 @@ window.addEventListener('load', async function(){
             desplegarFormularioActual({modoDemo:false});
         }
         if('serviceWorker' in navigator){
-            navigator.serviceWorker.register('service-worker.js')
-            .then(function(registration) {
-              console.log('Registered:', registration);
-            })
-            .catch(function(error) {
-              console.log('Registration failed: ', error);
+            navigator.serviceWorker.register('service-worker.js').then(function(reg) {
+                console.log('Registered:', reg);
+                //updatefound is fired if service-worker.js changes.
+                reg.onupdatefound = function() {
+                    // The updatefound event implies that reg.installing is set; see
+                    // https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
+                    var installingWorker = reg.installing;
+                    setMessage('Instalando una nueva version, por favor espere...','warning');
+                    installingWorker.onstatechange = function() {
+                        console.log("estado: ", installingWorker.state);
+                        switch (installingWorker.state) {
+                            case 'installed':
+                                if (navigator.serviceWorker.controller) {
+                                // At this point, the old content will have been purged and the fresh content will
+                                // have been added to the cache.
+                                // It's the perfect time to display a "New content is available; please refresh."
+                                // message in the page's interface.
+                                console.log('New or updated content is available.');
+                                
+                                } else {
+                                // At this point, everything has been precached.
+                                // It's the perfect time to display a "Content is cached for offline use." message.
+                                console.log('Content is now available offline!');
+                                }
+                                break;
+                            case 'activated':
+                                //my.setLocalVar('app-version', CACHE_NAME);
+                                setMessage(`Aplicación actualizada`,'all-ok');
+                                break;
+                            case 'redundant':
+                                console.error('The installing service worker became redundant.');
+                                setMessage('Se produjo un error al instalar la aplicación. ','danger')
+                                break;
+                        }
+                    };
+                };
+            }).catch(function(e) {
+                console.error('Error during service worker registration:', e);
             });
         }else{
             console.log('serviceWorkers no soportados')
-            var layout = await awaitForCacheLayout;
-            var cacheStatusElement = document.getElementById('cache-status');
-            if(!cacheStatusElement){
-                cacheStatusElement = html.p({id:'cache-status'}).create();
-                layout.insertBefore(cacheStatusElement, layout.firstChild);
-            }
-            cacheStatusElement.classList.add('danger')
-            cacheStatusElement.textContent='Service workers no soportados por el navegador. ';
+            setMessage('Service workers no soportados por el navegador. ','danger')
         }
     }else if(location.pathname.endsWith('/ver')){
         desplegarFormularioConsultaResultados();
     }
 })
+
+async function setMessage(message:string, color:'all-ok'|'warning'|'danger'){
+    var layout = await awaitForCacheLayout;
+    var cacheStatusElement = document.getElementById('cache-status');
+    if(!cacheStatusElement){
+        cacheStatusElement = html.p({id:'cache-status'}).create();
+        layout.insertBefore(cacheStatusElement, layout.firstChild);
+    }
+    cacheStatusElement.classList.add(color)
+    cacheStatusElement.textContent=message;
+}
 
 export var awaitForCacheLayout = async function prepareLayoutForCache(){
     await new Promise(function(resolve, _reject){

@@ -1,4 +1,5 @@
-var CACHE_NAME = '#2020-09-01';
+"use strict";
+const CACHE_NAME = '#20902';
 var urlsToCache = [
     "campo",
     "lib/react.production.min.js",
@@ -63,17 +64,17 @@ self.addEventListener('install', async function(event){
     .then(function(cache){
       return cache.addAll(urlsToCache);
     })
-    .catch(async function(err){
-      hayError=true;
-      console.log("error al cargar service worker", err)
-      //informar error
-    })
-    .finally(async function(){
-      if(!hayError){
-        console.log("instalacion correcta");
-        //informar correcto
-      }
-    })
+    //.catch(async function(err){
+    //  hayError=true;
+    //  console.log("error al cargar service worker", err)
+    //  //informar error
+    //})
+    //.finally(async function(){
+    //  if(!hayError){
+    //    console.log("instalacion correcta");
+    //    //informar correcto
+    //  }
+    //})
   );
 });
 
