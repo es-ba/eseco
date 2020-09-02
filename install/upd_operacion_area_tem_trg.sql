@@ -1,29 +1,28 @@
---set role eseco_owner;
+--set role eseco201_produc_owner;
 --set search_path=encu;
-
-CREATE OR REPLACE FUNCTION upd_operacion_area_tem_trg()
-  RETURNS trigger AS
-$BODY$
+-- DROP FUNCTION encu.upd_operacion_tareas_area_tem_trg();
+CREATE OR REPLACE FUNCTION encu.upd_operacion_tareas_area_tem_trg()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
 begin
-    if new.relevador is not null then
-        update tem
-            set operacion=new.operacion_area,
-                relevador=new.relevador
-            where area=new.area and habilitada;
-            --TODO falta contemplar excluir las encuestas que no se vincularan mas a un dm            
+    if new.asignado is not null then
+        update tareas_tem tt
+            set operacion=new.operacion,
+                asignado=new.asignado,
+                asignante=new.asignante,
+                fecha_asignacion=new.fecha_asignacion
+            from tem t   
+            where t.operativo=tt.operativo and t.enc=tt.enc 
+              and area=t.area and tt.habilitada;            
     end if;
     return new;
 end;
-$BODY$
-  LANGUAGE plpgsql ;
+$BODY$;
 
---/*
-DROP TRIGGER IF EXISTS upd_operacion_area_tem_trg ON encu.areas;
-
-CREATE TRIGGER upd_operacion_area_tem_trg
-  AFTER UPDATE OF operacion_area, relevador 
-  ON areas  
-  FOR EACH ROW
-  EXECUTE PROCEDURE upd_operacion_area_tem_trg();  
-
--- */
+DROP TRIGGER upd_operacion_tareas_areas_tem_trg ON tareas_areas;
+CREATE TRIGGER upd_operacion_tareas_areas_tem_trg
+   AFTER UPDATE OF operacion, asignado,fecha_asignacion,asignante 
+   ON encu.tareas_areas
+   FOR EACH ROW
+   EXECUTE PROCEDURE encu.upd_operacion_tareas_area_tem_trg();   

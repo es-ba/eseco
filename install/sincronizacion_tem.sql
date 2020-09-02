@@ -30,9 +30,25 @@ CREATE TRIGGER sincronizacion_tem_trg
 
 -- */
 
-
 --Ejemplos de uso
 --select sincronizacion_tem('ESECO', '400101');
 --select sincronizacion_tem('ESECO', '400102');
 --select sincronizacion_tem('ESECO', '400102');
 --select sincronizacion_tem('ESECO', '400103');
+
+-- PARA TAREAS_TEM
+CREATE OR REPLACE FUNCTION encu.sincronizacion_tareas_tem_trg()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+AS $BODY$
+begin
+    new.cargado      = new.cargado_dm is not null;
+    return new;
+end;
+$BODY$;
+
+CREATE TRIGGER sincronizacion_tareas_tem_trg
+    BEFORE INSERT OR UPDATE OF cargado_dm
+    ON encu.tareas_tem
+    FOR EACH ROW
+    EXECUTE PROCEDURE encu.sincronizacion_tareas_tem_trg();

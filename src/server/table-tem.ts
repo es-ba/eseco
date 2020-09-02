@@ -22,7 +22,7 @@ export function tem(context:TableContext):TableDefinition {
     "name": "tem",
     editable: true,
     //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
-    //"hiddenColumns":['carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado' ],
+    //"hiddenColumns":[],
     "fields": [
         {
             "name": "operativo",
@@ -166,23 +166,6 @@ export function tem(context:TableContext):TableDefinition {
             "typeName":"text"
         },
         { name:'etiqueta'         , typeName:'text'     },
-        /*
-        {
-            "name": "operacion",
-            editable: hasRecepcionistaPermission,
-            "typeName": "text",
-        },
-        {
-            "name": "carga_observaciones",  //va??? , pareceria por carga
-            editable: hasRecepcionistaPermission,
-            "typeName": "text"
-        },
-        {
-            "name": "cargado_dm",
-            editable: false,
-            "typeName": "text"
-        },
-        */
         {
             "name": "habilitada",
             editable: hasRecepcionistaPermission,
@@ -329,8 +312,6 @@ export function tem(context:TableContext):TableDefinition {
     ],
     foreignKeys:[
         {references:'areas' , fields:['area']},
-    //    {references:'operaciones' , fields:['operacion']},
-    //    {references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
     //    {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
     ], 
     "detailTables": [

@@ -25,7 +25,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     editable: true,
     tableName:'tem',
     //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
-    "hiddenColumns":[...columnasAreasParaLaTem.map(x=>`areas__${x}`), 'gru_no_rea','carga_rol','carga_persona','cod_enc','cod_recu','cod_sup','result_sup','dispositivo','estado','tipo_estado','lote','semana','carga' ],
+    "hiddenColumns":[...columnasAreasParaLaTem.map(x=>`areas__${x}`), 'gru_no_rea','semana'],
     "fields": [
         {
             "name": "operativo",
@@ -47,31 +47,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "integer"
         },
-        /*
-        {
-            "name": "operacion",
-            editable: hasRecepcionistaPermission,
-            "typeName": "text",
-        },
-        {
-            "name": "carga_observaciones",  //va??? , pareceria por carga
-            editable: true,
-            "typeName": "text"
-        },
-        {name:'confirmada'  , typeName:'boolean'},
-        {name:'seleccionada_actual'  , typeName:'text', editable:false},
-        {name:'seleccionada_anterior', typeName:'text', editable:false},
-        {
-            "name": "cargado",
-            editable: false,
-            "typeName": "boolean"
-        },
-        {
-            "name": "habilitada",
-            editable: hasRecepcionistaPermission,
-            "typeName": "boolean"
-        },  
-        */      
         { name:'rea_m'            , typeName:'integer'  },
         {name:'cod_no_rea'    , typeName:'text'   ,editable:false    },
         {name:'gru_no_rea'    , typeName:'text'   ,editable:false    },
@@ -252,16 +227,8 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "typeName": "text"
         },
         /*
-        {name:'result_sup', typeName:'text' ,editable: hasRecepcionistaPermission  },
         {name:'obs_sup'   , typeName:'text' ,editable: isSupervisor     },
         {name:'obs_coor'  , typeName:'text' ,editable: isCoordinador || isSubCoordinador },
-        {
-            "name": "telefonos",
-            "editable": false,
-            "typeName": "text",
-            visible: false,
-            inTable: false
-        },
         */
         {
             "name": "seleccionado",
@@ -316,50 +283,11 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             editable: false,
             "typeName": "integer"
         },
-        /*
-        {
-            "name": "carga_rol",
-            editable: hasRecepcionistaPermission,
-            "typeName": "text"
-        },
-        {
-            "name": "carga_persona",
-            editable: hasRecepcionistaPermission,
-            "typeName": "text"
-        },
-        {
-            "name": "lote",
-            "typeName": "integer",
-            editable: hasSubCoordinadorPermission,
-            //"nullable":false
-        },
-        */
         {
             "name": "semana", //nullable false
             editable: hasSubCoordinadorPermission,
             "typeName": "integer"
         },
-        /*
-        {
-            "name": "carga",
-            editable: hasRecepcionistaPermission,
-            "typeName": "date"
-        },
-        {
-            "name": "dispositivo",
-            "editable": false,
-            "typeName": "text"
-        },
-        {
-            "name": "estado",
-            "editable": false,
-            "typeName": "text",
-            //"nullable": false
-        },
-        {name:'cod_enc'       , typeName:'text'   ,editable:isAdmin    },
-        {name:'cod_recu'      , typeName:'text'   ,editable:false    },
-        {name:'cod_sup'       , typeName:'text'   ,editable:false    },
-        */
         {
             "name": "periodicidad",
             "editable": false,
@@ -379,8 +307,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     ],
     foreignKeys:[
         {references:'areas' , fields:['area'], displayFields:columnasAreasParaLaTem},
-        //{references:'operaciones' , fields:['operacion']},
-        //{references:'estados' , fields:['estado' ] , displayFields:['tipo_estado']},
         //{references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
     ], 
     "detailTables": [
@@ -398,12 +324,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
                 , area, dominio, estrato_ing, id_marco, nrocatastral, piso, departamento, habitacion, barrio, obs
                 , etiqueta, relevador, rea_m, fecha_rel, tipo_domicilio, json_backup, cluster, enc_original
                 , tipos_inconsist, obs_coor, consistido
-                --, result_sup, obs_sup
-                --, lote, carga_rol, carga_persona, carga, operacion, carga_observaciones, cargado_dm, habilitada
-                --, dispositivo, estado, cod_enc, cod_recu, cod_sup, rea_p, norea_p
-                --, seleccionada_actual, seleccionada_anterior, confirmada, observaciones_carga
-                --, cargado_dm is not null as cargado
-                --,encu.validar_tipodato(enc,json_encuesta) tipos_inconsist 
                 , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
                 , ${be.sqlNoreaCase('grupo')} as gru_no_rea
                 from tem t

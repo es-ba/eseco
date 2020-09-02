@@ -1,7 +1,10 @@
 operativo|id_casillero|padre|tipoc|tipoc__denominacion|casillero|orden|ok|nombre|tipovar|longitud|tipoe|aclaracion|salto|unidad_analisis|cantidad_resumen|irrepetible|despliegue|ver_id|optativo|orden_total|ultimo_ancestro|formulario_principal|var_name|var_name_especial|expresion_habilitar|valor_ns_nc|valor_sin_dato
 ESECO|F:F1||F|formulario|F1|1|✔|Estudio de seroprevalencia COVID-19||||||viviendas||||||1|F:F1||||||
 ESECO|UG|F:F1|B|bloque|UG|50|✔|Ubicación geográfica||||||||true||||1;50|F:F1||||||
-ESECO|G1|UG|P|pregunta|G1|1|✔|Tipo de domicilio|numero|||||||true|calculada|||1;50;1|F:F1||g1||||
+ESECO|TF|UG|P|pregunta|TF|1|✔|Tipo de formulario|opciones|||||||true||||1;50;1|F:F1||tipo_seleccion|tipo_seleccion|||
+ESECO|TF/1|TF|O|opción|1|1|✔|SPA||||||||||||1;50;1;1|F:F1||||||
+ESECO|TF/2|TF|O|opción|2|2|✔|SSP||||||||||||1;50;1;2|F:F1||||||
+ESECO|G1|UG|P|pregunta|G1|2|✔|Tipo de domicilio|numero|||||||true|calculada|||1;50;2|F:F1||g1||||
 ESECO|G2|UG|P|pregunta|G2|100|✔|Calle|texto|||||||true|ocultar no_leer|||1;50;100|F:F1||g2||g1=2||
 ESECO|G3|UG|P|pregunta|G3|110|✔|Número|texto|4||||||true|ocultar no_leer|||1;50;110|F:F1||g3||g1=2||
 ESECO|G4|UG|P|pregunta|G4|120|✔|Piso|texto|2||||||true|ocultar no_leer||true|1;50;120|F:F1||g4||g1=2||
@@ -37,10 +40,13 @@ ESECO|DV5|DV|P|pregunta|DV5|170|✔|¿En esta vivienda vive y está presente alg
 ESECO|DV5/1|DV5|O|opción|1|1|✔|Sí||||||||||||1;100;170;1|F:F1||||||
 ESECO|DV5/2|DV5|O|opción|2|2|✔|No||||||||||||1;100;170;2|F:F1||||||
 ESECO|CC3|DV|CONS|consistencia|CC3|175|⛔|Cuando en la vivienda no hay personas de 18 años o más se finaliza la entrevista||||||||true||||1;100;175|F:F1||||dv5=2||
-ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv5=1||
+ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv5=1 or dv4=2 & g1=6||
 ESECO|F1FIN|F:F1|BF|Botón para formulario|F1FIN|190|✔|FIN||||||||true|ocultar|||1;190|F:F1||||dv5=2 or dv1=2 & dv3>0 or dv4=1||
 ESECO|F:F2||F|formulario|F2|2|✔|Habitantes de la vivienda||||||viviendas||||||2|F:F2||||||
 ESECO|CP|F:F2|P|pregunta|CP|1|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;1|F:F2||cp||||
+ESECO|MR|F:F2|P|pregunta|MR|2|✔|Medio de relevamiento|opciones|||||||true||||2;2|F:F2||tipo_relevamiento|tipo_relevamiento|||
+ESECO|MR/1|MR|O|opción|1|1|✔|Dispositivo móvil||||||||||||2;2;1|F:F2||||||
+ESECO|MR/2|MR|O|opción|2|2|✔|Formulario en papel||||||||||||2;2;2|F:F2||||||
 ESECO|LN|F:F2|B|bloque|LN|10|✔|Lista de nombres||||||personas||true||||2;10|F:F2||||||
 ESECO|P1!|LN|P|pregunta|P1!|1|✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||||true||||2;10;1|F:F2||p1!|p1!|||
 ESECO|LP|F:F2|B|bloque|LP|100|✔|Lista de personas||||||personas||true||||2;100|F:F2||||||
@@ -49,9 +55,13 @@ ESECO|P2|LP|P|pregunta|P2|120|✔|Sexo|opciones|||(declarado por el encuestado/a
 ESECO|P2/1|P2|O|opción|1|1|✔|Varón||||||||||||2;100;120;1|F:F2||||||
 ESECO|P2/2|P2|O|opción|2|2|✔|Mujer||||||||||||2;100;120;2|F:F2||||||
 ESECO|P3|LP|P|pregunta|P3|130|✔|¿Cuántos años cumplidos tiene en este momento?|numero|2||Si tiene menos de un año anote 0||personas||true||||2;100;130|F:F2||p3||||
-ESECO|P4|LP|P|pregunta|P4|140|✔|¿Está la persona en este momento presente?|si_no|||||personas||true||||2;100;140|F:F2||p4||p3>=18 or p3<0||
+ESECO|P4|LP|P|pregunta|P4|140|✔|¿Está la persona en este momento presente?|si_no|||||personas||true|ocultar|||2;100;140|F:F2||p4||(p3>=18 or p3<0) and tipo_seleccion=2 and tipo_relevamiento=1||
 ESECO|P4/1|P4|O|opción|1|1|✔|Sí||||||||||||2;100;140;1|F:F2||||||
 ESECO|P4/2|P4|O|opción|2|2|✔|No||||||||||||2;100;140;2|F:F2||||||
+ESECO|P5|LP|P|pregunta|P5|150|✔|¿Quién es la próximo persona presente en cumplir años?|opciones|||(solo presentes de 18 años y más)||personas||true|ocultar||true|2;100;150|F:F2||p5||(p3>=18 or p3<0) and tipo_seleccion=2 and tipo_relevamiento=2||
+ESECO|P5/1|P5|O|opción|1|1|✔|ésta||||||||||||2;100;150;1|F:F2||||||
+ESECO|P6|LP|P|pregunta|P6|160|✔|¿Quién es la próximo persona en cumplir años?|opciones|||(solo personas de 18 años y más, aunque estén ausentes)||personas||true|ocultar||true|2;100;160|F:F2||p6||(p3>=18 or p3<0) and tipo_seleccion=1 and tipo_relevamiento=2||
+ESECO|P6/1|P6|O|opción|1|1|✔|ésta||||||||||||2;100;160;1|F:F2||||||
 ESECO|C.P3A|F:F2|CONS|consistencia|C.P3A|120|⛔|Revisar la edad en años cumplidos||||||||true||||2;120|F:F2||||_edad_maxima>120||
 ESECO|C.P3B|F:F2|CONS|consistencia|C.P3B|130|⛔|Hay una edad con números negativos||||||||true||||2;130|F:F2||||_edad_minima<0 & _edad_minima !== null||
 ESECO|B9|F:F2|B|bloque|B9|330|✔|confirmación de la lista de personas||||||||true||||2;330|F:F2||||||
@@ -62,6 +72,19 @@ ESECO|P11|B9|P|pregunta|P11|340|✔|Número de la persona seleccionada|numero|||
 ESECO|P12|B9|P|pregunta|P12|350|✔|Nombre de la persona seleccionada|texto|||||||true|calculada|||2;330;350|F:F2||p12||||
 ESECO|F3|F:F2|BF|Botón para formulario|F3|999|✔|Continuar|||||F3|||true||||2;999|F:F2||||p9=1||
 ESECO|F:F3||F|formulario|F3|3|✔|Formulario individual||||||viviendas||||||3|F:F3||||||
+ESECO|SP|F:F3|B|bloque|SP|136|✔|Presencia de la persona seleccionada||||||||true|ocultar|||3;136|F:F3||||tipo_seleccion=1||
+ESECO|SP1|SP|P|pregunta|SP1|100|✔|¿La persona seleccionada está presente?|si_no|||||||true||||3;136;100|F:F3||sp1||tipo_seleccion=1||
+ESECO|SP1/1|SP1|O|opción|1|1|✔|Sí|||||S1|||||||3;136;100;1|F:F3||||||
+ESECO|SP1/2|SP1|O|opción|2|2|✔|No||||||||||||3;136;100;2|F:F3||||||
+ESECO|SP2|SP|P|pregunta|SP2|105|✔|N° celular del seleccionado|texto|||||||true|telefono||true|3;136;105|F:F3||sp2||tipo_seleccion=1||
+ESECO|SP3|SP|P|pregunta|SP3|110|✔|Teléfono fijo de la vivienda|texto|||||||true|telefono||true|3;136;110|F:F3||sp3||tipo_seleccion=1||
+ESECO|C.SP|SP|CONS|consistencia|C.SP|111|⛔|Debe completar un teléfono de contacto||||||||true||||3;136;111|F:F3||||sp2=0 and sp3=0 and sp4<>0||
+ESECO|SP4|SP|P|pregunta|SP4|115|✔|Pactar cita en fecha|fecha|||||||true||||3;136;115|F:F3||sp4||tipo_seleccion=1||
+ESECO|SP5|SP|P|pregunta|SP5|120|✔|Hora de la cita|texto|||||||true||||3;136;120|F:F3||sp5||tipo_seleccion=1||
+ESECO|SP6|SP|P|pregunta|SP6|130|✔|Retomar la entrevista|opciones|||||||true||||3;136;130|F:F3||sp6||tipo_seleccion=1||
+ESECO|SP6/1|SP6|O|opción|1|1|✔|Sí||||||||||||3;136;130;1|F:F3||||||
+ESECO|SP6/2|SP6|O|opción|2|2|✔|Ausente reiterado|||||FIN|||||||3;136;130;2|F:F3||||||
+ESECO|SP6/3|SP6|O|opción|3|3|✔|Rechazo|||||FIN|||||||3;136;130;3|F:F3||||||
 ESECO|S|F:F3|B|bloque|S|137|✔|Realización de test, cuestionario y firma de consentimiento||||||||true||||3;137|F:F3||||||
 ESECO|S1|S|P|pregunta|S1|138|✔|¿La persona seleccionada aceptó firmar el consentimiento?|si_no|||||||true|no_leer|||3;137;138|F:F3||s1||||
 ESECO|S1/1|S1|O|opción|1|139|✔|Sí||||||||||||3;137;138;139|F:F3||||||

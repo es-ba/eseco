@@ -60,6 +60,38 @@ anchoNormal(ancho)
         display block
 
 @media screen and (min-width 600px)
+  [nuestro-seleccion="1"][nuestro-relevamiento="1"]
+    .bloque[es-multiple=SI]
+      > .casilleros
+        > div:nth-child(1)
+          width 45%
+        > div:nth-child(4)
+          display none
+        > div:nth-child(5)
+          display none
+        > div:nth-child(6)
+          display none
+  [nuestro-seleccion="2"][nuestro-relevamiento="1"]
+    .bloque[es-multiple=SI]
+      > .casilleros
+        > div:nth-child(5)
+          display none
+        > div:nth-child(6)
+          display none
+  [nuestro-seleccion="1"][nuestro-relevamiento="2"]
+    .bloque[es-multiple=SI]
+      > .casilleros
+        > div:nth-child(4)
+          display none
+        > div:nth-child(5)
+          display none
+  [nuestro-seleccion="2"][nuestro-relevamiento="2"]
+    .bloque[es-multiple=SI]
+      > .casilleros
+        > div:nth-child(4)
+          display none
+        > div:nth-child(6)
+          display none
   .bloque[es-multiple=SI]
     > .casilleros
       flex-direction row

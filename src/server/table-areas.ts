@@ -29,10 +29,10 @@ export function areas(context:TableContext):TableDefinition {
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
             {name:'relevador'               , typeName:'text', references:'mis_relevadores'},
             {name:'auxiliar'                , typeName:'text', editable:context.forDump || context.puede.campo.administrar},
-            {name:'operacion_area'          , typeName:'text'                      },
-            {name:'fecha'                   , typeName:'date'                      },
+            //{name:'operacion_area'          , typeName:'text'                      },
+            //{name:'fecha'                   , typeName:'date'                      },
             {name:'observaciones_hdr'       , typeName:'text'                      },
-            {name:'cargado'                 , typeName:'boolean' , editable:false  , inTable:false},
+            //{name:'cargado'                 , typeName:'boolean' , editable:false  , inTable:false},
             //{name:'cargadas'                , typeName:'integer' , editable:false  },
             {name:'reas'                    , typeName:'integer' , editable:false  , aggregate:'sum'},
             {name:'no_reas'                 , typeName:'integer' , editable:false  , aggregate:'sum'},
@@ -57,7 +57,7 @@ export function areas(context:TableContext):TableDefinition {
         primaryKey:['area'],
         foreignKeys:[
             //{references:'operativos', fields:['operativo']},
-            {references:'operaciones', fields:[{source:'operacion_area', target:'operacion'}]},
+            //{references:'operaciones', fields:[{source:'operacion_area', target:'operacion'}]},
             {references:'usuarios', fields:[{source:'relevador'    , target:'idper'}], alias:'per_enc', displayFields:[]},
             {references:'usuarios', fields:[{source:'recepcionista', target:'idper'}], alias:'per_recep', displayFields:[]},
         ],
@@ -71,12 +71,14 @@ export function areas(context:TableContext):TableDefinition {
         sql:{
             isTable:true,
             from:` 
-            (select a.area, a.recepcionista, a.relevador, a.operacion_area, a.fecha, a.observaciones_hdr,  
+            (select a.area, a.recepcionista, a.relevador,  a.observaciones_hdr,  
                   a.verificado_rec, a.obs_recepcionista, a.auxiliar,
+                  --a.operacion_area, a.fecha,
                   a.cargadas_bkp, a.reas_bkp, a.no_reas_bkp, a.incompletas_bkp, a.vacias_bkp, a.inhabilitadas_bkp,
                   t.*
                 from areas a, lateral(
-                    select bool_or( cargado_dm is not null )       as cargado , 
+                    select 
+                        -- bool_or( cargado_dm is not null )       as cargado , 
                         --count( cargado_dm )                            as cargadas,
                         sum ( rea_m )                                  as reas,
                         count(*) filter ( where etiqueta is null and resumen_estado='no rea')       as no_reas,

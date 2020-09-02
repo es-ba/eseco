@@ -46,7 +46,7 @@ install:
       - agregar_adjunto_carto_trg
       - tem_area_sincro_trg.sql
       - upd_operacion_area_tem_trg.sql
-      - sincronizacion_tareas_tem.sql
+      - sincronizacion_tem.sql
 login:
   infoFieldList: [usuario, idper, rol]
   plus:
