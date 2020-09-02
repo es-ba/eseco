@@ -120,7 +120,7 @@ export function getFuncionHabilitar(nombreFuncionComoExpresion:string):FuncionHa
 var rowValidator = getRowValidator({getFuncionHabilitar})
 
 // TODO: GENERALIZAR
-type Persona={p1:string, p2:number, p3:number, p4:number|null}
+type Persona={p1:string, p2:number, p3:number, p4:number|null, p5:1|null, p6:1|null}
 
 function num(num:number|string|null):number{
     //@ts-ignore la gracia es meter num cuando es string
@@ -171,6 +171,8 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
     var _personas_incompletas = '_personas_incompletas' as IdVariable
     var p9='p9' as IdVariable;
     var p11='p11' as IdVariable;
+    var tipo_seleccion = 'tipo_seleccion' as IdVariable;
+    var tipo_relevamiento = 'tipo_relevamiento' as IdVariable;
     //@ts-ignore
     var cantidadPersonasActual:number = datosVivienda.respuestas.personas?.length||0;
     //@ts-ignore
@@ -230,7 +232,10 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
     if(respuestas.personas.length==0){
         respuestas.personas.push({} as Persona)
     }
-    respuestas._personas_incompletas=respuestas.personas.filter(p=>!p.p1 || !p.p2 || !p.p3 || p.p3>=18 && !p.p4).length;
+    respuestas._personas_incompletas=respuestas.personas.filter(
+        p=>!p.p1 || !p.p2 || !p.p3 
+            || p.p3>=18 && (!p.p4 && datosVivienda.respuestas[tipo_seleccion]==2 && datosVivienda.respuestas[tipo_relevamiento]==1)
+    ).length;
     respuestas._edad_maxima=respuestas.personas.reduce((acc,p)=>Math.max(p.p3,acc),0);
     respuestas._edad_minima=respuestas.personas.reduce((acc,p)=>Math.min(p.p3,acc),99);
     if(respuestas.p9!=1){
@@ -238,7 +243,14 @@ function variablesCalculadas(datosVivienda: DatosVivienda):DatosVivienda{
         respuestas.p12=null;
     }
     if(respuestas.p9==1 && !respuestas.p11 && respuestas._personas_incompletas==0){
-        var sortear=likeAr(respuestas.personas).filter(p=>p.p4==1 && p.p3>=18).map((p,i)=>({p0:num(i)+1, ...p})).array();
+        var sortear=likeAr(respuestas.personas).filter(
+            p=>p.p3>=18 && (
+                datosVivienda.respuestas[tipo_seleccion]==1 && datosVivienda.respuestas[tipo_relevamiento]==1
+                || datosVivienda.respuestas[tipo_seleccion]==1 && datosVivienda.respuestas[tipo_relevamiento]==2 && p.p6==1
+                || datosVivienda.respuestas[tipo_seleccion]==2 && datosVivienda.respuestas[tipo_relevamiento]==1 && p.p4==1
+                || datosVivienda.respuestas[tipo_seleccion]==2 && datosVivienda.respuestas[tipo_relevamiento]==2 && p.p5==1
+            )
+        ).map((p,i)=>({p0:num(i)+1, ...p})).array();
         sortear.sort(bestGlobals.compareForOrder([{column:"p3"},{column:"p2"},{column:"p1"},{column:"p0"}]));
         var posicionSorteada=((num(datosVivienda.tem.nrocatastral)*13+num(datosVivienda.tem.piso))*17 % 3127) % sortear.length
         respuestas.p11=sortear[posicionSorteada].p0;
@@ -415,10 +427,11 @@ var reducers={
             if(payload.forPk.persona!=null){
                 var iPersona = payload.forPk.persona-1;
                 //@ts-ignore personas existe
-                respuestas.personas = [
-                    //@ts-ignore personas existe
-                    ...respuestas.personas
-                ];
+                respuestas.personas = respuestas.personas.map((p,i)=>
+                    payload.variable!='p6' as IdVariable && payload.variable!='p5' as IdVariable ? p : (
+                        {...p, [payload.variable]:i==iPersona?payload.respuesta:null}
+                    )
+                );
                 //@ts-ignore personas existe
                 respuestas.personas[iPersona] = {...respuestas.personas[iPersona]}
                 //@ts-ignore personas existe
@@ -656,7 +669,7 @@ export function replaceSpecialWords(text:string, nombre:string, apellido:string,
     function capitalizeFirstLetter(text:string) {
         return text.charAt(0).toUpperCase() + text.slice(1);
     }
-    var simplificatedChars={
+    var simplificatedChars:{[k:string]:string}={
         "#nombre":capitalizeFirstLetter(nombre),
         "#apellido":capitalizeFirstLetter(apellido),
         "#resultado":resultado,
