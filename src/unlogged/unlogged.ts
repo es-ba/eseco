@@ -113,6 +113,7 @@ async function setMessage(message:string, color:'all-ok'|'warning'|'danger'){
         cacheStatusElement = html.p({id:'cache-status'}).create();
         layout.insertBefore(cacheStatusElement, layout.firstChild);
     }
+    cacheStatusElement.classList.remove('warning')
     cacheStatusElement.classList.add(color)
     cacheStatusElement.textContent=message;
 }
