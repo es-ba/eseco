@@ -36,6 +36,7 @@ import { etiquetas_resultado } from './table-etiquetas_resultado';
 import { etiquetas_resultado_plus } from './table-etiquetas_resultado_plus';
 import { usuarios            } from './table-usuarios';
 import { operaciones         } from './table-operaciones';
+import { comunas             } from './table-comunas';
 import { areas               } from './table-areas';
 import { sincronizaciones    } from './table-sincronizaciones';
 import { viviendas           } from './table-viviendas';
@@ -379,6 +380,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , etiquetas_resultado
             , etiquetas_resultado_plus
             , operaciones
+            , comunas
             , areas
             , sincronizaciones
             , viviendas

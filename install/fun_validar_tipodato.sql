@@ -26,12 +26,12 @@ with metad as (
 ), data as (
     select  null persona,key variable, value::text valor
         from jsonb_each_text(xjson_enc)
-	union
-	   select persona, key variable, value::text valor
-	     from ( 
-    		select  ordinality persona, value per
-        		from jsonb_array_elements(xjson_enc->'personas') with ordinality xp
-			 ) xp, jsonb_each_text (per)	
+    union
+    select persona, key variable, value::text valor
+        from ( 
+        select  ordinality persona, value per
+            from jsonb_array_elements(xjson_enc->'personas') with ordinality xp
+        ) xp, jsonb_each_text (per) 
 )
  select string_agg(case when persona is null then '' else persona ||'_' end|| quote_literal(variable)||'- not '||type_name||':'||valor, ',')
     from data  join metad using(variable)

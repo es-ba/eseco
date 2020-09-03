@@ -45,7 +45,7 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
             {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true, displayAfterFieldName:'fecha_resultado'},
         ],
         sql:{
-            isTable:true,
+            isTable: !opt.mis,
             insertIfNotUpdate:true,
             from:`(
                 select tareas.tarea, t.operativo, t.enc, t.area

@@ -25,7 +25,7 @@ export function areas(context:TableContext):TableDefinition {
                 nullable: false,
                 editable: true
             },
-            {name:'clusters'                , typeName:'text'},
+            {name:'clusters'                , typeName:'text', inTable:false},
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
             {name:'relevador'               , typeName:'text', references:'mis_relevadores'},
             {name:'auxiliar'                , typeName:'text', editable:context.forDump || context.puede.campo.administrar},
@@ -43,7 +43,7 @@ export function areas(context:TableContext):TableDefinition {
             //{name:'confirmadas'             , typeName:'integer' , editable:false, aggregate:'sum'},
             //{name:'pend_conf'               , typeName:'integer' , editable:false, aggregate:'sum', description:'pendientes de confirmación'},
             {name:'obs_recepcionista'       , typeName:'text'                      },
-            {name:'comuna'                  , typeName:'bigint'  , title:'comuna'  },
+            {name:'comuna'                  , typeName:'bigint'  , title:'comuna'  , inTable:false},
             {name:'cargadas_bkp'            , typeName:'integer' , editable:false  },
             {name:'reas_bkp'                , typeName:'integer' , editable:false  },
             {name:'no_reas_bkp'             , typeName:'integer' , editable:false  },
