@@ -315,15 +315,13 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     sql:{
         isTable: false,
         isReferable:true,
+        xfields:{
+            cod_no_rea:{expr:be.sqlNoreaCase('no_rea')},
+            gru_no_rea:{expr:be.sqlNoreaCase('grupo')}
+        },
         from:`
             (select 
-                operativo, enc, enc_vieja, semana, nrocomuna, nrofraccion, nroradio, nromanzana, nrolado, codviviendaparticular, codcalle, nomcalle
-                , sector, edificio, entrada, casa, obsdatosdomicilio, obsconjunto, usodomicilio, orden_relevamiento, mapa
-                , json_encuesta, resumen_estado, rea, norea, cant_p, sexo_sel, edad_sel, zona, periodicidad, participacion
-                , reserva, areaup, rotacion_etoi, rotacion_eah, trimestre, procedencia, sel_etoi_villa, marco, codpos
-                , area, dominio, estrato_ing, id_marco, nrocatastral, piso, departamento, habitacion, barrio, obs
-                , etiqueta, relevador, rea_m, fecha_rel, tipo_domicilio, json_backup, cluster, enc_original
-                , tipos_inconsist, obs_coor, consistido, seleccionado
+                *
                 , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
                 , ${be.sqlNoreaCase('grupo')} as gru_no_rea
                 from tem t
