@@ -614,7 +614,8 @@ function rellenarVariablesYOpciones(estructura:EstructuraRowValidator, casillero
             salto:casillero.salto as IdVariable,
             saltoNsNr:'salto_ns_nc' in casillero && casillero.salto_ns_nc || null,
             funcionHabilitar:casillero.expresion_habilitar,
-            calculada:casillero.unidad_analisis && casillero.unidad_analisis!=unidadAnalisis || casillero.despliegue?.includes('calculada')
+            calculada:casillero.unidad_analisis && casillero.unidad_analisis!=unidadAnalisis || casillero.despliegue?.includes('calculada'),
+            libre:casillero.despliegue?.includes('libre')
         }
         estructura.variables[casillero.var_name]=variableDef;
     }

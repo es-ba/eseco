@@ -43,10 +43,10 @@ ESECO|CC3|DV|CONS|consistencia|CC3|175|⛔|Cuando en la vivienda no hay personas
 ESECO|F2|F:F1|BF|Botón para formulario|F2|180|✔|Continuar|||||F2|||true||||1;180|F:F1||||dv5=1 or dv4=2 & g1=6||
 ESECO|F1FIN|F:F1|BF|Botón para formulario|F1FIN|190|✔|FIN||||||||true|ocultar|||1;190|F:F1||||dv5=2 or dv1=2 & dv3>0 or dv4=1||
 ESECO|F:F2||F|formulario|F2|2|✔|Habitantes de la vivienda||||||viviendas||||||2|F:F2||||||
-ESECO|CP|F:F2|P|pregunta|CP|1|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;1|F:F2||cp||||
-ESECO|MR|F:F2|P|pregunta|MR|2|✔|Medio de relevamiento|opciones|||||||true||||2;2|F:F2||tipo_relevamiento|tipo_relevamiento|||
+ESECO|MR|F:F2|P|pregunta|MR|2|✔|Medio de relevamiento|opciones|||||||true|libre|||2;2|F:F2||tipo_relevamiento|tipo_relevamiento|||
 ESECO|MR/1|MR|O|opción|1|1|✔|Dispositivo móvil||||||||||||2;2;1|F:F2||||||
 ESECO|MR/2|MR|O|opción|2|2|✔|Formulario en papel||||||||||||2;2;2|F:F2||||||
+ESECO|CP|F:F2|P|pregunta|CP|5|✔|¿Cuántas personas viven en esta vivienda?|numero|2||||||true||||2;5|F:F2||cp||||
 ESECO|LN|F:F2|B|bloque|LN|10|✔|Lista de nombres||||||personas||true||||2;10|F:F2||||||
 ESECO|P1!|LN|P|pregunta|P1!|1|✔|Por favor, nombre todas las personas que habitan esta vivienda, empezando por usted. No olvide bebés y niños|texto|||||||true||||2;10;1|F:F2||p1!|p1!|||
 ESECO|LP|F:F2|B|bloque|LP|100|✔|Lista de personas||||||personas||true||||2;100|F:F2||||||
