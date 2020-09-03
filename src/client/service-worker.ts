@@ -106,3 +106,18 @@ self.addEventListener('fetch', function(event) {
     return false;
   }
 });
+self.addEventListener('activate', function(event) {
+  console.log("borrando caches viejas")
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.filter(function(cacheName) {
+          return cacheName != CACHE_NAME
+        }).map(function(cacheName) {
+          console.log("borrando cache ", cacheName);
+          return caches.delete(cacheName);
+        })
+      );
+    })
+  );
+});
