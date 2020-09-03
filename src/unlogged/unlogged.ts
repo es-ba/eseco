@@ -69,6 +69,7 @@ window.addEventListener('load', async function(){
                                 // It's the perfect time to display a "Content is cached for offline use." message.
                                 console.log('Content is now available offline!');
                                 }
+                                setMessage(`Aplicación actualizada, por favor refresque la pantalla`,'all-ok');
                                 break;
                             case 'activated':
                                 setMessage(`Aplicación actualizada, espere a que se refresque la pantalla`,'all-ok');

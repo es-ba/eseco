@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_NAME = '#20-09-02';
+const CACHE_NAME = '#20-09-03';
 var urlsToCache = [
     "campo",
     "lib/react.production.min.js",
@@ -95,9 +95,11 @@ self.addEventListener('fetch', function(event) {
   }
   if(sourceIsCached && !event.request.url.includes('login#')){
     event.respondWith(
-      caches.match(event.request)
-      .then(function(response) {
-        return response;
+      caches.open(CACHE_NAME).then(function(cache) {
+        return cache.match(event.request)
+        .then(function(response) {
+          return response;
+        })
       })
     );
   }else{
