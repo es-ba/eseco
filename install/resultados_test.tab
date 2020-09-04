@@ -1,0 +1,5 @@
+resultado|email_asunto|email_texto|pagina_texto
+Escasa muestra|Resultado del test de Seroprevalencia COVID-19 de #nombre #apellido.|texto escasa muestra #nombre #apellido #resultado|texto pagina escasa muestra#nombre #apellido #resultado
+Indeterminado|Resultado del test de Seroprevalencia COVID-19 de #nombre #apellido.|texto indeterminado #nombre #apellido #resultado|texto pagina indeterminado
+Negativo|Resultado del test de Seroprevalencia COVID-19 de #nombre #apellido.|texto negativo #nombre #apellido #resultado|texto pagina negativo #nombre #apellido #resultado
+Positivo|Resultado del test de Seroprevalencia COVID-19 de #nombre #apellido.|texto positivo #nombre #apellido #resultado|texto pagina positivo #nombre #apellido #resultado

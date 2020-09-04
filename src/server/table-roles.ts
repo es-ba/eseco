@@ -9,7 +9,7 @@ export function roles(context:TableContext):TableDefinition {
         elementName:'role',
         editable:esEditable,
         fields:[
-            {name:'rol'             , typeName:'text'      , nullable:false  , defaultValue: false},
+            {name:'rol'             , typeName:'text'      , nullable:false                       },
             {name:'superuser'       , typeName:'boolean'   , nullable:false  , defaultValue: false},
             {name:'nombre'          , typeName:'text'      , nullable:false                       },
         ],
