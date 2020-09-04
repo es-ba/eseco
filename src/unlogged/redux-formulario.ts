@@ -2,11 +2,10 @@ import { createStore } from "redux";
 import { CasilleroBase, CasillerosImplementados, CasoState, 
     DatosVivienda, EstadoCarga, EstructuraRowValidator, 
     FeedbackVariable, Formulario, ForPk, 
-    IdCarga, IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdVariable, 
+    IdCarga, IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdTarea, IdVariable, 
     ModoDespliegue, 
     Opcion, PlainForPk, Respuestas, ResumenEstado,
-    TEM,
-    IdTarea
+    Tareas, TareasEstructura, TEM
 } from "./tipos";
 import { deepFreeze } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
@@ -24,6 +23,8 @@ const OPERATIVO='ESECO';
 var dv1 = 'dv1' as IdVariable;
 var dv4 = 'dv4' as IdVariable;
 var dv5 = 'dv5' as IdVariable;
+var sp1 = 'sp1' as IdVariable;
+var sp6 = 'sp6' as IdVariable;
 var s1 = 's1' as IdVariable;
 var s2 = 's2' as IdVariable;
 var s3 = 's3' as IdVariable;
@@ -367,7 +368,8 @@ function calcularResumenVivienda(
         respuestas[s1]==2 ||  
         respuestas[s2]==2 ||  
         respuestas[s3]==2 ||  
-        respuestas[d4]==1 && respuestas[d5c]==1
+        respuestas[d4]==1 && respuestas[d5c]==1 ||
+        respuestas[sp6]>1 
     )){
        return "no rea";
     }
@@ -385,9 +387,10 @@ function calcularResumenVivienda(
         'con problemas':{prioridad: 2, cantidad:0},
         'incompleto':{prioridad: 3, cantidad:0},
         'vacio':{prioridad: 4, cantidad:0},
-        'ok':{prioridad: 5, cantidad:0}
+        'cita pactada':{prioridad: 5, cantidad:0},
+        'ok':{prioridad: 6, cantidad:0}
     }
-    var min = 5;
+    var min = 6;
     var minResumen: ResumenEstado = 'ok';
     for(var feedback of feedBackVivienda){
         var resumen = feedback.resumen;
@@ -396,7 +399,13 @@ function calcularResumenVivienda(
             min=prioridades[resumen].prioridad;
             minResumen=resumen;
         }
-        minResumen = minResumen=='vacio'&& prioridades['ok'].cantidad?'incompleto':minResumen;
+    }
+    if(minResumen=='vacio'&& prioridades['ok'].cantidad || minResumen=='incompleto'){
+        if(respuestas[sp1]==2 && respuestas[sp6]==null){
+            minResumen='cita pactada';
+        }else{
+            minResumen='incompleto';
+        }
     }
     return minResumen
 }
@@ -416,7 +425,14 @@ var reducers={
                 && datosViviendaRecibidos.respuestas.dv2 == null
             ){
                 // @ts-expect-error tengo que agregar toDmy en los tipos
-                otrasRespuestasCalculadas={dv2: bestGlobals.date.today().toDmy()}
+                otrasRespuestasCalculadas.dv2=bestGlobals.date.today().toDmy();
+            }
+            if(payload.variable==('c5' as IdVariable) && payload.respuesta != null 
+                // @ts-ignore en esta encuesta existe
+                && datosViviendaRecibidos.respuestas.c5 == null
+            ){
+                // @ts-expect-error tengo que agregar toDmy en los tipos
+                otrasRespuestasCalculadas.c6=bestGlobals.date.today().toDmy();
             }
             var respuestas = {
                 ...datosViviendaRecibidos.respuestas,
@@ -755,7 +771,8 @@ export async function traerEstructura(params:{operativo: string}){
         ).plain();
     var estructura={
         formularios:casillerosTodosFormularios,
-        mainForm:MAIN_FORM
+        mainForm:MAIN_FORM,
+        tareas:{} as TareasEstructura
     };
     return estructura;
 }
@@ -798,7 +815,7 @@ export async function dmTraerDatosFormulario(opts:{modoDemo:boolean, vivienda?: 
                                 tarea:'rel',
                                 notas: 'una nota'
                             },
-                        },
+                        } as Tareas,
                         tem:{
                             observaciones:'Otro ejemplo vacío', carga:"2020-07-07",
                             nomcalle:'Bolivar', nrocatastral:'541', piso:'3', departamento:'B'

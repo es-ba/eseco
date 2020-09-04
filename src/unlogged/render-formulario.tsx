@@ -12,7 +12,7 @@ import {
 import {Bloque, BotonFormulario, 
     CasilleroBase, CasoState, Consistencia, DatosVivienda,
     EstadoCarga, FeedbackVariable, Filtro, ForPk, Formulario, 
-    IdCaso, IdFormulario, IdVariable, InfoFormulario,
+    IdCaso, IdFormulario, IdTarea, IdVariable, InfoFormulario,
     ModoDespliegue,
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
@@ -48,6 +48,9 @@ import { controlarCodigoDV2 } from "./digitov";
 
 // TODO: Generalizar
 var c5 = 'c5' as IdVariable;
+var e1 = 'e1' as IdVariable;
+var e2 = 'e2' as IdVariable;
+var e7 = 'e7' as IdVariable;
 
 var useStyles = makeStyles((_theme: Theme) =>
     createStyles({
@@ -828,7 +831,17 @@ export function Atributo(props:{nombre:string, valor:string|null}){
     </span>:null
 }
 
-const listaEstadosCarga:EstadoCarga[]=['pendiente','abierta','cerrada'];
+const listaEstadosCarga:EstadoCarga[]=['resumen','relevamiento','recibo'];
+var resumidores = [
+    {nombre:'REA'         , f:(dv:DatosVivienda)=>dv.resumenEstado=="ok"          },
+    {nombre:'Cita pactada', f:(dv:DatosVivienda)=>dv.resumenEstado=="cita pactada"},
+    {nombre:'Pendientes'  , f:(dv:DatosVivienda)=>dv.resumenEstado=="vacio"       },
+];
+
+resumidores.push(
+    {nombre:'Otros', f:resumidores.reduce((g,r)=>(dv=>!r.f(dv) && g(dv) ),(_:DatosVivienda)=>true) }
+)
+
 
 export function DesplegarCarga(props:{
     carga:Carga, 
@@ -857,7 +870,7 @@ export function DesplegarCarga(props:{
             )}
             </ButtonGroup>
         </div>
-        {carga.estado_carga==null && !props.posicion || carga.estado_carga=='abierta'?
+        {carga.estado_carga==null && !props.posicion || carga.estado_carga=='relevamiento'?
         <Table className="tabla-carga-hoja-de-ruta">
             <colgroup>
                 <col style={{width:"70%"}}/>
@@ -898,7 +911,61 @@ export function DesplegarCarga(props:{
                     </TableRow>
                 ).array()}
             </TableBody>
-        </Table>:null}
+        </Table>:carga.estado_carga=='recibo'?
+        <Table className="tabla-carga-hoja-de-ruta">
+            <colgroup>
+                <col style={{width:"15%"}}/>
+                <col style={{width:"15%"}}/>
+                <col style={{width:"70%"}}/>
+            </colgroup>
+            <TableHead style={{fontSize: "1.2rem"}}>
+                <TableRow className="tr-carga">
+                    <TableCell>muestra</TableCell>
+                    <TableCell>documento</TableCell>
+                    <TableCell>apellido y nombre</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {likeAr(hdr).filter((datosVivienda:DatosVivienda)=>datosVivienda.tem.carga==idCarga).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
+                    <TableRow key={idCaso}>
+                        <TableCell>
+                            {datosVivienda.respuestas[c5]}
+                        </TableCell>
+                        <TableCell>
+                            {datosVivienda.respuestas[e7]}
+                        </TableCell>
+                        <TableCell>
+                            {datosVivienda.respuestas[e1]}, 
+                            {datosVivienda.respuestas[e2]}
+                        </TableCell>
+                    </TableRow>
+                ).array()}
+            </TableBody>
+        </Table>:
+        <Table>
+            <TableHead style={{fontSize: "1.2rem"}}>
+                <TableRow className="tr-carga">
+                    {resumidores.map((resumidor: typeof resumidores[0], i:number)=>
+                        <TableCell key={i}>
+                            {resumidor.nombre}
+                        </TableCell>
+                    )}
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                <TableRow>
+                    {resumidores.map((resumidor: typeof resumidores[0], i:number)=>
+                        <TableCell key={i}>
+                            {likeAr(hdr).array()
+                                .filter((datosVivienda:DatosVivienda)=>datosVivienda.tem.carga==idCarga)
+                                .reduce((count, datosVivienda: DatosVivienda)=>count+(resumidor.f(datosVivienda)?1:0),0)
+                            }
+                        </TableCell>
+                    )}
+                </TableRow>
+            </TableBody>
+        </Table>
+        }
     </Paper>
 }
 
@@ -922,7 +989,7 @@ export function DesplegarNotas(props:{tareas:Tareas, idCaso:IdCaso}){
     const {tareas, idCaso} = props;
     const [dialogoNotas, setDialogoNotas] = useState<boolean>(false);
     const [nota, setNota] = useState<string|null>(null);
-    const [miTarea, setMiTarea] = useState<string|null>(null);
+    const [miTarea, setMiTarea] = useState<IdTarea|null>(null);
     const [titulo, setTitulo] = useState<string|null>(null);
     var dispatch = useDispatch();
     return <div className="tareas-notas">
@@ -973,7 +1040,7 @@ export function DesplegarNotas(props:{tareas:Tareas, idCaso:IdCaso}){
                             Descartar nota
                         </Button>
                         <Button onClick={()=>{
-                            dispatch(dispatchers.REGISTRAR_NOTA({
+                            miTarea!=null && dispatch(dispatchers.REGISTRAR_NOTA({
                                 vivienda:idCaso,
                                 tarea: miTarea,
                                 nota: nota
@@ -1186,7 +1253,7 @@ export function ConsultaResultados(){
                     disabled={!(etiqueta && documento && etiquetaValida)}
                     onClick={async ()=>{
                         //ts-ignore Si el botón está habilitado existen la etiqueta y el documento
-                        let result = await consultarEtiqueta(etiqueta, documento);
+                        let result = await consultarEtiqueta(etiqueta!, documento!);
                         setResultadoConsulta(result)
                     }}
                 >
@@ -1225,6 +1292,7 @@ export async function desplegarFormularioConsultaResultados(){
 if(typeof window !== 'undefined'){
     // @ts-ignore para hacerlo
     window.desplegarFormularioActual = desplegarFormularioActual;
+    // @ts-ignore para hacerlo
     window.desplegarFormularioConsultaResultados = desplegarFormularioConsultaResultados;
     // window.desplegarHojaDeRuta = desplegarHojaDeRuta;
 }

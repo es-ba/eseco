@@ -194,7 +194,7 @@ export type TEM = {
     carga:string
 }
 
-export type ResumenEstado = 'vacio' | 'con problemas' | 'incompleto' | 'ok' | 'no rea';
+export type ResumenEstado = 'vacio' | 'con problemas' | 'incompleto' | 'ok' | 'no rea' | 'cita pactada';
 
 export type InfoTarea= {
     tarea: IdTarea
@@ -221,7 +221,7 @@ export type HojaDeRuta={
 
 export type IdCarga="2020-07-07"|"2020-07-08"
 
-export type EstadoCarga='pendiente'|'abierta'|'cerrada'
+export type EstadoCarga='resumen'|'relevamiento'|'recibo'
 
 export type Carga={
     fecha: Date
@@ -243,20 +243,22 @@ export type InfoFormulario={
     estructuraRowValidator:EstructuraRowValidator // estructura de variables para el RowValidator
 }
 
+export type TareasEstructura={
+    [idTarea in IdTarea]:{
+        resultados:{
+            [idResultado in IdResultado]:{
+                descripcion:string
+            }
+        }
+    }
+}
+
 export type CasoState={
     estructura:{
         formularios:{ 
             [nombreFormulario in IdFormulario]:InfoFormulario
         }
-        tareas:{
-            [idTarea in IdTarea]:{
-                resultados:{
-                    [idResultado in IdResultado]:{
-                        descripcion:string
-                    }
-                }
-            }
-        }
+        tareas:TareasEstructura
         mainForm:IdFormulario
     }
     datos:{

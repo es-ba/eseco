@@ -1,7 +1,7 @@
 operativo|id_casillero|padre|tipoc|tipoc__denominacion|casillero|orden|ok|nombre|tipovar|longitud|tipoe|aclaracion|salto|unidad_analisis|cantidad_resumen|irrepetible|despliegue|ver_id|optativo|orden_total|ultimo_ancestro|formulario_principal|var_name|var_name_especial|expresion_habilitar|valor_ns_nc|valor_sin_dato
 ESECO|F:F1||F|formulario|F1|1|✔|Estudio de seroprevalencia COVID-19||||||viviendas||||||1|F:F1||||||
 ESECO|UG|F:F1|B|bloque|UG|50|✔|Ubicación geográfica||||||||true||||1;50|F:F1||||||
-ESECO|TF|UG|P|pregunta|TF|1|✔|Tipo de formulario|opciones|||||||true||||1;50;1|F:F1||tipo_seleccion|tipo_seleccion|||
+ESECO|TF|UG|P|pregunta|TF|1|✔|Tipo de formulario|opciones|||||||true|libre|||1;50;1|F:F1||tipo_seleccion|tipo_seleccion|||
 ESECO|TF/1|TF|O|opción|1|1|✔|SPA||||||||||||1;50;1;1|F:F1||||||
 ESECO|TF/2|TF|O|opción|2|2|✔|SSP||||||||||||1;50;1;2|F:F1||||||
 ESECO|G1|UG|P|pregunta|G1|2|✔|Tipo de domicilio|numero|||||||true|calculada|||1;50;2|F:F1||g1||||
@@ -264,5 +264,6 @@ ESECO|C4|C|P|pregunta|C4|1750|✔|Otro número de teléfono alternativo:|texto|m
 ESECO|C5|C|P|pregunta|C5|1800|✔|CÓDIGO DE LA MUESTRA|texto|7||||||true|no_leer telefono|||3;1710;1800|F:F3||c5||||
 ESECO|C5OK|C|P|pregunta|C5OK|1810|✔|Validación del código de la muestra|numero|2||||||true|calculada ocultar|||3;1710;1810|F:F3||c5ok||1>2||
 ESECO|CONS.C5|C|CONS|consistencia|CONS.C5|1820|⛔|El código de la muestra no coincide con un código válido||||||||true||||3;1710;1820|F:F3||||c5ok=2||
+ESECO|C6|C|P|pregunta|C6|1830|✔|Fecha de extracción de la muestra|texto|medio||||||true|fecha|||3;1710;1830|F:F3||c6||||
 ESECO|FIN|F:F3|P|pregunta|FIN|2000|✔|Observaciones|texto|||||||true|no_leer||true|3;2000|F:F3||fin||||
 ESECO|F3FINU|F:F3|BF|Botón para formulario|F3FINU|2100|✔|FIN||||||||true|ocultar|||3;2100|F:F3||||s1=2 or s2=2 or s3=2 or d5c=1 & d4=1 or c5ok=1||

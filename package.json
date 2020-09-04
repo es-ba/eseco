@@ -28,7 +28,7 @@
     "rel-enc": "^1.2.3",
     "meta-enc": "^1.2.1",
     "procesamiento": "^1.0.0",
-    "row-validator": "^0.6.0",
+    "row-validator": "^0.6.1",
     "typed-controls": "^0.8.21",
     "qrcode": "^1.4.4"
   },
@@ -36,7 +36,7 @@
     "backend-plus": "^1.4.10",
     "operativos": "^1.1.0",
     "rel-enc": "^1.2.3",
-    "row-validator": "^0.5.1",
+    "row-validator": "^0.6.1",
     "typed-controls": "^0.8.21"
   },
   "devDependencies": {
