@@ -81,9 +81,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             // @ts-ignore sé que voy a recibir useragent por los middlewares de Backend-plus
             var {useragent, user} = req;
             if(user){
-                var manifestPath = 'carga-dm/dm-manifest.manifest';
                 /** @type {{type:'js', src:string}[]} */
-                var htmlMain=be.mainPage({useragent, user}, !be.config.devel["no-offline"], {skipMenu:true, manifestPath}).toHtmlDoc();
+                var htmlMain=be.mainPage({useragent, user}, false, {skipMenu:true}).toHtmlDoc();
                miniTools.serveText(htmlMain,'html')(req,res);
             }else{
                 res.redirect(baseUrl+'/login#w=path&path=/campo')

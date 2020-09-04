@@ -1,6 +1,6 @@
-set role to eseco201_produc_owner;
+--set role to eseco201_produc_owner;
 -- set role to eseco201_muleto_owner;
-set search_path = "encu";
+--set search_path = "encu";
 
 -- DROP FUNCTION encu.validar_tipodato(text, jsonb);
 
@@ -39,5 +39,5 @@ with metad as (
  ;
 $BODY$;
 
-ALTER FUNCTION encu.validar_tipodato(text, jsonb)
-    OWNER TO eseco201_produc_owner;
+--ALTER FUNCTION encu.validar_tipodato(text, jsonb)
+--    OWNER TO eseco201_produc_owner;
