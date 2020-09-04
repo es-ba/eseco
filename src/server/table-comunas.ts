@@ -11,9 +11,6 @@ export function comunas(context:TableContext):TableDefinition {
         fields:[
             {name:'comuna'                  , typeName:'integer'},
             {name:'zona'                    , typeName:'text'},
-            {name:'grupo'                   , typeName:'text'},
-            {name:'variable'                , typeName:'text'},
-            {name:'valor'                   , typeName:'text'},
         ],
         primaryKey:['comuna'],
     };
