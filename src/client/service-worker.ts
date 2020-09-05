@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_NAME = '#20-09-03';
+const CACHE_NAME = '#20-09-04';
 var urlsToCache = [
     "campo",
     "lib/react.production.min.js",
@@ -93,7 +93,7 @@ self.addEventListener('fetch', function(event) {
     var miRespuesta = new Response(miBlob,opciones);
     event.respondWith(miRespuesta);
   }
-  if(sourceIsCached && !event.request.url.includes('login#')){
+  if(sourceIsCached && !event.request.url.includes('login')){
     event.respondWith(
       caches.open(CACHE_NAME).then(function(cache) {
         return cache.match(event.request)
@@ -103,7 +103,20 @@ self.addEventListener('fetch', function(event) {
       })
     );
   }else{
-    return false;
+    console.log("busca fuera de la cache")
+    event.respondWith(
+      fetch(event.request).then(function(response) {
+        if (!response.ok) {
+          console.log("no tiene respuesta")
+          throw Error('response status ' + response.status);
+        }
+        return response;
+      }).catch(function(_err) {
+        return new Response("<p>Se produjo un error al intentar cargar la p&aacute;gina, es posible que no haya conexi&oacute;n a internet</p><a href=/eseco/campo>Volver a Hoja de Ruta</button>", {
+          headers: {'Content-Type': 'text/html'}
+        });
+      })
+    );
   }
 });
 self.addEventListener('activate', function(event) {
