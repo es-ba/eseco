@@ -116,7 +116,7 @@ myOwn.wScreens.proc.result.qrs_traer = async (result:{etiquetas:EtiquetaOpts[]},
     var planchaAnterior='';
     var cerrarPlancha=function(){
         planchas.appendChild(html.div({class:'pre-plancha'}, [
-            html.div("PLANCHA "+planchaAnterior+" - Dirección General de Estadística y Censos - ESECO 201")
+            html.div("PLANCHA "+planchaAnterior+" - Dirección General de Estadística y Censos - ESECO 202")
         ]).create());
         planchas.appendChild(html.div({class:'plancha'},etiquetas).create());
         etiquetas=[];

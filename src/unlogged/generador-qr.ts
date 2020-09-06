@@ -25,12 +25,9 @@ export async function crearEtiqueta(etiquetaOpts:EtiquetaOpts, width:number ):Pr
                 etiquetaOpts.etiqueta
             ]),
         ]),
-        html.div({class:'columna'},[
-            html.div({class:'logo-eseco'},[
-                html.img({src:'img/eseco_etiqueta.jpg'}),
-            ]),
-            html.div({class:'logo-ba'},[
-                html.img({src:'img/ba_etiqueta.jpg'}),
+        html.div({class:'columna-derecha'},[
+            html.div({class:'etiqueta-derecha'},[
+                html.img({src:'img/etiqueta_derecha.png'}),
             ]),
         ]),
     ]).create();

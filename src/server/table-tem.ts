@@ -315,6 +315,7 @@ export function tem(context:TableContext):TableDefinition {
     //    {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
     ], 
     "detailTables": [
+        {table: "tareas_tem", abr: "T", fields: ['operativo', 'enc'], label:'tareas'},
         {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
     ],
     sql:{
