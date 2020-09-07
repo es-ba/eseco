@@ -92,8 +92,7 @@ self.addEventListener('fetch', function(event) {
     var opciones = { "status" : 200 , "statusText" : CACHE_NAME, ok:true };
     var miRespuesta = new Response(miBlob,opciones);
     event.respondWith(miRespuesta);
-  }
-  if(sourceIsCached && !event.request.url.includes('login')){
+  }else if(sourceIsCached && !event.request.url.includes('login')){
     event.respondWith(
       caches.open(CACHE_NAME).then(function(cache) {
         return cache.match(event.request)
@@ -104,6 +103,9 @@ self.addEventListener('fetch', function(event) {
     );
   }else{
     console.log("busca fuera de la cache")
+    // envío la respuesta como venga, con error también la envío
+    event.respondWith(fetch(event.request));
+    /*
     event.respondWith(
       fetch(event.request).then(function(response) {
         if (!response.ok) {
@@ -112,11 +114,13 @@ self.addEventListener('fetch', function(event) {
         }
         return response;
       }).catch(function(_err) {
+        console.log(_err)
         return new Response("<p>Se produjo un error al intentar cargar la p&aacute;gina, es posible que no haya conexi&oacute;n a internet</p><a href=/eseco/campo>Volver a Hoja de Ruta</button>", {
           headers: {'Content-Type': 'text/html'}
         });
       })
     );
+    */
   }
 });
 self.addEventListener('activate', function(event) {

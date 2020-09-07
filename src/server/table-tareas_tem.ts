@@ -16,7 +16,7 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         {name:'abrir'    , typeName:'text'    , editable:false, inTable:false, clientSide:'abrirRecepcion'},
         {name:'area'     , typeName: 'integer', editable: false, inTable:false },
         {name:"habilitada"      , typeName: "boolean", editable: puedeEditar},
-        {name:'asignante' , typeName:'text'}, // va a la hoja de ruta
+        {name:'asignante' , typeName:'text', inTable:false, editable:false}, // va a la hoja de ruta
         {name:'asignado' , typeName:'text'}, // va a la hoja de ruta
         {name:'operacion' , typeName:'text'}, // cargar/descargar
         {name:'fecha_asignacion', typeName:'date'}, // cargar/descargar
@@ -26,6 +26,8 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         {name:'notas'           , typeName:'text'}, // viene de la hoja de ruta
         {name:'resultado'       , typeName:'text'}, // fk tareas_resultados 
         {name:'fecha_resultado' , typeName:'date'}, // fk tareas_resultados 
+        {name:'verificado'      , typeName:'text'}, 
+        {name:'obs_verificado'  , typeName:'text'}, 
     ];
     return {
         name:`${mis}tareas_tem`,
@@ -36,24 +38,29 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         foreignKeys:[
             {references:'tem' , fields:['operativo','enc'], displayFields:[], alias:'te'},
             {references:'tareas' , fields:['tarea']},
-            {references:'usuarios', fields:[{source:'asignante', target:'idper'}], alias:'at'},
             {references:'usuarios', fields:[{source:'asignado' , target:'idper'}], alias:'ad'},
             {references:'resultados_tarea', fields:['resultado']},
             {references:'operaciones' , fields:['operacion']},
         ],
         softForeignKeys:[
+            {references:'usuarios', fields:[{source:'asignante', target:'idper'}], alias:'at'},
             {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true, displayAfterFieldName:'fecha_resultado'},
         ],
         sql:{
             isTable: !opt.mis,
             insertIfNotUpdate:true,
             from:`(
+                select *
+                    from (
                 select tareas.tarea, t.operativo, t.enc, t.area
                     ${fields.filter(x=>!(x.isPk || x.inTable===false||x.name=='area')).map(x=>`, tt.${db.quoteIdent(x.name)}`).join('')}
                     , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
                     , ${be.sqlNoreaCase('grupo')} as gru_no_rea
-                    from tareas, tem t
+                    , case rol_asignante when 'automatico' then null
+                        when 'recepcionista' then areas.recepcionista end as asignante
+                    from tareas, tem t left join areas using (area)
                         left join lateral (select * from tareas_tem where tarea=tareas.tarea and operativo=t.operativo and enc=t.enc) tt on true
+                    ) x
                     ${opt.mis?`where (asignante = ${db.quoteNullable(context.user.idper)} or asignado = ${db.quoteNullable(context.user.idper)})`:''}
             )`
         }

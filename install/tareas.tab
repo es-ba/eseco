@@ -1,4 +1,4 @@
-tarea|nombre
-rel|relevamiento
-sen|sensibilización
-sup|supervisión
+tarea|nombre       |rol_asignante
+rel|relevamiento   |recepcionista
+sen|sensibilización|recepcionista
+sup|supervisión    |automatico
