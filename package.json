@@ -22,7 +22,7 @@
     "redux-typed-reducer": "~0.1.1",
     "yazl": "~2.5.1",
     "ajax-best-promise": "^0.3.7",
-    "backend-plus": "^1.5.3",
+    "backend-plus": "^1.5.4",
     "best-globals": "^0.10.26",
     "operativos": "^1.1.0",
     "rel-enc": "^1.2.3",
@@ -33,7 +33,7 @@
     "qrcode": "^1.4.4"
   },
   "dependencias provisorias: las que se pongan en dependencias ponerlas acá y sacarlas juntas": {
-    "backend-plus": "^1.4.10",
+    "backend-plus": "^1.5.4",
     "operativos": "^1.1.0",
     "rel-enc": "^1.2.3",
     "row-validator": "^0.6.1",

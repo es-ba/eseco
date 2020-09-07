@@ -6,16 +6,15 @@ CREATE OR REPLACE FUNCTION encu.upd_operacion_tareas_area_tem_trg()
     LANGUAGE 'plpgsql'
 AS $BODY$
 begin
-    if new.asignado is not null then
-        update tareas_tem tt
-            set operacion=new.operacion,
-                asignado=new.asignado,
-                asignante=new.asignante,
-                fecha_asignacion=new.fecha_asignacion
-            from tem t   
-            where t.operativo=tt.operativo and t.enc=tt.enc 
-              and area=t.area and tt.habilitada;            
-    end if;
+    update tareas_tem tt
+        set operacion        = case when new.operacion        is not null and new.operacion        is distinct from old.operacion        then new.operacion        else operacion        end,
+            asignado         = case when new.asignado         is not null and new.asignado         is distinct from old.asignado         then new.asignado         else asignado         end,
+            fecha_asignacion = case when new.fecha_asignacion is not null and new.fecha_asignacion is distinct from old.fecha_asignacion then new.fecha_asignacion else fecha_asignacion end
+        from tem t   
+        where t.operativo=tt.operativo and t.enc=tt.enc 
+            and area=t.area and tt.habilitada
+            and tt.tarea=new.tarea
+            and area=new.area;            
     return new;
 end;
 $BODY$;

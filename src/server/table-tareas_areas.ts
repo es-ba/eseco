@@ -32,7 +32,7 @@ export function tareas_areas(context:TableContext, opt:any):TableDefinition {
             {references:'operaciones' , fields:['operacion']},
         ],
         detailTables:[
-            {table:`${mis}tareas_tem`       , fields:['tarea', 'area'], abr:'T', refreshParent:true},
+            {table:`${mis}tareas_tem`       , fields:['tarea', 'area'], abr:'T', refreshParent:true, refreshFromParent:true},
         ],
         sql:{
             isTable: !opt.mis,
