@@ -1,6 +1,6 @@
 
 export class DigitoVerificador<Num extends bigint|number>{
-    constructor(private cast:(numbreString:string|number)=>Num, private multiplicadores:Num[], private divisor:Num){
+    constructor(private cast:(numbreString:string|number)=>Num, private multiplicadores:Num[], private divisor:Num, private desplazamiento?:Num){
     }
     obtenerDigito(numero:Num):Num|null{
         var digitos=numero.toString().split('');
@@ -15,6 +15,10 @@ export class DigitoVerificador<Num extends bigint|number>{
             sumador = sumador + producto;
             i++;
         }
+        if(this.desplazamiento){
+            // @ts-expect-error No debería ser error. https://github.com/microsoft/TypeScript/issues/39569
+            sumador = sumador + this.desplazamiento
+        }
         // @ts-expect-error No debería ser error. https://github.com/microsoft/TypeScript/issues/39569
         var verificador:Num = sumador % this.divisor;
         if(!verificador) return this.cast(0);
@@ -24,8 +28,8 @@ export class DigitoVerificador<Num extends bigint|number>{
     }
 }
 
-var v1 = new DigitoVerificador(Number, [2,3,4,5],11);
-var v2 = new DigitoVerificador(Number, [3,4,5,7],11);
+var v1 = new DigitoVerificador(Number, [2,3,4,5],11,1);
+var v2 = new DigitoVerificador(Number, [3,4,5,9],11);
 
 export function controlarCodigoDV2(codigo:string){
     var [i,dd]=codigo.split('-');

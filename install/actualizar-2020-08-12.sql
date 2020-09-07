@@ -60,10 +60,7 @@ alter table tem add column seleccionada_actual text;
 alter table tem add column seleccionada_anterior text;
 alter table tem add column confirmada boolean;
 alter table areas add column auxiliar text;
-
-update tem set seleccionada_actual = replace(observaciones_carga,'persona seleccionada: ','')
-  where cluster = 4;
-
+alter table tem disable trigger changes_trg;
 
 insert into areas (area) select area+1 from areas where area<700;
 
@@ -182,3 +179,5 @@ insert into roles_permisos
 
 update roles_permisos set habilitado=true
     where (rol,permiso,accion) = ('auxiliar','citas','programar');
+
+alter table tem enable trigger changes_trg;

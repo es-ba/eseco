@@ -292,8 +292,6 @@ select e.etiqueta, resultado, enc,
   )
   order by etiqueta, enc;
 
-
-
 select e.etiqueta, resultado, enc,
     json_encuesta->>'e1' as apellido,
     json_encuesta->>'e2' as nombre,
@@ -304,3 +302,58 @@ select e.etiqueta, resultado, enc,
   where plancha in (select plancha from etiquetas where etiqueta in ('4642-68','4644-22','4660-46'))
   -- where plancha between '200' and '202'
   order by enc, etiqueta;
+
+
+select username, idper
+  from tem left join tokens on cargado_dm=token 
+    inner join usuarios on usuario=username
+  where area=156;
+
+select enc, h.cha_when, h.cha_new_value::jsonb->>'c5', 
+        (select cha_new_value from his.changes z where cha_table='tem' and cha_column='relevador' and z.cha_new_pk=h.cha_new_pk and z.cha_when<=h.cha_when order by cha_when desc limit 1)
+       , k.*
+  from his.changes h inner join tem on enc = cha_new_pk->>'enc'
+       left join tokens k on token=cargado_dm
+  where cha_table='tem'
+    and cha_column='json_encuesta'
+    and h.cha_new_pk::jsonb->>'enc' in ('32414','48802') 
+  order by cha_when desc
+  limit 10;
+
+select grupo, grupo2
+       , count(rea_m) as realizadas
+       , count(resultado) as con_resultado
+       , sum(case when resultado ilike 'positivo' then 1 else null end) as positivos
+       , round(count(case when resultado ilike 'positivo' then 1 else null end)*100.0/nullif(count(resultado),0),1) as "%"
+    from (
+        select comunas.zona as grupo, case tipo_domicilio when 3 then 'BV' when 4 then 'I' when 5 then 'G' else 'BC' end as grupo2, *
+            from tem inner join etiquetas using (etiqueta) left join comunas on (nrocomuna=comuna)
+            where tem.cluster=4
+    ) x
+    group by cube (grupo, grupo2)
+    order by grupo2, grupo;
+
+select resultado, count(*), count(*)*100/sum(count(*)) over () as "%"
+  from tem inner join etiquetas using (etiqueta)
+  where cluster=4
+  group by resultado;
+
+select count(*)
+  from tem
+  where cluster=4 and rea_m=1;
+
+
+select *
+  from tem
+  where json_backup::text like '%5293-09%';
+
+  
+
+select enc, h.cha_new_value::jsonb->>'c5', k.username, h.cha_column, h.cha_when
+  from his.changes h inner join tem on enc = cha_new_pk->>'enc'
+       left join tokens k on token=cargado_dm
+  where cha_table='tem'
+    and cha_column in ('json_encuesta', 'json_backup')
+    and  h.cha_new_value::jsonb->>'c5' like '5296%'  -- 4642-68, 4643-45 y 4644-22
+    -- and  h.cha_new_value::jsonb->>'c5' like '1001%'  -- 4642-68, 4643-45 -> 32613 y 4644-22 -> 
+  limit 10;
