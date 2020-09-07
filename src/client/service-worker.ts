@@ -1,5 +1,6 @@
 "use strict";
 const CACHE_NAME = '#20-09-07';
+const FALLBACK = '/eseco/campo';
 var urlsToCache = [
     "campo",
     "lib/react.production.min.js",
@@ -86,7 +87,7 @@ self.addEventListener('fetch', (event)=>{
                         return response;
                     }).catch((err)=>{
                         console.log(err)
-                        return new Response("<p>Se produjo un error al intentar cargar la p&aacute;gina, es posible que no haya conexi&oacute;n a internet</p><a href=/eseco/campo>Volver a Hoja de Ruta</button>", {
+                        return new Response(`<p>Se produjo un error al intentar cargar la p&aacute;gina, es posible que no haya conexi&oacute;n a internet</p><a href=${FALLBACK}>Volver a Hoja de Ruta</button>`, {
                             headers: {'Content-Type': 'text/html'}
                         });
                     });
