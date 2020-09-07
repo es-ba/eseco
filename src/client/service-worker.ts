@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_NAME = '#20-09-04';
+const CACHE_NAME = '#20-09-07';
 var urlsToCache = [
     "campo",
     "lib/react.production.min.js",
@@ -52,89 +52,61 @@ var urlsToCache = [
     "css/formulario-react.css",
     "img/main-loading.gif",
 ];
-var hayError=false;
-self.addEventListener('install', async function(event){
-  //si hay cambios no espero para cambiarlo
-  self.skipWaiting();
-  console.log("instalando")
-  var wasDownloading=true;
-  //informar descargando
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-    .then(function(cache){
-      return cache.addAll(urlsToCache);
-    })
-    //.catch(async function(err){
-    //  hayError=true;
-    //  console.log("error al cargar service worker", err)
-    //  //informar error
-    //})
-    //.finally(async function(){
-    //  if(!hayError){
-    //    console.log("instalacion correcta");
-    //    //informar correcto
-    //  }
-    //})
-  );
+self.addEventListener('install', async (event)=>{
+    //si hay cambios no espero para cambiarlo
+    self.skipWaiting();
+    console.log("instalando")
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache)=>
+            cache.addAll(urlsToCache)
+        )
+    );
 });
 
-self.addEventListener('fetch', function(event) {
-  var sourceParts = event.request.url.split('/');
-  var source:string = sourceParts[sourceParts.length-1];
-  var sourceIsCached = urlsToCache.find((url:string)=>{
-    let urlParts = url.split('/')
-    let myUrl = urlParts[urlParts.length-1]
-    return myUrl==source
-  });
-  console.log("source",source)
-  if(source=='@version'){
-    var miBlob = new Blob();
-    var opciones = { "status" : 200 , "statusText" : CACHE_NAME, ok:true };
-    var miRespuesta = new Response(miBlob,opciones);
-    event.respondWith(miRespuesta);
-  }else if(sourceIsCached && !event.request.url.includes('login')){
-    event.respondWith(
-      caches.open(CACHE_NAME).then(function(cache) {
-        return cache.match(event.request)
-        .then(function(response) {
-          return response;
-        })
-      })
-    );
-  }else{
-    console.log("busca fuera de la cache")
-    // envío la respuesta como venga, con error también la envío
-    event.respondWith(fetch(event.request));
-    /*
-    event.respondWith(
-      fetch(event.request).then(function(response) {
-        if (!response.ok) {
-          console.log("no tiene respuesta")
-          throw Error('response status ' + response.status);
-        }
-        return response;
-      }).catch(function(_err) {
-        console.log(_err)
-        return new Response("<p>Se produjo un error al intentar cargar la p&aacute;gina, es posible que no haya conexi&oacute;n a internet</p><a href=/eseco/campo>Volver a Hoja de Ruta</button>", {
-          headers: {'Content-Type': 'text/html'}
-        });
-      })
-    );
-    */
-  }
+self.addEventListener('fetch', (event)=>{
+    var sourceParts = event.request.url.split('/');
+    var source:string = sourceParts[sourceParts.length-1];
+    console.log("source",source)
+    if(source=='@version'){
+        var miBlob = new Blob();
+        var opciones = { "status" : 200 , "statusText" : CACHE_NAME, ok:true };
+        var miRespuesta = new Response(miBlob,opciones);
+        event.respondWith(miRespuesta);
+    }else{
+        event.respondWith(
+            caches.open(CACHE_NAME).then((cache)=>
+                cache.match(event.request).then((response)=>{
+                    console.log("respuesta caché: ", response)
+                    return response || fetch(event.request).then((response)=>{
+                        console.log("respuesta", response)
+                        if(!response) {
+                            console.log("no tiene respuesta")
+                            throw Error('without response');
+                        }
+                        return response;
+                    }).catch((err)=>{
+                        console.log(err)
+                        return new Response("<p>Se produjo un error al intentar cargar la p&aacute;gina, es posible que no haya conexi&oacute;n a internet</p><a href=/eseco/campo>Volver a Hoja de Ruta</button>", {
+                            headers: {'Content-Type': 'text/html'}
+                        });
+                    });
+                })
+            )
+        );
+    }
 });
-self.addEventListener('activate', function(event) {
-  console.log("borrando caches viejas")
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.filter(function(cacheName) {
-          return cacheName != CACHE_NAME
-        }).map(function(cacheName) {
-          console.log("borrando cache ", cacheName);
-          return caches.delete(cacheName);
+self.addEventListener('activate', (event)=>{
+    console.log("borrando caches viejas")
+    event.waitUntil(
+        caches.keys().then((cacheNames)=>{
+            return Promise.all(
+                cacheNames.filter((cacheName)=>
+                    cacheName != CACHE_NAME
+                ).map((cacheName)=>{
+                    console.log("borrando cache ", cacheName);
+                    return caches.delete(cacheName);
+                })
+            );
         })
-      );
-    })
-  );
+    );
 });
