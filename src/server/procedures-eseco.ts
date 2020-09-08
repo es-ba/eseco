@@ -82,16 +82,17 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
 					'notas', notas,
 					'fecha_asignacion', fecha_asignacion,
 					'asignado', asignado
-				)) as tareas
-                from tem t left join tareas_tem tt using (operativo, enc)
+				)) as tareas,
+                min(fecha_asignacion) as fecha_asignacion
+                from tem t join tareas_tem tt using (operativo, enc)
                 where ${quotedCondViv}
                 group by t.enc, t.json_encuesta, t.resumen_estado, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones,t.area
             )
             select ${jsono(`select enc, respuestas, "resumenEstado", tem, tareas from viviendas`, 'enc')} as hdr,
                 ${json(`
-                    select area as carga, observaciones_hdr as observaciones, fecha
+                    select area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha
                         from viviendas inner join areas using (area) 
-                        group by area, observaciones_hdr, fecha`, 
+                        group by area, observaciones_hdr`, 
                     'fecha')} as cargas
     `
 }
