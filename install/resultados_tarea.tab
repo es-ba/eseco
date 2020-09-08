@@ -1,0 +1,20 @@
+tarea|resultado|descripcion
+rel|ok|Realizada con muestra
+rel|cita pactada|Encuesta con cita pactada
+rel|1|La vivienda está deshabitada
+rel|2|La vivienda está demolida
+rel|3|La vivienda se usa solo los fines de semana o muy esporádicamente
+rel|4|La vivienda está en construcción y allí no vive nadie
+rel|5|La vivienda se usa como establecimiento y no tiene uso residencial
+rel|6|En la dirección de referencia no se encuentra la vivienda especificada
+rel|7|Los habitantes de la vivienda están ausentes
+rel|8|Los habitantes de la vivienda rechazan ser entrevistados
+rel|9|Otras causas
+rel|101|COVID positivo en la vivienda
+rel|75|miembro seleccionado ausente
+rel|85|miembro seleccionado rechazo
+rel|91|No hay mayores presentes
+rel|81|No aceptó firmar el consentimiento
+rel|82|No aceptó contestar el cuestionario
+rel|83|No aceptó realizarse el test
+rel|102|COVID positivo del seleccionado

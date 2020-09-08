@@ -28,12 +28,7 @@ export function areas(context:TableContext):TableDefinition {
             {name:'clusters'                , typeName:'text', inTable:false},
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
             {name:'relevador'               , typeName:'text', references:'mis_relevadores'},
-            {name:'auxiliar'                , typeName:'text', editable:context.forDump || context.puede.campo.administrar},
-            //{name:'operacion_area'          , typeName:'text'                      },
-            //{name:'fecha'                   , typeName:'date'                      },
             {name:'observaciones_hdr'       , typeName:'text'                      },
-            //{name:'cargado'                 , typeName:'boolean' , editable:false  , inTable:false},
-            //{name:'cargadas'                , typeName:'integer' , editable:false  },
             {name:'reas'                    , typeName:'integer' , editable:false  , aggregate:'sum'},
             {name:'no_reas'                 , typeName:'integer' , editable:false  , aggregate:'sum'},
             {name:'incompletas'             , typeName:'integer' , editable:false  , aggregate:'sum'},
@@ -66,14 +61,14 @@ export function areas(context:TableContext):TableDefinition {
             {references:'relevadores', fields:[{source:'relevador', target:'persona'}]},
         ],
         detailTables:[
-            {table:'tareas_areas'     , fields:['area'], abr:'TA', refreshParent:true, label:'tareas'},
-            {table:'tem'              , fields:['area'], abr:'T' , refreshParent:true, label:'TEM'},
+            {table:'tareas_areas'     , fields:['area'], abr:'T', refreshParent:true, label:'tareas'},
+            {table:'tem'              , fields:['area'], abr:'E', refreshParent:true, label:'TEM'},
         ],
         sql:{
             isTable:true,
             from:` 
             (select a.area, a.recepcionista, a.relevador,  a.observaciones_hdr,  
-                  a.verificado_rec, a.obs_recepcionista, a.auxiliar,
+                  a.verificado_rec, a.obs_recepcionista,
                   --a.operacion_area, a.fecha,
                   a.cargadas_bkp, a.reas_bkp, a.no_reas_bkp, a.incompletas_bkp, a.vacias_bkp, a.inhabilitadas_bkp,
                   t.*

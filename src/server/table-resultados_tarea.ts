@@ -9,10 +9,11 @@ export function resultados_tarea(context:TableContext):TableDefinition {
         name:'resultados_tarea',
         editable:puedeEditar,
         fields:[
+            {name:'tarea'        , typeName:'text'},
             {name:'resultado'    , typeName:'text'},
             {name:'descripcion'  , typeName:'text'},
         ],
-        primaryKey:['resultado']
+        primaryKey:['tarea', 'resultado']
     };
 }
 

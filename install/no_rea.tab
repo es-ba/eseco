@@ -9,6 +9,8 @@ no_rea|descripcion|grupo|variable|valor
 8|Los habitantes de la vivienda rechazan ser entrevistados|rechazo simple|dv2|8
 9|Otras causas|recuperable|dv2|9
 101|COVID positivo en la vivienda|irrecuperable|dv4|1
+75|miembro seleccionado ausente|recuperable|sp6|2
+85|miembro seleccionado rechazo|rechazo simple|sp6|3
 91|No hay mayores presentes|recuperable|dv5|2
 81|No aceptó firmar el consentimiento|rechazo irrecuperable|s1|2
 82|No aceptó contestar el cuestionario|rechazo irrecuperable|s2|2

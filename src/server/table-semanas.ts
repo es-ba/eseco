@@ -14,7 +14,7 @@ export function semanas(context:TableContext):TableDefinition {
         ],
         primaryKey:['semana'],
         detailTables:[
-            {table:'tem'          , fields:['semana'], abr:'T', label:'TEM'},
+            {table:'tem'          , fields:['semana'], abr:'E', label:'TEM'},
         ],
         sql:{
             from:`(

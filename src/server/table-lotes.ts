@@ -15,7 +15,7 @@ export function lotes(context:TableContext):TableDefinition {
         ],
         primaryKey:['lote'],
         detailTables:[
-            {table:'tem'          , fields:['lote'], abr:'T', label:'TEM'},
+            {table:'tem'          , fields:['lote'], abr:'E', label:'TEM'},
         ],
         sql:{
             from:`(

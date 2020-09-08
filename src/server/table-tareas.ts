@@ -19,9 +19,9 @@ export function tareas(context:TableContext, opts:any):TableDefinition {
         ],
         primaryKey:['tarea'],
         detailTables:[
-            {table:`${mis}tareas_areas`     , fields:['tarea'], abr:'A', refreshParent:true},
-            {table:`${mis}tareas_tem`       , fields:['tarea'], abr:'T', refreshParent:true},
-            // tareas_resultados
+            {table:`${mis}tareas_areas`     , fields:['tarea'], abr:'A'},
+            {table:`${mis}tareas_tem`       , fields:['tarea'], abr:'E'},
+            {table:`resultados_tarea`       , fields:['tarea'], abr:'R'},
         ],
         sql:{
             isTable:!opts.mis
