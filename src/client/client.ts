@@ -209,7 +209,7 @@ myOwn.clientSides.tareasTemRow={
         var row=depot.row;
         var esperar:boolean=false;
         if(row.habilitada){
-            if(!row.asignante){
+            if(!row.asignante && !row.asignado){
                 tarea='preasignar';
                 esperar=true;
             }else if(!row.asignado || !row.fecha_asignacion || !row.operacion){
@@ -228,9 +228,9 @@ myOwn.clientSides.tareasTemRow={
             asignado           :tarea=='cargar'     && (esperar?'esperar':'normal'),
             fecha_asignacion   :tarea=='cargar'     && (esperar?'esperar':'normal'),
             operacion          :tarea=='cargar'     && (esperar?'esperar':'normal'),
-            carga_observaciones:(tarea=='cargar'   || tarea=='realizar' && !row.cargado && !row.resultado && !row.notas) && (row.asignante!=my.config.idper?'esperar':'optativo'),
+            carga_observaciones:(tarea=='cargar'   || tarea=='realizar' && !row.cargado && !row.resultado && !row.notas) && row.asignante==my.config.idper && 'optativo',
             resultado          :tarea=='realizar'   && (esperar?'esperar':'normal'),
-            notas              :(tarea=='realizar' || tarea=='verificar' && !row.verificado) && (row.asignado!=my.config.idper?'esperar':'optativo'),
+            notas              :(tarea=='realizar' || tarea=='verificar' && !row.verificado) && row.asignado==my.config.idper && 'optativo',
             verificado         :tarea=='verificar'  && (esperar?'esperar':'normal'),
             obs_verificado     :tarea=='verificar'  && (esperar?'esperar':'optativo'),
         }
