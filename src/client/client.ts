@@ -203,6 +203,47 @@ myOwn.clientSides.avisar={
     update: false,
 };
 
+myOwn.clientSides.tareasTemRow={
+    update:(depot)=>{
+        var tarea:'nada'|'preasignar'|'cargar'|'realizar'|'verificar'='nada';
+        var row=depot.row;
+        var esperar:boolean=false;
+        if(row.habilitada){
+            if(!row.asignante){
+                tarea='preasignar';
+                esperar=true;
+            }else if(!row.asignado || !row.fecha_asignacion || !row.operacion){
+                tarea='cargar';
+                esperar=row.asignante!=my.config.idper;
+            }else if(!row.resultado){
+                tarea='realizar';
+                esperar=row.asignado!=my.config.idper;
+            }else if(!row.verificado){
+                tarea='verificar';
+                esperar=row.asignante!=my.config.idper;
+            }
+        }
+        var poner={
+            asignante          :tarea=='preasignar' && (esperar?'esperar':'normal'),
+            asignado           :tarea=='cargar'     && (esperar?'esperar':'normal'),
+            fecha_asignacion   :tarea=='cargar'     && (esperar?'esperar':'normal'),
+            operacion          :tarea=='cargar'     && (esperar?'esperar':'normal'),
+            carga_observaciones:(tarea=='cargar'   || tarea=='realizar' && !row.cargado && !row.resultado && !row.notas) && (row.asignante!=my.config.idper?'esperar':'optativo'),
+            resultado          :tarea=='realizar'   && (esperar?'esperar':'normal'),
+            notas              :(tarea=='realizar' || tarea=='verificar' && !row.verificado) && (row.asignado!=my.config.idper?'esperar':'optativo'),
+            verificado         :tarea=='verificar'  && (esperar?'esperar':'normal'),
+            obs_verificado     :tarea=='verificar'  && (esperar?'esperar':'optativo'),
+        }
+        likeAr(poner).forEach((valor, campo)=>{
+            if(!valor){
+                depot.rowControls[campo].removeAttribute('my-mandatory')
+            }else{
+                depot.rowControls[campo].setAttribute('my-mandatory',valor);
+            }
+        })
+    }
+}
+
 myOwn.clientSides.avisar_email={
     prepare: (depot, fieldName)=>{
         var {email, resultado, nombre, apellido, mail_aviso_texto, mail_aviso_asunto, tipo_informe} = depot.row;

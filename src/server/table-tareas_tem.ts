@@ -44,7 +44,7 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         ],
         softForeignKeys:[
             {references:'usuarios', fields:[{source:'asignante', target:'idper'}], alias:'at'},
-            {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true, displayAfterFieldName:'fecha_resultado'},
+            {references:'tem_recepcion' , fields:['operativo','enc'], displayAllFields:true, displayAfterFieldName:'obs_verificado'},
         ],
         sql:{
             isTable: !opt.mis,
@@ -63,7 +63,8 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
                     ) x
                     ${opt.mis?`where (asignante = ${db.quoteNullable(context.user.idper)} or asignado = ${db.quoteNullable(context.user.idper)})`:''}
             )`
-        }
+        },
+        clientSide:'tareasTemRow'
     };
 }
 

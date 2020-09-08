@@ -257,6 +257,12 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         var fatherContext = super.getContextForDump();
         return {superuser:true, puede: this.permisosSuperuser, ...fatherContext};
     }
+    getClientSetupForSendToFrontEnd(req:Request){
+        return {
+            ...super.getClientSetupForSendToFrontEnd(req),
+            idper: req.user?.idper
+        }
+    }
     getMenu(context:Context){
         let menu:MenuInfoBase[] = [];
         if(context.puede.encuestas.relevar && this.config['client-setup'].para_dm){
