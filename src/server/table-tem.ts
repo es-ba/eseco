@@ -304,7 +304,12 @@ export function tem(context:TableContext):TableDefinition {
         },
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
-        { name: "json_backup"   , typeName:'jsonb', visible:false}
+        { name: "json_backup"   , typeName:'jsonb' , editable: false, visible:false},
+        { name: "h4"         , typeName:'text'     , editable:false},
+        { name: "hospital"   , typeName:'text'     , editable:false},
+        { name: "x"          , typeName:'decimal'  , editable:false},
+        { name: "y"          , typeName:'decimal'  , editable:false},
+        { name: "dist_m"     , typeName:'decimal'  , editable:false}
     ],
     "primaryKey": [
         "operativo",
@@ -322,7 +327,7 @@ export function tem(context:TableContext):TableDefinition {
         isTable: true,
         isReferable:true,
         from:`
-            (select * --, encu.validar_tipodato(enc,json_encuesta) tipos_inconsist, null telefonos, null seleccionado
+            (select * 
                 from tem t                
             )
         `, 
