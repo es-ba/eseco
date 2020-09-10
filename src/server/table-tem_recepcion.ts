@@ -63,6 +63,17 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             //inTable: false,
             "typeName":"text"
         },       
+        {name:'sp1'           , typeName:'bigint' ,editable:false, inTable:false},
+        {name:'sp2_cel'       , typeName:'text'   ,editable:false, inTable:false},
+        {name:'sp3_tel'       , typeName:'text'   ,editable:false, inTable:false},
+        {name:'sp4_fecha'     , typeName:'text'   ,editable:false, inTable:false},
+        {name:'sp5_hora'      , typeName:'text'   ,editable:false, inTable:false},
+        {name:'sp6'           , typeName:'bigint' ,editable:false, inTable:false},
+        {name:'seleccionado'  , typeName:'bigint' ,editable: false   },
+        {name:'sexo_sel'      , typeName:'bigint' ,editable:false    },
+        {name:'edad_sel'      , typeName:'bigint' ,editable:false    },
+        {name:'cant_p'        , typeName:'bigint' ,editable:false    },
+        {name:'fecha_rel'     , typeName:'date'   ,editable:false    },
         {
             "name": "codcalle",
             editable: false,
@@ -128,17 +139,9 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "text"
         },
-        {name:'cant_p'        , typeName:'bigint' ,editable:false    },
-        {name:'sexo_sel'      , typeName:'bigint' ,editable:false    },
-        {name:'edad_sel'      , typeName:'bigint' ,editable:false    },        
 //        {name: "verificar"    , typeName:'boolean',editable:true, inTable:false, clientSide:'verificarCaso'},
 //        {name: "finalizar_campo", typeName:'boolean',editable:true, inTable:false, clientSide:'finalizarCampo'}, //fin_de_campo
 //        {name: "procesamiento", typeName:'boolean',editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
-        {
-        "name": "fecha_rel",
-        editable: false,
-        "typeName": "date"
-        },
         {
             "name": "tipo_domicilio",
             "editable": false,
@@ -230,12 +233,6 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         {name:'obs_sup'   , typeName:'text' ,editable: isSupervisor     },
         {name:'obs_coor'  , typeName:'text' ,editable: isCoordinador || isSubCoordinador },
         */
-        {
-            "name": "seleccionado",
-            "editable": false,
-            "typeName": "text",
-            visible: false
-        },
         { name: "consistido"    , label:'consistido'            , typeName: 'timestamp'},
         // { name: "modificado"    , label:'modificado'            , typeName: 'timestamp'},
         {
@@ -322,6 +319,12 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         from:`
             (select 
                 *
+                ,(json_encuesta->>'sp1')::bigint sp1
+                ,json_encuesta->>'sp2' sp2_cel
+                ,json_encuesta->>'sp3' sp3_tel 
+                ,json_encuesta->>'sp4' sp4_fecha 
+                ,json_encuesta->>'sp5' sp5_hora 
+                ,(json_encuesta->>'sp6')::bigint sp6 
                 , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
                 , ${be.sqlNoreaCase('grupo')} as gru_no_rea
                 from tem t

@@ -15,7 +15,7 @@ AS $BODY$
 with metad as (
     select var_name variable,tipovar,type_name, validar, 
         case when type_name='bigint'  then '^\d*$' 
-             when type_name='date'    then '^([1-9]|0[1-9]|[12]\d|3[01])/([1-9]|1[012])/20\d\d$'
+             when type_name='date'    then '^([1-9]|0[1-9]|[12]\d|3[01])/([1-9]|0[1-9]|1[012])/20\d\d$'
              when type_name='decimal' then '^(\d*\.)?\d+$'
              when type_name='text'    then '.*'  -- revisar
              when type_name='boolean' then '^(true|false|TRUE|FALSE|True|False)$'  
