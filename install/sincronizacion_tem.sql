@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION encu.sincronizacion_tem_trg()
 AS $BODY$
 declare
   datos         jsonb=new.json_encuesta;
+  fechat        text;
 begin
-    new.fecha_rel    = (datos ->>'c5f')::date;
     new.rea          = CASE (datos ->>'dv1')::integer when 1 then 1 when 2 then 0 else null end;
     new.norea        = (datos ->>'dv3')::integer ;
     new.cant_p       = (datos ->>'cp') ::integer ;
@@ -21,6 +21,12 @@ begin
             new.tipos_inconsist= encu.validar_tipodato(new.enc,datos);
         end if;
     end if;
+    fechat=datos ->>'c6';
+    new.fecha_rel    = CASE 
+        WHEN  fechat ~ '^([1-9]|0[1-9]|[12]\d|3[01])/([1-9]|0[1-9]|1[012])/20\d\d$'
+            THEN fechat::date 
+        ELSE NULL 
+    END;
     return new;
 end;
 $BODY$;
