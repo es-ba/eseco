@@ -63,6 +63,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             //inTable: false,
             "typeName":"text"
         },       
+        {name:'nombre_sel'    , typeName:'text'   ,editable:false, inTable:false},
         {name:'sp1'           , typeName:'bigint' ,editable:false, inTable:false},
         {name:'sp2_cel'       , typeName:'text'   ,editable:false, inTable:false},
         {name:'sp3_tel'       , typeName:'text'   ,editable:false, inTable:false},
@@ -319,6 +320,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         from:`
             (select 
                 *
+                ,json_encuesta->>'p12' nombre_sel
                 ,(json_encuesta->>'sp1')::bigint sp1
                 ,json_encuesta->>'sp2' sp2_cel
                 ,json_encuesta->>'sp3' sp3_tel 
