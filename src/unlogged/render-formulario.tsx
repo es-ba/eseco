@@ -1092,7 +1092,23 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                                     {visita.hora}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {visita.observaciones}
+                                                    {miIdPer==visita.idper?
+                                                        <TextField 
+                                                            fullWidth={true}
+                                                            value={visita.observaciones || ''} 
+                                                            type="text"
+                                                            onChange={(event)=>{
+                                                                let value = event.target.value || null;
+                                                                dispatch(dispatchers.MODIFICAR_VISITA({
+                                                                    vivienda:idCaso,
+                                                                    index,
+                                                                    observaciones: value
+                                                                }));
+                                                            }}
+                                                        />
+                                                    :
+                                                        visita.observaciones
+                                                    }
                                                 </TableCell>
                                                 <TableCell>
                                                     {miIdPer==visita.idper?
