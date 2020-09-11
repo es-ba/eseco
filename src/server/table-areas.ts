@@ -25,16 +25,17 @@ export function areas(context:TableContext):TableDefinition {
                 nullable: false,
                 editable: true
             },
-            {name:'clusters'                , typeName:'text', inTable:false},
+            //{name:'clusters'                , typeName:'text', inTable:false},
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
-            {name:'relevador'               , typeName:'text', references:'mis_relevadores'},
+            {name:'relevador'               , typeName:'text', editable:false},
             {name:'observaciones_hdr'       , typeName:'text'                      },
+            {name:'cargado'                 , typeName:'boolean' , editable:false  , inTable:false},
             {name:'reas'                    , typeName:'integer' , editable:false  , aggregate:'sum', inTable:false },
             {name:'no_reas'                 , typeName:'integer' , editable:false  , aggregate:'sum', inTable:false },
             {name:'incompletas'             , typeName:'integer' , editable:false  , aggregate:'sum', inTable:false },
             {name:'vacias'                  , typeName:'integer' , editable:false  , aggregate:'sum', inTable:false },
             {name:'inhabilitadas'           , typeName:'integer' , editable:false  , aggregate:'sum', inTable:false },
-            {name:'verificado_rec'          , typeName:'text'                      , aggregate:'count', inTable:false },
+            {name:'verificado_rec'          , typeName:'text'                      , aggregate:'count' },
             //{name:'confirmadas'             , typeName:'integer' , editable:false, aggregate:'sum'},
             //{name:'pend_conf'               , typeName:'integer' , editable:false, aggregate:'sum', description:'pendientes de confirmación'},
             {name:'obs_recepcionista'       , typeName:'text'                      },
@@ -53,7 +54,7 @@ export function areas(context:TableContext):TableDefinition {
         foreignKeys:[
             //{references:'operativos', fields:['operativo']},
             //{references:'operaciones', fields:[{source:'operacion_area', target:'operacion'}]},
-            {references:'usuarios', fields:[{source:'relevador'    , target:'idper'}], alias:'per_enc', displayFields:[]},
+            //{references:'usuarios', fields:[{source:'relevador'    , target:'idper'}], alias:'per_enc', displayFields:[]},
             {references:'usuarios', fields:[{source:'recepcionista', target:'idper'}], alias:'per_recep', displayFields:[]},
         ],
         softForeignKeys:[
@@ -67,16 +68,16 @@ export function areas(context:TableContext):TableDefinition {
         sql:{
             isTable:true,
             from:` 
-            (select a.area, a.recepcionista, a.relevador,  a.observaciones_hdr,  
-                  a.verificado_rec, a.obs_recepcionista,
+            (select a.area, a.recepcionista, ta.asignado relevador
+                ,  a.observaciones_hdr, a.verificado_rec, a.obs_recepcionista
                   --a.operacion_area, a.fecha,
-                  a.cargadas_bkp, a.reas_bkp, a.no_reas_bkp, a.incompletas_bkp, a.vacias_bkp, a.inhabilitadas_bkp,
-                  t.*
-                from areas a, lateral(
+                , a.cargadas_bkp, a.reas_bkp, a.no_reas_bkp, a.incompletas_bkp, a.vacias_bkp, a.inhabilitadas_bkp
+                , t.*
+                from areas a left join tareas_areas ta on ta.tarea='rel' and ta.area=a.area, lateral(
                     select 
-                        -- bool_or( cargado_dm is not null )       as cargado , 
-                        --count( cargado_dm )                            as cargadas,
-                        sum ( rea_m )                                  as reas,
+                        bool_or( cargado_dm is not null )       as cargado , 
+                        --count( cargado_dm )                     as cargadas,
+                        sum ( rea_m )                              as reas,
                         count(*) filter ( where etiqueta is null and resumen_estado='no rea')       as no_reas,
                         count(*) filter ( where resumen_estado in ('incompleto', 'con problemas') ) as incompletas, 
                         count(*) filter ( where etiqueta is null and resumen_estado in ('vacio' ) ) as vacias,
@@ -88,7 +89,12 @@ export function areas(context:TableContext):TableDefinition {
                         ${be.caches.tableContent.no_rea_groups.map(x=>
                         	`, sum(CASE WHEN gru_no_rea=${be.db.quoteLiteral(x.grupo)} THEN 1 ELSE NULL END) as ${be.db.quoteIdent(x.grupo.replace(/ /g,'_'))}`
                         ).join('')}
-                        from (select *, ${be.sqlNoreaCase('grupo')} as gru_no_rea from tem where area=a.area) tem
+                        from ( select operativo, enc, cluster, nrocomuna, 
+                                json_encuesta, resumen_estado, etiqueta, --habilitada, 
+                                relevador, rea_m, rea, norea, cant_p, seleccionado, sexo_sel, edad_sel, fecha_rel, tipo_domicilio, area, dominio, zona
+                                json_backup, hospital
+                            , tt.habilitada, tt.cargado_dm
+                            , ${be.sqlNoreaCase('grupo')} as gru_no_rea from tem t left join tareas_tem tt using(operativo,enc) where t.area=a.area and tt.tarea='rel') tem
                 ) t
             )`
         }

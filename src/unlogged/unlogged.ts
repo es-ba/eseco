@@ -102,7 +102,7 @@ window.addEventListener('load', async function(){
             setMessage('Service workers no soportados por el navegador. La aplicación no funcionará sin conexión a internet. ','danger')
             desplegarFormularioActual({modoDemo:false});    
         }
-    }else if(location.pathname.endsWith('/ver')){
+    }else if(location.pathname.endsWith('/consulta')){
         desplegarFormularioConsultaResultados();
     }
 })
