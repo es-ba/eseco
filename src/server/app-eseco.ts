@@ -88,7 +88,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 res.redirect(baseUrl+'/login#w=path&path=/campo')
             }
         });
-        mainApp.get(baseUrl+'/ver',async function(req,res,_next){
+        mainApp.get(baseUrl+'/consulta',async function(req,res,_next){
             // @ts-ignore sé que voy a recibir useragent por los middlewares de Backend-plus
             var {useragent, user} = req;
             //if(user){
@@ -97,7 +97,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 var htmlMain=be.mainPage({useragent, user}, false, {skipMenu:true}).toHtmlDoc();
                miniTools.serveText(htmlMain,'html')(req,res);
             //}else{
-            //    res.redirect(baseUrl+'/login#w=path&path=/ver')
+            //    res.redirect(baseUrl+'/login#w=path&path=/consulta')
             //}
         });
     }

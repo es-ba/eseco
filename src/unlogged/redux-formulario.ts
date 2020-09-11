@@ -709,7 +709,7 @@ export function gotoCampo(){
 }
 
 export function gotoVer(){
-    history.replaceState(null, '', `${location.origin+location.pathname}/../ver`);
+    history.replaceState(null, '', `${location.origin+location.pathname}/../consulta`);
     location.reload();   
 }
 
