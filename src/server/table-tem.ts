@@ -18,7 +18,7 @@ export function tem(context:TableContext):TableDefinition {
     var hasRecepcionistaPermission=isRecepcionista || hasSubCoordinadorPermission;
     // var hasSupervisorPermission=isSupervisor || hasRecepcionistaPermission;
 
-    return {
+    var def: TableDefinition= {
     "name": "tem",
     editable: true,
     //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
@@ -165,20 +165,18 @@ export function tem(context:TableContext):TableDefinition {
             editable: false,
             "typeName":"text"
         },
-        { name:'etiqueta'         , typeName:'text'     },
-        {
-            "name": "habilitada",
-            editable: hasRecepcionistaPermission,
-            "typeName": "boolean"
-        },        
+        {name:'etiqueta'      , typeName:'text'    , editable: false , inTable: false  },
+        {name:'habilitada'    , typeName:'boolean' , editable: false , inTable: false  },
+        {name:'cargado'       , typeName:'boolean' , editable: false , inTable: false  },
+        {name:'cargado_dm'    , typeName:'boolean' , editable: false , inTable: false, visible:false  },
         {
             "name": "tipos_inconsist",
             editable: false,
             //inTable: false,
             "typeName":"text"
         },        
-        { name:'relevador'        , typeName:'text'     },
-        { name:'rea_m'            , typeName:'integer'  },
+        { name:'relevador'     , typeName:'text'   , editable: false , inTable: false  },
+        { name:'rea_m'         , typeName:'integer'  },
         {name:'rea'           , typeName:'bigint' ,editable:false    },
         {name:'norea'         , typeName:'text'   ,editable:false    },
         {name:'cant_p'        , typeName:'bigint' ,editable:false      },
@@ -195,11 +193,7 @@ export function tem(context:TableContext):TableDefinition {
 //        {name: "verificar"    , typeName:'boolean',editable:true, inTable:false, clientSide:'verificarCaso'},
 //        {name: "finalizar_campo", typeName:'boolean',editable:true, inTable:false, clientSide:'finalizarCampo'}, //fin_de_campo
 //        {name: "procesamiento", typeName:'boolean',editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
-        {
-            "name": "fecha_rel",
-            editable: false,
-            "typeName": "date"
-        },
+        {name:'fecha_rel'      , typeName:'date' ,editable:false, inTable:false},
         {
             "name": "tipo_domicilio",
             "editable": false,
@@ -329,12 +323,18 @@ export function tem(context:TableContext):TableDefinition {
     "detailTables": [
         {table: "tareas_tem", abr: "T", fields: ['operativo', 'enc'], label:'tareas'},
         {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
-    ],
-    sql:{
+    ]
+    };
+    const q=context.be.db.quoteIdent;
+    def.sql= {
         isTable: true,
         isReferable:true,
         from:`
-            (select *
+            (select
+                ${def.fields.filter(f=>f.inTable==undefined && !f.clientSide).map(f=>'t.'+q(f.name)).join(',')}
+                , tt.cargado, tt.cargado_dm, tt.habilitada, tt.asignado as relevador
+                ,(json_encuesta->>'c6')::date as fecha_rel
+                ,json_encuesta->>'c5' etiqueta
                 ,json_encuesta->>'p12' nombre_sel
                 ,(json_encuesta->>'sp1')::bigint sp1
                 ,json_encuesta->>'sp2' sp2_cel
@@ -342,13 +342,13 @@ export function tem(context:TableContext):TableDefinition {
                 ,json_encuesta->>'sp4' sp4_fecha 
                 ,json_encuesta->>'sp5' sp5_hora 
                 ,(json_encuesta->>'sp6')::bigint  sp6 
-                from tem t                
+                from tem t left join tareas_tem tt on t.operativo=tt.operativo and t.enc=tt.enc and tt.tarea='rel'
             )
         `, 
         postCreateSqls:`
            -- create index "carga 4 tem IDX" ON tem (carga);
             --CREATE TRIGGER tem_cod_per_trg before UPDATE OF carga_rol, carga_persona  ON tem FOR EACH ROW  EXECUTE PROCEDURE tem_cod_per_trg();
         `
-    }
-};
+    };
+    return def;
 }
