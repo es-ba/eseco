@@ -7,7 +7,7 @@ import { CasilleroBase, CasillerosImplementados, CasoState,
     Opcion, PlainForPk, Respuestas, ResumenEstado,
     Tareas, TareasEstructura, TEM
 } from "./tipos";
-import { deepFreeze } from "best-globals";
+import { deepFreeze, datetime } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
 import { getRowValidator, Structure, Opcion as RowValidatorOpcion, FormStructureState } from "row-validator";
 import * as JSON4all from "json4all";
@@ -498,6 +498,68 @@ var reducers={
                             }
                         }
                         
+                    }
+                }
+            })
+        },
+    AGREGAR_VISITA: (payload: {vivienda:IdCaso, observaciones:string|null}) => 
+        function(state: CasoState){
+            var visitas = state.datos.hdr[payload.vivienda].visitas;
+            visitas.push({
+                fecha: datetime.now().toYmd(),
+                hora: datetime.now().toHms(),
+                idper: state.datos.idper,
+                observaciones:payload.observaciones
+            })
+            return calcularFeedback({
+                ...state,
+                datos:{
+                    ...state.datos,
+                    hdr:{
+                        ...state.datos.hdr,
+                        [payload.vivienda]:{
+                            ...state.datos.hdr[payload.vivienda],
+                            visitas:
+                                visitas
+                        }
+                    }
+                }
+            })
+        },
+    MODIFICAR_VISITA: (payload: {vivienda:IdCaso, index:number, observaciones:string|null}) => 
+        function(state: CasoState){
+            var visitas = state.datos.hdr[payload.vivienda].visitas;
+            visitas[payload.index].observaciones=payload.observaciones
+            return calcularFeedback({
+                ...state,
+                datos:{
+                    ...state.datos,
+                    hdr:{
+                        ...state.datos.hdr,
+                        [payload.vivienda]:{
+                            ...state.datos.hdr[payload.vivienda],
+                            visitas:
+                                visitas
+                        }
+                    }
+                }
+            })
+        },
+    BORRAR_VISITA: (payload: {vivienda:IdCaso, index:number}) => 
+        function(state: CasoState){
+            var visitas = state.datos.hdr[payload.vivienda].visitas;
+            visitas.splice(payload.index, 1);
+            return calcularFeedback({
+                ...state,
+                datos:{
+                    ...state.datos,
+                    hdr:{
+                        ...state.datos.hdr,
+                        [payload.vivienda]:{
+                            ...state.datos.hdr[payload.vivienda],
+                            visitas:
+                                visitas
+                        }
                     }
                 }
             })

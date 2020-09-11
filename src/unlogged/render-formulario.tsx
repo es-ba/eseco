@@ -16,7 +16,7 @@ import {Bloque, BotonFormulario,
     ModoDespliegue,
     Opcion, OpcionMultiple, OpcionNo, OpcionSi, 
     Pregunta, PreguntaConOpciones, PreguntaConOpcionesMultiples, PreguntaSimple, 
-    Respuestas, Valor, TEM, IdCarga, Carga, HojaDeRuta, PlainForPk, IdFin, InfoTarea, Tareas
+    Respuestas, Valor, TEM, IdCarga, Carga, HojaDeRuta, PlainForPk, IdFin, InfoTarea, Tareas, Visita
 } from "./tipos";
 import { dmTraerDatosFormulario, dispatchers, 
     getFuncionHabilitar, 
@@ -889,7 +889,7 @@ export function DesplegarCarga(props:{
                     <TableRow key={idCaso}>
                         <TableCell>
                             <DesplegarTem tem={datosVivienda.tem}/>
-                            <DesplegarNotas tareas={datosVivienda.tareas} idCaso={idCaso}/>
+                            <DesplegarNotasYVisitas tareas={datosVivienda.tareas} visitas={datosVivienda.visitas} idCaso={idCaso}/>
                         </TableCell>
                         <TableCell>
                             {datosVivienda.respuestas[c5]}
@@ -985,10 +985,13 @@ export function DesplegarTem(props:{tem:TEM}){
     </div>
 }
 
-export function DesplegarNotas(props:{tareas:Tareas, idCaso:IdCaso}){
-    const {tareas, idCaso} = props;
+export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visitas:Visita[]}){
+    const {tareas, visitas, idCaso} = props;
+    const {miIdPer} = useSelector((state:CasoState)=>({miIdPer:state.datos.idper}));
     const [dialogoNotas, setDialogoNotas] = useState<boolean>(false);
     const [nota, setNota] = useState<string|null>(null);
+    const [observacionNueva, setObservacionNueva] = useState<string|null>(null);
+    const [observacionEdicion, setObservacionEdicion] = useState<string|null>(null);
     const [miTarea, setMiTarea] = useState<IdTarea|null>(null);
     const [titulo, setTitulo] = useState<string|null>(null);
     var dispatch = useDispatch();
@@ -1004,7 +1007,7 @@ export function DesplegarNotas(props:{tareas:Tareas, idCaso:IdCaso}){
                         setNota(tarea.notas)
                         setMiTarea(tarea.tarea)
                         setDialogoNotas(true)
-                        setTitulo(`Notas  ${tarea.tarea} vivienda  ${idCaso}`)
+                        setTitulo(`Vivienda  ${idCaso} - tarea "${tarea.tarea}"`)
                     }}
                 >
                     <ICON.Create/>
@@ -1016,12 +1019,12 @@ export function DesplegarNotas(props:{tareas:Tareas, idCaso:IdCaso}){
                     }}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
+                    className="dialogo-notas"
                 >
                     <DialogTitle id="alert-dialog-title-obs">{titulo}</DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-description-obs">
+                        <div className="notas">
                             <TextField 
-                                autoFocus={true}
                                 fullWidth={true}
                                 value={nota || ''} 
                                 label="Notas"
@@ -1029,27 +1032,105 @@ export function DesplegarNotas(props:{tareas:Tareas, idCaso:IdCaso}){
                                 onChange={(event)=>{
                                     let value = event.target.value || null;
                                     setNota(value)
+                                    miTarea!=null && dispatch(dispatchers.REGISTRAR_NOTA({
+                                        vivienda:idCaso,
+                                        tarea: miTarea,
+                                        nota: nota
+                                    }));
                                 }}
                             />
-                        </DialogContentText>
+                        </div>
+                        <div className="visitas">
+                            <Table className="tabla-visitas">
+                                <colgroup>
+                                    <col style={{width:"5%"}}/>
+                                    <col style={{width:"40%"}}/>
+                                    <col style={{width:"15%"}}/>
+                                    <col style={{width:"35%"}}/>
+                                    <col style={{width:"5%"}}/>
+                                </colgroup>
+                                <TableHead style={{fontSize: "1.2rem"}}>
+                                    <TableRow>
+                                        <TableCell>vis</TableCell>
+                                        <TableCell>fecha</TableCell>
+                                        <TableCell>hora</TableCell>
+                                        <TableCell>observaciones</TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {visitas? //por si ya hay algo sincronizado
+                                        visitas.map((visita, index)=>
+                                            <TableRow key={"visita_" + index.toString()}>
+                                                <TableCell>
+                                                    {(index+1).toString()}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {visita.fecha}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {visita.hora}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {visita.observaciones}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {miIdPer==visita.idper?
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="secondary"
+                                                            onClick={()=>{
+                                                                dispatch(dispatchers.BORRAR_VISITA({vivienda:idCaso, index: index}))
+                                                            }}
+                                                        >
+                                                            <ICON.DeleteOutline/>
+                                                        </Button>
+                                                    :
+                                                        null
+                                                    }
+                                                    
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    :
+                                        null
+                                    }
+                                    <TableRow>
+                                        <TableCell colSpan={4}>
+                                            <TextField 
+                                                fullWidth={true}
+                                                value={observacionNueva || ''} 
+                                                label="nueva visita"
+                                                type="text"
+                                                onChange={(event)=>{
+                                                    let value = event.target.value || null;
+                                                    setObservacionNueva(value)
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button onClick={()=>{
+                                                dispatch(dispatchers.AGREGAR_VISITA({
+                                                    vivienda:idCaso,
+                                                    observaciones: observacionNueva
+                                                }));
+                                                setObservacionNueva(null)
+                                            }} disabled={!observacionNueva} color="primary" variant="contained">
+                                                <ICON.Add/>
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </div>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={()=>{
                             setDialogoNotas(false)
-                        }} color="secondary" variant="outlined">
-                            Descartar nota
-                        </Button>
-                        <Button onClick={()=>{
-                            miTarea!=null && dispatch(dispatchers.REGISTRAR_NOTA({
-                                vivienda:idCaso,
-                                tarea: miTarea,
-                                nota: nota
-                            }));
-                            setDialogoNotas(false)
                         }} color="primary" variant="contained">
-                            Guardar
+                            Salir
                         </Button>
-                        
                     </DialogActions>
                 </Dialog>
             </div>

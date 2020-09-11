@@ -76,6 +76,7 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                     'observaciones' , tt.carga_observaciones ,
                     'carga'         , t.area         
                 ) as tem, t.area,
+                tt.visitas,
                 --TODO: GENERALIZAR
                 jsonb_object_agg(coalesce(tarea,'rel'),jsonb_build_object(
 					'tarea', tarea,
@@ -86,9 +87,9 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                 min(fecha_asignacion) as fecha_asignacion
                 from tem t join tareas_tem tt using (operativo, enc)
                 where ${quotedCondViv}
-                group by t.enc, t.json_encuesta, t.resumen_estado, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones,t.area
+                group by t.enc, t.json_encuesta, t.resumen_estado, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones,t.area, tt.visitas
             )
-            select ${jsono(`select enc, respuestas, "resumenEstado", tem, tareas from viviendas`, 'enc')} as hdr,
+            select ${jsono(`select enc, respuestas, "resumenEstado", tem, tareas, coalesce(visitas,'[]') as visitas from viviendas`, 'enc')} as hdr,
                 ${json(`
                     select area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha
                         from viviendas inner join areas using (area) 
@@ -379,6 +380,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             return {
                 ...row,
                 soloLectura,
+                idPer:context.user.idper,
                 cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:carga.fecha?date.iso(carga.fecha).toDmy():null})), 'carga')
             };
         }
@@ -419,11 +421,11 @@ export const ProceduresEseco : ProcedureDef[] = [
                         var puedoGuardarEnTEM=true;
                         var queryTareasTem = await context.client.query(
                             `update tareas_tem
-                                set cargado_dm=null, notas = $4
+                                set cargado_dm=null, notas = $4, visitas = $5
                                 where operativo= $1 and enc = $2 and tarea = $3 and cargado_dm = ${context.be.db.quoteLiteral(token!)}
                                 returning 'ok'`
                             ,
-                            [OPERATIVO, idCaso, tarea, tareas[tarea].notas]
+                            [OPERATIVO, idCaso, tarea, tareas[tarea].notas, JSON.stringify(vivienda.visitas || [])]
                         ).fetchOneRowIfExists();
                         if(queryTareasTem.rowCount==0){
                             var puedoGuardarEnTEM=false;
@@ -458,6 +460,7 @@ export const ProceduresEseco : ProcedureDef[] = [
                 ...row,
                 token,
                 num_sincro,
+                idper:context.user.idper,
                 cargas:likeAr.createIndex(row.cargas.map(carga=>({...carga, fecha:carga.fecha?date.iso(carga.fecha).toDmy():null})), 'carga')
             };
         }

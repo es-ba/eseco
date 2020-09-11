@@ -207,11 +207,19 @@ export type Tareas = {
     [tarea in IdTarea]:InfoTarea
 }
 
+export type Visita={
+    fecha: string
+    hora: string
+    idper: string
+    observaciones: string | null
+}
+
 export type DatosVivienda= {
     respuestas: Respuestas
     tareas: Tareas
     tem: TEM
     resumenEstado: ResumenEstado
+    visitas: Visita[]
     dirty?:boolean,
 }
 
@@ -267,6 +275,7 @@ export type CasoState={
         persona:string
         tarea:IdTarea
         num_sincro?:number
+        idper:string
         cargas: Cargas
         soloLectura?: boolean
     }
