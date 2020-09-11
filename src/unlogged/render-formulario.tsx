@@ -52,6 +52,12 @@ var e1 = 'e1' as IdVariable;
 var e2 = 'e2' as IdVariable;
 var e7 = 'e7' as IdVariable;
 
+var p12 = 'p12' as IdVariable;
+var sp2 = 'sp2' as IdVariable;
+var sp3 = 'sp3' as IdVariable;
+var sp4 = 'sp4' as IdVariable;
+var sp5 = 'sp5' as IdVariable;
+
 var useStyles = makeStyles((_theme: Theme) =>
     createStyles({
         root:{},
@@ -889,6 +895,11 @@ export function DesplegarCarga(props:{
                     <TableRow key={idCaso}>
                         <TableCell>
                             <DesplegarTem tem={datosVivienda.tem}/>
+                            {datosVivienda.resumenEstado=="cita pactada"?
+                                <DesplegarCitaPactada respuestas={datosVivienda.respuestas}/>
+                            :
+                                null
+                            }
                             <DesplegarNotasYVisitas tareas={datosVivienda.tareas} visitas={datosVivienda.visitas} idCaso={idCaso}/>
                         </TableCell>
                         <TableCell>
@@ -968,7 +979,16 @@ export function DesplegarCarga(props:{
         }
     </Paper>
 }
-
+export function DesplegarCitaPactada(props:{respuestas:Respuestas}){
+    const {respuestas} = props;
+    return <div className="cita-pactada">
+        <div><Atributo nombre="Cita pactada con " valor={respuestas[p12]}/></div>
+        <div><Atributo nombre="Cel.:" valor={respuestas[sp2]}/></div>
+        <div><Atributo nombre="Tel.:" valor={respuestas[sp3]}/></div>
+        <div><Atributo nombre="Fecha:" valor={respuestas[sp4]}/></div>
+        <div><Atributo nombre="Hora:" valor={respuestas[sp5]}/></div>
+    </div>
+}
 export function DesplegarTem(props:{tem:TEM}){
     const {tem} = props;
     return <div>
