@@ -1016,7 +1016,7 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
     const [titulo, setTitulo] = useState<string|null>(null);
     var dispatch = useDispatch();
     return <div className="tareas-notas">
-        <div className="notas">Notas:</div>
+        <div className="notas"><h4>Notas y visitas</h4></div>
         {likeAr(tareas).map((tarea)=>
             <div className="nota">
                 <span>{tarea.tarea + ":"}</span><span>{tarea.notas?tarea.notas:'-'}</span>
