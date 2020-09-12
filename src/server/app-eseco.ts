@@ -50,6 +50,7 @@ import { mis_tareas          } from './table-mis_tareas';
 import { mis_tareas_tem      } from './table-mis_tareas_tem';
 import { mis_tareas_areas    } from './table-mis_tareas_areas';
 import { resultados_tarea    } from './table-resultados_tarea';
+import { control_campo       } from './table-control_campo';
 
 import {defConfig} from "./def-config"
 
@@ -230,10 +231,12 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         this.caches.tableContent = this.caches.tableContent || {};
         await this.inDbClient(null, async (client)=>{
             this.caches.tableContent.no_rea = (await client.query(`select * from no_rea order by no_rea`).fetchAll()).rows;
+            console.log('caches',this.caches.tableContent.no_rea)
             this.caches.tableContent.no_rea_groups = (await client.query(`
                 select grupo, jsonb_agg(to_json(r.*)) from no_rea r group by grupo order by 1
             `).fetchAll()).rows;
         })
+        console.log('caches ok');
     }
     sqlNoreaCase(campoNecesario:string){
         var be=this;
@@ -399,6 +402,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , mis_tareas
             , mis_tareas_tem
             , mis_tareas_areas
+            , control_campo
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
