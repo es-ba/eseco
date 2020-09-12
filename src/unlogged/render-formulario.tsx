@@ -1370,6 +1370,7 @@ export function ConsultaResultados(){
                     disabled={!(etiqueta && documento && etiquetaValida)}
                     onClick={async ()=>{
                         //ts-ignore Si el botón está habilitado existen la etiqueta y el documento
+                        setResultadoConsulta('buscando...')
                         let result = await consultarEtiqueta(etiqueta!, documento!);
                         setResultadoConsulta(result)
                     }}
@@ -1377,7 +1378,9 @@ export function ConsultaResultados(){
                     Consultar
                 </Button>
                 <div className='espacio-final-formulario'>
-                    <p>{resultadoConsulta}</p>
+                    {resultadoConsulta?.split(/\r?\n|%0A/).map(parrafo=>
+                        <p>{parrafo}</p>
+                    )}
                 </div>
             </Paper>
             
