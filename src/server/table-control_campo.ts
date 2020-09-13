@@ -11,11 +11,11 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
         {name:'tipo_domicilio', typeName:'bigint'}
     ];
     var camposCalculados:(FieldDefinition & {condicion:string, tasa_efectividad:boolean})[]=[
-        {name:'no_salieron'  , typeName:'bigint', title:'no salieron a campo', condicion:`resumen_estado is null`},
-        {name:'sin_novedad'  , typeName:'bigint', visible:opts.agrupado},
-        {name:'sin_resultado', typeName:'bigint', visible:!opts.agrupado, condicion:`resumen_estado='vacio'`},
-        {name:'incompleto'   , typeName:'bigint', visible:!opts.agrupado, condicion:`resumen_estado in ('incompleto','con problemas')`},
-        {name:'rea'          , typeName:'bigint', condicion:`rea_m=1`},
+        {name:'no_salieron'  , typeName:'bigint', aggregate:'sum', title:'no salieron a campo', condicion:`resumen_estado is null`},
+        {name:'sin_novedad'  , typeName:'bigint', aggregate:'sum', visible:opts.agrupado},
+        {name:'sin_resultado', typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado='vacio'`},
+        {name:'incompleto'   , typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado in ('incompleto','con problemas')`},
+        {name:'rea'          , typeName:'bigint', aggregate:'sum', condicion:`rea_m=1`},
         /*
         {name:'asuente_viv'  , typeName:'bigint', title:'ausente de vivienda', condicion:`cod_no_rea=7`},
         {name:'asuente_mie'  , typeName:'bigint', title:'ausente de miembro seleccionado', condicion:`cod_no_rea=75`},
@@ -25,6 +25,7 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
             typeName:'bigint',
             title:g.grupo,
             condicion:`cod_no_rea in (${g.codigos.map(c=>db.quoteLiteral(c.no_rea)).join(',')})`,
+            aggregate:'sum',
             tasa_efectividad:g.codigos[0].grupo0.startsWith('no encuestable')
         }))
     ];
@@ -33,7 +34,7 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
         editable:false,
         fields:[
             ...camposCorte,
-            {name:'total'        , typeName:'bigint'},
+            {name:'total'        , typeName:'bigint', aggregate:'sum'},
             ...camposCalculados.map(f=>{var {condicion, ...fieldDef}=f; return fieldDef}),
             {name:'tasa_efectividad', typeName:'decimal'},
         ],
