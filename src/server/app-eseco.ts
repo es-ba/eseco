@@ -51,6 +51,7 @@ import { mis_tareas_tem      } from './table-mis_tareas_tem';
 import { mis_tareas_areas    } from './table-mis_tareas_areas';
 import { resultados_tarea    } from './table-resultados_tarea';
 import { control_campo       } from './table-control_campo';
+import { control_resumen     } from './table-control_resumen';
 
 import {defConfig} from "./def-config"
 
@@ -233,7 +234,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             this.caches.tableContent.no_rea = (await client.query(`select * from no_rea order by no_rea`).fetchAll()).rows;
             console.log('caches',this.caches.tableContent.no_rea)
             this.caches.tableContent.no_rea_groups = (await client.query(`
-                select grupo, jsonb_agg(to_json(r.*)) from no_rea r group by grupo order by 1
+                select grupo, jsonb_agg(to_json(r.*)) as codigos from no_rea r group by grupo order by 1
+            `).fetchAll()).rows;
+            this.caches.tableContent.no_rea_groups0 = (await client.query(`
+                select grupo0 as grupo, jsonb_agg(to_json(r.*)) as codigos from no_rea r group by grupo0 order by 1
             `).fetchAll()).rows;
         })
         console.log('caches ok');
@@ -315,6 +319,15 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'mis_relevadores'},
                     {menuType:'table', name:'areas'},
                     {menuType:'table', name:'tem_recepcion', label:'TEM'},
+                ]},            
+            )
+        }
+        if(context.superuser){
+            menu.push(
+                {menuType:'menu', name:'control', menuContent:[
+                    //{menuType:'carga_recepcionista', name:'cargar'},
+                    {menuType:'table', name:'resumen', table:'control_resumen', selectedByDefault:true},
+                    {menuType:'table', name:'detallado', table:'control_campo'},
                 ]},            
             )
         }
@@ -403,6 +416,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , mis_tareas_tem
             , mis_tareas_areas
             , control_campo
+            , control_resumen
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
