@@ -51,8 +51,8 @@ export function mis_relevadores(context:TableContext):TableDefinition {
                                 sum(case when t.resumen_estado in ('incompleta', 'con problemas') then 1 else null end) as incompletas,
                                 sum(case when t.resumen_estado in ('vacia') then 1 else null end) as vacias,
                                 sum(case when tt.fecha_asignacion is not null and t.rea_m = 1 then 1 else null end)*1.0 / nullif(count(distinct tt.fecha_asignacion),0) as reas_dia
-                            from tem t inner join areas a using (area) left join tareas_tem tt on (t.operativo=tt.operativo and  t.enc=tt.enc and 'rel'=tt.tarea)
-                            where t.relevador = u.idper
+                            from tem t inner join areas a using (area) inner join tareas_tem tt on (t.operativo=tt.operativo and  t.enc=tt.enc and 'rel'=tt.tarea)
+                            where tt.asignado = u.idper
                     ) t left join lateral (
                         select max(cuando) as ultima_sincro
                             from sincronizaciones s
