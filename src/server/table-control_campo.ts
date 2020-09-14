@@ -12,9 +12,9 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
     ];
     var camposCalculados:(FieldDefinition & {condicion:string, tasa_efectividad:boolean})[]=[
         {name:'no_salieron'  , typeName:'bigint', aggregate:'sum', title:'no salieron a campo', condicion:`resumen_estado is null`},
+        {name:'salieron'     , typeName:'bigint', aggregate:'sum', title:'salieron a campo'},
         {name:'sin_novedad'  , typeName:'bigint', aggregate:'sum', visible:opts.agrupado},
-        {name:'sin_resultado', typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado='vacio'`},
-        {name:'incompleto'   , typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado in ('incompleto','con problemas')`},
+        {name:'sin_resultado', typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado in ('vacio','cita pactada')`},
         {name:'rea'          , typeName:'bigint', aggregate:'sum', condicion:`rea_m=1`},
         /*
         {name:'asuente_viv'  , typeName:'bigint', title:'ausente de vivienda', condicion:`cod_no_rea=7`},
@@ -36,7 +36,10 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
             ...camposCorte,
             {name:'total'        , typeName:'bigint', aggregate:'sum'},
             ...camposCalculados.map(f=>{var {condicion, ...fieldDef}=f; return fieldDef}),
+            {name:'otros'           , typeName:'bigint', aggregate:'sum'},
             {name:'tasa_efectividad', typeName:'decimal'},
+            {name:'incompleto'       , typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado in ('incompleto','con problemas')`},
+            {name:'pendiente_verif'  , typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado in ('incompleto','con problemas')`},
         ],
         primaryKey:camposCorte.map(f=>f.name),
         sql:{
@@ -44,7 +47,8 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
             from:` 
             ( 
                 select t.*, coalesce(incompleto,0)+coalesce(sin_resultado,0) as sin_novedad,
-                    round(rea*100.0/nullif(rea+${camposCalculados.filter(f=>f.tasa_efectividad).map(f=>f.name).join('+')},0),1) as tasa_efectividad
+                        round(rea*100.0/nullif(rea+${camposCalculados.filter(f=>f.tasa_efectividad).map(f=>f.name).join('+')},0),1) as tasa_efectividad,
+                        total-coalesce(no_salieron,0) as salieron
                     from (   
                         select ${[
                             ...camposCorte.map(f=>f.name),
@@ -53,6 +57,8 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
                             count(*) filter (where klase=${db.quoteLiteral(f.name)}) as ${f.name}`),
                             'count(*) filter (where klase is null) as otros'
                         ].join(',')}
+                            , count(*) filter (where resumen_estado in ('incompleto','con problema')) as incompleto
+                            , count(*) filter (where resumen_estado in ('no rea','ok') and verificado is null) as pendiente_verif
                         from (
                             select t.*, 
                                 case ${camposCalculados.filter(f=>f.condicion).map(f=>
@@ -60,15 +66,14 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
                                     `
                                     ).join('')} else null end as klase
                                 from (
-                                    select t.*, ${be.sqlNoreaCase('no_rea')} as cod_no_rea
-                                        from tem t
+                                    select t.*, tt.verificado, ${be.sqlNoreaCase('no_rea')} as cod_no_rea
+                                        from tem t left join tareas_tem tt on t.operativo=tt.operativo and t.enc=tt.enc and tt.tarea='rel'
                                 ) t
                         ) t
                         ${camposCorte.length?`group by ${camposCorte.map(f=>f.name)}`:''}
                     ) t
             )`
         }
-        , hiddenColumns: new Date().toISOString()<'2020-09-17'?['tasa_efectividad']:[]
     };
 }
 
