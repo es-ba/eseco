@@ -1010,8 +1010,7 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
     const {miIdPer} = useSelector((state:CasoState)=>({miIdPer:state.datos.idper}));
     const [dialogoNotas, setDialogoNotas] = useState<boolean>(false);
     const [nota, setNota] = useState<string|null>(null);
-    const [observacionNueva, setObservacionNueva] = useState<string|null>(null);
-    const [observacionEdicion, setObservacionEdicion] = useState<string|null>(null);
+    const [puedeBorrar, setPuedeBorrar] = useState<boolean>(true);
     const [miTarea, setMiTarea] = useState<IdTarea|null>(null);
     const [titulo, setTitulo] = useState<string|null>(null);
     var dispatch = useDispatch();
@@ -1060,7 +1059,7 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                 }}
                             />
                         </div>
-                        <div className="visitas">
+                        <div className="visitas" style={{marginTop:"20px"}}>
                             <Table className="tabla-visitas">
                                 <colgroup>
                                     <col style={{width:"5%"}}/>
@@ -1086,10 +1085,48 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                                     {(index+1).toString()}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {visita.fecha}
+                                                    {miIdPer==visita.idper?
+                                                        <TextField style={{width:"135px"}}
+                                                            value={visita.fecha || ''} 
+                                                            fullWidth={true}
+                                                            type="date"
+                                                            onFocus={()=>setPuedeBorrar(false)}
+                                                            onBlur={()=>setPuedeBorrar(true)}
+                                                            onChange={(event)=>{
+                                                                let value = event.target.value || null;
+                                                                dispatch(dispatchers.MODIFICAR_VISITA({
+                                                                    vivienda:idCaso,
+                                                                    index,
+                                                                    opcion:"fecha",
+                                                                    valor: value
+                                                                }));
+                                                            }}
+                                                        />
+                                                    :
+                                                        visita.fecha
+                                                    }
                                                 </TableCell>
                                                 <TableCell>
-                                                    {visita.hora}
+                                                    {miIdPer==visita.idper?
+                                                        <TextField 
+                                                            fullWidth={true}
+                                                            value={visita.hora || ''} 
+                                                            type="time"
+                                                            onFocus={()=>setPuedeBorrar(false)}
+                                                            onBlur={()=>setPuedeBorrar(true)}
+                                                            onChange={(event)=>{
+                                                                let value = event.target.value || null;
+                                                                dispatch(dispatchers.MODIFICAR_VISITA({
+                                                                    vivienda:idCaso,
+                                                                    index,
+                                                                    opcion:"hora",
+                                                                    valor: value
+                                                                }));
+                                                            }}
+                                                        />
+                                                    :
+                                                        visita.hora
+                                                    }
                                                 </TableCell>
                                                 <TableCell>
                                                     {miIdPer==visita.idper?
@@ -1097,12 +1134,15 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                                             fullWidth={true}
                                                             value={visita.observaciones || ''} 
                                                             type="text"
+                                                            onFocus={()=>setPuedeBorrar(false)}
+                                                            onBlur={()=>setPuedeBorrar(true)}
                                                             onChange={(event)=>{
                                                                 let value = event.target.value || null;
                                                                 dispatch(dispatchers.MODIFICAR_VISITA({
                                                                     vivienda:idCaso,
                                                                     index,
-                                                                    observaciones: value
+                                                                    opcion:"observaciones",
+                                                                    valor: value
                                                                 }));
                                                             }}
                                                         />
@@ -1113,6 +1153,7 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                                 <TableCell>
                                                     {miIdPer==visita.idper?
                                                         <Button
+                                                            disabled={!puedeBorrar}
                                                             size="small"
                                                             variant="outlined"
                                                             color="secondary"

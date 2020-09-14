@@ -208,9 +208,9 @@ export type Tareas = {
 }
 
 export type Visita={
-    fecha: string
-    hora: string
-    idper: string
+    fecha: string | null
+    hora: string | null
+    idper: string | null
     observaciones: string | null
 }
 

@@ -5,7 +5,7 @@ import { CasilleroBase, CasillerosImplementados, CasoState,
     IdCarga, IdCasillero, IdCaso, IdDestino, IdFin, IdFormulario, IdTarea, IdVariable, 
     ModoDespliegue, 
     Opcion, PlainForPk, Respuestas, ResumenEstado,
-    Tareas, TareasEstructura, TEM
+    Tareas, TareasEstructura, TEM, Visita
 } from "./tipos";
 import { deepFreeze, datetime } from "best-globals";
 import { createReducer, createDispatchers, ActionsFrom } from "redux-typed-reducer";
@@ -527,10 +527,10 @@ var reducers={
                 }
             })
         },
-    MODIFICAR_VISITA: (payload: {vivienda:IdCaso, index:number, observaciones:string|null}) => 
+    MODIFICAR_VISITA: (payload: {vivienda:IdCaso, index:number, opcion:keyof Visita , valor:string|null}) => 
         function(state: CasoState){
             var visitas = state.datos.hdr[payload.vivienda].visitas;
-            visitas[payload.index].observaciones=payload.observaciones
+            visitas[payload.index][payload.opcion]=payload.valor
             return calcularFeedback({
                 ...state,
                 datos:{
