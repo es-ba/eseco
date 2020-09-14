@@ -1063,9 +1063,9 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                             <Table className="tabla-visitas">
                                 <colgroup>
                                     <col style={{width:"5%"}}/>
-                                    <col style={{width:"40%"}}/>
+                                    <col style={{width:"20%"}}/>
                                     <col style={{width:"15%"}}/>
-                                    <col style={{width:"35%"}}/>
+                                    <col style={{width:"55%"}}/>
                                     <col style={{width:"5%"}}/>
                                 </colgroup>
                                 <TableHead style={{fontSize: "1.2rem"}}>
@@ -1134,6 +1134,7 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                                             fullWidth={true}
                                                             value={visita.observaciones || ''} 
                                                             type="text"
+                                                            multiline
                                                             onFocus={()=>setPuedeBorrar(false)}
                                                             onBlur={()=>setPuedeBorrar(true)}
                                                             onChange={(event)=>{
