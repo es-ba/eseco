@@ -1195,7 +1195,7 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                         <Button onClick={()=>{
                             setDialogoNotas(false)
                         }} color="primary" variant="contained">
-                            Salir
+                            OK
                         </Button>
                     </DialogActions>
                 </Dialog>
