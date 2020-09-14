@@ -508,7 +508,7 @@ var reducers={
             var visitas = state.datos.hdr[payload.vivienda].visitas || [];
             visitas.push({
                 fecha: datetime.now().toYmd(),
-                hora: datetime.now().toHms(),
+                hora: datetime.now().toHm(),
                 idper: state.datos.idper,
                 observaciones:payload.observaciones
             })
