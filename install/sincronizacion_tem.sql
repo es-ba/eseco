@@ -16,6 +16,7 @@ begin
     new.sexo_sel     = ((datos->'personas'->((datos->>'p11')::integer - 1))->>'p2')::bigint ;
     new.edad_sel     = ((datos->'personas'->((datos->>'p11')::integer - 1))->>'p3')::bigint ;
     new.seleccionado = (datos ->>'p11') ::integer;
+    new.etiqueta     = datos ->>'c5'; 
     if tg_op = 'UPDATE' then
         if new.json_encuesta is distinct from old.json_encuesta and new.json_encuesta is not null then
             new.tipos_inconsist= encu.validar_tipodato(new.enc,datos);

@@ -1,7 +1,7 @@
 {
   "name": "eseco",
   "description": "Encuesta Seropositiva de Covid19",
-  "version": "1.5.0",
+  "version": "2.0.1",
   "private": true,
   "author": "Codenautas <codenautas@googlegroups.com>",
   "license": "MIT",

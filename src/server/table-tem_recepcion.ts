@@ -20,13 +20,13 @@ export function tem_recepcion(context:TableContext):TableDefinition {
     // var hasSupervisorPermission=isSupervisor || hasRecepcionistaPermission;
     var columnasAreasParaLaTem=['obs_recepcionista','verificado_rec','recepcionista'];
 
-    return {
-    "name": "tem_recepcion",
-    editable: true,
-    tableName:'tem',
-    //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
-    "hiddenColumns":[...columnasAreasParaLaTem.map(x=>`areas__${x}`), 'gru_no_rea','semana'],
-    "fields": [
+    var def:TableDefinition= {
+      "name": "tem_recepcion",
+      editable: true,
+      tableName:'tem',
+      //allow:{insert:hasCampoPermissions, delete:hasCampoPermissions},
+      "hiddenColumns":[...columnasAreasParaLaTem.map(x=>`areas__${x}`), 'gru_no_rea','semana'],
+      "fields": [
         {
             "name": "operativo",
             "editable": false,
@@ -47,16 +47,18 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "editable": false,
             "typeName": "integer"
         },
-        { name:'rea_m'            , typeName:'integer'  },
-        {name:'cod_no_rea'    , typeName:'text'   ,editable:false    },
-        {name:'gru_no_rea'    , typeName:'text'   ,editable:false    },
+        { name:'rea_m'        , typeName:'integer'  },
+        {name:'cod_no_rea'    , typeName:'text'      ,editable:false, inTable:false  },
+        {name:'gru_no_rea'    , typeName:'text'      ,editable:false, inTable:false  },
+        {name:'habilitada'    , typeName:'boolean'   ,editable:false, inTable:false  },
+        {name:'cargado'       , typeName:'boolean'   ,editable:false, inTable:false  },
         {
             "name": "resumen_estado",
             editable: false,
             "typeName":"text"
         },
-        { name:'etiqueta'         , typeName:'text'     },
-        { name:'relevador'        , typeName:'text'     },
+        { name:'etiqueta'      , typeName:'text', editable: false , inTable:false   },
+        { name:'relevador'     , typeName:'text', editable: false , inTable:false   },
         {
             "name": "tipos_inconsist",
             editable: false,
@@ -74,7 +76,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
         {name:'sexo_sel'      , typeName:'bigint' ,editable:false    },
         {name:'edad_sel'      , typeName:'bigint' ,editable:false    },
         {name:'cant_p'        , typeName:'bigint' ,editable:false    },
-        {name:'fecha_rel'     , typeName:'date'   ,editable:false    },
+        {name:'fecha_rel'     , typeName:'date'   ,editable:false, inTable:false   },
         {
             "name": "codcalle",
             editable: false,
@@ -298,28 +300,34 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             "typeName": "integer"
             ,visible: false
         }
-    ],
-    "primaryKey": [
-        "operativo",
-        "enc"
-    ],
-    foreignKeys:[
-        {references:'areas' , fields:['area'], displayFields:columnasAreasParaLaTem}
-        //{references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
-    ],
-    "detailTables": [
-        {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
-    ],
-    sql:{
+      ],
+      "primaryKey": [
+          "operativo",
+          "enc"
+      ],
+      foreignKeys:[
+          {references:'areas' , fields:['area'], displayFields:columnasAreasParaLaTem}
+          //{references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
+      ],
+      "detailTables": [
+          {table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
+      ]
+    };
+    const q=context.be.db.quoteIdent;
+    def.sql={
         isTable: false,
         isReferable:true,
         xfields:{
             cod_no_rea:{expr:be.sqlNoreaCase('no_rea')},
             gru_no_rea:{expr:be.sqlNoreaCase('grupo')}
         },
+
         from:`
             (select 
-                *
+                ${def.fields.filter(f=>f.inTable==undefined && !f.clientSide).map(f=>'t.'+q(f.name)).join(',')}
+                , tt.cargado, tt.cargado_dm, tt.habilitada, tt.asignado as relevador
+                ,(json_encuesta->>'c6')::date as fecha_rel   
+                ,json_encuesta->>'c5' etiqueta
                 ,json_encuesta->>'p12' nombre_sel
                 ,(json_encuesta->>'sp1')::bigint sp1
                 ,json_encuesta->>'sp2' sp2_cel
@@ -329,7 +337,7 @@ export function tem_recepcion(context:TableContext):TableDefinition {
                 ,(json_encuesta->>'sp6')::bigint sp6 
                 , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
                 , ${be.sqlNoreaCase('grupo')} as gru_no_rea
-                from tem t
+                from tem t left join tareas_tem tt on t.operativo=tt.operativo and t.enc=tt.enc and tt.tarea='rel'
             )
         `, 
         postCreateSqls:`
@@ -337,5 +345,5 @@ export function tem_recepcion(context:TableContext):TableDefinition {
             --CREATE TRIGGER tem_cod_per_trg before UPDATE OF carga_rol, carga_persona  ON tem FOR EACH ROW  EXECUTE PROCEDURE tem_cod_per_trg();
         `
     }
-};
+    return def;
 }
