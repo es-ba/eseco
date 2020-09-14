@@ -504,7 +504,8 @@ var reducers={
         },
     AGREGAR_VISITA: (payload: {vivienda:IdCaso, observaciones:string|null}) => 
         function(state: CasoState){
-            var visitas = state.datos.hdr[payload.vivienda].visitas;
+            //para que funcione también en la DEMO
+            var visitas = state.datos.hdr[payload.vivienda].visitas || [];
             visitas.push({
                 fecha: datetime.now().toYmd(),
                 hora: datetime.now().toHms(),

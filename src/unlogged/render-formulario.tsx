@@ -1134,25 +1134,14 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                     }
                                     <TableRow>
                                         <TableCell colSpan={4}>
-                                            <TextField 
-                                                fullWidth={true}
-                                                value={observacionNueva || ''} 
-                                                label="nueva visita"
-                                                type="text"
-                                                onChange={(event)=>{
-                                                    let value = event.target.value || null;
-                                                    setObservacionNueva(value)
-                                                }}
-                                            />
                                         </TableCell>
                                         <TableCell>
                                             <Button onClick={()=>{
                                                 dispatch(dispatchers.AGREGAR_VISITA({
                                                     vivienda:idCaso,
-                                                    observaciones: observacionNueva
+                                                    observaciones: null
                                                 }));
-                                                setObservacionNueva(null)
-                                            }} disabled={!observacionNueva} color="primary" variant="contained">
+                                            }} color="primary" variant="contained">
                                                 <ICON.Add/>
                                             </Button>
                                         </TableCell>
