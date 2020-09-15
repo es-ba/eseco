@@ -2,12 +2,23 @@
 
 import {TableDefinition, TableContext, FieldDefinition} from "./types-eseco";
 
-export function control_campo(context:TableContext,opts?:{nombre:string, agrupador:string, agrupado:boolean }):TableDefinition {
-    opts = opts || {nombre:'control_campo', agrupador:'no_rea_groups', agrupado:false}
+export type controlCamposOpts={
+    nombre:string, 
+    agrupador?:string, 
+    agrupado?:boolean,
+    camposCorte?:FieldDefinition[],
+    filtroWhere?:string
+    title?:string
+}
+
+export function control_campo(context:TableContext,opts?:controlCamposOpts):TableDefinition {
+    opts = opts || {nombre:'control_campo'}
+    opts.agrupador = opts.agrupador || 'no_rea_groups'
+    opts.agrupado = opts.agrupado ?? false
     var be=context.be;
     var db=be.db;
     var puedeEditar = context.forDump || context.puede.campo.administrar||context.user.rol==='recepcionista';
-    var camposCorte:FieldDefinition[]=[
+    var camposCorte:FieldDefinition[]=opts.camposCorte||[
         {name:'tipo_domicilio', typeName:'bigint'}
     ];
     var camposCalculados:(FieldDefinition & {condicion:string, tasa_efectividad:boolean})[]=[
@@ -32,6 +43,7 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
     return {
         name:opts.nombre,
         editable:false,
+        title:opts.title||opts.nombre.replace(/_/g,' '),
         fields:[
             ...camposCorte,
             {name:'total'        , typeName:'bigint', aggregate:'sum'},
@@ -67,7 +79,10 @@ export function control_campo(context:TableContext,opts?:{nombre:string, agrupad
                                     ).join('')} else null end as klase
                                 from (
                                     select t.*, tt.verificado, ${be.sqlNoreaCase('no_rea')} as cod_no_rea
-                                        from tem t left join tareas_tem tt on t.operativo=tt.operativo and t.enc=tt.enc and tt.tarea='rel'
+                                        from tem t left join comunas c on t.nrocomuna=c.comuna
+                                            left join tareas_tem tt on t.operativo=tt.operativo and t.enc=tt.enc and tt.tarea='rel'
+
+                                    where ${opts.filtroWhere || 'true'}    
                                 ) t
                         ) t
                         ${camposCorte.length?`group by ${camposCorte.map(f=>f.name)}`:''}

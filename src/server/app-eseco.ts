@@ -327,11 +327,14 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {menuType:'menu', name:'control', menuContent:[
                     //{menuType:'carga_recepcionista', name:'cargar'},
                     {menuType:'table', name:'resumen', table:'control_resumen', selectedByDefault:true},
-                    {menuType:'table', name:'detallado', table:'control_campo'},
+                    {menuType:'table', name:'dominio', table:'control_campo'},
+                    {menuType:'table', name:'zona'   , table:'control_campo_zona'  },
+                    {menuType:'table', name:'comuna' , table:'control_campo_comuna'},
+                    {menuType:'table', name:'área'   , table:'control_campo_area'  },
                 ]},            
             )
         }
-        if(context.puede.citas?.programar){
+        if(context.puede.citas?.programar && false){
             menu.push(
                 {menuType:'menu', name:'citas' ,menuContent:[
                     //{menuType:'carga_recepcionista', name:'cargar'},
@@ -417,6 +420,15 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , mis_tareas_areas
             , control_campo
             , control_resumen
+            , control_campo_zona: context=>control_campo(context, 
+                {nombre:'control_campo_comuna', title:'control campo x zona solo cemento', camposCorte:[{name:'zona', typeName:'text'}], filtroWhere:'tipo_domicilio=1' }
+            )
+            , control_campo_comuna: context=>control_campo(context, 
+                {nombre:'control_campo_comuna', title:'control campo x comuna solo cemento', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'}], filtroWhere:'tipo_domicilio=1' }
+            )
+            , control_campo_area: context=>control_campo(context, 
+                {nombre:'control_campo_comuna', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'},{name:'area', typeName:'integer'}]}
+            )
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
