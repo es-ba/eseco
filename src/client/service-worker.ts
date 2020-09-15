@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_NAME = '#20-09-14d';
+const CACHE_NAME = '#20-09-15';
 const FALLBACK = '/eseco/campo';
 var urlsToCache = [
     "campo",

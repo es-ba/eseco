@@ -41,7 +41,7 @@ import {
     SvgIcon, Switch, 
     Table, TableBody, TableCell, TableHead, TableRow, TextField, Theme, Toolbar, Typography, Zoom,
     useScrollTrigger,
-    createStyles, makeStyles, Icon
+    createStyles, makeStyles, Icon, Hidden
 } from "@material-ui/core";
 import { EstadoVariable, FormStructureState } from "row-validator";
 import { controlarCodigoDV2 } from "./digitov";
@@ -1014,6 +1014,9 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
     const [miTarea, setMiTarea] = useState<IdTarea|null>(null);
     const [titulo, setTitulo] = useState<string|null>(null);
     var dispatch = useDispatch();
+    var obsTitle = <Grid item xs={2} sm={4} >
+        observaciones
+    </Grid>
     return <div className="tareas-notas">
         <div className="notas"><h4>Notas y visitas</h4></div>
         {likeAr(tareas).map((tarea)=>
@@ -1059,138 +1062,130 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                 }}
                             />
                         </div>
-                        <div className="visitas" style={{marginTop:"20px"}}>
-                            <Table className="tabla-visitas">
-                                <colgroup>
-                                    <col style={{width:"5%"}}/>
-                                    <col style={{width:"20%"}}/>
-                                    <col style={{width:"15%"}}/>
-                                    <col style={{width:"55%"}}/>
-                                    <col style={{width:"5%"}}/>
-                                </colgroup>
-                                <TableHead style={{fontSize: "1.2rem"}}>
-                                    <TableRow>
-                                        <TableCell>vis</TableCell>
-                                        <TableCell>fecha</TableCell>
-                                        <TableCell>hora</TableCell>
-                                        <TableCell>observaciones</TableCell>
-                                        <TableCell></TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {visitas? //por si ya hay algo sincronizado
-                                        visitas.map((visita, index)=>
-                                            <TableRow key={"visita_" + index.toString()}>
-                                                <TableCell>
-                                                    {(index+1).toString()}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {miIdPer==visita.idper?
-                                                        <TextField style={{width:"135px"}}
-                                                            value={visita.fecha || ''} 
-                                                            fullWidth={true}
-                                                            type="date"
-                                                            onFocus={()=>setPuedeBorrar(false)}
-                                                            onBlur={()=>setPuedeBorrar(true)}
-                                                            onChange={(event)=>{
-                                                                let value = event.target.value || null;
-                                                                dispatch(dispatchers.MODIFICAR_VISITA({
-                                                                    vivienda:idCaso,
-                                                                    index,
-                                                                    opcion:"fecha",
-                                                                    valor: value
-                                                                }));
-                                                            }}
-                                                        />
-                                                    :
-                                                        visita.fecha
-                                                    }
-                                                </TableCell>
-                                                <TableCell>
-                                                    {miIdPer==visita.idper?
-                                                        <TextField 
-                                                            fullWidth={true}
-                                                            value={visita.hora || ''} 
-                                                            type="time"
-                                                            onFocus={()=>setPuedeBorrar(false)}
-                                                            onBlur={()=>setPuedeBorrar(true)}
-                                                            onChange={(event)=>{
-                                                                let value = event.target.value || null;
-                                                                dispatch(dispatchers.MODIFICAR_VISITA({
-                                                                    vivienda:idCaso,
-                                                                    index,
-                                                                    opcion:"hora",
-                                                                    valor: value
-                                                                }));
-                                                            }}
-                                                        />
-                                                    :
-                                                        visita.hora
-                                                    }
-                                                </TableCell>
-                                                <TableCell>
-                                                    {miIdPer==visita.idper?
-                                                        <TextField 
-                                                            fullWidth={true}
-                                                            value={visita.observaciones || ''} 
-                                                            type="text"
-                                                            multiline
-                                                            onFocus={()=>setPuedeBorrar(false)}
-                                                            onBlur={()=>setPuedeBorrar(true)}
-                                                            onChange={(event)=>{
-                                                                let value = event.target.value || null;
-                                                                dispatch(dispatchers.MODIFICAR_VISITA({
-                                                                    vivienda:idCaso,
-                                                                    index,
-                                                                    opcion:"observaciones",
-                                                                    valor: value
-                                                                }));
-                                                            }}
-                                                        />
-                                                    :
-                                                        visita.observaciones
-                                                    }
-                                                </TableCell>
-                                                <TableCell>
-                                                    {miIdPer==visita.idper?
-                                                        <Button
-                                                            disabled={!puedeBorrar}
-                                                            size="small"
-                                                            variant="outlined"
-                                                            color="secondary"
-                                                            onClick={()=>{
-                                                                dispatch(dispatchers.BORRAR_VISITA({vivienda:idCaso, index: index}))
-                                                            }}
-                                                        >
-                                                            <ICON.DeleteOutline/>
-                                                        </Button>
-                                                    :
-                                                        null
-                                                    }
-                                                    
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    :
-                                        null
-                                    }
-                                    <TableRow>
-                                        <TableCell colSpan={4}>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Button onClick={()=>{
-                                                dispatch(dispatchers.AGREGAR_VISITA({
-                                                    vivienda:idCaso,
-                                                    observaciones: null
-                                                }));
-                                            }} color="primary" variant="contained">
-                                                <ICON.Add/>
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </div>
+                        <Grid container className="visitas" style={{marginTop:"20px"}}>
+                            <Grid item xs={2} sm={1}>
+                                vis
+                            </Grid>
+                            <Grid item xs={6} sm={3}>
+                                fecha
+                            </Grid>
+                            <Grid item xs={4} sm={2}>
+                                hora
+                            </Grid>
+                            <Hidden only="xs">
+                                {obsTitle}
+                            </Hidden>
+                            <Grid item xs={2} sm={2}></Grid>
+                            {visitas? //por si ya hay algo sincronizado
+                                visitas.map((visita, index)=>
+                                    <Grid container spacing={2} key={"visita_" + index.toString()} style={{marginTop:"20px"}}>
+                                        <Grid item xs={2} sm={1}>
+                                            {(index+1).toString()}
+                                        </Grid>
+                                        <Grid item xs={6} sm={3}>
+                                            {miIdPer==visita.idper?
+                                                <TextField
+                                                    value={visita.fecha || ''} 
+                                                    fullWidth={true}
+                                                    type="date"
+                                                    onFocus={()=>setPuedeBorrar(false)}
+                                                    onBlur={()=>setPuedeBorrar(true)}
+                                                    onChange={(event)=>{
+                                                        let value = event.target.value || null;
+                                                        dispatch(dispatchers.MODIFICAR_VISITA({
+                                                            vivienda:idCaso,
+                                                            index,
+                                                            opcion:"fecha",
+                                                            valor: value
+                                                        }));
+                                                    }}
+                                                />
+                                            :
+                                                visita.fecha
+                                            }
+                                        </Grid>
+                                        <Grid item xs={4} sm={2}>
+                                            {miIdPer==visita.idper?
+                                                <TextField 
+                                                    fullWidth={true}
+                                                    value={visita.hora || ''} 
+                                                    type="time"
+                                                    onFocus={()=>setPuedeBorrar(false)}
+                                                    onBlur={()=>setPuedeBorrar(true)}
+                                                    onChange={(event)=>{
+                                                        let value = event.target.value || null;
+                                                        dispatch(dispatchers.MODIFICAR_VISITA({
+                                                            vivienda:idCaso,
+                                                            index,
+                                                            opcion:"hora",
+                                                            valor: value
+                                                        }));
+                                                    }}
+                                                />
+                                            :
+                                                visita.hora
+                                            }
+                                        </Grid>
+                                        <Grid item xs={10} sm={4}>
+                                            {miIdPer==visita.idper?
+                                                <TextField 
+                                                    fullWidth={true}
+                                                    value={visita.observaciones || ''} 
+                                                    type="text"
+                                                    multiline
+                                                    onFocus={()=>setPuedeBorrar(false)}
+                                                    onBlur={()=>setPuedeBorrar(true)}
+                                                    onChange={(event)=>{
+                                                        let value = event.target.value || null;
+                                                        dispatch(dispatchers.MODIFICAR_VISITA({
+                                                            vivienda:idCaso,
+                                                            index,
+                                                            opcion:"observaciones",
+                                                            valor: value
+                                                        }));
+                                                    }}
+                                                />
+                                            :
+                                                visita.observaciones
+                                            }
+                                        </Grid>
+                                        <Grid item xs={2} sm={2}>
+                                            {miIdPer==visita.idper?
+                                                <Button
+                                                    disabled={!puedeBorrar}
+                                                    size="small"
+                                                    variant="outlined"
+                                                    color="secondary"
+                                                    onClick={()=>{
+                                                        dispatch(dispatchers.BORRAR_VISITA({vivienda:idCaso, index: index}))
+                                                    }}
+                                                >
+                                                    <ICON.DeleteOutline/>
+                                                </Button>
+                                            :
+                                                null
+                                            }
+                                            
+                                        </Grid>
+                                    </Grid>
+                                )
+                            :
+                                null
+                            }
+                            <Grid container spacing={2} style={{marginTop: '15px'}}>
+                                <Grid item xs={10}></Grid>
+                                <Grid item xs={2}>
+                                    <Button onClick={()=>{
+                                        dispatch(dispatchers.AGREGAR_VISITA({
+                                            vivienda:idCaso,
+                                            observaciones: null
+                                        }));
+                                    }} color="primary" variant="contained">
+                                        <ICON.Add/>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={()=>{

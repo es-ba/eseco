@@ -69,9 +69,15 @@ anchoNormal(ancho)
   .MuiTableCell-root
     padding 8px
 
-.dialogo-notas
-  .MuiDialog-paper
-    min-width 600px
+@media (min-width 600px)
+  .dialogo-notas
+    .MuiDialog-paper
+      min-width 600px
+
+@media (max-width 599px)
+  .dialogo-notas
+    .MuiDialog-paper
+      min-width 100%
 
 @media screen and (min-width 600px)
   [nuestro-seleccion="1"][nuestro-relevamiento="1"]
