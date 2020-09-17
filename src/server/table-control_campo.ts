@@ -25,7 +25,8 @@ export function control_campo(context:TableContext,opts?:controlCamposOpts):Tabl
         {name:'no_salieron'  , typeName:'bigint', aggregate:'sum', title:'no salieron a campo', condicion:`resumen_estado is null`},
         {name:'salieron'     , typeName:'bigint', aggregate:'sum', title:'salieron a campo'},
         {name:'sin_novedad'  , typeName:'bigint', aggregate:'sum', visible:opts.agrupado},
-        {name:'sin_resultado', typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado in ('vacio','cita pactada')`},
+        {name:'sin_resultado', typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado in ('vacio')`},
+        {name:'cita_pactada' , typeName:'bigint', aggregate:'sum', visible:!opts.agrupado, condicion:`resumen_estado in ('cita pactada')`},
         {name:'rea'          , typeName:'bigint', aggregate:'sum', condicion:`rea_m=1`},
         /*
         {name:'asuente_viv'  , typeName:'bigint', title:'ausente de vivienda', condicion:`cod_no_rea=7`},
@@ -37,7 +38,7 @@ export function control_campo(context:TableContext,opts?:controlCamposOpts):Tabl
             title:g.grupo,
             condicion:`cod_no_rea in (${g.codigos.map(c=>db.quoteLiteral(c.no_rea)).join(',')})`,
             aggregate:'sum',
-            tasa_efectividad:g.codigos[0].grupo0.startsWith('no encuestable')
+            tasa_efectividad:!g.codigos[0].grupo0.startsWith('no encuestable')
         }))
     ];
     return {
