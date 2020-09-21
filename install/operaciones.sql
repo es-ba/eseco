@@ -357,3 +357,24 @@ select enc, h.cha_new_value::jsonb->>'c5', k.username, h.cha_column, h.cha_when
     and  h.cha_new_value::jsonb->>'c5' like '5296%'  -- 4642-68, 4643-45 y 4644-22
     -- and  h.cha_new_value::jsonb->>'c5' like '1001%'  -- 4642-68, 4643-45 -> 32613 y 4644-22 -> 
   limit 10;
+
+
+set search_path = encu;
+
+select  sincro ,token,usuario,cuando,substr(datos::text,1,30) as d
+  from sincronizaciones
+  -- where token='f53f40bafef0376dbd30acbb953ccb7d'
+  where usuario='rnina'
+  order by cuando desc
+  limit 10;
+
+update tareas_tem
+  set cargado_dm=null
+  where asignado=39::text;
+
+---- sobre el recepcionista
+select *
+  from his.changes h
+  where cha_table='areas'
+    -- and cha_column='recepcionista'
+    and cha_new_pk='{"area": 394}';
