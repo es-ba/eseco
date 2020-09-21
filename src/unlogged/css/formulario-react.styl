@@ -65,9 +65,48 @@ anchoNormal(ancho)
 .tareas-notas, .cita-pactada
   margin-top 10px
 
-.dialogo-notas
-  .MuiDialog-paper
-    min-width 700px
+.visitas
+  .MuiTableCell-root
+    padding 8px
+  .campo
+    display flex
+    flex-direction row
+    margin-bottom margenPregunta
+    .MuiButton-root
+      margin-left 5px
+    .input-campo
+      max-width calc(100% - 40px)
+    &[nuestra-longitud=full]
+      .input-campo
+        width 88%
+      .boton-confirmar-campo
+        width 20%
+    &[nuestra-longitud=medium]
+      .input-campo
+        width 60%
+      .boton-confirmar-campo
+        width 40%
+    &[nuestra-longitud=small]
+      .input-campo
+        width 30%
+      .boton-confirmar-campo
+        width 70%
+    &[nuestra-longitud="3"]
+      .input-campo
+        width 40px
+    &[nuestra-longitud="2"]
+      .input-campo
+        width 28px
+
+@media (min-width 600px)
+  .dialogo-notas
+    .MuiDialog-paper
+      min-width 600px
+
+@media (max-width 599px)
+  .dialogo-notas
+    .MuiDialog-paper
+      min-width 100%
 
 @media screen and (min-width 600px)
   [nuestro-seleccion="1"][nuestro-relevamiento="1"]

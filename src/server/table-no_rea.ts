@@ -14,6 +14,7 @@ export function no_rea(context:TableContext):TableDefinition {
             {name:'grupo'                   , typeName:'text'},
             {name:'variable'                , typeName:'text'},
             {name:'valor'                   , typeName:'text'},
+            {name:'grupo0'                  , typeName:'text'},
         ],
         primaryKey:['no_rea'],
     };

@@ -51,6 +51,7 @@ import { mis_tareas_tem      } from './table-mis_tareas_tem';
 import { mis_tareas_areas    } from './table-mis_tareas_areas';
 import { resultados_tarea    } from './table-resultados_tarea';
 import { control_campo       } from './table-control_campo';
+import { control_resumen     } from './table-control_resumen';
 
 import {defConfig} from "./def-config"
 
@@ -233,7 +234,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             this.caches.tableContent.no_rea = (await client.query(`select * from no_rea order by no_rea`).fetchAll()).rows;
             console.log('caches',this.caches.tableContent.no_rea)
             this.caches.tableContent.no_rea_groups = (await client.query(`
-                select grupo, jsonb_agg(to_json(r.*)) from no_rea r group by grupo order by 1
+                select grupo, jsonb_agg(to_json(r.*)) as codigos from no_rea r group by grupo order by 1
+            `).fetchAll()).rows;
+            this.caches.tableContent.no_rea_groups0 = (await client.query(`
+                select grupo0 as grupo, jsonb_agg(to_json(r.*)) as codigos from no_rea r group by grupo0 order by 1
             `).fetchAll()).rows;
         })
         console.log('caches ok');
@@ -318,7 +322,19 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 ]},            
             )
         }
-        if(context.puede.citas?.programar){
+        if(context.superuser){
+            menu.push(
+                {menuType:'menu', name:'control', menuContent:[
+                    //{menuType:'carga_recepcionista', name:'cargar'},
+                    {menuType:'table', name:'resumen', table:'control_resumen', selectedByDefault:true},
+                    {menuType:'table', name:'dominio', table:'control_campo'},
+                    {menuType:'table', name:'zona'   , table:'control_campo_zona'  },
+                    {menuType:'table', name:'comuna' , table:'control_campo_comuna'},
+                    {menuType:'table', name:'área'   , table:'control_campo_area'  },
+                ]},            
+            )
+        }
+        if(context.puede.citas?.programar && false){
             menu.push(
                 {menuType:'menu', name:'citas' ,menuContent:[
                     //{menuType:'carga_recepcionista', name:'cargar'},
@@ -403,6 +419,16 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , mis_tareas_tem
             , mis_tareas_areas
             , control_campo
+            , control_resumen
+            , control_campo_zona: context=>control_campo(context, 
+                {nombre:'control_campo_comuna', title:'control campo x zona solo cemento', camposCorte:[{name:'zona', typeName:'text'}], filtroWhere:'tipo_domicilio=1' }
+            )
+            , control_campo_comuna: context=>control_campo(context, 
+                {nombre:'control_campo_comuna', title:'control campo x comuna solo cemento', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'}], filtroWhere:'tipo_domicilio=1' }
+            )
+            , control_campo_area: context=>control_campo(context, 
+                {nombre:'control_campo_comuna', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'},{name:'area', typeName:'integer'}]}
+            )
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){

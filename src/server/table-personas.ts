@@ -7,14 +7,14 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
     opts=opts||{};
     var puedeEditar = context.forDump || context.user.rol==='admin';
     var fieldsExtendida=opts.extendida?[        
-     {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
-    , {name: "cluster", editable:false, typeName:"integer" }
-    , {name: "area", editable:false, typeName:'integer', inTable:false}
-    , {name: "areaup", editable:false, typeName:'text', inTable:false}
-    , {name: "id_marco", editable:false, typeName:'bigint', inTable:false}
-    , {name: "estrato_ing", editable:false, typeName:"integer", inTable:false}
-    , {name: "nrocomuna", editable:false, typeName:"integer", inTable:false}
-    , {name: "p11", editable:false, typeName:"integer", inTable:false}
+          {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
+//        , {name: "cluster"       , editable:false, typeName:"integer" }
+        , {name: "area"          , editable:false, typeName:'integer', inTable:false}
+        , {name: "areaup"        , editable:false, typeName:'text'   , inTable:false}
+        , {name: "id_marco"      , editable:false, typeName:'bigint' , inTable:false}
+        , {name: "estrato_ing"   , editable:false, typeName:"integer", inTable:false}
+        , {name: "nrocomuna"     , editable:false, typeName:"integer", inTable:false}
+        , {name: "p11"           , editable:false, typeName:"integer", inTable:false}
     ]:[];
     return {
     "name": opts.extendida?'personas_extendida':"personas",
@@ -74,20 +74,20 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
         }
     ],
     "sql": {
-        isTable: false,
+        isTable: !opts.extendida,
         "isReferable": true,
         from: `(
             select t.operativo, t.enc
-                , coalesce(t.tipo_domicilio,1) tipo_domicilio
+                , t.tipo_domicilio
                 , t.cluster
                 , t.area, t.areaup, t.id_marco, t.estrato_ing
                 , t.nrocomuna
                 , (t.json_encuesta->>'p11')::integer p11
                 , x.p1, x.p2, x.p3, x.p4
                 ,  ordinality persona
-            from (select *, validar_tipodato(enc, json_encuesta) tipodato_inconsist from tem) t 
+            from  tem t 
                 ${opts.extendida?`left`:``} join etiquetas using(etiqueta)
-                , jsonb_populate_recordset(null::personas , case when tipodato_inconsist is null then json_encuesta->'personas'else null::jsonb end) with ordinality as x
+                , jsonb_populate_recordset(null::personas , case when tipos_inconsist is null then json_encuesta->'personas'else null::jsonb end) with ordinality as x
             where json_encuesta->'personas' not in  ('[{}]'::jsonb, '[]'::jsonb) 
                 ${opts.extendida?``:`
                 and rea_m=1

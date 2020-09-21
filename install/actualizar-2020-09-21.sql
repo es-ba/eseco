@@ -1,8 +1,11 @@
 set role to eseco202_produc_owner;
--- set role to eseco202_muleto_owner;
-set search_path = "encu";
-set client_encoding = 'UTF8';
+set search_path = encu;
 
+--completar comuna 
+update tem  set nrocomuna=7  where area=710;
+update tem  set nrocomuna=12 where area=718;
+
+----create_tablas_ua.sql
 update unidad_analisis
  set pk_agregada='enc'
  where unidad_analisis='viviendas';
@@ -195,3 +198,5 @@ update variables v
 set nombre = c.nombre
 from casilleros c
 where v.variable=c.var_name and v.clase = 'interna';
+
+------fin create_tablas_ua.sql
