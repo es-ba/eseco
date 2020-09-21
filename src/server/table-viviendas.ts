@@ -7,12 +7,14 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
     opts=opts||{};
     var puedeEditar = context.forDump || context.user.rol==='admin';
     var fieldsExtendidos=opts.extendida?[
-        {name: "areaup"          , editable:false, typeName:'text'   , inTable:false}
+         {name: "areaup"         , editable:false, typeName:'text'   , inTable:false}
         , {name: "id_marco"      , editable:false, typeName:'bigint' , inTable:false}
         , {name: "estrato_ing"   , editable:false, typeName:"integer", inTable:false}
         , {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
         , {name: "edad_sel_rango", editable:false, typeName:"integer", inTable:false}
         , {name: "cod_no_rea"    , editable:false, typeName:"text"   , inTable:false}
+        , {name: "dominio"       , editable:false, typeName:"integer", inTable:false} 
+        , {name: "zona"          , editable:false, typeName:"text"   , inTable:false}
     ]:[];
     var def:TableDefinition= {
         "name": opts.extendida?'viviendas_extendida':"viviendas",
@@ -23,17 +25,16 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 "name": "operativo",
                 "typeName": "text",
                 "visible": false,
-                "nullable": false,
-                enJson: false
+                "nullable": false
             },
             {
                 "name": "enc",
                 "typeName": "text",
-                "nullable": false,
-                enJson: false
+                "nullable": false
             },
             {name:'rea_m'        , typeName:'integer' , inTable: false},
             {name:'resultado'    , typeName:'text'    , inTable: false},
+            {name:'etiqueta'     , typeName:'text'    , inTable: false},
             {name:'observaciones', typeName:'text'    , inTable: false},
             {name:'area'         , typeName:'integer' , inTable: false},
             {name:'nrocomuna'    , typeName:'integer' , inTable: false},
@@ -592,6 +593,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
             (select t.operativo, t.enc, t.area, t.nrocomuna, t.nrofraccion, t.nroradio
                 , rea_m
                 , resultado
+                , etiqueta
                 , observaciones
                 , tipo_domicilio 
                 , areaup
@@ -600,6 +602,8 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 , case when tipos_inconsist is null then t.sexo_sel else null end::bigint sexo_sel 
                 , case when tipos_inconsist is null then t.edad_sel else null end::bigint edad_sel 
                 , ${be.sqlNoreaCase('no_rea')} as cod_no_rea
+                , dominio
+                , zona
                 , "tipo_seleccion"
                 , "g1"
                 , "g2"
