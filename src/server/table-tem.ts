@@ -16,7 +16,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
     ];
     var columnasSoloTem=[
           'enc_original'   , 'json_encuesta'   , 'rea'     , 'norea'  , 'json_backup'
-        , 'h4'             , 'hospital'        , 'x'       , 'y'      , 'dist_m'
+        , 'h4'             , 'hospital'        , 'x'       , 'y'      , 'dist_m'     , 'fexp'
     ];
     var def: TableDefinition= {
         name:`tem${recepcion}`,
@@ -68,6 +68,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             //{name: "procesamiento"   , typeName:'boolean', editable:true, inTable:false, clientSide:'pasarAProcesamiento', label: 'pasar a procesamiento'}, //procesamiento
             {name:'tipo_domicilio'       , typeName:'integer' , editable: false  },
             {name:'zona'                 , typeName:'text'    , editable: puedeEditar  },
+            {name:'fexp'                 , typeName:'integer' , editable: false  },
             {name:'areaup'               , typeName:'text'    , editable: false  },
             {name:'codpos'               , typeName:'integer' , editable: false  },
             {name:'dominio'              , typeName:'integer' , editable: false  },
