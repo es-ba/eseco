@@ -334,11 +334,11 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 ]},            
             )
         }
-        if(context.puede.citas?.programar && false){
+        if(context.puede.citas?.programar){
             menu.push(
                 {menuType:'menu', name:'citas' ,menuContent:[
                     //{menuType:'carga_recepcionista', name:'cargar'},
-                    {menuType:'table', name:'mis_areas', table:'areas', ff:{auxiliar:context.user.idper, clusters:'4'}},
+                    {menuType:'table', name:'mis_areas', table:'areas', ff:{auxiliar:context.user.idper, clusters:'4'}}, //REVISAR CONDICION de búsqueda
                     {menuType:'table', name:'areas', ff:{clusters:'4'}},
                 ]},            
             )

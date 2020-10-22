@@ -25,7 +25,7 @@ export function areas(context:TableContext):TableDefinition {
                 nullable: false,
                 editable: true
             },
-            //{name:'clusters'                , typeName:'text', inTable:false},
+            {name:'clusters'                , typeName:'text' },
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
             {name:'relevador'               , typeName:'text', editable:false},
             {name:'observaciones_hdr'       , typeName:'text'                      },
