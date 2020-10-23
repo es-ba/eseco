@@ -118,9 +118,11 @@ export function tem(context:TableContext, opts:any):TableDefinition {
         "primaryKey": [ "operativo", "enc" ],
         foreignKeys:[
             {references:'areas' , fields:['area']},
-            {references:'tokens', fields:[{source:'cargado_dm', target:'token'}], displayFields:['username'], displayAfterFieldName:'cargado'},
         //    {references:'usuarios', fields:[{source:'carga_persona', target:'idper'}], displayFields:['apellido','nombre']},
         ], 
+        softForeignKeys:[
+            {references:'tokens', fields:[{source:'cargado_dm', target:'token'}], displayFields:['username'], displayAfterFieldName:'cargado'}
+        ],
         "detailTables": [
             //{table: "inconsistencias", abr: "I", fields: ['operativo', 'enc']}
         ]
