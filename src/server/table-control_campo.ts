@@ -32,7 +32,7 @@ export function control_campo(context:TableContext,opts?:controlCamposOpts):Tabl
         {name:'asuente_viv'  , typeName:'bigint', title:'ausente de vivienda', condicion:`cod_no_rea=7`},
         {name:'asuente_mie'  , typeName:'bigint', title:'ausente de miembro seleccionado', condicion:`cod_no_rea=75`},
         */
-        ...be.caches.tableContent[opts.agrupador].map(g=>({
+        ...(be.caches.tableContent[opts.agrupador]||[]).map(g=>({
             name:g.grupo.replace(/ /g,'_'),
             typeName:'bigint',
             title:g.grupo,
