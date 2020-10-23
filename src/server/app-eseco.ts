@@ -52,6 +52,7 @@ import { mis_tareas_areas    } from './table-mis_tareas_areas';
 import { resultados_tarea    } from './table-resultados_tarea';
 import { control_campo       } from './table-control_campo';
 import { control_resumen     } from './table-control_resumen';
+import { rea_sin_resultados  } from './table-rea_sin_resultados';
 
 import {defConfig} from "./def-config"
 
@@ -331,6 +332,13 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'zona'   , table:'control_campo_zona'  },
                     {menuType:'table', name:'comuna' , table:'control_campo_comuna'},
                     {menuType:'table', name:'área'   , table:'control_campo_area'  },
+                    {menuType:'table', name:'rea_sin_resultados' , table:'rea_sin_resultados'  },
+                ]},            
+            )
+        }else if(context.user.rol='comunicacion'){
+            menu.push(
+                {menuType:'menu', name:'control', menuContent:[
+                    {menuType:'table', name:'rea_sin_resultados' , table:'rea_sin_resultados'  },
                 ]},            
             )
         }
@@ -428,7 +436,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             )
             , control_campo_area: context=>control_campo(context, 
                 {nombre:'control_campo_comuna', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'},{name:'area', typeName:'integer'}]}
-            )
+            ),
+            rea_sin_resultados
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
