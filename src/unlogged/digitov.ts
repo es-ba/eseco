@@ -28,8 +28,10 @@ export class DigitoVerificador<Num extends bigint|number>{
     }
 }
 
-var v1 = new DigitoVerificador(Number, [2,3,4,5],11,1);
-var v2 = new DigitoVerificador(Number, [3,4,5,9],11);
+var eseco='203';
+
+var v1 = eseco=='201'?new DigitoVerificador(Number, [2,3,4,5],11): eseco=='202'? new DigitoVerificador(Number, [2,3,4,5],11,1) :  new DigitoVerificador(Number, [2,3,4,5],11,2);
+var v2 = eseco=='201'?new DigitoVerificador(Number, [3,4,5,7],11): eseco=='202'? new DigitoVerificador(Number, [3,4,5,9],11)   :  new DigitoVerificador(Number, [3,4,5,13],11);
 
 export function controlarCodigoDV2(codigo:string){
     var [i,dd]=codigo.split('-');
