@@ -27,10 +27,10 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             , 'cargado_dm'
         ],
         "fields": [
-            {name:'operativo'     , typeName:'text'   , editable: false , nullable: false, defaultValue: 'ESECO'},
-            {name:'enc'           , typeName:'text'   , editable: false , nullable: false                       },
-            {name: "abrir"        , typeName:'text'   ,editable:false, inTable:false, clientSide:'abrir'},
-            //{name: "cluster", typeName:'integer',editable:false, isName:true},
+            {name:'operativo'     , typeName:'text'           , editable: false , nullable: false, defaultValue: 'ESECO'},
+            {name:'enc'           , typeName:'text'           , editable: false , nullable: false                       },
+            {name: "abrir"        , typeName:'text'           , editable: false, inTable:false, clientSide:'abrir'},
+            {name: "cluster"      , typeName:'integer'        , editable: false, isName:true},
             {name:'area'                 , typeName:'integer' , editable: false  },
             {name:'rea_m'                , typeName:'integer' , editable: false  },
             {name:'cod_no_rea'           , typeName:'text'    , editable: false , inTable:false  },
@@ -86,6 +86,9 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:'mapa'                 , typeName:'integer' , editable: false  },
             {name: "consistido"          , typeName: 'timestamp', label:'consistido'   },
             {name:'cargado_dm'           , typeName:'text'    , editable: false , inTable: false  },
+            {name:'participacion'        , typeName:'integer' , editable: false  ,visible: true  },
+            {name:'rotacion'             , typeName:'integer' , editable: false  ,visible: true  },
+            {name:'clase'                , typeName:'text'    , editable: false  ,visible: true  },
             //vacios o poco interesantes
             {name:'codviviendaparticular', typeName:'text'    , editable: false  },
             {name:'casa'                 , typeName:'text'    , editable: false  },
@@ -100,7 +103,6 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:'marco'                , typeName:'integer' , editable: false  ,visible: false  },
             {name:'semana'               , typeName:'integer' , editable: false  ,visible: false  },
             {name:'periodicidad'         , typeName:'text'    , editable: false  ,visible: false  },
-            {name:'participacion'        , typeName:'integer' , editable: false  ,visible: false  },
             //solo tem 
             {name:'enc_original'         , typeName:'text'    , editable: false  },
             {name:'json_encuesta'        , typeName:'jsonb'   , editable: false  },

@@ -1,18 +1,18 @@
-no_rea|descripcion|grupo|variable|valor
-1|La vivienda está deshabitada|recuperable|dv2|1
-2|La vivienda está demolida|irrecuperable|dv2|2
-3|La vivienda se usa solo los fines de semana o muy esporádicamente|recuperable|dv2|3
-4|La vivienda está en construcción y allí no vive nadie|irrecuperable|dv2|4
-5|La vivienda se usa como establecimiento y no tiene uso residencial|irrecuperable|dv2|5
-6|En la dirección de referencia no se encuentra la vivienda especificada|problema listado|dv2|6
-7|Los habitantes de la vivienda están ausentes|recuperable|dv2|7
-8|Los habitantes de la vivienda rechazan ser entrevistados|rechazo simple|dv2|8
-9|Otras causas|recuperable|dv2|9
-101|COVID positivo en la vivienda|irrecuperable|dv4|1
-75|miembro seleccionado ausente|recuperable|sp6|2
-85|miembro seleccionado rechazo|rechazo simple|sp6|3
-91|No hay mayores presentes|recuperable|dv5|2
-81|No aceptó firmar el consentimiento|rechazo irrecuperable|s1|2
-82|No aceptó contestar el cuestionario|rechazo irrecuperable|s2|2
-83|No aceptó realizarse el test|rechazo irrecuperable|s3|2
-102|COVID positivo del seleccionado|irrecuperable|d5c|1
+no_rea|descripcion|grupo|variable|valor|grupo0
+1|La vivienda está deshabitada|no encuestable|dv3|1|no encuestable
+101|COVID positivo en la vivienda|no encuestable|dv4|1|no encuestable
+102|COVID positivo del seleccionado|no encuestable|d5c|1|no encuestable
+2|La vivienda está demolida|no encuestable|dv3|2|no encuestable
+3|La vivienda se usa solo los fines de semana o muy esporádicamente|no encuestable|dv3|3|no encuestable
+4|La vivienda está en construcción y allí no vive nadie|no encuestable|dv3|4|no encuestable
+5|La vivienda se usa como establecimiento y no tiene uso residencial|no encuestable|dv3|5|no encuestable
+6|En la dirección de referencia no se encuentra la vivienda especificada|error marco|dv3|6|no encuestable
+7|Los habitantes de la vivienda están ausentes|ausente vivienda|dv3|7|ausentes y rechazos
+75|miembro seleccionado ausente|ausente seleccionado|sp6|2|ausentes y rechazos
+8|Los habitantes de la vivienda rechazan ser entrevistados|rechazo vivienda|dv3|8|ausentes y rechazos
+81|No aceptó firmar el consentimiento|rechazo seleccionado|s1|2|ausentes y rechazos
+82|No aceptó contestar el cuestionario|rechazo seleccionado|s2|2|ausentes y rechazos
+83|No aceptó realizarse el test|rechazo seleccionado|s3|2|ausentes y rechazos
+85|miembro seleccionado rechazo|rechazo seleccionado|sp6|3|ausentes y rechazos
+9|Otras causas|otras causas|dv3|9|ausentes y rechazos
+91|No hay mayores presentes|no encuestable|dv5|2|no encuestable
