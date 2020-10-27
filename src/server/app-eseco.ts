@@ -323,6 +323,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 ]},            
             )
         }
+        console.log("context user", context.user)
         if(context.superuser){
             menu.push(
                 {menuType:'menu', name:'control', menuContent:[
@@ -346,8 +347,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             menu.push(
                 {menuType:'menu', name:'citas' ,menuContent:[
                     //{menuType:'carga_recepcionista', name:'cargar'},
-                    {menuType:'table', name:'mis_areas', table:'areas', ff:{auxiliar:context.user.idper, clusters:'4'}}, //REVISAR CONDICION de búsqueda
-                    {menuType:'table', name:'areas', ff:{clusters:'4'}},
+                    {menuType:'table', name:'mis_areas', table:'areas', ff:{recepcionista:context.user.idper}}, //REVISAR CONDICION de búsqueda
+                    {menuType:'table', name:'areas'},
                 ]},            
             )
         }

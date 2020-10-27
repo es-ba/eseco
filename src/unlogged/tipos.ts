@@ -205,6 +205,7 @@ export type TEM = {
         sexo: string,
         edad: string
     }
+    cita: string,
     carga:string
 }
 

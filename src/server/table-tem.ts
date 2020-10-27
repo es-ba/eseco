@@ -50,6 +50,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:'sp6'                  , typeName:'bigint'  , editable: false , inTable: false},
             {name:'seleccionado'         , typeName:'bigint'  , editable: false  },
             {name:'seleccionado_anterior', typeName:'jsonb'   , editable: false  },
+            {name:'cita'                 , typeName:'text'    , editable: true   },
             {name:'sexo_sel'             , typeName:'bigint'  , editable: false  },
             {name:'edad_sel'             , typeName:'bigint'  , editable: false  },
             {name:'cant_p'               , typeName:'bigint'  , editable: false  },

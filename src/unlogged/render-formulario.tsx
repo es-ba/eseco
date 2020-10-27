@@ -1003,8 +1003,9 @@ export function DesplegarTem(props:{tem:TEM}){
         </div>
         <div className="tem-observaciones">
             {tem.observaciones} 
-            <pre>{JSON.stringify(tem.seleccionado_anterior)}</pre>
         </div>
+        <pre>{tem.cita}</pre>
+        <pre>{JSON.stringify(tem.seleccionado_anterior)}</pre>
     </div>
 }
 
