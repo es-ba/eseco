@@ -1001,7 +1001,10 @@ export function DesplegarTem(props:{tem:TEM}){
             <Atributo nombre="entrada" valor={tem.entrada}/>
             <Atributo nombre="habitacion" valor={tem.habitacion}/>
         </div>
-        <div className="tem-observaciones">{tem.observaciones} <Atributo nombre="persona seleccionada" valor={tem.seleccionada_actual}/></div>
+        <div className="tem-observaciones">
+            {tem.observaciones} 
+            <pre>{JSON.stringify(tem.seleccionado_anterior)}</pre>
+        </div>
     </div>
 }
 

@@ -190,7 +190,21 @@ export type TEM = {
     casa:string
     prioridad:1|2|3
     observaciones:string
-    seleccionada_actual:string
+    seleccionado:number,
+    seleccionado_anterior:{
+        apellido: string,
+        nombre: string,
+        tipo_documento: string,
+        tipo_documento_esp: string,
+        pais_documento: string,
+        numero_documento: string,
+        celular: string,
+        email: string,
+        numero_linea_vivienda: string,
+        tel_alternativo: string,
+        sexo: string,
+        edad: string
+    }
     carga:string
 }
 
