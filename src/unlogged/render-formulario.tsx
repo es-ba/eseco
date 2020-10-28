@@ -1004,8 +1004,28 @@ export function DesplegarTem(props:{tem:TEM}){
         <div className="tem-observaciones">
             {tem.observaciones} 
         </div>
-        <pre>{tem.cita}</pre>
-        <pre>{JSON.stringify(tem.seleccionado_anterior)}</pre>
+        {tem.seleccionado_anterior?
+            <div className="tem-seleccionado-anterior">
+                <h4>Seleccionado anterior</h4>
+                <div><Atributo nombre="Apellido:" valor={tem.seleccionado_anterior.apellido}/></div>
+                <div><Atributo nombre="Nombre:" valor={tem.seleccionado_anterior.nombre}/></div>
+                <div><Atributo nombre="Tipo documento:" valor={tem.seleccionado_anterior.tipo_documento}/></div>
+                <div><Atributo nombre="Tipo documento esp:" valor={tem.seleccionado_anterior.tipo_documento_esp}/></div>
+                <div><Atributo nombre="Pais documento:" valor={tem.seleccionado_anterior.pais_documento}/></div>
+                <div><Atributo nombre="Nº documento:" valor={tem.seleccionado_anterior.numero_documento}/></div>
+                <div><Atributo nombre="Cel:" valor={tem.seleccionado_anterior.celular}/></div>
+                <div><Atributo nombre="Email:" valor={tem.seleccionado_anterior.email}/></div>
+                <div><Atributo nombre="Numero linea vivienda:" valor={tem.seleccionado_anterior.numero_linea_vivienda}/></div>
+                <div><Atributo nombre="Tel alternativo:" valor={tem.seleccionado_anterior.tel_alternativo}/></div>
+                <div><Atributo nombre="Sexo:" valor={tem.seleccionado_anterior.sexo}/></div>
+                <div><Atributo nombre="Edad:" valor={tem.seleccionado_anterior.edad}/></div>
+            </div>
+        :
+            null
+        }
+        <div className="tem-cita">
+            <Atributo nombre="Cita sel. ant.:" valor={tem.cita}/>
+        </div>
     </div>
 }
 
