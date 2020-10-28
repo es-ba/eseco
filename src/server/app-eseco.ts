@@ -336,7 +336,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'rea_sin_resultados' , table:'rea_sin_resultados'  },
                 ]},            
             )
-        }else if(context.user.rol='comunicacion'){
+        }else if(context.user.rol=='comunicacion'){
             menu.push(
                 {menuType:'menu', name:'control', menuContent:[
                     {menuType:'table', name:'rea_sin_resultados' , table:'rea_sin_resultados'  },
