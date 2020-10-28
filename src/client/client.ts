@@ -7,6 +7,7 @@ import * as TypedControls from "typed-controls";
 import * as likeAr from "like-ar";
 
 const OPERATIVO = 'ESECO';
+const OPERATIVO_ACTUAL = 'ESECO 203';
 
 async function traerHdr(opts:{modoDemo:boolean, vivienda?:IdCaso}){
     await dmTraerDatosFormulario(opts);
@@ -116,7 +117,7 @@ myOwn.wScreens.proc.result.qrs_traer = async (result:{etiquetas:EtiquetaOpts[]},
     var planchaAnterior='';
     var cerrarPlancha=function(){
         planchas.appendChild(html.div({class:'pre-plancha'}, [
-            html.div("PLANCHA "+planchaAnterior+" - Dirección General de Estadística y Censos - ESECO 202")
+            html.div("PLANCHA "+planchaAnterior+" - Dirección General de Estadística y Censos - "+ OPERATIVO_ACTUAL)
         ]).create());
         planchas.appendChild(html.div({class:'plancha'},etiquetas).create());
         etiquetas=[];
