@@ -38,7 +38,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:'habilitada'           , typeName:'boolean' , editable: false , inTable: false  },
             {name:'cargado'              , typeName:'boolean' , editable: false , inTable: false  },
             {name:'resumen_estado'       , typeName:'text'    , editable: false  },
-            {name:'etiqueta'             , typeName:'text'    , editable: false , inTable: false  },
+            {name:'etiqueta'             , typeName:'text'    , editable: false  },
             {name:'relevador'            , typeName:'text'    , editable: false , inTable: false  },
             {name:'tipos_inconsist'      , typeName:'text'    , editable: false  },
             {name:'nombre_sel'           , typeName:'text'    , editable: false , inTable: false},
@@ -54,7 +54,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:'sexo_sel'             , typeName:'bigint'  , editable: false  },
             {name:'edad_sel'             , typeName:'bigint'  , editable: false  },
             {name:'cant_p'               , typeName:'bigint'  , editable: false  },
-            {name:'fecha_rel'            , typeName:'date'    , editable: false, inTable:false},
+            {name:'fecha_rel'            , typeName:'date'    , editable: false  },
             {name:'codcalle'             , typeName:'integer' , editable: false  },
             {name:'nomcalle'             , typeName:'text'    , editable: false  },
             {name:'nrocatastral'         , typeName:'integer' , editable: false  },
@@ -148,8 +148,8 @@ export function tem(context:TableContext, opts:any):TableDefinition {
                 (select
                     ${def.fields.filter(f=>f.inTable==undefined && !f.clientSide).map(f=>'t.'+q(f.name)).join(',')}
                     , tt.cargado, tt.cargado_dm, tt.habilitada, tt.asignado as relevador
-                    ,(json_encuesta->>'c6')::date as fecha_rel
-                    ,json_encuesta->>'c5' etiqueta
+                    --,(json_encuesta->>'c6')::date as fecha_rel
+                    --,json_encuesta->>'c5' etiqueta
                     ,json_encuesta->>'p12' nombre_sel
                     ,(json_encuesta->>'sp1')::bigint sp1
                     ,json_encuesta->>'sp2' sp2_cel
