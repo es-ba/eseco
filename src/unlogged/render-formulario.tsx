@@ -898,7 +898,7 @@ export function DesplegarCarga(props:{
                             {datosVivienda.resumenEstado=="cita pactada"?
                                 <DesplegarCitaPactada respuestas={datosVivienda.respuestas}/>
                             :
-                                null
+                                <DesplegarCitaPactadaYSeleccionadoAnteriorTem tem={datosVivienda.tem}/>
                             }
                             <DesplegarNotasYVisitas tareas={datosVivienda.tareas} visitas={datosVivienda.visitas} idCaso={idCaso}/>
                         </TableCell>
@@ -989,21 +989,10 @@ export function DesplegarCitaPactada(props:{respuestas:Respuestas}){
         <div><Atributo nombre="Hora:" valor={respuestas[sp5]}/></div>
     </div>
 }
-export function DesplegarTem(props:{tem:TEM}){
+
+export function DesplegarCitaPactadaYSeleccionadoAnteriorTem(props:{tem:TEM}){
     const {tem} = props;
     return <div>
-        <div className="tem-domicilio">{tem.nomcalle} {tem.nrocatastral} <Atributo nombre="piso" valor={tem.piso}/> <Atributo nombre="dpto" valor={tem.departamento}/> </div>
-        <div>
-            <Atributo nombre="suplente" valor={tem.prioridad==2?'!':tem.prioridad>2?tem.prioridad-1+'':null}/>
-            <Atributo nombre="sector" valor={tem.sector}/>
-            <Atributo nombre="edificio" valor={tem.edificio}/>
-            <Atributo nombre="casa" valor={tem.casa}/>
-            <Atributo nombre="entrada" valor={tem.entrada}/>
-            <Atributo nombre="habitacion" valor={tem.habitacion}/>
-        </div>
-        <div className="tem-observaciones">
-            {tem.observaciones} 
-        </div>
         {tem.seleccionado_anterior?
             <div className="tem-seleccionado-anterior">
                 <h4>Seleccionado anterior</h4>
@@ -1024,7 +1013,25 @@ export function DesplegarTem(props:{tem:TEM}){
             null
         }
         <div className="tem-cita">
-            <Atributo nombre="Cita sel. ant.:" valor={tem.cita}/>
+            <Atributo nombre="Detalle cita:" valor={tem.cita}/>
+        </div>
+    </div>
+}
+
+export function DesplegarTem(props:{tem:TEM}){
+    const {tem} = props;
+    return <div>
+        <div className="tem-domicilio">{tem.nomcalle} {tem.nrocatastral} <Atributo nombre="piso" valor={tem.piso}/> <Atributo nombre="dpto" valor={tem.departamento}/> </div>
+        <div>
+            <Atributo nombre="suplente" valor={tem.prioridad==2?'!':tem.prioridad>2?tem.prioridad-1+'':null}/>
+            <Atributo nombre="sector" valor={tem.sector}/>
+            <Atributo nombre="edificio" valor={tem.edificio}/>
+            <Atributo nombre="casa" valor={tem.casa}/>
+            <Atributo nombre="entrada" valor={tem.entrada}/>
+            <Atributo nombre="habitacion" valor={tem.habitacion}/>
+        </div>
+        <div className="tem-observaciones">
+            {tem.observaciones} 
         </div>
     </div>
 }
