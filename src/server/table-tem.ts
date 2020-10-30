@@ -23,7 +23,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
         editable: puedeEditar,
         hiddenColumns:[
             'codviviendaparticular', 'casa', 'obsdatosdomicilio', 'obsconjunto', 'reserva', 'rotacion_etoi', 'rotacion_eah'
-            , 'trimestre'   , 'procedencia', 'sel_etoi_villa'   , 'marco'      , 'semana' , 'periodicidad' , 'participacion'
+            , 'trimestre'   , 'procedencia', 'sel_etoi_villa'   , 'marco'      , 'semana' , 'periodicidad' 
             , 'cargado_dm'
         ],
         "fields": [
