@@ -1,6 +1,6 @@
 "use strict";
 const CACHE_NAME = '#20-11-02a';
-const FALLBACK = '/eseco/campo';
+const FALLBACK = 'campo';
 var urlsToCache = [
     "campo",
     "lib/react.production.min.js",
