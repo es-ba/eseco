@@ -833,12 +833,8 @@ function FormularioDespliegue(props:{forPk:ForPk}){
 
 export function Atributo(props:{nombre:string, valor:string|null}){
     return props.valor!=null && props.valor!=''?<span className="atributo-par">
-        {props.nombre?
-            <span className="atributo-nombre">{props.nombre}</span>
-        :
-            null
-        } 
-        <span className="atributo-valor">{props.valor}</span>
+        {props.nombre?<span className="atributo-nombre">{props.nombre}</span>:null}
+         <span className="atributo-valor">{props.valor}</span>
     </span>:null
 }
 
@@ -997,19 +993,20 @@ export function DesplegarCitaPactada(props:{respuestas:Respuestas}){
 
 export function DesplegarCitaPactadaYSeleccionadoAnteriorTem(props:{tem:TEM}){
     const {tem} = props;
-    console.log("anterior: ", tem.seleccionado_anterior)
     return <div>
         {tem.seleccionado_anterior?
             <div className="tem-seleccionado-anterior">
                 <h4>Seleccionado anterior</h4>
                 <Atributo nombre="" valor={tem.seleccionado_anterior.nombre}/>
                 <Atributo nombre="" valor={tem.seleccionado_anterior.apellido}/>
-                <Atributo nombre="|" valor={tem.seleccionado_anterior.sexo}/>
-                <Atributo nombre="|" valor={tem.seleccionado_anterior.edad}/>
-                <Atributo nombre="|" valor={tem.seleccionado_anterior.tipo_documento}/>
-                <Atributo nombre="|" valor={tem.seleccionado_anterior.numero_documento}/>
-                <Atributo nombre="|" valor={tem.seleccionado_anterior.celular}/>
-                <Atributo nombre="|" valor={tem.seleccionado_anterior.email}/>
+                <Atributo nombre="" valor={tem.seleccionado_anterior.celular}/>
+                <Atributo nombre="" valor={tem.seleccionado_anterior.numero_linea_vivienda}/>
+                <Atributo nombre="" valor={tem.seleccionado_anterior.tel_alternativo}/>
+                <Atributo nombre="" valor={tem.seleccionado_anterior.email}/>
+                <Atributo nombre="" valor={tem.seleccionado_anterior.sexo}/>
+                <Atributo nombre="" valor={tem.seleccionado_anterior.edad}/>
+                
+                
             </div>
         :
             null
