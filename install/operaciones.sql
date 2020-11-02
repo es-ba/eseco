@@ -345,7 +345,7 @@ select count(*)
 
 select *
   from tem
-  where json_backup::text like '%5293-09%';
+  where json_backup::text like '%7999-45%';
 
   
 
@@ -378,3 +378,59 @@ select *
   where cha_table='areas'
     -- and cha_column='recepcionista'
     and cha_new_pk='{"area": 394}';
+
+select cha_who, cha_when, cha_context
+  from his.changes
+  where cha_new_value::text not like '%7998-68%' 
+    and cha_old_value::text like '%7998-68%' 
+    and cha_table='tem' 
+    and cha_column='json_encuesta'
+    ;
+
+/*
+-- update tem set json_encuesta = json_backup
+  select json_backup->>'c5', enc, json_encuesta from tem
+  where json_backup->>'c5' in ('7997-80','7998-68','7999-45');
+-- */
+
+
+set search_path = encu;
+
+select * 
+  from tem
+  where area=710;
+
+update tem
+  set obs='RESIDENCIA GERIATRICA SANTA PATRICIA',
+    nomcalle='HUMBERTO PRIMO 3140',
+    json_encuesta='{"d5": null, "g1": 5, "d5c": null, "p11": null, "p12": null, "c5ok": null, "dv3otros": null, "personas": [{}], "_edad_maxima": null, "_edad_minima": null, "tipo_seleccion": 1, "tipo_relevamiento": 1, "_personas_incompletas": 1}'
+  where area=718;
+
+update tem
+  set obs='RESIDENCIA GERIATRICA SAN JULIAN',
+    nomcalle='NAHUEL HUAPI 5581',
+    json_encuesta='{"d5": null, "g1": 5, "d5c": null, "p11": null, "p12": null, "c5ok": null, "dv3otros": null, "personas": [{}], "_edad_maxima": null, "_edad_minima": null, "tipo_seleccion": 1, "tipo_relevamiento": 1, "_personas_incompletas": 1}'
+  where area=717;
+
+
+update tem
+  set obs='ESTABLECIMIENTO GERIATRICO NUESTRA SRA DE LUJAN',
+    nomcalle='AV. LARRAZABAL 451',
+    json_encuesta='{"d5": null, "g1": 5, "d5c": null, "p11": null, "p12": null, "c5ok": null, "dv3otros": null, "personas": [{}], "_edad_maxima": null, "_edad_minima": null, "tipo_seleccion": 1, "tipo_relevamiento": 1, "_personas_incompletas": 1}'
+  where area=706;
+
+select enc, h.cha_new_value::jsonb->>'c5', h.cha_column, h.cha_when
+  from his.changes h inner join tem on enc = cha_new_pk->>'enc'
+       -- left join tokens k on token=cargado_dm
+  where cha_table='tem'
+    and cha_column in ('json_encuesta', 'json_backup')
+    and  h.cha_new_value::jsonb->>'c5' like '8333-92%'  -- 4642-68, 4643-45 y 4644-22
+    -- and  h.cha_new_value::jsonb->>'c5' like '1001%'  -- 4642-68, 4643-45 -> 32613 y 4644-22 -> 
+  limit 10;
+
+
+select json_backup->>'c5', enc, json_encuesta
+  from  tem 
+       -- left join tokens k on token=cargado_dm
+  where json_backup->>'c5' = '8335-57'
+  limit 10;

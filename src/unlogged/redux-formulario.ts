@@ -37,6 +37,7 @@ var p2 = 'p2' as IdVariable;
 var p3 = 'p3' as IdVariable;
 var p4 = 'p4' as IdVariable;
 var p9 = 'p9' as IdVariable;
+var sp6 = 'sp6' as IdVariable;
 
 export var varEspeciales:{[idVariable in IdVariable]?:{cluster4:boolean}}={
     [dv5] :{cluster4:true},
