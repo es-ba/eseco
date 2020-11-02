@@ -996,17 +996,7 @@ export function DesplegarCitaPactadaYSeleccionadoAnteriorTem(props:{tem:TEM}){
     return <div>
         {tem.seleccionado_anterior?
             <div className="tem-seleccionado-anterior">
-                <h4>Seleccionado anterior</h4>
-                <Atributo nombre="" valor={tem.seleccionado_anterior.nombre}/>
-                <Atributo nombre="" valor={tem.seleccionado_anterior.apellido}/>
-                <Atributo nombre="" valor={tem.seleccionado_anterior.celular}/>
-                <Atributo nombre="" valor={tem.seleccionado_anterior.numero_linea_vivienda}/>
-                <Atributo nombre="" valor={tem.seleccionado_anterior.tel_alternativo}/>
-                <Atributo nombre="" valor={tem.seleccionado_anterior.email}/>
-                <Atributo nombre="" valor={tem.seleccionado_anterior.sexo}/>
-                <Atributo nombre="" valor={tem.seleccionado_anterior.edad}/>
-                
-                
+                <span className="atributo-nombre">Seleccionado: {tem.seleccionado_anterior.nombre} {tem.seleccionado_anterior.apellido} {tem.seleccionado_anterior.celular} {tem.seleccionado_anterior.numero_linea_vivienda} {tem.seleccionado_anterior.tel_alternativo} {tem.seleccionado_anterior.email} {tem.seleccionado_anterior.sexo} {tem.seleccionado_anterior.edad} </span>
             </div>
         :
             null
