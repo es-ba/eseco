@@ -833,7 +833,12 @@ function FormularioDespliegue(props:{forPk:ForPk}){
 
 export function Atributo(props:{nombre:string, valor:string|null}){
     return props.valor!=null && props.valor!=''?<span className="atributo-par">
-        <span className="atributo-nombre">{props.nombre}</span> <span className="atributo-valor">{props.valor}</span>
+        {props.nombre?
+            <span className="atributo-nombre">{props.nombre}</span>
+        :
+            null
+        } 
+        <span className="atributo-valor">{props.valor}</span>
     </span>:null
 }
 
@@ -992,28 +997,25 @@ export function DesplegarCitaPactada(props:{respuestas:Respuestas}){
 
 export function DesplegarCitaPactadaYSeleccionadoAnteriorTem(props:{tem:TEM}){
     const {tem} = props;
+    console.log("anterior: ", tem.seleccionado_anterior)
     return <div>
         {tem.seleccionado_anterior?
             <div className="tem-seleccionado-anterior">
                 <h4>Seleccionado anterior</h4>
-                <div><Atributo nombre="Apellido:" valor={tem.seleccionado_anterior.apellido}/></div>
-                <div><Atributo nombre="Nombre:" valor={tem.seleccionado_anterior.nombre}/></div>
-                <div><Atributo nombre="Tipo documento:" valor={tem.seleccionado_anterior.tipo_documento}/></div>
-                <div><Atributo nombre="Tipo documento esp:" valor={tem.seleccionado_anterior.tipo_documento_esp}/></div>
-                <div><Atributo nombre="Pais documento:" valor={tem.seleccionado_anterior.pais_documento}/></div>
-                <div><Atributo nombre="Nº documento:" valor={tem.seleccionado_anterior.numero_documento}/></div>
-                <div><Atributo nombre="Cel:" valor={tem.seleccionado_anterior.celular}/></div>
-                <div><Atributo nombre="Email:" valor={tem.seleccionado_anterior.email}/></div>
-                <div><Atributo nombre="Numero linea vivienda:" valor={tem.seleccionado_anterior.numero_linea_vivienda}/></div>
-                <div><Atributo nombre="Tel alternativo:" valor={tem.seleccionado_anterior.tel_alternativo}/></div>
-                <div><Atributo nombre="Sexo:" valor={tem.seleccionado_anterior.sexo}/></div>
-                <div><Atributo nombre="Edad:" valor={tem.seleccionado_anterior.edad}/></div>
+                <Atributo nombre="" valor={tem.seleccionado_anterior.nombre}/>
+                <Atributo nombre="" valor={tem.seleccionado_anterior.apellido}/>
+                <Atributo nombre="|" valor={tem.seleccionado_anterior.sexo}/>
+                <Atributo nombre="|" valor={tem.seleccionado_anterior.edad}/>
+                <Atributo nombre="|" valor={tem.seleccionado_anterior.tipo_documento}/>
+                <Atributo nombre="|" valor={tem.seleccionado_anterior.numero_documento}/>
+                <Atributo nombre="|" valor={tem.seleccionado_anterior.celular}/>
+                <Atributo nombre="|" valor={tem.seleccionado_anterior.email}/>
             </div>
         :
             null
         }
         <div className="tem-cita">
-            <Atributo nombre="Detalle cita:" valor={tem.cita}/>
+            <Atributo nombre="Cita:" valor={tem.cita}/>
         </div>
     </div>
 }
