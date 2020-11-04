@@ -1431,7 +1431,7 @@ export function ConsultaResultados(){
                 <Button 
                     variant="contained"
                     color="primary"
-                    disabled={!(etiqueta && documento && etiquetaValida)}
+                    disabled={!(etiqueta && documento)}
                     onClick={async ()=>{
                         //ts-ignore Si el botón está habilitado existen la etiqueta y el documento
                         setResultadoConsulta('buscando...')

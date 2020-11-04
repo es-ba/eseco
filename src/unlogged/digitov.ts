@@ -1,3 +1,4 @@
+import { HojaDeRuta, IdVariable } from "./tipos";
 
 export class DigitoVerificador<Num extends bigint|number>{
     constructor(private cast:(numbreString:string|number)=>Num, private multiplicadores:Num[], private divisor:Num, private desplazamiento?:Num){
@@ -41,5 +42,10 @@ export function controlarCodigoDV2(codigo:string){
 }
 
 export function etiquetaRepetida(etiquetas:(string|null)[], etiqueta:string){
+    return etiquetas.filter((e)=>e==etiqueta).length > 1
+}
+
+export function buscarEtiquetaEnHdra(hdr:HojaDeRuta, etiqueta:string, etiquetaVarname:IdVariable){
+    likeAr(hdr).filter((datosVivienda:DatosVivienda)=>datosVivienda.respuestas[etiquetaVarname]).array()
     return etiquetas.filter((e)=>e==etiqueta).length > 1
 }

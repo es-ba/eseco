@@ -756,6 +756,7 @@ export const ProceduresEseco : ProcedureDef[] = [
             {name:'etiqueta'          , typeName:'text'},
             {name:'numero_documento'  , typeName:'text'},
         ],
+        bitacora:{error:true, always:true},
         unlogged:true,
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var {be, client} =context;
