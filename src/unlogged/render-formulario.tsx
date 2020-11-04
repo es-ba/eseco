@@ -44,7 +44,7 @@ import {
     createStyles, makeStyles, Icon, Hidden, Grow
 } from "@material-ui/core";
 import { EstadoVariable, FormStructureState } from "row-validator";
-import { controlarCodigoDV2 } from "./digitov";
+import { controlarCodigoDV2, etiquetaRepetida } from "./digitov";
 
 // TODO: Generalizar
 var c5 = 'c5' as IdVariable;
@@ -861,6 +861,7 @@ export function DesplegarCarga(props:{
     }
 }){
     const {carga, idCarga, hdr, mainForm, feedbackRowValidator} = props;
+    const etiquetas = likeAr(hdr).map((datosVivienda:DatosVivienda)=>datosVivienda.respuestas[c5]).array() as (string|null)[];
     const dispatch = useDispatch();
     return <Paper className="carga">
         <div className="informacion-carga">
@@ -904,7 +905,11 @@ export function DesplegarCarga(props:{
                             <DesplegarNotasYVisitas tareas={datosVivienda.tareas} visitas={datosVivienda.visitas} idCaso={idCaso}/>
                         </TableCell>
                         <TableCell>
-                            {datosVivienda.respuestas[c5]}
+                            {datosVivienda.respuestas[c5] && etiquetaRepetida(etiquetas, datosVivienda.respuestas[c5] as string)?
+                                <Chip label={datosVivienda.respuestas[c5]} color="secondary"/>
+                            :
+                                datosVivienda.respuestas[c5]
+                            }
                         </TableCell>
                         <TableCell>
                             {datosVivienda.tareas.rel?

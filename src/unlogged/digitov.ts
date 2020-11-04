@@ -39,3 +39,7 @@ export function controlarCodigoDV2(codigo:string){
     var d2=v2.obtenerDigito(Number(i));
     return dd==""+d1+d2;
 }
+
+export function etiquetaRepetida(etiquetas:(string|null)[], etiqueta:string){
+    return etiquetas.filter((e)=>e==etiqueta).length > 1
+}
