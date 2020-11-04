@@ -1080,7 +1080,7 @@ export function DesplegarNotasYVisitas(props:{tareas:Tareas, idCaso:IdCaso, visi
                                     miTarea!=null && dispatch(dispatchers.REGISTRAR_NOTA({
                                         vivienda:idCaso,
                                         tarea: miTarea,
-                                        nota: nota
+                                        nota: value
                                     }));
                                 }}
                             />
