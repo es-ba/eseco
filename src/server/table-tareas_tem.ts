@@ -36,6 +36,7 @@ export function tareas_tem(context:TableContext, opt:any):TableDefinition {
         editable:puedeEditar,
         fields,
         primaryKey:['tarea','operativo','enc'],
+        hiddenColumns:['cargado_dm'],
         foreignKeys:[
             {references:'tem' , fields:['operativo','enc'], displayFields:[], alias:'te'},
             {references:'tareas' , fields:['tarea']},
