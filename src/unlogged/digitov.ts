@@ -1,4 +1,3 @@
-
 export class DigitoVerificador<Num extends bigint|number>{
     constructor(private cast:(numbreString:string|number)=>Num, private multiplicadores:Num[], private divisor:Num, private desplazamiento?:Num){
     }
@@ -38,8 +37,4 @@ export function controlarCodigoDV2(codigo:string){
     var d1=v1.obtenerDigito(Number(i));
     var d2=v2.obtenerDigito(Number(i));
     return dd==""+d1+d2;
-}
-
-export function etiquetaRepetida(etiquetas:(string|null)[], etiqueta:string){
-    return etiquetas.filter((e)=>e==etiqueta).length > 1
 }

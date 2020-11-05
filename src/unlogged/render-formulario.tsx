@@ -44,7 +44,7 @@ import {
     createStyles, makeStyles, Icon, Hidden, Grow
 } from "@material-ui/core";
 import { EstadoVariable, FormStructureState } from "row-validator";
-import { controlarCodigoDV2, etiquetaRepetida } from "./digitov";
+import { controlarCodigoDV2 } from "./digitov";
 
 // TODO: Generalizar
 var c5 = 'c5' as IdVariable;
@@ -863,6 +863,16 @@ export function DesplegarCarga(props:{
     const {carga, idCarga, hdr, mainForm, feedbackRowValidator} = props;
     const etiquetas = likeAr(hdr).map((datosVivienda:DatosVivienda)=>datosVivienda.respuestas[c5]).array() as (string|null)[];
     const dispatch = useDispatch();
+    const [desplegarEtiquetasRepetidas, setDesplegarEtiquetasRepetidas] = useState<boolean>(false);
+    const etiquetaRepetida = (etiquetas:(string|null)[], etiqueta:string)=>{
+        return etiquetas.filter((e)=>e==etiqueta).length > 1
+    }
+    const buscarCasosEnHdrParaEtiqueta = (hdr:HojaDeRuta, etiqueta:string, etiquetaVarname:IdVariable, casoActual:IdCaso)=>{
+        return likeAr(hdr)
+            .filter((datosVivienda:DatosVivienda, idCaso:IdCaso)=>datosVivienda.respuestas[etiquetaVarname]==etiqueta)
+            .map((_datosVivienda:DatosVivienda,idCaso:IdCaso)=>idCaso)
+            .array()
+    }
     return <Paper className="carga">
         <div className="informacion-carga">
             <div className="carga">Área: {idCarga}</div>
@@ -893,7 +903,7 @@ export function DesplegarCarga(props:{
                 </TableRow>
             </TableHead>
             <TableBody>
-                {likeAr(hdr).filter((datosVivienda:DatosVivienda)=>datosVivienda.tem.carga==idCarga).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
+                {likeAr(hdr).filter((datosVivienda:DatosVivienda, idCaso:IdCaso)=>datosVivienda.tem.carga==idCarga).map((datosVivienda: DatosVivienda, idCaso: IdCaso)=>
                     <TableRow key={idCaso}>
                         <TableCell>
                             <DesplegarTem tem={datosVivienda.tem}/>
@@ -906,7 +916,30 @@ export function DesplegarCarga(props:{
                         </TableCell>
                         <TableCell>
                             {datosVivienda.respuestas[c5] && etiquetaRepetida(etiquetas, datosVivienda.respuestas[c5] as string)?
-                                <Chip label={datosVivienda.respuestas[c5]} color="secondary"/>
+                                <span>
+                                    <Button 
+                                        variant="contained" 
+                                        color="secondary" 
+                                        size="small"
+                                        onClick={()=>setDesplegarEtiquetasRepetidas(true)}
+                                    >
+                                        {datosVivienda.respuestas[c5]}
+                                    </Button>
+                                    <Dialog 
+                                        open={desplegarEtiquetasRepetidas}
+                                        onClose={()=>setDesplegarEtiquetasRepetidas(false)}
+                                    >
+                                        <DialogTitle id="alert-dialog-title-obs">Etiqueta repetida en las viviendas</DialogTitle>
+                                        <DialogContent>
+                                            {buscarCasosEnHdrParaEtiqueta(hdr,datosVivienda.respuestas[c5] as string,c5, idCaso).map((caso:IdCaso)=>
+                                                <Typography align="center">{caso}</Typography>
+                                            )}
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button color="primary" variant="contained" onClick={()=>setDesplegarEtiquetasRepetidas(false)}>Cerrar</Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                </span>
                             :
                                 datosVivienda.respuestas[c5]
                             }
