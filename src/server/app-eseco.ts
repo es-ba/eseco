@@ -53,6 +53,7 @@ import { resultados_tarea    } from './table-resultados_tarea';
 import { control_campo       } from './table-control_campo';
 import { control_resumen     } from './table-control_resumen';
 import { rea_sin_resultados  } from './table-rea_sin_resultados';
+import { etiquetas_duplicadas} from './table-etiquetas_duplicadas';
 
 import {defConfig} from "./def-config"
 
@@ -334,6 +335,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'comuna' , table:'control_campo_comuna'},
                     {menuType:'table', name:'área'   , table:'control_campo_area'  },
                     {menuType:'table', name:'rea_sin_resultados' , table:'rea_sin_resultados'  },
+                    {menuType:'table', name:'etiquetas_duplicadas' , table:'etiquetas_duplicadas'  },
                 ]},            
             )
         }else if(context.user.rol=='comunicacion'){
@@ -439,6 +441,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {nombre:'control_campo_comuna', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'},{name:'area', typeName:'integer'}]}
             ),
             rea_sin_resultados
+            , etiquetas_duplicadas
         }
         be.appendToTableDefinition('consistencias',function(tableDef, context){
             tableDef.fields.forEach(function(field){
