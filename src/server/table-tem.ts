@@ -20,6 +20,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
     ];
     var def: TableDefinition= {
         name:`tem${recepcion}`,
+        tableName:'tem',
         editable: puedeEditar,
         hiddenColumns:[
             'codviviendaparticular', 'casa', 'obsdatosdomicilio', 'obsconjunto', 'reserva', 'rotacion_etoi', 'rotacion_eah'
@@ -142,7 +143,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
     };
     const q=context.be.db.quoteIdent;
     def.sql= {
-            isTable:!opts.recepcion,
+            //isTable:!opts.recepcion,
             isReferable:true,
             from:`
                 (select
