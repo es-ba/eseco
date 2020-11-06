@@ -143,7 +143,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
     };
     const q=context.be.db.quoteIdent;
     def.sql= {
-            //isTable:!opts.recepcion,
+            //isTable:!opts.recepcion, //TODO: resolver como sacarlo del dump
             isReferable:true,
             from:`
                 (select
