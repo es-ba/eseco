@@ -346,13 +346,13 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             )
         }
         if(context.puede.citas?.programar){
-            menu.push(
-                {menuType:'menu', name:'citas' ,menuContent:[
-                    //{menuType:'carga_recepcionista', name:'cargar'},
-                    {menuType:'table', name:'mis_areas', table:'areas', ff:{recepcionista:context.user.idper}}, //REVISAR CONDICION de búsqueda
-                    {menuType:'table', name:'areas'},
-                ]},            
-            )
+            //menu.push(
+            //    {menuType:'menu', name:'citas' ,menuContent:[
+            //        //{menuType:'carga_recepcionista', name:'cargar'},
+            //        {menuType:'table', name:'mis_areas', table:'areas', ff:{recepcionista:context.user.idper}}, //REVISAR CONDICION de búsqueda
+            //        {menuType:'table', name:'areas'},
+            //    ]},            
+            //)
         }
         if(context.superuser){
             menu = [ ...menu,
