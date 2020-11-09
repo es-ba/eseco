@@ -22,7 +22,7 @@
     "redux-typed-reducer": "~0.1.1",
     "yazl": "~2.5.1",
     "ajax-best-promise": "^0.3.7",
-    "backend-plus": "^1.5.23",
+    "backend-plus": "^1.5.25",
     "best-globals": "^0.10.27",
     "operativos": "^1.1.0",
     "rel-enc": "^1.2.3",
