@@ -18,7 +18,7 @@ var discrepances = require('discrepances');
 //const  ResultadosLaboratorio = ['Positivo', 'Negativo', 'Indeterminado','Escasa muestra']; 
 
 const OPERATIVO = 'ESECO';
-const OPERATIVO_ETIQUETAS = 'ESECO202';
+const OPERATIVO_ETIQUETAS = 'ESECO203';
 const formPrincipal = 'F:F1';
 const MAIN_TABLENAME ='viviendas';
 
@@ -542,7 +542,7 @@ export const ProceduresEseco : ProcedureDef[] = [
         ],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             const DGEyC = "DGEyC";
-            const OPERATIVO = "ESECO202";
+            const OPERATIVO = "ESECO203";
             var {rows:etiquetas} = await context.client.query(
                 `SELECT 'DGEyC' as dgeyc, * FROM etiquetas WHERE plancha BETWEEN $1 AND $2 ORDER BY plancha, etiqueta`,
                 [parameters.desde, parameters.hasta||parameters.desde]
