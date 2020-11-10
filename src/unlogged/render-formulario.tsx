@@ -44,7 +44,6 @@ import {
     createStyles, makeStyles, Icon, Hidden, Grow
 } from "@material-ui/core";
 import { EstadoVariable, FormStructureState } from "row-validator";
-import { controlarCodigoDV2 } from "./digitov";
 
 // TODO: Generalizar
 var c5 = 'c5' as IdVariable;
@@ -1344,7 +1343,6 @@ export function AppEseco(){
 
 export function ConsultaResultados(){
     var [etiqueta, setEtiqueta] = useState<string|null>(null);
-    var [etiquetaValida, setEtiquetaValida] = useState<boolean>(false);
     var [documento, setDocumento] = useState<string|null>(null);
     var [resultadoConsulta, setResultadoConsulta] = useState<string|null>(null);
     var imageStyles = {
@@ -1370,14 +1368,11 @@ export function ConsultaResultados(){
                 <Grid container className="fields-container">
                     <TextField 
                         autoFocus={true}
-                        error={!!etiqueta && !etiquetaValida}
-                        helperText={!!etiqueta && !etiquetaValida?"Numero de etiqueta incorrecto":null}
                         fullWidth={true}
                         value={etiqueta || ''} 
                         label="Etiqueta"
                         type="text"
                         onChange={(event)=>{
-                            setEtiquetaValida(true);
                             let value = event.target.value || null;
                             if(value){
                                 value = value.replace(/[\+\*\.# _\/,]/g,'-');
@@ -1386,9 +1381,6 @@ export function ConsultaResultados(){
                                 }
                             }
                             setEtiqueta(value)
-                        }}
-                        onBlur={(_event)=>{
-                            setEtiquetaValida(controlarCodigoDV2(etiqueta||''));
                         }}
                     />
                     <TextField 
@@ -1406,7 +1398,7 @@ export function ConsultaResultados(){
                 <Button 
                     variant="contained"
                     color="primary"
-                    disabled={!(etiqueta && documento && etiquetaValida)}
+                    disabled={!(etiqueta && documento)}
                     onClick={async ()=>{
                         //ts-ignore Si el botón está habilitado existen la etiqueta y el documento
                         setResultadoConsulta('buscando...')
