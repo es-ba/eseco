@@ -18,9 +18,11 @@ export function control_campo(context:TableContext,opts?:controlCamposOpts):Tabl
     var be=context.be;
     var db=be.db;
     var puedeEditar = context.forDump || context.puede.campo.administrar||context.user.rol==='recepcionista';
-    var camposCorte:FieldDefinition[]=opts.camposCorte||[
-        {name:'tipo_domicilio', typeName:'bigint'}
-    ];
+    var camposCorte:FieldDefinition[]=[{name:'cluster'       , typeName:'integer'},...(
+        opts.camposCorte ||[
+            {name:'tipo_domicilio', typeName:'bigint'}
+        ]
+    )];
     var camposCalculados:(FieldDefinition & {condicion:string, tasa_efectividad:boolean})[]=[
         {name:'no_salieron'  , typeName:'bigint', aggregate:'sum', title:'no salieron a campo', condicion:`resumen_estado is null`},
         {name:'salieron'     , typeName:'bigint', aggregate:'sum', title:'salieron a campo'},

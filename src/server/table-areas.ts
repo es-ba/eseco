@@ -29,6 +29,7 @@ export function areas(context:TableContext):TableDefinition {
             {name:'recepcionista'           , typeName:'text', references:'recepcionistas'},
             {name:'relevador'               , typeName:'text', editable:false},
             {name:'observaciones_hdr'       , typeName:'text'                      },
+            {name:'clases'                  , typeName:'text'    , editable:false  , inTable:false},
             {name:'cargado'                 , typeName:'boolean' , editable:false  , inTable:false},
             {name:'reas'                    , typeName:'integer' , editable:false  , aggregate:'sum', inTable:false },
             {name:'no_reas'                 , typeName:'integer' , editable:false  , aggregate:'sum', inTable:false },
@@ -84,12 +85,13 @@ export function areas(context:TableContext):TableDefinition {
                         count(*) filter ( where habilitada is not true )    as inhabilitadas,
                         --sum(case when cluster <>4 then null when confirmada is true then 1 else 0 end) as confirmadas,
                         --sum(case when cluster <>4 then null when confirmada is null then 1 else 0 end) as pend_conf,
+                        string_agg(distinct clase,', ' order by clase desc) as clases,
                         string_agg(distinct nrocomuna::text,'0' order by nrocomuna::text)::bigint as comuna,
                         string_agg(distinct cluster::text,', ' order by cluster::text desc) as clusters
                         ${be.caches.tableContent.no_rea_groups.map(x=>
                         	`, sum(CASE WHEN gru_no_rea=${be.db.quoteLiteral(x.grupo)} THEN 1 ELSE NULL END) as ${be.db.quoteIdent(x.grupo.replace(/ /g,'_'))}`
                         ).join('')}
-                        from ( select operativo, enc, cluster, nrocomuna, 
+                        from ( select operativo, enc, cluster, nrocomuna, clase, 
                                 json_encuesta, resumen_estado, etiqueta, --habilitada, 
                                 relevador, rea_m, rea, norea, cant_p, seleccionado, sexo_sel, edad_sel, fecha_rel, tipo_domicilio, area, dominio, zona
                                 json_backup, hospital
