@@ -446,7 +446,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {nombre:'control_campo_comuna', title:'control campo x comuna solo cemento', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'}], filtroWhere:'tipo_domicilio=1' }
             )
             , control_campo_area: context=>control_campo(context, 
-                {nombre:'control_campo_comuna', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'},{name:'area', typeName:'integer'}]}
+                {nombre:'control_campo_comuna', title:'control campo x area', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'},{name:'area', typeName:'integer'}]}
             ),
             rea_sin_resultados
             , etiquetas_duplicadas
