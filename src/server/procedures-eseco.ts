@@ -58,17 +58,6 @@ function createStructure(context:ProcedureContext, tableName:string){
 
 type AnyObject = {[k:string]:any}
 
-export var getConsultarResultadoQuery = function getConsultarResultadoQuery(){
-    return `
-        select e.resultado,(json_encuesta->>'e1')::text as apellido,
-        (json_encuesta->>'e2')::text as nombre, pagina_texto
-            from  etiquetas e
-            left join resultados_test rt using (resultado)
-            left join tem t using(etiqueta)
-            where e.etiqueta =$1 and (t.json_encuesta->>'e7')::text = $2 and resultado is not null
-    `
-}
-
 var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
     return `
         with viviendas as 
@@ -771,8 +760,14 @@ export const ProceduresEseco : ProcedureDef[] = [
         unlogged:true,
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var {be, client} =context;
-            var result = await client.query(
-                getConsultarResultadoQuery(),
+            var result = await client.query(`
+                select e.resultado,(json_encuesta->>'e1')::text as apellido,
+                    (json_encuesta->>'e2')::text as nombre, pagina_texto
+                        from  etiquetas e
+                        left join resultados_test rt using (resultado)
+                        left join tem t using(etiqueta)
+                        where e.etiqueta =$1 and (t.json_encuesta->>'e7')::text = $2 and resultado is not null
+            `,
                 [parameters.etiqueta, parameters.numero_documento]
             ).fetchOneRowIfExists();
             return result.rowCount?result.row:null

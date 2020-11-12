@@ -1,7 +1,7 @@
 "use strict";
 
 import * as procesamiento from "procesamiento";
-import {getConsultarResultadoQuery, ProceduresEseco} from "./procedures-eseco";
+import {ProceduresEseco} from "./procedures-eseco";
 
 import * as pg from "pg-promise-strict";
 import {json} from "pg-promise-strict";
@@ -106,10 +106,12 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
         });
         mainApp.get(baseUrl+'/consulta-ws',async function(req,res,_next){
             var {etiqueta,numero_documento} = req.query;
-            let result = await be.inTransaction(req,(client:pg.Client)=>
-                client.query(getConsultarResultadoQuery(),[etiqueta,numero_documento]).fetchOneRowIfExists()
-            );
-            var response = result.rowCount?result.row:null
+            var context = be.getContext(req);
+            let response =  await be.inTransaction(req, function(client:pg.Client){
+                context.client=client;
+                var procedureResultadoConsultar = ProceduresEseco.find((proc)=>proc.action =='resultado_consultar');
+                return procedureResultadoConsultar.coreFunction(context, {etiqueta,numero_documento});
+            });
             miniTools.serveText(JSON.stringify(response), 'application/json')(req,res);
         });
     }
