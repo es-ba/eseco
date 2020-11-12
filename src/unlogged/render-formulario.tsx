@@ -1350,6 +1350,7 @@ export function ConsultaResultados(){
         verticalAlign: 'bottom',
         marginRight: '10px'
     }
+    const MENSAJE_BUSCANDO = "buscando...";
     return <>
         <AppBar position="fixed" color='primary'>
             <Toolbar>
@@ -1398,10 +1399,10 @@ export function ConsultaResultados(){
                 <Button 
                     variant="contained"
                     color="primary"
-                    disabled={!(etiqueta && documento)}
+                    disabled={!(etiqueta && documento) || resultadoConsulta == MENSAJE_BUSCANDO}
                     onClick={async ()=>{
                         //ts-ignore Si el botón está habilitado existen la etiqueta y el documento
-                        setResultadoConsulta('buscando...')
+                        setResultadoConsulta(MENSAJE_BUSCANDO)
                         let result = await consultarEtiqueta(etiqueta!, documento!);
                         setResultadoConsulta(result)
                     }}

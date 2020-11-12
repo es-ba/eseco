@@ -14,6 +14,9 @@ var sqlTools = require('sql-tools');
 
 var discrepances = require('discrepances');
 
+var https = require('https');
+
+
 //NO SE USA MAS, ahora en tabla resultados_test
 //const  ResultadosLaboratorio = ['Positivo', 'Negativo', 'Indeterminado','Escasa muestra']; 
 
@@ -764,10 +767,48 @@ export const ProceduresEseco : ProcedureDef[] = [
                     left join resultados_test rt using (resultado)
                     left join tem t using(etiqueta)
                     where e.etiqueta =$1 and (t.json_encuesta->>'e7')::text = $2 and resultado is not null
-            `,
-                [parameters.etiqueta, parameters.numero_documento]).fetchOneRowIfExists();
-            
+            `,[parameters.etiqueta, parameters.numero_documento]).fetchOneRowIfExists();
             return result.rowCount?result.row:null
+        }
+    },
+    {
+        action:'resultado_consultar_eseco203',
+        parameters:[
+            {name:'etiqueta'          , typeName:'text'},
+            {name:'numero_documento'  , typeName:'text'},
+        ],
+        unlogged:true,
+        coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            var {be, client} =context;
+            var getFromUrl = (url:string)=>
+                new Promise((resolve, reject) => {
+                    https.get(url, function(res){
+                        var body = '';
+                    
+                        res.on('data', function(chunk){
+                            body += chunk;
+                        });
+                    
+                        res.on('end', function(){
+                            resolve(body)
+                        });
+                    }).on('error', function(e){
+                        reject(e)
+                    });
+                });
+            var baseURL = be.config.server['base-url'] || '';
+            baseURL = baseURL.replace('eseco202', 'eseco203');
+            var url = `https://sistemas.estadisticaciudad.gob.ar${baseURL}/consulta-ws?etiqueta=${parameters.etiqueta}&numero_documento=${parameters.numero_documento}`;
+            var eseco203 = null;
+            try{
+                eseco203 = await getFromUrl(url);
+                eseco203 = eseco203?JSON.parse(eseco203):null
+            }catch(err){
+                console.log(err)
+                eseco203 = null;
+            }finally{
+                return eseco203;
+            }
         }
     },
 ];

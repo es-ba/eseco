@@ -778,10 +778,18 @@ export function gotoVer(){
 
 export async function consultarEtiqueta(etiqueta:string, numero_documento:string){
     try{
-        var result = await my.ajax.resultado_consultar({
-            etiqueta,
-            numero_documento
-        });
+        var result = null;
+        if(controlarCodigoDV2(etiqueta)){
+            result = await my.ajax.resultado_consultar({
+                etiqueta,
+                numero_documento
+            });
+        }else{
+            result = await my.ajax.resultado_consultar_eseco203({
+                etiqueta,
+                numero_documento
+            });
+        }
         if(result){
             let {pagina_texto, nombre, apellido, resultado } = result;
             return replaceSpecialWords(pagina_texto || '', nombre || '', apellido || '', resultado || '')
