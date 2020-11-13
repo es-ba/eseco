@@ -8,7 +8,7 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
     var puedeEditar = context.forDump || context.user.rol==='admin';
     var fieldsExtendida=opts.extendida?[        
           {name: "tipo_domicilio", editable:false, typeName:"integer", inTable:false}
-//        , {name: "cluster"       , editable:false, typeName:"integer" }
+        , {name: "cluster"       , editable:false, typeName:"integer" }
         , {name: "area"          , editable:false, typeName:'integer', inTable:false}
         , {name: "areaup"        , editable:false, typeName:'text'   , inTable:false}
         , {name: "id_marco"      , editable:false, typeName:'bigint' , inTable:false}
@@ -89,7 +89,7 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
                 ${opts.extendida?`left`:``} join etiquetas using(etiqueta)
                 , jsonb_populate_recordset(null::personas , case when tipos_inconsist is null then json_encuesta->'personas'else null::jsonb end) with ordinality as x
             where json_encuesta->'personas' not in  ('[{}]'::jsonb, '[]'::jsonb) 
-                ${opts.extendida?``:`
+                ${opts.extendida?` and (json_encuesta->>'dv1' is not null or resultado is not null)`:`
                 and rea_m=1
                 and resultado in ('Negativo','Positivo')
                  `}
