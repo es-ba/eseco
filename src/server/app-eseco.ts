@@ -344,8 +344,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'zona'   , table:'control_campo_zona'  },
                     {menuType:'table', name:'comuna' , table:'control_campo_comuna'},
                     {menuType:'table', name:'área'   , table:'control_campo_area'  },
-                    {menuType:'table', name:'clase'  , table:'control_campo_clase'  },
-                    {menuType:'table', name:'rea_sin_resultados' , table:'rea_sin_resultados'  },
+                    {menuType:'table', name:'participacion'        , table:'control_campo_participacion'  },
+                    {menuType:'table', name:'rea_sin_resultados'   , table:'rea_sin_resultados'  },
                     {menuType:'table', name:'etiquetas_duplicadas' , table:'etiquetas_duplicadas'  },
                 ]},            
             )
@@ -449,10 +449,10 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 {nombre:'control_campo_comuna', title:'control campo x comuna solo cemento', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'}], filtroWhere:'tipo_domicilio=1' }
             )
             , control_campo_area: context=>control_campo(context, 
-                {nombre:'control_campo_comuna', title:'control campo x area', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'},{name:'area', typeName:'integer'},{name:'clase', typeName:'text'}]}
+                {nombre:'control_campo_comuna', title:'control campo x area', camposCorte:[{name:'zona', typeName:'text'},{name:'nrocomuna', typeName:'integer'},{name:'area', typeName:'integer'},{name:'participacion_a', typeName:'text'},{name:'clase_a', typeName:'text'}]}
             )
-            , control_campo_clase: context=>control_campo(context, 
-                {nombre:'control_campo_comuna', title:'control campo x clase', camposCorte:[{name:'tipo_domicilio', typeName:'bigint'},{name:'clase', typeName:'text'}]}
+            , control_campo_participacion: context=>control_campo(context, 
+                {nombre:'control_campo_comuna', title:'control campo x participacion', camposCorte:[{name:'tipo_domicilio', typeName:'bigint'},{name:'participacion', typeName:'bigint'}]}
             ),
             rea_sin_resultados
             , etiquetas_duplicadas

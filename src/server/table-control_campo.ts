@@ -75,7 +75,7 @@ export function control_campo(context:TableContext,opts?:controlCamposOpts):Tabl
                             , count(*) filter (where resumen_estado in ('incompleto','con problema')) as incompleto
                             , count(*) filter (where resumen_estado in ('no rea','ok') and verificado is null) as pendiente_verif
                         from (
-                            select t.*, 
+                            select t.*,a.participacion_a, a.clase_a, 
                                 case ${camposCalculados.filter(f=>f.condicion).map(f=>
                                     `when ${f.condicion} then ${db.quoteLiteral(f.name)} 
                                     `
@@ -86,7 +86,11 @@ export function control_campo(context:TableContext,opts?:controlCamposOpts):Tabl
                                             left join tareas_tem tt on t.operativo=tt.operativo and t.enc=tt.enc and tt.tarea='rel'
 
                                     where ${opts.filtroWhere || 'true'}    
-                                ) t
+                                ) t left join (select area, string_agg(distinct participacion::text, ', ' order by participacion::text desc ) as participacion_a
+                                    , string_agg(distinct clase, ', ' order by clase desc ) as clase_a
+                                    from tem
+                                    group by 1                            
+                                ) a  using  (area )
                         ) t
                         ${camposCorte.length?`group by ${camposCorte.map(f=>f.name)}`:''}
                     ) t
