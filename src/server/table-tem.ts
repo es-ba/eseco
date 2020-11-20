@@ -117,6 +117,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:"x"                    , typeName:'decimal' , editable: false  },
             {name:"y"                    , typeName:'decimal' , editable: false  },
             {name:"dist_m"               , typeName:'decimal' , editable: false  },
+            {name:'notas'                , typeName:'jsonb'   , editable: false, inTable:false},
             //{ name: "modificado"   , label:'modificado'        , typeName: 'timestamp'},
             //{name:'obs_sup'        , typeName:'text' , editable: isSupervisor     },
             //{name:'obs_coor'       , typeName:'text' , editable: isCoordinador || isSubCoordinador },  
@@ -165,7 +166,9 @@ export function tem(context:TableContext, opts:any):TableDefinition {
                     coalesce(seleccionado_anterior->>'tel_alternativo'|| ' ','') || 
                     coalesce(seleccionado_anterior->>'email'|| ' ','') || 
                     coalesce(seleccionado_anterior->>'sexo'|| ' ','') || 
-                    coalesce(seleccionado_anterior->>'edad'|| ' ',''),'') as seleccionado_anterior_resumen
+                    coalesce(seleccionado_anterior->>'edad'|| ' ',''),'') as seleccionado_anterior_resumen,
+                    (select jsonb_agg(x.*)
+                        from (select tarea, notas from tareas_tem where enc=t.enc) x) as notas
                     ${opts.recepcion? columnasNoRea.map(v=>'\n     , '+ v.expr +' as '+ v.name).join('') :''}
                     from tem t left join tareas_tem tt on t.operativo=tt.operativo and t.enc=tt.enc and tt.tarea='rel'
                 )
