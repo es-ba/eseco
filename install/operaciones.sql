@@ -434,3 +434,13 @@ select json_backup->>'c5', enc, json_encuesta
        -- left join tokens k on token=cargado_dm
   where json_backup->>'c5' = '8335-57'
   limit 10;
+
+--intercambiar encuestas
+set search_path = encu;
+
+select json_encuesta into encu_64902 from tem where enc = '64902';
+select json_encuesta into encu_64903 from tem where enc = '64903';
+
+update tem set json_encuesta = (select json_encuesta from encu_64902) where enc='64903';
+update tem set json_encuesta = (select json_encuesta from encu_64903) where enc='64902';
+--luego abrir la encuesta desde tem_recepcion y guardar para que actualice el trigger los demás datos
