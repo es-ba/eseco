@@ -443,4 +443,4 @@ select json_encuesta into encu_64903 from tem where enc = '64903';
 
 update tem set json_encuesta = (select json_encuesta from encu_64902) where enc='64903';
 update tem set json_encuesta = (select json_encuesta from encu_64903) where enc='64902';
---luego abrir la encuesta desde tem_recepcion y guardar para que actualice el trigger los demás datos
+--luego abrir la encuesta desde tem_recepcion y guardarla para que se actualicen los datos que se copian en el resto de la grilla
