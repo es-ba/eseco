@@ -15,6 +15,7 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
         , {name: "estrato_ing"   , editable:false, typeName:"integer", inTable:false}
         , {name: "nrocomuna"     , editable:false, typeName:"integer", inTable:false}
         , {name: "p11"           , editable:false, typeName:"integer", inTable:false}
+        , {name: "clase"         , editable:false, typeName:"text"   , inTable:false}
     ]:[];
     return {
     "name": opts.extendida?'personas_extendida':"personas",
@@ -83,6 +84,7 @@ export function personas(context:TableContext, opts:{extendida:boolean}):TableDe
                 , t.area, t.areaup, t.id_marco, t.estrato_ing
                 , t.nrocomuna
                 , (t.json_encuesta->>'p11')::integer p11
+                , t.clase
                 , x.p1, x.p2, x.p3, x.p4
                 ,  ordinality persona
             from  tem t 
