@@ -17,6 +17,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
         , {name: "zona"          , editable:false, typeName:"text"   , inTable:false}
         , {name: "fexp"          , editable:false, typeName:"integer", inTable:false}
         , {name: "clase"         , editable:false, typeName:"text"   , inTable:false}
+        , {name: "panel"         , editable:false, typeName:"integer", inTable:false}
     ]:[];
     var def:TableDefinition= {
         "name": opts.extendida?'viviendas_extendida':"viviendas",
@@ -608,6 +609,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 , zona
                 , fexp
                 , clase
+                , panel
                 , "tipo_seleccion"
                 , "g1"
                 , "g2"

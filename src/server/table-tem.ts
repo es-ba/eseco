@@ -91,6 +91,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:'participacion'        , typeName:'integer' , editable: false  ,visible: true  },
             {name:'rotacion'             , typeName:'integer' , editable: false  ,visible: true  },
             {name:'clase'                , typeName:'text'    , editable: false  ,visible: true  },
+            {name:'panel'                , typeName:'integer' , editable: false  ,visible: true  },
             //vacios o poco interesantes
             {name:'codviviendaparticular', typeName:'text'    , editable: false  },
             {name:'casa'                 , typeName:'text'    , editable: false  },
