@@ -43,6 +43,7 @@ import { viviendas           } from './table-viviendas';
 import { viviendas_extendida } from './table-viviendas_extendida';
 import { personas            } from './table-personas';
 import { personas_extendida  } from './table-personas_extendida';
+import { personas_extendida_onda_anterior  } from './table-personas_extendida_onda_anterior';
 import { tareas              } from './table-tareas';
 import { tareas_tem          } from './table-tareas_tem';
 import { tareas_areas        } from './table-tareas_areas';
@@ -433,6 +434,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , viviendas_extendida
             , personas
             , personas_extendida
+            , personas_extendida_onda_anterior
             , tareas
             , resultados_tarea
             , tareas_tem

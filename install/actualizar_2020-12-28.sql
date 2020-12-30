@@ -7,3 +7,6 @@ alter table tem
   --,add column if not exists cant_pers_completo integer
 ;
 
+GRANT SELECT ON TABLE tem_reas_eseco202_participacion2 TO eseco203_produc_admin;
+
+
