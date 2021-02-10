@@ -1,5 +1,5 @@
 "use strict";
-const CACHE_NAME = '#20-11-05';
+const CACHE_NAME = '#21-02-10';
 const FALLBACK = 'campo';
 var urlsToCache = [
     "campo",
@@ -45,8 +45,8 @@ var urlsToCache = [
     "lib/my-inform-net-status.js",
     "lib/my-skin.js",
     "lib/cliente-en-castellano.js",
-    "client/client.js",
-    "client/menu.js",
+    //"client/client.js",
+    //"client/menu.js",
     "dialog-promise/dialog-promise.css",
     "pikaday/pikaday.css",
     "css/offline-mode.css",
