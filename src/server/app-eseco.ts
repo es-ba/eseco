@@ -86,8 +86,8 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             // @ts-ignore sé que voy a recibir useragent por los middlewares de Backend-plus
             var {useragent, user} = req;
             if(user){
-                /** @type {{type:'js', src:string}[]} */
-                var htmlMain=be.mainPage({useragent, user}, false, {skipMenu:true}).toHtmlDoc();
+                var webManifestPath = 'carga-dm/web-manifest.webmanifest';
+                var htmlMain=be.mainPage({useragent, user}, false, {skipMenu:true, webManifestPath}).toHtmlDoc();
                miniTools.serveText(htmlMain,'html')(req,res);
             }else{
                 res.redirect(baseUrl+'/login#w=path&path=/campo')
@@ -114,6 +114,55 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                 return procedureResultadoConsultar.coreFunction(context, {etiqueta,numero_documento});
             });
             miniTools.serveText(JSON.stringify(response), 'application/json')(req,res);
+        });
+        mainApp.get(baseUrl+`/carga-dm/web-manifest.webmanifest`, async function(req, res, next){
+            try{
+                const content = {
+                  "name": `ESECO Progressive Web App`,
+                  "short_name": "ESECO PWA",
+                  "description": "Progressive Web App for ESECO.",
+                  "icons": [
+                    {
+                      "src": "../img/logo-dm-32.png",
+                      "sizes": "32x32",
+                      "type": "image/png"
+                    },
+                    {
+                      "src": "../img/logo-dm-48.png",
+                      "sizes": "48x48",
+                      "type": "image/png"
+                    },
+                    {
+                      "src": "../img/logo-dm-64.png",
+                      "sizes": "64x64",
+                      "type": "image/png"
+                    },
+                    {
+                      "src": "../img/logo-dm-72.png",
+                      "sizes": "72x72",
+                      "type": "image/png"
+                    },
+                    {
+                      "src": "../img/logo-dm-192.png",
+                      "sizes": "192x192",
+                      "type": "image/png"
+                    },
+                    {
+                      "src": "../img/logo-dm-512.png",
+                      "sizes": "512x512",
+                      "type": "image/png"
+                    }
+                  ],
+                  "start_url": "../campo",
+                  "display": "standalone",
+                  "theme_color": "#3F51B5",
+                  "background_color": "#9a4ead"
+                }
+                miniTools.serveText(JSON.stringify(content), 'application/json')(req,res);
+            }catch(err){
+                console.log(err);
+                miniTools.serveErr(req, res, next)(err);
+            }
         });
     }
     addLoggedServices(){
