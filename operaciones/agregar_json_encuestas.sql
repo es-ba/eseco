@@ -23,7 +23,7 @@ update tem
   )
   where json_encuesta is null and area>=900;
 
--- /*
+/*
 update tem t
   set json_encuesta=jsonb_set(t.json_encuesta,'{personas}',
       jsonb_build_array((a.json_encuesta->'personas'->((a.json_encuesta->>'p11')::integer - 1)))
@@ -33,7 +33,7 @@ update tem t
 -- quizas haya que presetear las preguntas ei y ci de contacto al final del cuestionario
 -- al probar, se despliegan valores preseteados de p11,p12 despues de poner si en p9
 -- cp? 1 o cp anterior? 
--- */
+*/
 
 insert into tareas_areas(tarea, area, asignado, asignante, obs_asignante)
   select 'rel', area, relevador, recepcionista, obs_recepcionista
@@ -45,7 +45,8 @@ insert into tareas_tem (operativo, enc, tarea, habilitada, operacion, fecha_asig
   from (select * from tareas ta, tem t) ta left join tareas_areas x on x.tarea=ta.tarea and x.area=ta.area
   where not (operativo, enc, ta.tarea) in (select operativo, enc, tarea from tareas_tem)
     and (ta.tarea<>'sup');
-
+	
+/*
 update tareas_tem t
   set fecha_asignacion = a.fecha_asignacion,
       operacion = a.operacion,
@@ -57,4 +58,4 @@ update tareas_tem t
     and tem.area=a.area
     and t.tarea=a.tarea
 	and a.asignado is not null;
-
+*/

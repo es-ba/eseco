@@ -20,7 +20,7 @@ alter table tokens enable trigger changes_trg;
 --limpieza de campos
 select * into etiquetas_bkp from etiquetas order by etiqueta;
 alter table etiquetas disable trigger changes_trg;
-  update from etiquetas
+update etiquetas
     set operativo='ESECO211',
     resultado            = null,
     fecha                = null,
@@ -48,28 +48,6 @@ update tem
       resumen_estado=null,
       cita=null
 ;
-update tem
-  set json_encuesta=jsonb_build_object(
-	  'personas','[]'::jsonb,    -- cemento                   geriatricos            inquilinato     vulnerables
-	  'tipo_relevamiento',case when area<=699 then 1 when area<=799 then 1 when area<=899 then 1 else 2 end,
-	  'tipo_seleccion'   ,case when area<=699 then 1 when area<=799 then 1 when area<=899 then 2 else 1 end,
-	  'g1'               ,case when area<=699 then 1 when area<=799 then 5 when area<=899 then 4 else 3 end
-  )
-  where json_encuesta is null and area<900;
-
-update tem
-  set json_encuesta=jsonb_build_object(
-	  'personas','[]'::jsonb,   -- vulnerables
-	  'tipo_relevamiento',2,
-	  'tipo_seleccion'   ,1,
-	  'g1'               ,3,
-	  'ug2', nomcalle,
-	  'ug3', nrocomuna,
-	  'ug4', nrofraccion,
-	  'ug5', nroradio,
-	  'ug6', nromanzana 
-  )
-  where json_encuesta is null and area>=900;
 
 alter table tem enable trigger changes_trg;
 

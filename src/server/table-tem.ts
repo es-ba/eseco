@@ -25,7 +25,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
         hiddenColumns:[
             'codviviendaparticular', 'casa', 'obsdatosdomicilio', 'obsconjunto', 'reserva', 'rotacion_etoi', 'rotacion_eah'
             , 'trimestre'   , 'procedencia', 'sel_etoi_villa'   , 'marco'      , 'semana' , 'periodicidad' 
-            , 'cargado_dm'
+            , 'cargado_dm', 'clase'
         ],
         "fields": [
             {name:'operativo'     , typeName:'text'           , editable: false , nullable: false, defaultValue: 'ESECO'},
