@@ -40,7 +40,7 @@ export function areas(context:TableContext):TableDefinition {
             //{name:'confirmadas'             , typeName:'integer' , editable:false, aggregate:'sum'},
             //{name:'pend_conf'               , typeName:'integer' , editable:false, aggregate:'sum', description:'pendientes de confirmación'},
             {name:'obs_recepcionista'       , typeName:'text'                      },
-            {name:'comuna'                  , typeName:'bigint'  , title:'comuna'  , inTable:false},
+            {name:'comuna'                  , typeName:'bigint'  , title:'comuna'  , editable: false, inTable:false},
             {name:'cargadas_bkp'            , typeName:'integer' , editable:false  },
             {name:'reas_bkp'                , typeName:'integer' , editable:false  },
             {name:'no_reas_bkp'             , typeName:'integer' , editable:false  },
