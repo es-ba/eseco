@@ -33,6 +33,8 @@ INSERT INTO encu.casilleros(operativo, id_casillero, padre, tipoc, casillero, or
 ('ESECO', 'V4/6/1', 'V4/6', 'O', '1', 1, 'Sí', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('ESECO', 'V4/6/2', 'V4/6', 'O', '2', 2, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
---falta especifique de v4_6
+--especifique de v4_6
+INSERT INTO encu.casilleros(operativo, id_casillero, padre, tipoc, casillero, orden, nombre, tipovar, longitud, tipoe, aclaracion, salto, unidad_analisis, cantidad_resumen, irrepetible, despliegue, ver_id, optativo, formulario_principal, var_name, var_name_especial, expresion_habilitar, valor_ns_nc, valor_sin_dato) VALUES 
+('ESECO', 'V4_6_OTRO', 'V', 'P', 'V4_6_OTRO', 1450, 'Especifique', 'texto', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ocultar no_leer', NULL, NULL, NULL, 'v4_6_otro', null, 'v4_6=1', NULL, NULL);
 
 update casilleros set salto='V1'  where id_casillero='T1/2' and  salto='E1';
