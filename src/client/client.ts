@@ -7,7 +7,7 @@ import * as TypedControls from "typed-controls";
 import * as likeAr from "like-ar";
 
 const OPERATIVO = 'ESECO';
-const OPERATIVO_ACTUAL = 'ESECO 203';
+const OPERATIVO_ACTUAL = 'ESECO 211';
 
 async function traerHdr(opts:{modoDemo:boolean, vivienda?:IdCaso}){
     await dmTraerDatosFormulario(opts);
