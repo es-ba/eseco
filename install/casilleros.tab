@@ -30,7 +30,9 @@ ESECO|DV3/5|DV3|O|opción|5|5|✔|La vivienda se usa como establecimiento y no t
 ESECO|DV3/6|DV3|O|opción|6|6|✔|En la dirección de referencia no se encuentra la vivienda especificada||||||||||||1;100;130;6|F:F1||||||
 ESECO|DV3/7|DV3|O|opción|7|7|✔|Los habitantes de la vivienda están ausentes||||||||||||1;100;130;7|F:F1||||||
 ESECO|DV3/8|DV3|O|opción|8|8|✔|Los habitantes de la vivienda rechazan ser entrevistados||||||||||||1;100;130;8|F:F1||||||
-ESECO|DV3/9|DV3|O|opción|9|9|✔|Otras causas||||||||||||1;100;130;9|F:F1||||||
+ESECO|DV3/11|DV3|O|opción|11|11|✔|La persona seleccionada no vive más en la vivienda||||||||||||1;100;130;11|F:F1||||||
+ESECO|DV3/12|DV3|O|opción|12|12|✔|No se pudo contactar a la persona seleccionada||||||||||||1;100;130;12|F:F1||||||
+ESECO|DV3/9|DV3|O|opción|9|19|✔|Otras causas||||||||||||1;100;130;19|F:F1||||||
 ESECO|DV3otros|DV|P|pregunta|DV3otros|140|✔|Especifique la causa|texto|||||||true|ocultar no_leer|-||1;100;140|F:F1||dv3otros||dv3=9||
 ESECO|DV4|DV|P|pregunta|DV4|160|✔|¿Alguna persona de esta vivienda fue diagnosticada con COVID-19 positivo hace menos de 14 días?|si_no|||||||true|ocultar|||1;100;160|F:F1||dv4||dv1=1||
 ESECO|DV4/1|DV4|O|opción|1|1|✔|Sí||||||||||||1;100;160;1|F:F1||||||
@@ -79,7 +81,7 @@ ESECO|SP1/2|SP1|O|opción|2|2|✔|No||||||||||||3;136;100;2|F:F3||||||
 ESECO|SP2|SP|P|pregunta|SP2|105|✔|N° celular del seleccionado|texto|||||||true|telefono||true|3;136;105|F:F3||sp2||tipo_seleccion=1||
 ESECO|SP3|SP|P|pregunta|SP3|110|✔|Teléfono fijo de la vivienda|texto|||||||true|telefono||true|3;136;110|F:F3||sp3||tipo_seleccion=1||
 ESECO|C.SP|SP|CONS|consistencia|C.SP|111|⛔|Debe completar un teléfono de contacto||||||||true||||3;136;111|F:F3||||sp2=0 and sp3=0 and sp4<>0||
-ESECO|SP4|SP|P|pregunta|SP4|115|✔|Pactar cita en fecha|fecha|||||||true||||3;136;115|F:F3||sp4||tipo_seleccion=1||
+ESECO|SP4|SP|P|pregunta|SP4|115|✔|Pactar cita en fecha|texto|||||||true||||3;136;115|F:F3||sp4||tipo_seleccion=1||
 ESECO|SP5|SP|P|pregunta|SP5|120|✔|Hora de la cita|texto|||||||true||||3;136;120|F:F3||sp5||tipo_seleccion=1||
 ESECO|SP6|SP|P|pregunta|SP6|130|✔|Retomar la entrevista|opciones|||||||true||||3;136;130|F:F3||sp6||tipo_seleccion=1||
 ESECO|SP6/1|SP6|O|opción|1|1|✔|Sí||||||||||||3;136;130;1|F:F3||||||
@@ -205,7 +207,7 @@ ESECO|C.CV4|CV|CONS|consistencia|C.CV4|1145|⛔|Si en CV3 dice que estuvo en con
 ESECO|T|F:F3|B|bloque|T|1200|✔|Exposición en el ámbito laboral||||||||true||||3;1200|F:F3||||||
 ESECO|T1|T|P|pregunta|T1|1205|✔|En los últimos dos meses, ¿trabajó en la modalidad presencial?|si_no|||||||true||||3;1200;1205|F:F3||t1||||
 ESECO|T1/1|T1|O|opción|1|1|✔|Sí||||||||||||3;1200;1205;1|F:F3||||||
-ESECO|T1/2|T1|O|opción|2|2|✔|No|||||E1|||||||3;1200;1205;2|F:F3||||||
+ESECO|T1/2|T1|O|opción|2|2|✔|No|||||V1|||||||3;1200;1205;2|F:F3||||||
 ESECO|T2|T|P|pregunta|T2|1210|✔|En los últimos dos meses, ¿trabajó en alguno de estos sectores?||||||||true||||3;1200;1210|F:F3||||||
 ESECO|T2/1|T2|OM|opción múltiple|1|1220|✔|En comercio|si_no|||||||||||3;1200;1210;1220|F:F3||t2_1||(t1>0 OR t10<>2)||
 ESECO|T2/1/1|T2/1|O|opción|1|1|✔|Sí||||||||||||3;1200;1210;1220;1|F:F3||||||
@@ -236,6 +238,38 @@ ESECO|T3|T|P|pregunta|T3|1410|✔|¿Cuántas horas semanales trabaja?|opciones||
 ESECO|T3/1|T3|O|opción|1|1420|✔|Hasta 34 horas|||||||||no_leer|||3;1200;1410;1420|F:F3||||||
 ESECO|T3/2|T3|O|opción|2|1430|✔|Entre 35 y 45 horas|||||||||no_leer|||3;1200;1410;1430|F:F3||||||
 ESECO|T3/3|T3|O|opción|3|1440|✔|Más de 45 horas|||||||||no_leer|||3;1200;1410;1440|F:F3||||||
+ESECO|V|F:F3|B|bloque|V|1400|✔|Datos de Vacunación||||||||true||||3;1400|F:F3||||||
+ESECO|V1|V|P|pregunta|V1|1405|✔|¿Recibió la vacuna contra el COVID-19?|si_no|||||||true||||3;1400;1405|F:F3||v1||||
+ESECO|V1/1|V1|O|opción|1|1|✔|Sí|||||E1|||||||3;1400;1405;1|F:F3||||||
+ESECO|V1/2|V1|O|opción|2|2|✔|No||||||||||||3;1400;1405;2|F:F3||||||
+ESECO|V2|V|P|pregunta|V2|1410|✔|¿Se aplicaría la vacuna contra el COVID-19|opciones|||||||true|si_leer|||3;1400;1410|F:F3||v2||||
+ESECO|V2/1|V2|O|opción|1|1|✔|Sí, ni bien tenga la posibilidad.|||||E1||||si_leer|||3;1400;1410;1|F:F3||||||
+ESECO|V2/2|V2|O|opción|2|2|✔|Sí, pero prefiere esperar.|||||||||si_leer|||3;1400;1410;2|F:F3||||||
+ESECO|V2/3|V2|O|opción|3|3|✔|No se aplicaría la vacuna.|||||V4||||si_leer|||3;1400;1410;3|F:F3||||||
+ESECO|V3|V|P|pregunta|V3|1415|✔|Prefiere esperar...|opciones|||||||true|si_leer|||3;1400;1415|F:F3||v3||||
+ESECO|V3/1|V3|O|opción|1|1|✔|hasta 3 meses.|||||||||si_leer|||3;1400;1415;1|F:F3||||||
+ESECO|V3/2|V3|O|opción|2|2|✔|de 3 a 6 meses.|||||||||si_leer|||3;1400;1415;2|F:F3||||||
+ESECO|V3/3|V3|O|opción|3|3|✔|más de 6 meses.|||||||||si_leer|||3;1400;1415;3|F:F3||||||
+ESECO|V4|V|P|pregunta|V4|1420|✔|¿Por qué motivo postergaría la vacunación o no se vacunaría?||||||||true||||3;1400;1420|F:F3||||||
+ESECO|V4/1|V4|OM|opción múltiple|1|1421|✔|Considera que las fases de prueba de la vacuna pasaron muy rápido.|si_no|||||||||||3;1400;1420;1421|F:F3||v4_1||||
+ESECO|V4/1/1|V4/1|O|opción|1|1|✔|Sí||||||||||||3;1400;1420;1421;1|F:F3||||||
+ESECO|V4/1/2|V4/1|O|opción|2|2|✔|No||||||||||||3;1400;1420;1421;2|F:F3||||||
+ESECO|V4/2|V4|OM|opción múltiple|2|1423|✔|Le preocupan posibles efectos secundarios.|si_no|||||||||||3;1400;1420;1423|F:F3||v4_2||||
+ESECO|V4/2/1|V4/2|O|opción|1|1|✔|Sí||||||||||||3;1400;1420;1423;1|F:F3||||||
+ESECO|V4/2/2|V4/2|O|opción|2|2|✔|No||||||||||||3;1400;1420;1423;2|F:F3||||||
+ESECO|V4/3|V4|OM|opción múltiple|3|1425|✔|Considera que no es efectiva.|si_no|||||||||||3;1400;1420;1425|F:F3||v4_3||||
+ESECO|V4/3/1|V4/3|O|opción|1|1|✔|Sí||||||||||||3;1400;1420;1425;1|F:F3||||||
+ESECO|V4/3/2|V4/3|O|opción|2|2|✔|No||||||||||||3;1400;1420;1425;2|F:F3||||||
+ESECO|V4/4|V4|OM|opción múltiple|4|1427|✔|Está expuesto a poco riesgo de contagio de COVID-19.|si_no|||||||||||3;1400;1420;1427|F:F3||v4_4||||
+ESECO|V4/4/1|V4/4|O|opción|1|1|✔|Sí||||||||||||3;1400;1420;1427;1|F:F3||||||
+ESECO|V4/4/2|V4/4|O|opción|2|2|✔|No||||||||||||3;1400;1420;1427;2|F:F3||||||
+ESECO|V4/5|V4|OM|opción múltiple|5|1429|✔|Considera que no es necesario aplicarse vacunas|si_no|||||||||||3;1400;1420;1429|F:F3||v4_5||||
+ESECO|V4/5/1|V4/5|O|opción|1|1|✔|Sí||||||||||||3;1400;1420;1429;1|F:F3||||||
+ESECO|V4/5/2|V4/5|O|opción|2|2|✔|No||||||||||||3;1400;1420;1429;2|F:F3||||||
+ESECO|V4/6|V4|OM|opción múltiple|6|1430|✔|Otro motivo|si_no|||||||||||3;1400;1420;1430|F:F3||v4_6||||
+ESECO|V4/6/1|V4/6|O|opción|1|1|✔|Sí||||||||||||3;1400;1420;1430;1|F:F3||||||
+ESECO|V4/6/2|V4/6|O|opción|2|2|✔|No||||||||||||3;1400;1420;1430;2|F:F3||||||
+ESECO|V4_6_OTRO|V|P|pregunta|V4_6_OTRO|1450|✔|Especifique|texto|||||||true|ocultar no_leer|-||3;1400;1450|F:F3||v4_6_otro||v4_6=1||
 ESECO|E|F:F3|B|bloque|E|1520|✔|Datos del entrevistado para devolución de resultados y supervisión||||Los datos del entrevistado/a se deben copiar de un original, fotocopia o App||||true||||3;1520|F:F3||||||
 ESECO|E1|E|P|pregunta|E1|1530|✔|Apellido|texto|||||||true|no_leer|||3;1520;1530|F:F3||e1||||
 ESECO|E2|E|P|pregunta|E2|1535|✔|Nombres|texto|||||||true|no_leer|||3;1520;1535|F:F3||e2||||
