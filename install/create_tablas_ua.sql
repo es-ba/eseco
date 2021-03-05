@@ -1,5 +1,5 @@
-set role to eseco202_produc_owner;
--- set role to eseco202_muleto_owner;
+set role to eseco211_produc_owner;
+-- set role to eseco211_muleto_owner;
 set search_path = "encu";
 set client_encoding = 'UTF8';
 
@@ -97,6 +97,16 @@ create table "viviendas" (
   "t2_7" bigint, 
   "t2_8" bigint, 
   "t3" bigint, 
+  "v1" bigint, 
+  "v2" bigint, 
+  "v3" bigint, 
+  "v4_1" bigint, 
+  "v4_2" bigint, 
+  "v4_3" bigint, 
+  "v4_4" bigint, 
+  "v4_5" bigint, 
+  "v4_6" bigint, 
+  "v4_6_otro" text, 
   "e1" text, 
   "e2" text, 
   "e3" bigint, 
@@ -114,7 +124,7 @@ create table "viviendas" (
   "observaciones_viv" text
 , primary key ("operativo", "enc")
 );
-grant select, references on "viviendas" to eseco202_produc_admin;
+grant select, references on "viviendas" to eseco211_produc_admin;
 
 create table "personas" (
   "operativo" text, 
@@ -126,7 +136,7 @@ create table "personas" (
   "p4" bigint
 , primary key ("operativo", "enc", "persona")
 );
-grant select, references on "personas" to eseco202_produc_admin;
+grant select, references on "personas" to eseco211_produc_admin;
 
 -- conss
 alter table "viviendas" add constraint "operativo<>''" check ("operativo"<>'');
@@ -158,6 +168,7 @@ alter table "viviendas" add constraint "c3<>''" check ("c3"<>'');
 alter table "viviendas" add constraint "c4<>''" check ("c4"<>'');
 alter table "viviendas" add constraint "c5<>''" check ("c5"<>'');
 alter table "viviendas" add constraint "c6<>''" check ("c6"<>'');
+alter table "viviendas" add constraint "v4_6_otro<>''" check ("v4_6_otro"<>'');
 alter table "viviendas" add constraint "observaciones_viv<>''" check ("observaciones_viv"<>'');
 alter table "personas" add constraint "operativo<>''" check ("operativo"<>'');
 alter table "personas" alter column "operativo" set not null;
@@ -174,12 +185,12 @@ alter table "personas" add constraint "personas viviendas REL" foreign key ("ope
 create index "operativo,enc 4 viviendas IDX" ON "viviendas" ("operativo", "enc");
 create index "operativo,enc 4 personas IDX" ON "personas" ("operativo", "enc");
 
-do $SQL_ENANCE$
- begin
-PERFORM enance_table('viviendas','operativo,enc');
-PERFORM enance_table('personas','operativo,enc,persona');
-end
-$SQL_ENANCE$;
+--do $SQL_ENANCE$
+-- begin
+--PERFORM enance_table('viviendas','operativo,enc');
+--PERFORM enance_table('personas','operativo,enc,persona');
+--end
+--$SQL_ENANCE$;
 
 --datos
 select sql2tabla_datos('encu', 'tem', 'ESECO');

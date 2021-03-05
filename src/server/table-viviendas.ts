@@ -472,6 +472,56 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 "nullable": true
             },
             {
+                "name": "v1",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v2",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v3",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v4_1",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v4_2",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v4_3",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v4_4",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v4_5",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v4_6",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v4_6_otro",
+                "typeName": "text",
+                "nullable": true
+            },
+            {
                 "name": "e1",
                 "typeName": "text",
                 "nullable": true
@@ -693,6 +743,16 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 , "t2_7"
                 , "t2_8"
                 , "t3"
+                , "v1"
+                , "v2"
+                , "v3"
+                , "v4_1"
+                , "v4_2"
+                , "v4_3"
+                , "v4_4"
+                , "v4_5"
+                , "v4_6"
+                , "v4_6_otro"
                 , "e1"
                 , "e2"
                 , "e3"
