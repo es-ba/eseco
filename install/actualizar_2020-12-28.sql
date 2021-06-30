@@ -1,5 +1,5 @@
 set search_path=encu;
-set role eseco203_produc_owner;
+set role eseco211_produc_owner;
 
 alter table tem  
   add column if not exists panel integer

@@ -1,5 +1,5 @@
 set search_path=encu;
-set role eseco203_muleto_owner;
+set role eseco211_muleto_owner;
 
 alter table tem
   add column if not exists etiqueta text,
