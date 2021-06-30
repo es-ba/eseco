@@ -25,7 +25,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
         hiddenColumns:[
             'codviviendaparticular', 'casa', 'obsdatosdomicilio', 'obsconjunto', 'reserva', 'rotacion_etoi', 'rotacion_eah'
             , 'trimestre'   , 'procedencia', 'sel_etoi_villa'   , 'marco'      , 'semana' , 'periodicidad' 
-            , 'cargado_dm', 'clase'
+            , 'cargado_dm', 'clase', 'seleccionado_anterior'
         ],
         "fields": [
             {name:'operativo'     , typeName:'text'           , editable: false , nullable: false, defaultValue: 'ESECO'},
@@ -50,6 +50,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:'sp5_hora'             , typeName:'text'    , editable: false , inTable: false},
             {name:'sp6'                  , typeName:'bigint'  , editable: false , inTable: false},
             {name:'seleccionado'         , typeName:'bigint'  , editable: false  },
+            {name:'seleccionado_anterior', typeName:'jsonb'   , editable: false  },
             {name:'seleccionado_anterior_resumen', typeName:'text'   , editable: false, inTable:false  },
             {name:'cita'                 , typeName:'text'    , editable: puedeEditar },
             {name:'sexo_sel'             , typeName:'bigint'  , editable: false  },
@@ -145,7 +146,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
     };
     const q=context.be.db.quoteIdent;
     def.sql= {
-            //isTable:!opts.recepcion, //TODO: resolver como sacarlo del dump
+            isTable:!opts.recepcion, //TODO: resolver como sacarlo del dump
             isReferable:true,
             from:`
                 (select
