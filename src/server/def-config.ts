@@ -3,6 +3,15 @@ server:
   port: 3068
   base-url: /eseco
   session-store: memory
+  skins:
+    "":
+      local-path: client/
+    confort:
+      local-path: node_modules/backend-skins/dist/
+    confort-bis:
+      local-path: node_modules/backend-skins/dist/
+    default:
+      local-path: node_modules/backend-skins/dist/
 db:
   motor: postgresql
   host: localhost
@@ -75,6 +84,7 @@ login:
     lockedFail: el usuario se encuentra bloqueado
     inactiveFail: es usuario está marcado como inactivo
 client-setup:
+  skin: confort-bis
   title: ESECO
   cursors: true
   lang: es
