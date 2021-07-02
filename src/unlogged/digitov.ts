@@ -29,8 +29,8 @@ export class DigitoVerificador<Num extends bigint|number>{
 
 var eseco='211';
 
-var v1 = eseco=='211'?new DigitoVerificador(Number, [2,3,4,5],11,3): eseco=='201'?new DigitoVerificador(Number, [2,3,4,5],11): eseco=='202'? new DigitoVerificador(Number, [2,3,4,5],11,1) :  new DigitoVerificador(Number, [2,3,4,5],11,2);
-var v2 = eseco=='211'?new DigitoVerificador(Number, [3,4,5,7],11,1): eseco=='201'?new DigitoVerificador(Number, [3,4,5,7],11): eseco=='202'? new DigitoVerificador(Number, [3,4,5,9],11)   :  new DigitoVerificador(Number, [3,4,5,13],11);
+var v1 = eseco=='211'?new DigitoVerificador(Number, [2,3,4,7],11,3): eseco=='201'?new DigitoVerificador(Number, [2,3,4,5],11): eseco=='202'? new DigitoVerificador(Number, [2,3,4,5],11,1) :  new DigitoVerificador(Number, [2,3,4,5],11,2);
+var v2 = eseco=='211'?new DigitoVerificador(Number, [3,4,5,9],11,0): eseco=='201'?new DigitoVerificador(Number, [3,4,5,7],11): eseco=='202'? new DigitoVerificador(Number, [3,4,5,9],11)   :  new DigitoVerificador(Number, [3,4,5,13],11);
 
 export function controlarCodigoDV2(codigo:string){
     var [i,dd]=codigo.split('-');
