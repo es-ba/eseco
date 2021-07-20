@@ -44,3 +44,7 @@ INSERT INTO casilleros (operativo, id_casillero, padre, tipoc, casillero, orden,
   ('ESECO', 'V9/2', 'V9', 'O', '2', 2, 'En Provincia de Buenos Aires', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   ('ESECO', 'V9/3', 'V9', 'O', '3', 3, 'En otra provincia', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
   ('ESECO', 'V9/4', 'V9', 'O', '4', 4, 'En otro país', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+--2021/07/20
+--agregar salto a DV3 a la opcion 2 de DV1
+update casilleros set salto= 'DV3' where operativo='ESECO' AND id_casillero='DV1/2';
