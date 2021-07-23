@@ -48,3 +48,9 @@ INSERT INTO casilleros (operativo, id_casillero, padre, tipoc, casillero, orden,
 --2021/07/20
 --agregar salto a DV3 a la opcion 2 de DV1
 update casilleros set salto= 'DV3' where operativo='ESECO' AND id_casillero='DV1/2';
+
+--2021/07/23 
+--select id_casillero, nombre from casilleros where operativo='ESECO' AND id_casillero in ('V4/4','CP','DV6');
+update casilleros set nombre= '¿Cuántas personas viven habitualmente en esta vivienda?' where operativo='ESECO' AND id_casillero='CP';
+update casilleros set nombre= replace(nombre, 'Usted', 'usted') where operativo='ESECO' AND id_casillero='DV6';
+update casilleros set nombre= replace(nombre, 'expuesto', 'expuesto/a') where operativo='ESECO' AND id_casillero='V4/4';
