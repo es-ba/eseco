@@ -54,3 +54,8 @@ update casilleros set salto= 'DV3' where operativo='ESECO' AND id_casillero='DV1
 update casilleros set nombre= '¿Cuántas personas viven habitualmente en esta vivienda?' where operativo='ESECO' AND id_casillero='CP';
 update casilleros set nombre= replace(nombre, 'Usted', 'usted') where operativo='ESECO' AND id_casillero='DV6';
 update casilleros set nombre= replace(nombre, 'expuesto', 'expuesto/a') where operativo='ESECO' AND id_casillero='V4/4';
+
+--2021/07/29
+update casilleros set nombre='N° celular de la persona seleccionada'
+  where operativo='ESECO' AND id_casillero ='SP2';
+
