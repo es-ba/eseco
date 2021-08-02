@@ -57,6 +57,7 @@ install:
       - tem_area_sincro_trg.sql
       - upd_operacion_area_tem_trg.sql
       - sincronizacion_tem.sql
+      - calcular_resultado_etiqueta_trg.sql
 login:
   infoFieldList: [usuario, idper, rol]
   plus:

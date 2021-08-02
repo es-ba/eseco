@@ -30,7 +30,7 @@ import {tem                  } from "./table-tem";
 import {tem_recepcion        } from "./table-tem_recepcion";
 import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
-import { resultados_test     } from './table-resultados-test';
+import { resultados_test     } from './table-resultados_test';
 import { etiquetas           } from './table-etiquetas';
 import { etiquetas_resultado } from './table-etiquetas_resultado';
 import { etiquetas_resultado_plus } from './table-etiquetas_resultado_plus';
