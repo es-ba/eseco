@@ -681,15 +681,16 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'operativo'      , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
             {name:'etiqueta'       , typeName: 'text' },
-            {name:'resultado'      , typeName: 'text' , references:'resultados_test'},
+            {name:'resultado_s'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
+            {name:'resultado_n'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
             {name:'observaciones'  , typeName: 'text', defaultValue:null},
         ],
         resultOk:'resultado_cargar',
         roles:['lab','jefe_lab'],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be = context.be;
-            if(!parameters.resultado){
-                throw new Error('Por favor ingrese resultado.');
+            if(!parameters.resultado_s && !parameters.resultado_n){
+                throw new Error('Por favor ingrese al menos 1 resultado.');
             }
             var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
             var estado;
@@ -697,15 +698,20 @@ export const ProceduresEseco : ProcedureDef[] = [
                 estado = 'tenia';
             }else{
                 estado = 'ok';
-                await context.client.query(
-                    `update etiquetas 
-                        set resultado = $2, observaciones = $3, fecha = current_date, 
-                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4,
-                            ingreso_lab = coalesce(ingreso_lab, current_timestamp)
-                        where etiqueta = $1
-                        returning true`,
-                    [parameters.etiqueta, parameters.resultado, parameters.observaciones, context.username]
-                ).fetchUniqueRow();
+                try{
+                    await context.client.query(
+                        `update etiquetas 
+                            set observaciones = $2, fecha = current_date, 
+                                hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $3,
+                                ingreso_lab = coalesce(ingreso_lab, current_timestamp), resultado_s = $4, resultado_n = $5
+                            where etiqueta = $1 and (resultado_s is null or resultado_s = $4) and (resultado_n is null or resultado_n = $5)
+                            
+                            returning true`,
+                        [parameters.etiqueta, parameters.observaciones, context.username, parameters.resultado_s, parameters.resultado_n]
+                    ).fetchUniqueRow();
+                }catch(err){
+                    throw new Error('La etiqueta ya tiene resultado cargado, rectifique si es necesario');
+                }
             }
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
             return {estado, hayDatos, datos}
@@ -716,7 +722,8 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'operativo'             , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
             {name:'etiqueta'              , typeName: 'text'    },
-            {name:'resultado'             , typeName: 'text' , references:'resultados_test'   },
+            {name:'resultado_s'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
+            {name:'resultado_n'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
             {name:'observaciones'         , typeName: 'text', defaultValue:null},
             {name:'numero_rectificacion'  , typeName: 'integer' },
         ],
@@ -724,8 +731,8 @@ export const ProceduresEseco : ProcedureDef[] = [
         roles:['lab','jefe_lab'],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be = context.be;
-            if(!parameters.resultado){
-                throw new Error('Por favor ingrese resultado.');
+            if(!parameters.resultado_s && !parameters.resultado_n){
+                throw new Error('Por favor ingrese al menos 1 resultado.');
             }
             var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
             var estado;
@@ -733,14 +740,15 @@ export const ProceduresEseco : ProcedureDef[] = [
             try{
                 await context.client.query(
                     `update etiquetas 
-                        set resultado = $2, observaciones = $3, fecha = current_date, rectificacion = $6,
-                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $4,
-                            ingreso_lab = coalesce(ingreso_lab, current_timestamp)
-                        where etiqueta = $1 and rectificacion + 1 = $5
+                        set observaciones = $2, fecha = current_date, rectificacion = $5,
+                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $3,
+                            ingreso_lab = coalesce(ingreso_lab, current_timestamp), resultado_s = $6, resultado_n = $7
+                        where etiqueta = $1 and rectificacion + 1 = $4
                     returning *`,
                     [
-                        parameters.etiqueta, parameters.resultado, parameters.observaciones, 
-                        context.username, parameters.numero_rectificacion, parameters.numero_rectificacion
+                        parameters.etiqueta, parameters.observaciones, 
+                        context.username, parameters.numero_rectificacion, parameters.numero_rectificacion, 
+                        parameters.resultado_s, parameters.resultado_n
                     ]
                 ).fetchUniqueRow();
             }catch(err){
