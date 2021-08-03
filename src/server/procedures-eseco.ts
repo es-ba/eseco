@@ -698,20 +698,15 @@ export const ProceduresEseco : ProcedureDef[] = [
                 estado = 'tenia';
             }else{
                 estado = 'ok';
-                try{
-                    await context.client.query(
-                        `update etiquetas 
-                            set observaciones = $2, fecha = current_date, 
-                                hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $3,
-                                ingreso_lab = coalesce(ingreso_lab, current_timestamp), resultado_s = $4, resultado_n = $5
-                            where etiqueta = $1 and (resultado_s is null or resultado_s = $4) and (resultado_n is null or resultado_n = $5)
-                            
-                            returning true`,
-                        [parameters.etiqueta, parameters.observaciones, context.username, parameters.resultado_s, parameters.resultado_n]
-                    ).fetchUniqueRow();
-                }catch(err){
-                    throw new Error('La etiqueta ya tiene resultado cargado, rectifique si es necesario');
-                }
+                await context.client.query(
+                    `update etiquetas 
+                        set observaciones = $2, fecha = current_date, 
+                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $3,
+                            ingreso_lab = coalesce(ingreso_lab, current_timestamp), resultado_s = $4, resultado_n = $5
+                        where etiqueta = $1 and rectificacion = 0
+                        returning true`,
+                    [parameters.etiqueta, parameters.observaciones, context.username, parameters.resultado_s, parameters.resultado_n]
+                ).fetchUniqueRow();
             }
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
             return {estado, hayDatos, datos}
