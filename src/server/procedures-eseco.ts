@@ -726,9 +726,6 @@ export const ProceduresEseco : ProcedureDef[] = [
         roles:['lab','jefe_lab'],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be = context.be;
-            if(!parameters.resultado_s && !parameters.resultado_n){
-                throw new Error('Por favor ingrese al menos 1 resultado.');
-            }
             var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
             var estado;
             estado = 'ok';
