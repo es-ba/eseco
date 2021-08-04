@@ -266,9 +266,9 @@ myOwn.clientSides.avisar_email={
     update: false,
 };
 
-myOwn.wScreens.proc.result.resultado_cargar = wScreenProcResultResultadoLaboratorio('resultado-rectificar', "No se cargó el resultado ya que fue cargado anteriormente. Vaya a rectificar si desea modificalo.");
+myOwn.wScreens.proc.result.resultado_cargar = wScreenProcResultResultadoLaboratorio('resultado-cargar', "No se cargó el resultado ya que fue cargado anteriormente. Vaya a rectificar si desea modificalo.");
 
-myOwn.wScreens.proc.result.resultado_rectificar = wScreenProcResultResultadoLaboratorio('resultado-rectificar', "No se cargó la rectificación revise el número de rectificación.");
+myOwn.wScreens.proc.result.resultado_rectificar = wScreenProcResultResultadoLaboratorio('resultado-cargar', "No se cargó la rectificación revise el número de rectificación.");
 
 myOwn.wScreens.proc.result.laboratorio_ingresar = wScreenProcResultResultadoLaboratorio('resultado-cargar', "Recepción de la muestra ya había sido registrada");
 

@@ -4,7 +4,7 @@ import { ProcedureDef, TableDefinition, Client } from "./types-eseco";
 import { adaptParameterTypes, TablaDatos, OperativoGenerator, ProcedureContext, CoreFunctionParameters, ForeignKey } from "meta-enc";
 import * as likeAr from "like-ar";
 export * from "./types-eseco";
-
+import {VALOR_BLANQUEO} from './table-resultados_test_nullables';
 import {json, jsono} from "pg-promise-strict";
 
 import {changing, datetime, date } from 'best-globals';
@@ -99,7 +99,45 @@ var getHdrQuery =  function getHdrQuery(quotedCondViv:string){
                     'fecha')} as cargas
     `
 }
-    
+
+type TipoResultado='resultado_s'|'resultado_n'|'resultado_d';
+var cargarResultadoFun = async (tipoResultado:TipoResultado, resultado:string|null, parameters:CoreFunctionParameters, context:ProcedureContext, rectifica:boolean)=>{
+    try{
+        if(resultado){
+            await context.client.query(
+                `select * from resultados_test where resultado = $1`,
+                [resultado]
+            ).fetchUniqueRow();
+        }
+    }catch(err){
+        throw new Error(`El valor ${resultado} no es válido para el resultado ${tipoResultado}`)
+    }
+    try{
+        let queryParamsList = [
+            parameters.etiqueta,
+            parameters.observaciones,
+            context.username,
+            resultado,
+        ];
+        if(!rectifica){
+            queryParamsList.push(resultado);
+        }
+        await context.client.query(
+            `update etiquetas 
+                set observaciones = $2, fecha = current_date, 
+                    hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $3,
+                    ingreso_lab = coalesce(ingreso_lab, current_timestamp), ${context.be.db.quoteIdent(tipoResultado)} = $4
+                where etiqueta = $1 
+                    ${rectifica?``:`and (${context.be.db.quoteIdent(tipoResultado)} is null or ${context.be.db.quoteIdent(tipoResultado)} = $5)`}
+                returning true`,
+                queryParamsList
+        ).fetchUniqueRow();
+    }catch(err){
+        //throw new Error(`El ${tipoResultado} fue cargado anteriormente, rectifique si es necesario. ${err.message}`)
+        throw new Error(`El ${tipoResultado} fue cargado anteriormente, rectifique si es necesario.`)
+    }
+}
+
 export const ProceduresEseco : ProcedureDef[] = [
     {
         action:'generar_formularios',
@@ -683,31 +721,22 @@ export const ProceduresEseco : ProcedureDef[] = [
             {name:'etiqueta'       , typeName: 'text' },
             {name:'resultado_s'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
             {name:'resultado_n'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
+            {name:'resultado_d'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
             {name:'observaciones'  , typeName: 'text', defaultValue:null},
         ],
         resultOk:'resultado_cargar',
         roles:['lab','jefe_lab'],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
             var be = context.be;
-            if(!parameters.resultado_s && !parameters.resultado_n){
+            if(!parameters.resultado_s && !parameters.resultado_n && !parameters.resultado_d){
                 throw new Error('Por favor ingrese al menos 1 resultado.');
             }
             var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
-            var estado;
-            if(etiqueta.resultado){
-                estado = 'tenia';
-            }else{
-                estado = 'ok';
-                await context.client.query(
-                    `update etiquetas 
-                        set observaciones = $2, fecha = current_date, 
-                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $3,
-                            ingreso_lab = coalesce(ingreso_lab, current_timestamp), resultado_s = $4, resultado_n = $5
-                        where etiqueta = $1 and rectificacion = 0
-                        returning true`,
-                    [parameters.etiqueta, parameters.observaciones, context.username, parameters.resultado_s, parameters.resultado_n]
-                ).fetchUniqueRow();
-            }
+            const RECTIFICA = false;
+            parameters.resultado_s?await cargarResultadoFun('resultado_s',parameters.resultado_s, parameters, context, RECTIFICA):null;
+            parameters.resultado_n?await cargarResultadoFun('resultado_n',parameters.resultado_n, parameters, context, RECTIFICA):null;
+            parameters.resultado_d?await cargarResultadoFun('resultado_d',parameters.resultado_d, parameters, context, RECTIFICA):null;
+            var estado = 'ok';
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
             return {estado, hayDatos, datos}
         }
@@ -717,35 +746,45 @@ export const ProceduresEseco : ProcedureDef[] = [
         parameters:[
             {name:'operativo'             , typeName:'text' , defaultValue:OPERATIVO_ETIQUETAS },
             {name:'etiqueta'              , typeName: 'text'    },
-            {name:'resultado_s'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
-            {name:'resultado_n'    , typeName: 'text' , references:'resultados_test', defaultValue:null},
+            {name:'resultado_s'    , typeName: 'text' , references:'resultados_test_nullables', defaultValue:null},
+            {name:'resultado_n'    , typeName: 'text' , references:'resultados_test_nullables', defaultValue:null},
+            {name:'resultado_d'    , typeName: 'text' , references:'resultados_test_nullables', defaultValue:null},
             {name:'observaciones'         , typeName: 'text', defaultValue:null},
             {name:'numero_rectificacion'  , typeName: 'integer' },
         ],
         resultOk:'resultado_rectificar',
         roles:['lab','jefe_lab'],
         coreFunction:async function(context: ProcedureContext, parameters: CoreFunctionParameters){
+            //VALOR_BLANQUEO
             var be = context.be;
+            if(!parameters.resultado_s && !parameters.resultado_n && !parameters.resultado_d){
+                throw new Error('Por favor ingrese al menos 1 resultado.');
+            }
             var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
             var estado;
             estado = 'ok';
             try{
                 await context.client.query(
                     `update etiquetas 
-                        set observaciones = $2, fecha = current_date, rectificacion = $5,
-                            hora = date_trunc('seconds',current_timestamp-current_date), laboratorista = $3,
-                            ingreso_lab = coalesce(ingreso_lab, current_timestamp), resultado_s = $6, resultado_n = $7
-                        where etiqueta = $1 and rectificacion + 1 = $4
+                        set rectificacion = $3
+                        where etiqueta = $1 and rectificacion + 1 = $2
                     returning *`,
                     [
-                        parameters.etiqueta, parameters.observaciones, 
-                        context.username, parameters.numero_rectificacion, parameters.numero_rectificacion, 
-                        parameters.resultado_s, parameters.resultado_n
+                        parameters.etiqueta, 
+                        parameters.numero_rectificacion, 
+                        parameters.numero_rectificacion
                     ]
                 ).fetchUniqueRow();
             }catch(err){
                 throw new Error('Numero de rectificacion incorrecto.')
             }
+            var sanitizarValorBlanqueo = (resultado:string)=>
+                resultado==VALOR_BLANQUEO?null:resultado
+            const RECTIFICA = true;
+            var {resultado_s, resultado_n, resultado_d } =  parameters;
+            resultado_s?await cargarResultadoFun('resultado_s',sanitizarValorBlanqueo(resultado_s), parameters, context, RECTIFICA):null;
+            resultado_n?await cargarResultadoFun('resultado_n',sanitizarValorBlanqueo(resultado_n), parameters, context, RECTIFICA):null;
+            resultado_d?await cargarResultadoFun('resultado_d',sanitizarValorBlanqueo(resultado_d), parameters, context, RECTIFICA):null;
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
             return {estado, hayDatos, datos}
         }

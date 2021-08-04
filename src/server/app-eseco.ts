@@ -31,6 +31,7 @@ import {tem_recepcion        } from "./table-tem_recepcion";
 import {semanas              } from "./table-semanas";
 import { planchas            } from './table-planchas';
 import { resultados_test     } from './table-resultados_test';
+import { resultados_test_nullables } from './table-resultados_test_nullables';
 import { etiquetas           } from './table-etiquetas';
 import { etiquetas_resultado } from './table-etiquetas_resultado';
 import { etiquetas_resultado_plus } from './table-etiquetas_resultado_plus';
@@ -472,6 +473,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
             , parametros
             , planchas
             , resultados_test
+            , resultados_test_nullables
             , etiquetas
             , etiquetas_resultado
             , etiquetas_resultado_plus
