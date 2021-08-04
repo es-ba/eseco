@@ -112,6 +112,10 @@ var cargarResultadoFun = async (tipoResultado:TipoResultado, resultado:string|nu
     }catch(err){
         throw new Error(`El valor ${resultado} no es válido para el resultado ${tipoResultado}`)
     }
+    var etiquetaAnteriorRow = (await context.client.query(`
+        select * from etiquetas where etiqueta = $1`,
+        [parameters.etiqueta]
+    ).fetchUniqueRow()).row;
     try{
         let queryParamsList = [
             parameters.etiqueta,
@@ -129,13 +133,27 @@ var cargarResultadoFun = async (tipoResultado:TipoResultado, resultado:string|nu
                     ingreso_lab = coalesce(ingreso_lab, current_timestamp), ${context.be.db.quoteIdent(tipoResultado)} = $4
                 where etiqueta = $1 
                     ${rectifica?``:`and (${context.be.db.quoteIdent(tipoResultado)} is null or ${context.be.db.quoteIdent(tipoResultado)} = $5)`}
-                returning true`,
+                returning *`,
                 queryParamsList
         ).fetchUniqueRow();
+        //Si el valor era el mismo (ej: Positivo x Positivo, avisa con un cartel para que se de cuenta si le erró al renglón)
+        if(resultado && etiquetaAnteriorRow[tipoResultado]==resultado){
+            return `El resultado cargado en ${tipoResultado} ya había sido cargado previamente con el mismo valor (${resultado})`
+        }else{
+            return 'ok'
+        }
     }catch(err){
-        //throw new Error(`El ${tipoResultado} fue cargado anteriormente, rectifique si es necesario. ${err.message}`)
-        throw new Error(`El ${tipoResultado} fue cargado anteriormente, rectifique si es necesario.`)
+        //Si el valor no era el mismo (ej Positivo x Negativo) le aclara que antes había un valor distinto, y cuál y le indica que vaya a rectificaciones.
+        throw new Error(`El ${tipoResultado} fue cargado anteriormente con el valor ${etiquetaAnteriorRow[tipoResultado]}, rectifique si es necesario.`)
     }
+}
+
+var getResultadosNoNulosDeParametros = (parameters: CoreFunctionParameters):{[key:string]:string}=>{
+    var {resultado_s, resultado_n, resultado_d}:{[key:string]:string|null} = parameters;
+    var resultados = {resultado_s, resultado_n, resultado_d};
+    //@ts-ignore siempre devuelve resultados no nulos
+    return likeAr(resultados).filter((result)=>result!=null).plain();
+    //return [resultado_s, resultado_n, resultado_d].filter((param)=>param!=null)
 }
 
 export const ProceduresEseco : ProcedureDef[] = [
@@ -733,12 +751,14 @@ export const ProceduresEseco : ProcedureDef[] = [
             }
             var {etiqueta, persona} = await be.procedure.etiqueta_verificar.coreFunction(context, parameters)
             const RECTIFICA = false;
-            parameters.resultado_s?await cargarResultadoFun('resultado_s',parameters.resultado_s, parameters, context, RECTIFICA):null;
-            parameters.resultado_n?await cargarResultadoFun('resultado_n',parameters.resultado_n, parameters, context, RECTIFICA):null;
-            parameters.resultado_d?await cargarResultadoFun('resultado_d',parameters.resultado_d, parameters, context, RECTIFICA):null;
+            var messages:string[]=[]
+            var resultadosNoNulos = getResultadosNoNulosDeParametros(parameters);
+            for(let key in resultadosNoNulos){
+                messages.push(await cargarResultadoFun(key as TipoResultado,resultadosNoNulos[key], parameters, context, RECTIFICA));
+            }
             var estado = 'ok';
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
-            return {estado, hayDatos, datos}
+            return {estado, hayDatos, datos, messages:messages.filter(message=>message!='ok')}
         }
     },
     {
@@ -781,12 +801,13 @@ export const ProceduresEseco : ProcedureDef[] = [
             var sanitizarValorBlanqueo = (resultado:string)=>
                 resultado==VALOR_BLANQUEO?null:resultado
             const RECTIFICA = true;
-            var {resultado_s, resultado_n, resultado_d } =  parameters;
-            resultado_s?await cargarResultadoFun('resultado_s',sanitizarValorBlanqueo(resultado_s), parameters, context, RECTIFICA):null;
-            resultado_n?await cargarResultadoFun('resultado_n',sanitizarValorBlanqueo(resultado_n), parameters, context, RECTIFICA):null;
-            resultado_d?await cargarResultadoFun('resultado_d',sanitizarValorBlanqueo(resultado_d), parameters, context, RECTIFICA):null;
+            var messages:string[]=[]
+            var resultadosNoNulos = getResultadosNoNulosDeParametros(parameters);
+            for(let key in resultadosNoNulos){
+                messages.push(await cargarResultadoFun(key as TipoResultado, sanitizarValorBlanqueo(resultadosNoNulos[key]), parameters, context, RECTIFICA));
+            }
             var {hayDatos, datos} = await be.procedure.datos_tem_traer.coreFunction(context, parameters)
-            return {estado, hayDatos, datos}
+            return {estado, hayDatos, datos, messages:messages.filter(message=>message!='ok')}
         }
     },
     {

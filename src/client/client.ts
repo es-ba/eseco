@@ -175,11 +175,14 @@ function mostrarDatosPersona(hayDatos:boolean, datos:any, divResult:HTMLDivEleme
 }
 
 var wScreenProcResultResultadoLaboratorio = function(atributo:string, mensajeNo){
-    return async (result:{estado:'ok'|'tenia', hayDatos:boolean, datos:any}, divResult:HTMLDivElement)=>{
+    return async (result:{estado:'ok'|'tenia', hayDatos:boolean, datos:any, messages?:string[]}, divResult:HTMLDivElement)=>{
         divResult.removeAttribute("style");
         divResult.setAttribute(atributo,result.estado);
         divResult.appendChild(
             html.h2({class:result.estado}, result.estado=="ok"?'ok':mensajeNo).create()
+        )
+        result.messages?.forEach((message)=>
+            divResult.appendChild(html.p({}, message).create())
         )
         mostrarDatosPersona(result.hayDatos, result.datos, divResult);
     }
