@@ -120,6 +120,11 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 "nullable": true
             },
             {
+                "name": "dv6",
+                "typeName": "bigint",
+                "nullable": true
+            },    
+            {
                 "name": "dv3",
                 "typeName": "bigint",
                 "nullable": true
@@ -477,6 +482,36 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 "nullable": true
             },
             {
+                "name": "v5",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v6",
+                "typeName": "text",
+                "nullable": true
+            },
+            {
+                "name": "v7",
+                "typeName": "text",
+                "nullable": true
+            },
+            {
+                "name": "v8",
+                "typeName": "bigint",
+                "nullable": true
+            },
+            {
+                "name": "v8otros",
+                "typeName": "text",
+                "nullable": true
+            },
+            {
+                "name": "v9",
+                "typeName": "bigint",
+                "nullable": true
+            },    
+            {
                 "name": "v2",
                 "typeName": "bigint",
                 "nullable": true
@@ -517,10 +552,18 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 "nullable": true
             },
             {
+                "name": "v4otros",
+                "typeName": "text",
+                "nullable": true,
+                //visible: false
+            },
+            /*
+            {
                 "name": "v4_6_otro",
                 "typeName": "text",
-                "nullable": true
+                "nullable": true,
             },
+            */
             {
                 "name": "e1",
                 "typeName": "text",
@@ -675,6 +718,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 , "g9"
                 , "dv1"
                 , "dv2"
+                , "dv6"
                 , "dv3"
                 , "dv3otros"
                 , "dv4"
@@ -744,6 +788,12 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 , "t2_8"
                 , "t3"
                 , "v1"
+                , "v5"
+                , "v6"
+                , "v7"
+                , "v8"
+                , "v8otros"
+                , "v9" 
                 , "v2"
                 , "v3"
                 , "v4_1"
@@ -752,7 +802,8 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 , "v4_4"
                 , "v4_5"
                 , "v4_6"
-                , "v4_6_otro"
+                , "v4otros"
+                --, "v4otros" as "v4_6_otro"
                 , "e1"
                 , "e2"
                 , "e3"
