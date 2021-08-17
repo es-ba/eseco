@@ -444,3 +444,39 @@ select json_encuesta into encu_64903 from tem where enc = '64903';
 update tem set json_encuesta = (select json_encuesta from encu_64902) where enc='64903';
 update tem set json_encuesta = (select json_encuesta from encu_64903) where enc='64902';
 --luego abrir la encuesta desde tem_recepcion y guardarla para que se actualicen los datos que se copian en el resto de la grilla
+
+
+select edad_sel, sexo_sel
+      , json_encuesta->>'v1' as v1
+      , json_encuesta->>'v5' as v1
+      , json_encuesta->>'v6' as v1
+      , json_encuesta->>'v7' as v1
+      , json_encuesta->>'v8' as v1
+      , json_encuesta->>'v9' as v1
+      , json_encuesta->>'d1' as v1
+      , json_encuesta->>'d2' as v1
+      , json_encuesta->>'d5' as v1 
+    from encuestas inner join resultados using(resultado)
+
+select edad_sel, sexo_sel
+      , resultado_s
+      , json_encuesta->>'v1' as v1
+      , json_encuesta->>'v5' as v5
+      , json_encuesta->>'v6' as v6
+      , json_encuesta->>'v7' as v7
+      , json_encuesta->>'v8' as v8
+      , json_encuesta->>'v9' as v9
+      , json_encuesta->>'d1' as d1
+      , json_encuesta->>'d2' as d2
+      , coalesce( json_encuesta->>'d5', json_encuesta->>'d5c') as d5
+      , json_encuesta->>'e1' as e1
+      , json_encuesta->>'e2' as e2
+      , json_encuesta->>'e3' as e3
+      , json_encuesta->>'e7' as e7
+      , json_encuesta->>'c1' as c1
+      , json_encuesta->>'c3' as c3
+      , json_encuesta->>'c4' as c4
+      , json_encuesta->>'c5' as c5
+    from tem inner join etiquetas using(etiqueta)
+    where resultado_s <> 'Positivo'
+    order by edad_sel, sexo_sel;
