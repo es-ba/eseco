@@ -400,7 +400,7 @@ export function emergeAppEseco<T extends Constructor<procesamiento.AppProcesamie
                     {menuType:'table', name:'etiquetas_duplicadas' , table:'etiquetas_duplicadas'  },
                 ]},            
             )
-        }else if(context.user.rol=='comunicacion'){
+        }else if(context.user?.rol=='comunicacion'){
             menu.push(
                 {menuType:'menu', name:'control', menuContent:[
                     {menuType:'table', name:'rea_sin_resultados' , table:'rea_sin_resultados'  },
