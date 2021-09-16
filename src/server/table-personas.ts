@@ -17,6 +17,7 @@ export function personas(context:TableContext, opts:{extendida:boolean, onda_ant
         , {name: "p11"           , editable:false, typeName:"integer", inTable:false}
         , {name: "clase"         , editable:false, typeName:"text"   , inTable:false}
         , {name: "panel"         , editable:false, typeName:"integer", inTable:false}
+        , {name: "rea_m"         , editable:false, typeName:"integer", inTable:false}
     ]:[];
     return {
     "name": opts.extendida?(opts.onda_anterior?'personas_extendida_onda_ant':'personas_extendida'):"personas",
@@ -87,6 +88,7 @@ export function personas(context:TableContext, opts:{extendida:boolean, onda_ant
                 , (${opts.extendida && opts.onda_anterior?`a`:`t`}.json_encuesta->>'p11')::integer p11
                 , t.clase
                 , t.panel
+                , t.rea_m
                 , x.p1, x.p2, x.p3, x.p4
                 ,  ordinality persona
                 from  tem t left join tem_reas_eseco202_participacion2 a using(enc)
