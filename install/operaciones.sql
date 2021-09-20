@@ -480,3 +480,31 @@ select edad_sel, sexo_sel
     from tem inner join etiquetas using(etiqueta)
     where resultado_s <> 'Positivo'
     order by edad_sel, sexo_sel;
+
+--modificar dv2
+with cambios as (
+select '12005' enc,'19/8/2021' dv2nue 
+union select '16001','1/9/2021'
+union select '29608','11/9/2021' 
+union select '29611','11/9/2021' 
+union select '30602','24/8/2021' 
+union select '61403','13/9/2021' 
+)
+select t.enc, t.json_encuesta->'dv2', jsonb_set(json_encuesta, '{"dv2"}',to_jsonb(dv2nue )), json_encuesta
+from cambios join tem t using (enc)
+order by 1;
+
+with cambios as (
+select '12005' enc,'19/8/2021' dv2nue 
+union select '16001','1/9/2021'
+union select '29608','11/9/2021' 
+union select '29611','11/9/2021' 
+union select '30602','24/8/2021' 
+union select '61403','13/9/2021' 
+)
+update tem t
+  set json_encuesta=jsonb_set(json_encuesta, '{"dv2"}',to_jsonb(dv2nue ))
+  from cambios c
+  where t.enc= c.enc;
+
+
