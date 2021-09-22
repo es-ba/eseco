@@ -506,5 +506,15 @@ update tem t
   set json_encuesta=jsonb_set(json_encuesta, '{"dv2"}',to_jsonb(dv2nue ))
   from cambios c
   where t.enc= c.enc;
+  
+-- caso con resumen_estado='con problemas'. Tenia dato en p6 y modo_relevamiento=1
+ select * from tem                             
+  where enc='15008' and ((json_encuesta->'personas')->0)?'p6' and (json_encuesta->>'tipo_relevamiento')='1'
+ update tem
+  set json_encuesta=jsonb_set(json_encuesta,'{personas,0}', ((json_encuesta->'personas')->0)-'p6')
+  where enc='15008' and ((json_encuesta->'personas')->0)?'p6' and (json_encuesta->>'tipo_relevamiento')='1';
+  -- y luego grabar pestaña de personas para forzar cambio de resumen_estado
+
+
 
 
