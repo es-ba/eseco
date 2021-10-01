@@ -37,6 +37,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
             },
             {name:'rea_m'        , typeName:'integer' , inTable: false},
             {name:'resultado'    , typeName:'text'    , inTable: false},
+            {name:'resultado_d'  , typeName:"text"    , inTable: false},
             {name:'etiqueta'     , typeName:'text'    , inTable: false},
             {name:'observaciones', typeName:'text'    , inTable: false},
             {name:'area'         , typeName:'integer' , inTable: false},
@@ -689,6 +690,7 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
             (select t.operativo, t.enc, t.area, t.nrocomuna, t.nrofraccion, t.nroradio
                 , rea_m
                 , resultado
+                , resultado_d
                 , etiqueta
                 , observaciones
                 , tipo_domicilio 
