@@ -18,6 +18,10 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
         , {name: "fexp"          , editable:false, typeName:"integer", inTable:false}
         , {name: "clase"         , editable:false, typeName:"text"   , inTable:false}
         , {name: "panel"         , editable:false, typeName:"integer", inTable:false}
+        , {name:'grupo_edad'     , editable:false, typeName:'integer', inTable:false}
+        , {name:'dias_dosis_1'   , editable:false, typeName:'integer', inTable:false
+        , {name:'dias_dosis_2'   , editable:false, typeName:'integer', inTable:false
+        , {name:'dias_ult_dosis' , editable:false, typeName:'integer', inTable:false
     ]:[];
     var def:TableDefinition= {
         "name": opts.extendida?'viviendas_extendida':"viviendas",
@@ -705,6 +709,10 @@ export function viviendas(context:TableContext, opts:{extendida:boolean}):TableD
                 , fexp
                 , clase
                 , panel
+                , grupo_edad
+                , dias_dosis_1
+                , dias_dosis_2
+                , dias_ult_dosis
                 , "tipo_seleccion"
                 , "g1"
                 , "g2"

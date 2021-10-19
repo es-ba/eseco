@@ -17,6 +17,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
     var columnasSoloTem=[
           'enc_original'   , 'json_encuesta'   , 'rea'     , 'norea'  , 'json_backup'
         , 'h4'             , 'hospital'        , 'x'       , 'y'      , 'dist_m'     , 'fexp'
+        ,'grupo_edad'      , 'dias_dosis_1'    , 'dias_dosis_2',	'dias_ult_dosis'
     ];
     var def: TableDefinition= {
         name:`tem${recepcion}`,
@@ -26,6 +27,7 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             'codviviendaparticular', 'casa', 'obsdatosdomicilio', 'obsconjunto', 'reserva', 'rotacion_etoi', 'rotacion_eah'
             , 'trimestre'   , 'procedencia', 'sel_etoi_villa'   , 'marco'      , 'semana' , 'periodicidad' 
             , 'cargado_dm', 'clase', 'seleccionado_anterior','seleccionado_anterior_resumen'
+            ,'grupo_edad' , 'dias_dosis_1', 'dias_dosis_2',	'dias_ult_dosis'
         ],
         "fields": [
             {name:'operativo'     , typeName:'text'           , editable: false , nullable: false, defaultValue: 'ESECO'},
@@ -120,6 +122,10 @@ export function tem(context:TableContext, opts:any):TableDefinition {
             {name:"y"                    , typeName:'decimal' , editable: false  },
             {name:"dist_m"               , typeName:'decimal' , editable: false  },
             {name:'notas'                , typeName:'text'    , editable: false, inTable:false},
+            {name:'grupo_edad'           , typeName:'integer' , editable: false  },
+            {name:'dias_dosis_1'         , typeName:'integer' , editable: false  },
+            {name:'dias_dosis_2'         , typeName:'integer' , editable: false  },
+            {name:'dias_ult_dosis'       , typeName:'integer' , editable: false  },
             //{ name: "modificado"   , label:'modificado'        , typeName: 'timestamp'},
             //{name:'obs_sup'        , typeName:'text' , editable: isSupervisor     },
             //{name:'obs_coor'       , typeName:'text' , editable: isCoordinador || isSubCoordinador },  
